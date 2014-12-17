@@ -13,4 +13,4 @@ This proyect includes these visualizations over maps:
 
 Uses this arquitecture:
 
-(uml img)
+![uml diagram](http://i.imgur.com/0uHFguU.png)
