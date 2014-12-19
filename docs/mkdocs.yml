@@ -1,0 +1,9 @@
+site_name: City Dashboard Docs
+pages:
+- ['index.md', 'Home']
+- ['Manual/Creating_a_Dashboard.md', 'Manual', 'Creating a Dashboard']
+- ['Dashboard.md', 'Dashboard']
+- ['Maps/Map.md', 'Maps', 'Map']
+- ['Maps/GoogleMap.md', 'Maps', 'GoogleMap']
+- ['Info/InfoWindow.md', 'InfoWindows', 'InfoWindow']
+theme: yeti
