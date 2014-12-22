@@ -1,0 +1,39 @@
+.layout-none {
+  height: 100%;
+}
+
+.layout-none #mapWindow{
+  height: 100%;
+}
+
+.layout-left {
+  height: 100%;
+}
+
+.layout-left #infoWindow {
+  display: inline-block;
+  float: left;
+  height: 100%;
+  width: 300px;
+}
+
+.layout-left #mapWindow {
+  height: 100%;
+  margin-left: 300px;
+}
+
+.layout-right {
+  height: 100%;
+}
+
+.layout-right #infoWindow {
+  display: inline-block;
+  float: right;
+  height: 100%;
+  width: 300px;
+}
+
+.layout-right #mapWindow {
+  height: 100%;
+  margin-right: 300px;
+}
