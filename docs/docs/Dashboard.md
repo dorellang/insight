@@ -13,7 +13,7 @@ var myDashboard = new CityDashboard.Dashboard({
 
 ## Constructor
 
-#### Dashboard( parameters )
+#### Dashboard( `parameters` )
 parameters is an object with the properties that define the dashboard.
 
 > anchor - The id of the DOM element that will contain the map.
@@ -22,16 +22,16 @@ parameters is an object with the properties that define the dashboard.
 > 
 > info - An InfoWindow object.
 >
-> layout - The position of the window relative to the map. Default is a left Layout.
+> layout - The position of the window relative to the map. Default is a `none` Layout.
 
 ## Parameters
 
 #### `.layer`
-  A Layer object.
+  A Layer object. These layers are superposed over each other using the method `addLayer`.
 
 ---
 #### `.layout`
-  A Layout object.
+  A Layout object. `left`, `right` or `none`.
 
 ---
 #### `.map`
@@ -44,7 +44,7 @@ parameters is an object with the properties that define the dashboard.
 ---
 ## Methods
 
-#### `.addLayer` ( parameters ) : Dashboard
+#### `.addLayer` ( `parameters` ) : Dashboard
   Adds a new layer to the map visualization.
 
   parameters is an object with one or more properties definig the layer's configuration.

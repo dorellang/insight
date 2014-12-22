@@ -18,7 +18,7 @@ var infoWindow = new CityDashboard.InfoWindow({
 
 ## Constructor
 
-#### InfoWindow( visualizations )
+#### InfoWindow( `visualizations` )
 Creates an information window with all the visualizations.
 
 > visualizations - An array of visualization properties.

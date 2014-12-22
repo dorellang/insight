@@ -7,7 +7,7 @@ Abstract base class for maps. This class should always be inherited when you bui
 
 ## Methods
 
-#### `.place` (String)
+#### `.place` ( `String` )
   Places the map inside the container with the given id.
 
 ---

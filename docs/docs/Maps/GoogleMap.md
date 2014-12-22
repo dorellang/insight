@@ -14,7 +14,7 @@ var map = new CityDashboard.GoogleMap({
 
 ## Constructor
 
-#### GoogleMap( parameters )
+#### GoogleMap( `parameters` )
 parameters is an object with one or more properties definig the map's initial configuration.
 
 > lat - Map center's initial latitude. Default is 0.
@@ -39,12 +39,12 @@ parameters is an object with one or more properties definig the map's initial co
 
 ## Methods
 
-#### `.place` (String)
+#### `.place` ( `String` )
   Places the map inside the container with the given id.
 
 ---
 
-#### `.latLngToPix` ( coordinates ) : coordinates
+#### `.latLngToPix` ( `coordinates` ) : `coordinates`
   Transforms GoogleMaps longitude and latitude in pixels of the container div.
 
   coordinates is an object with two parameters: `lat` and `lng`.
