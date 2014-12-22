@@ -3,7 +3,7 @@ CityDashboard.Dashboard = function ( parameters ) {
 	if ( parameters.anchor === undefined ) {
 		throw new Error( 'Anchor ID is required.' )
 	}
-  this.anchor = parameters.anchor;
+  
 	this.map = parameters.map;
   this.info = parameters.info;
 

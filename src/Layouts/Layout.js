@@ -1,6 +1,6 @@
 CityDashboard.Layout = function ( anchorID, orientation ) {
+  
   this.anchor = anchorID
-
   this.orientation = orientation;
 };
 
