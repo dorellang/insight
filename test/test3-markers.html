@@ -36,6 +36,7 @@
     <script src="../src/Layouts/Layout.js"></script>
     <script src="../src/Layers/MarkerLayer.js"></script>
     <script src="../src/Layers/NullLayer.js"></script>
+    <script src="../src/Layers/ElementFactory.js"></script>
     <script src="../src/Dashboard.js"></script>
 
     <div id="dashboard"></div>
@@ -63,11 +64,22 @@
         'id': '#myMarker',
         'layer': 'marker-layer',
         'data-source': '#myMarker',
-        'data': {'lat': -33.442909,
+        'data': [{'lat': -33.442909,
                  'lng': -70.65387,
                  'value': {
                    'landmark': 'La Moneda'
-                }}
+                }},
+                 {'lat': -33.443465,
+                  'lng': -70.647571,
+                  'value': {
+                    'landmark': 'San Fransisco'
+                  }}],
+        'marker_attr': {
+          'type': 'rect',
+          'width': 50,
+          'height': 50,
+          'fill': 'blue'
+        }
       });
 
       // Show the Dashboard
