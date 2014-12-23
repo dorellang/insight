@@ -7,23 +7,28 @@ CityDashboard.Layout = function ( anchorID, orientation ) {
 CityDashboard.Layout.prototype = {
   constructor: CityDashboard.Layout,
 
-  place: function ( map, info ) {
+  place: function ( map, info, layer ) {
 
-    var container = d3.select(this.anchor).append('div')
-    .attr('id','city-dashboard')
-    .attr('class',this.orientation);
+    var container = d3.select( this.anchor ).append( 'div' )
+    .attr( 'id', 'city-dashboard' )
+    .attr( 'class', this.orientation );
     
     if ( this.orientation !== 'layout-none' ) {
       
-      container.append('div').attr('id','infoWindow')
-      .style('background-color','blue');
+      container.append( 'div' )
+      .attr( 'id', 'infoWindow' );
     
       info.place( '#infoWindow' );
     }
 
-    container.append("div").attr('id','mapWindow')
-    .style('background-color','red');
+    var mapWindow = container.append( 'div' )
+    .attr( 'id', 'mapWindow' );
 
-    map.place( '#mapWindow' );
+    mapWindow.append('div')
+    .attr( 'id', 'map-container' );
+
+    map.place( '#map-container' );
+
+    layer.place( '#mapWindow' );
   }
 };

@@ -1,15 +1,15 @@
 <!--
   THIS IS A TEST
 
-  IT SHOULD SHOW ONLY A GOOGLE MAPS
+  IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW
 
-  The map is over Santiago (center at La Moneda (-33.442909,-70.65387)), with a zoom level of 12.
+  A BLUE DOT OVER LA MONEDA
 
 -->
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Test 1 - Just a Map</title>
+    <title>Test 3 - Markers</title>
     <style>
       html,
       body {
@@ -28,12 +28,14 @@
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v="></script>
+    
     <script src="../src/CityDashboard.js"></script>
     <script src="../src/Maps/Map.js"></script>
     <script src="../src/Maps/GoogleMap.js"></script>
-    <script src="../src/Layouts/Layout.js"></script>
-    <script src="../src/Layers/NullLayer.js"></script>
     <script src="../src/InfoWindow.js"></script>
+    <script src="../src/Layouts/Layout.js"></script>
+    <script src="../src/Layers/MarkerLayer.js"></script>
+    <script src="../src/Layers/NullLayer.js"></script>
     <script src="../src/Dashboard.js"></script>
 
     <div id="dashboard"></div>
@@ -46,10 +48,26 @@
         'zoom': 12
       });
 
+      // Setting up our information window.
+      var infoWindow = new CityDashboard.InfoWindow({});
+
       // Binding the map and the information window.
       var myDashboard = new CityDashboard.Dashboard({
         'anchor': '#dashboard',
-        'map': map
+        'map': map,
+        'info': infoWindow,
+        'layout': 'left'
+      });
+
+      myDashboard.addLayer({
+        'id': '#myMarker',
+        'layer': 'marker-layer',
+        'data-source': '#myMarker',
+        'data': {'lat': -33.442909,
+                 'lng': -70.65387,
+                 'value': {
+                   'landmark': 'La Moneda'
+                }}
       });
 
       // Show the Dashboard
