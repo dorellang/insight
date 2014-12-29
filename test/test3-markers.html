@@ -3,7 +3,9 @@
 
   IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW
 
-  A BLUE DOT OVER LA MONEDA
+  TWO BLUE RECTANGLES
+  TWO RED DOTS
+  AND TWO ANTENNAS
 
 -->
 <!DOCTYPE html>
@@ -60,10 +62,11 @@
         'layout': 'left'
       });
 
-      myDashboard.addLayer({
-        'id': '#myMarker',
+      myDashboard
+      .addLayer({
+        'id': '#rectMarker',
         'layer': 'marker-layer',
-        'data-source': '#myMarker',
+        'data-source': '#rectMarker',
         'data': [{'lat': -33.442909,
                  'lng': -70.65387,
                  'value': {
@@ -80,7 +83,49 @@
           'height': 50,
           'fill': 'blue'
         }
+      })
+      //second markers red circles
+      .addLayer({
+        'id': '#circMarker',
+        'layer': 'marker-layer',
+        'data-source': '#circMarker',
+        'data': [{'lat': -33.464628,
+                 'lng': -70.610676,
+                 'value': {
+                   'landmark': 'Estadio Nacional'
+                }},
+                {'lat': -33.457669,
+                  'lng': -70.662319,
+                  'value': {
+                    'landmark': 'FCFM'
+                  }}],
+        'marker_attr': {
+          'type': 'circle',
+          'r': 10,
+          'fill': 'red'
+        }
+      })
+      //last markers with images!
+      .addLayer({
+        'id': '#imgMarker',
+        'layer': 'marker-layer',
+        'data-source': '#imgMarker',
+        'data': [{'lat': -33.4177719,
+                 'lng': -70.6067358,
+                 'value': {
+                   'landmark': 'Costanera Center'
+                }},
+                {'lat': -33.4626001,
+                  'lng': -70.7032339,
+                  'value': {
+                    'landmark': 'Estacion Central'
+                  }}],
+        'marker_attr': {
+          'type': 'image',
+          'src': 'antenna.svg'
+        }
       });
+    //  
 
       // Show the Dashboard
       myDashboard.show();

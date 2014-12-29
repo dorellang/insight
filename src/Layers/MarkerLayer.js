@@ -1,6 +1,5 @@
 CityDashboard.MarkerLayer = function( parameters ){
   this.wrappedLayer = undefined;
-  this.zIndex = 1;
 
   if ( parameters.id === undefined ){
     throw Error( "All layers must have an ID." )
@@ -8,7 +7,7 @@ CityDashboard.MarkerLayer = function( parameters ){
   this.id = parameters.id;
   this.dataSource = parameters.dataSource;
 
-  this.elements = parameters.data.length == 0 ? [parameters.data] : parameters.data;
+  this.elements = parameters.data.length == 0 ? [ parameters.data ] : parameters.data;
 
   this.elementFact = new CityDashboard.ElementFactory( parameters.marker_attr );
 };
@@ -23,10 +22,10 @@ CityDashboard.MarkerLayer.prototype = {
     return this;
   },
 
-  refreshZIndex: function (zIndex) {
+  refreshZIndex: function ( z ) {
 
-    this.zIndex = zIndex || 1;
-    this.wrappedLayer.refreshZIndex( zIndex + 1 );
+    this.zIndex = z || 1;
+    this.wrappedLayer.refreshZIndex( this.zIndex + 1 );
   },
 
   place: function ( container ) {
