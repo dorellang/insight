@@ -8,6 +8,7 @@ CityDashboard.GoogleMap = function ( parameters ) {
     'lat': parameters.lat || 0,
     'lng': parameters.lng || 0
   };
+
   this.zoom = parameters.zoom || 3;
 
   this.map = undefined;
@@ -16,10 +17,14 @@ CityDashboard.GoogleMap = function ( parameters ) {
 CityDashboard.GoogleMap.prototype = Object.create ( CityDashboard.Map.prototype );
 
 CityDashboard.GoogleMap.prototype.place  = function ( containerID ) {
-  var lat = this.center.lat;
-  var lng = this.center.lng;
-  var zoom = this.zoom;
 
+  var lat, lng, zoom;
+
+  lat = this.center.lat;
+  lng = this.center.lng;
+  zoom = this.zoom;
+
+  // create googlemaps
   this.map = new google.maps.Map( $(containerID)[0], {
     zoom: zoom,
     center: new google.maps.LatLng(lat, lng)

@@ -12,14 +12,17 @@ CityDashboard.Dashboard = function ( parameters ) {
   this.layout = new CityDashboard.Layout( parameters.anchor, 'layout-' + orientation );
 
   this.layer = new CityDashboard.NullLayer();
+
 };
 
 CityDashboard.Dashboard.prototype = {
+
 	constructor: CityDashboard.Dashboard,
 
 	show: function () {
 
     this.layout.place( this.map, this.info, this.layer );
+    
   },
 
   addLayer: function ( parameters ) {
@@ -32,5 +35,7 @@ CityDashboard.Dashboard.prototype = {
     this.map.addObserver( this.layer );
 
     return this;
+
   }
+
 };

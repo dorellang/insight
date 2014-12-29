@@ -1,18 +1,22 @@
 CityDashboard.MarkerLayer = function( parameters ){
+
   this.wrappedLayer = undefined;
 
   if ( parameters.id === undefined ){
     throw Error( "All layers must have an ID." )
   }
+
   this.id = parameters.id;
   this.dataSource = parameters.dataSource;
 
   this.elements = parameters.data.length == 0 ? [ parameters.data ] : parameters.data;
 
   this.elementFact = new CityDashboard.ElementFactory( parameters.marker_attr );
+
 };
 
 CityDashboard.MarkerLayer.prototype = {
+
   constructor: CityDashboard.MarkerLayer,
 
   wrap: function ( wrappedLayer ){
@@ -30,8 +34,10 @@ CityDashboard.MarkerLayer.prototype = {
 
   place: function ( container ) {
 
+    // creates a new div of class layer
     var divLayer = d3.select( container ).append( 'div' )
     .attr( 'class', 'layer' )
+    .attr( 'id', this.id)
     .style( 'z-index', this.zIndex );
 
     var svg = divLayer.append( 'svg' );
@@ -58,10 +64,7 @@ CityDashboard.MarkerLayer.prototype = {
   },
 
   update: function ( message ) {
-    //change/update the position of elements
-    // if ( message.event == 'idle_changed' ) {
-      this.placeElements( message.method );
-    // }
+    this.placeElements( message.method );
   }
 
 };

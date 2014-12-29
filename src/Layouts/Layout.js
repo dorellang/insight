@@ -2,9 +2,11 @@ CityDashboard.Layout = function ( anchorID, orientation ) {
   
   this.anchor = anchorID
   this.orientation = orientation;
+
 };
 
 CityDashboard.Layout.prototype = {
+
   constructor: CityDashboard.Layout,
 
   place: function ( map, info, layer ) {
@@ -31,4 +33,5 @@ CityDashboard.Layout.prototype = {
 
     layer.place( '#mapWindow' );
   }
+  
 };

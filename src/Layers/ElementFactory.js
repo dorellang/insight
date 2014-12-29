@@ -1,9 +1,16 @@
 CityDashboard.ElementFactory = function( parameters ){
+
   this.type = parameters.type || 'circle';
   this.params = parameters;
+
+  //create methods MUST change this values.
+  this.width = undefined;
+  this.height = undefined;
+
 };
 
 CityDashboard.ElementFactory.prototype = {
+
   constructor: CityDashboard.ElementFactory,
 
   create: function ( svg ) {
@@ -20,12 +27,14 @@ CityDashboard.ElementFactory.prototype = {
       figure = this.createImage( svg );
 
     //the z-index of figures must be the same of its container layer
-    figure.style( 'z-index', 'inherit' );
+    //figure.style( 'z-index', 'inherit' );
 
     return figure;
+
   },
 
   moveElement: function ( element, coordenates ) {
+
     if ( this.type === 'circle' ) {
       element
       .attr( 'cx', coordenates.lat )
@@ -34,39 +43,43 @@ CityDashboard.ElementFactory.prototype = {
 
     else if ( this.type === 'rect' ) {
       element
-      .attr( 'x', coordenates.lat - ( this.params.width / 2 ) ) //TODO: If the width or height is not given, what happens?
-      .attr( 'y', coordenates.lng - ( this.params.height / 2 ) );
+      .attr( 'x', coordenates.lat - ( this.width / 2 ) ) 
+      .attr( 'y', coordenates.lng - ( this.height / 2 ) );
     }
 
     else if ( this.type === 'image' ) {
       element
-      .attr( 'x', coordenates.lat )
-      .attr( 'y', coordenates.lng );
+      .attr( 'x', coordenates.lat - ( this.width / 2 ) ) 
+      .attr( 'y', coordenates.lng - ( this.height / 2 ) );
     }
   },
 
   createRect: function ( svg ){
+
     var x, y, width, height, rx, ry, fill;
 
     x = this.params.x || 0;
     y = this.params.y || 0;
-    width = this.params.width || 50;
-    height = this.params.height || 50;
     rx = this.params.rx || 0;
     ry = this.params.ry || 0;
     fill = this.params.fill || 'black';
 
+    this.width = this.params.width || 50;
+    this.height = this.params.height || 50;
+
     return svg.append( 'rect' )
     .attr( 'x', x )
     .attr( 'y', y )
-    .attr( 'width', width )
-    .attr( 'height', height )
+    .attr( 'width', this.width )
+    .attr( 'height', this.height )
     .attr( 'rx', rx )
     .attr( 'ry', ry )
     .attr( 'fill', fill );
+    
   },
 
   createCircle: function ( svg ) {
+
     var cx, cy, r, fill;
 
     cx = this.params.cy || 0;
@@ -74,27 +87,34 @@ CityDashboard.ElementFactory.prototype = {
     r = this.params.r || 20;
     fill = this.params.fill || 'black';
 
+    this.width = 2 * r;
+    this.height = 2 * r;
+
     return svg.append( 'circle' )
     .attr( 'cx', cx )
     .attr( 'cy', cy )
     .attr( 'r', r )
     .attr( 'fill', fill );
+
   },
 
   createImage: function ( svg ) {
+
     var x, y, width, height, src;
 
     x = this.params.x || 0;
     y = this.params.y || 0;
-    width = this.params.width || 50;
-    height = this.params.height || 50;
     src = this.params.src || 'not_found.svg';
 
+    this.width = this.params.width || 50;
+    this.height = this.params.height || 50;
+
     return svg.append( 'svg:image' )
-    .attr('x',x)
-    .attr('y',y)
-    .attr('width',width)
-    .attr('height',height)
-    .attr('xlink:href',src);
+    .attr( 'x', x )
+    .attr( 'y', y )
+    .attr( 'width', this.width )
+    .attr( 'height', this.height )
+    .attr( 'xlink:href', src );
+
   }
 };
