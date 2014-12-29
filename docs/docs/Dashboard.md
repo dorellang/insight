@@ -13,7 +13,7 @@ var myDashboard = new CityDashboard.Dashboard({
 
 ## Constructor
 
-#### Dashboard( `parameters` )
+#### Dashboard ( parameters :  `Object` )
 parameters is an object with the properties that define the dashboard.
 
 > anchor - The id of the DOM element that will contain the map.
@@ -44,7 +44,7 @@ parameters is an object with the properties that define the dashboard.
 ---
 ## Methods
 
-#### `.addLayer` ( `parameters` ) : Dashboard
+#### `.addLayer` ( parameters : `Object` ) : `Dashboard`
   Adds a new layer to the map visualization.
 
   parameters is an object with one or more properties definig the layer's configuration.
@@ -52,3 +52,5 @@ parameters is an object with the properties that define the dashboard.
 ---
 #### `.show` ()
   Places the dashboard inside the container, and starts the visualization.
+
+---

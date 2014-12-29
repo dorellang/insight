@@ -7,4 +7,7 @@ pages:
 - ['Maps/GoogleMap.md', 'Maps', 'GoogleMap']
 - ['InfoWindow.md', 'InfoWindows', 'InfoWindow']
 - ['Layouts/Layout.md', 'Layouts', 'Layout']
+- ['Layers/NullLayer.md', 'Layers', 'NullLayer']
+- ['Layers/MarkerLayer.md', 'Layers', 'MarkerLayer']
+- ['Layers/ElementFactory.md', 'Layers', 'ElementFactory']
 theme: yeti

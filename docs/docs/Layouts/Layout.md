@@ -3,7 +3,7 @@ A layout, places the map and information window on the HTML document.
 
 ## Constructor
 
-#### Layout ( `anchorID`, `orientation` )
+#### Layout ( anchorID : `String`, orientation : `String` )
 Creates a layout anchored at the container with `anchorID` as its id. The layout is oriented by the given `orientation`.
 
 Supported orientations are:
@@ -30,7 +30,7 @@ Supported orientations are:
 
 ## Methods
 
-#### `.place` ( `map`, `info` )
+#### `.place` ( map : `Map`, info : `InfoWindow`, layer : `Layer` )
   Places the map and information window in this layout's container element. The distribution of the elements is acording to its orientation.
 
 ---

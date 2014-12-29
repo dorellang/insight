@@ -14,7 +14,7 @@ var map = new CityDashboard.GoogleMap({
 
 ## Constructor
 
-#### GoogleMap( `parameters` )
+#### GoogleMap ( parameters : `Object` )
 parameters is an object with one or more properties definig the map's initial configuration.
 
 > lat - Map center's initial latitude. Default is 0.
@@ -36,17 +36,20 @@ parameters is an object with one or more properties definig the map's initial co
   The current value of the map's zoom.
 
 ---
+#### `.map`
+  The GoogleMaps map instance.
+
+  **Note**: undefined until method `.place` is called.
+  
+---
 
 ## Methods
 
-#### `.place` ( `String` )
+#### `.place` ( containerID : `String` )
   Places the map inside the container with the given id.
 
----
+  Adds Listeners to the GoogleMap's `idle`, `zoom_changed` and `center_changed` events.
 
-#### `.latLngToPix` ( `coordinates` ) : `coordinates`
-  Transforms GoogleMaps longitude and latitude in pixels of the container div.
-
-  coordinates is an object with two parameters: `lat` and `lng`.
+  See `Map`'s `.notify` method.
 
 ---
