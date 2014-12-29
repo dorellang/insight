@@ -51,7 +51,7 @@ CityDashboard.MarkerLayer.prototype = {
     this.wrappedLayer.place( container );
   },
 
-  placeElements: function ( pixelChangeMethod ) {
+  refreshElements: function ( pixelChangeMethod ) {
     var coord, element;
 
     for (var i = this.elements.length - 1; i >= 0; i--) {
@@ -64,7 +64,7 @@ CityDashboard.MarkerLayer.prototype = {
   },
 
   update: function ( message ) {
-    this.placeElements( message.method );
+    this.refreshElements( message.method );
   }
 
 };
