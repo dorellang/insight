@@ -32,15 +32,17 @@
 }
 
 .layout-left #infoWindow {
-  display: inline-block;
+  /*display: inline-block;*/
   float: left;
   height: 100%;
-  width: 300px;
+  min-width: 300px;
+  resize: horizontal;
+  overflow: auto;
 }
 
 .layout-left #mapWindow {
   height: 100%;
-  margin-left: 300px;
+  /*margin-left: 300px;*/
 }
 
 /* right layout */
@@ -50,13 +52,15 @@
 }
 
 .layout-right #infoWindow {
-  display: inline-block;
+  /*display: inline-block;*/
   float: right;
   height: 100%;
-  width: 300px;
+  min-width: 300px;
+  resize: horizontal;
+  overflow: auto;
 }
 
 .layout-right #mapWindow {
   height: 100%;
-  margin-right: 300px;
+  /*margin-right: 300px;*/
 }

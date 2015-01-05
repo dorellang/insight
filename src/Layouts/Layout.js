@@ -27,9 +27,9 @@ CityDashboard.Layout.prototype = {
     .attr( 'id', 'mapWindow' );
 
     mapWindow.append('div')
-    .attr( 'id', 'map-container' );
+    .attr( 'id', 'mapWindow' );
 
-    map.place( '#map-container' );
+    map.place( '#mapWindow' );
 
     layer.place( '#mapWindow' );
   }

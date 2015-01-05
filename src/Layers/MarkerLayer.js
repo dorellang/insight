@@ -9,7 +9,7 @@ CityDashboard.MarkerLayer = function( parameters ){
   this.id = parameters.id;
   this.dataSource = parameters.dataSource;
 
-  this.elements = parameters.data.length == 0 ? [ parameters.data ] : parameters.data;
+  this.elements = parameters.data.length ? parameters.data : [ parameters.data ];
 
   this.elementFact = new CityDashboard.ElementFactory( parameters.marker_attr );
 
@@ -41,7 +41,7 @@ CityDashboard.MarkerLayer.prototype = {
     .style( 'z-index', this.zIndex );
 
     var svg = divLayer.append( 'svg' );
-    svg.style('width', $( '#map-container' ).innerWidth() );
+    svg.style('width', $( container ).innerWidth() );
 
     for (var i = this.elements.length - 1; i >= 0; i--) {
       // asign a marker object to each data package
