@@ -39,6 +39,9 @@
     <script src="../src/Layers/MarkerLayer.js"></script>
     <script src="../src/Layers/NullLayer.js"></script>
     <script src="../src/Layers/ElementFactory.js"></script>
+    <script src="../src/Layers/Elements/RectangleFactory.js"></script>
+    <script src="../src/Layers/Elements/ImageFactory.js"></script>
+    <script src="../src/Layers/Elements/CircleFactory.js"></script>
     <script src="../src/Dashboard.js"></script>
 
     <div id="dashboard"></div>
@@ -62,69 +65,69 @@
         'layout': 'left'
       });
 
-      myDashboard
-      .addLayer({
-        'id': '#rectMarker',
-        'layer': 'marker-layer',
-        'data-source': '#rectMarker',
-        'data': [{'lat': -33.442909,
-                 'lng': -70.65387,
-                 'value': {
-                   'landmark': 'La Moneda'
-                }},
-                 {'lat': -33.443465,
-                  'lng': -70.647571,
-                  'value': {
-                    'landmark': 'San Fransisco'
-                  }}],
-        'marker_attr': {
-          'type': 'rect',
-          'width': 50,
-          'height': 50,
-          'fill': 'blue'
-        }
-      })
-      //second markers red circles
-      .addLayer({
-        'id': '#circMarker',
-        'layer': 'marker-layer',
-        'data-source': '#circMarker',
-        'data': [{'lat': -33.464628,
-                 'lng': -70.610676,
-                 'value': {
-                   'landmark': 'Estadio Nacional'
-                }},
-                {'lat': -33.457669,
-                  'lng': -70.662319,
-                  'value': {
-                    'landmark': 'FCFM'
-                  }}],
-        'marker_attr': {
-          'type': 'circle',
-          'r': 10,
-          'fill': 'red'
-        }
-      })
-      //last markers with images!
-      .addLayer({
-        'id': '#imgMarker',
-        'layer': 'marker-layer',
-        'data-source': '#imgMarker',
-        'data': [{'lat': -33.4177719,
-                 'lng': -70.6067358,
-                 'value': {
-                   'landmark': 'Costanera Center'
-                }},
-                {'lat': -33.451967,
-                  'lng': -70.678898,
-                  'value': {
-                    'landmark': 'Estacion Central'
-                  }}],
-        'marker_attr': {
-          'type': 'image',
-          'src': 'antenna.svg'
-        }
-      });
+  myDashboard
+.addLayer({
+'id': '#rectMarker',
+'layer': 'marker-layer',
+'data-source': '#rectMarker',
+'data': [{'lat': -33.442909,
+'lng': -70.65387,
+'value': {
+'landmark': 'La Moneda'
+}},
+{'lat': -33.443465,
+'lng': -70.647571,
+'value': {
+'landmark': 'San Fransisco'
+}}],
+'marker_attr': {
+'type': 'rect',
+'width': 15,
+'height': 15,
+'fill': 'blue'
+}
+})
+//second markers red circles
+.addLayer({
+'id': '#circMarker',
+'layer': 'marker-layer',
+'data-source': '#circMarker',
+'data': [{'lat': -33.464628,
+'lng': -70.610676,
+'value': {
+'landmark': 'Estadio Nacional'
+}},
+{'lat': -33.457669,
+'lng': -70.662319,
+'value': {
+'landmark': 'FCFM'
+}}],
+'marker_attr': {
+'type': 'circle',
+'r': 10,
+'fill': 'red'
+}
+})
+//last markers with images!
+.addLayer({
+'id': '#imgMarker',
+'layer': 'marker-layer',
+'data-source': '#imgMarker',
+'data': [{'lat': -33.4177719,
+'lng': -70.6067358,
+'value': {
+'landmark': 'Costanera Center'
+}},
+{'lat': -33.451967,
+'lng': -70.678898,
+'value': {
+'landmark': 'Estacion Central'
+}}],
+'marker_attr': {
+'type': 'image',
+'src': 'antenna.svg'
+}
+});
     //  
 
       // Show the Dashboard
