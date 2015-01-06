@@ -1,6 +1,6 @@
-CityDashboard.ImageFactory = function( parameters ){
+CityDashboard.Rectangle = function( parameters ){
 
-  this.type = 'image';
+  this.type = 'rect';
   this.params = parameters;
 
   //create method MUST change these values.
@@ -9,27 +9,31 @@ CityDashboard.ImageFactory = function( parameters ){
 
 };
 
-CityDashboard.ImageFactory.prototype = {
+CityDashboard.Rectangle.prototype = {
 
-  constructor: CityDashboard.ImageFactory,
+  constructor: CityDashboard.Rectangle,
 
   create: function ( svg ) {
 
-    var x, y, width, height, src;
+    var x, y, width, height, rx, ry, fill;
 
     x = this.params.x || 0;
     y = this.params.y || 0;
-    src = this.params.src || 'not_found.svg';
+    rx = this.params.rx || 0;
+    ry = this.params.ry || 0;
+    fill = this.params.fill || 'black';
 
     this.width = this.params.width || 50;
     this.height = this.params.height || 50;
 
-    return svg.append( 'svg:image' )
+    return svg.append( 'rect' )
     .attr( 'x', x )
     .attr( 'y', y )
     .attr( 'width', this.width )
     .attr( 'height', this.height )
-    .attr( 'xlink:href', src );
+    .attr( 'rx', rx )
+    .attr( 'ry', ry )
+    .attr( 'fill', fill );
 
   },
 

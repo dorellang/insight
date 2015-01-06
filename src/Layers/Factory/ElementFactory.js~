@@ -1,0 +1,16 @@
+CityDashboard.ElementFactory = function( parameters ){
+
+  var elementFact;
+
+  if ( parameters.type === 'rect' )
+    elementFact = new CityDashboard.Rectangle( parameters );
+
+  else if ( parameters.type === 'circle' )
+    elementFact = new CityDashboard.Circle( parameters );
+
+  else if ( parameters.type === 'image' )
+    elementFact = new CityDashboard.Image( parameters );
+
+  return elementFact;
+
+};

@@ -1,4 +1,4 @@
-CityDashboard.CircleFactory = function( parameters ){
+CityDashboard.Circle = function( parameters ){
 
   this.type = 'circle';
   this.params = parameters;
