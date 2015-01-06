@@ -57,7 +57,7 @@ CityDashboard.MarkerLayer.prototype = {
     for (var i = this.elements.length - 1; i >= 0; i--) {
 
       element = this.elements[i];
-
+      
       coord = pixelChangeMethod( { 'lat': element.lat, 'lng': element.lng } );
       this.elementFact.moveElement ( element.marker, coord );
     };
