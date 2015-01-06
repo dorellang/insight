@@ -41,7 +41,6 @@ class Minifier:
 import SimpleHTTPServer
 import SocketServer
 import urlparse
-from Minifier import Minifier
 
 class GetHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     
@@ -73,4 +72,5 @@ if __name__ == '__main__':
 
   server = SocketServer.TCPServer(('localhost', PORT), handler)
   print 'Starting server, use <Ctrl-C> to stop'
+  print 'Server working at port %s, visit http://localhost:%s' % (PORT, PORT)
   server.serve_forever()
