@@ -1,0 +1,13 @@
+require([
+  "../src/CityDashboard",
+  "../src/Maps/Map",
+  "../src/Maps/GoogleMap",
+  "../src/InfoWindow",
+  "../src/Layouts/Layout",
+  "../src/Layers/MarkerLayer",
+  "../src/Layers/NullLayer",
+  "../src/Layers/Factory/ElementFactory",
+  "../src/Layers/Elements/Rectangle",
+  "../src/Layers/Elements/Image",
+  "../src/Layers/Elements/Circle",
+  "../src/Dashboard"]);
