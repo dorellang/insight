@@ -20,7 +20,7 @@ CityDashboard.Visualization.prototype = {
 
 CityDashboard.Visualization.prototype.placeBasic = function ( container ) {
 
-  var viz = $("<div>").attr('id',this.id).addClass('visualization').append(this.title);
+  var viz = $('<div>').attr('id',this.id).addClass('visualization').append(this.title);
   container.append( viz );
   return viz;
 

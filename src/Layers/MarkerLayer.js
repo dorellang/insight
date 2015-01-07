@@ -35,10 +35,23 @@ CityDashboard.MarkerLayer.prototype = {
   place: function ( container ) {
 
     // creates a new div of class layer
-    var divLayer = d3.select( container ).append( 'div' )
-    .attr( 'class', 'layer' )
-    .attr( 'id', this.id)
-    .style( 'z-index', this.zIndex );
+    // var divLayer = d3.select( container ).append( 'div' )
+    // .attr( 'class', 'layer' )
+    // .attr( 'id', this.id)
+    // .style( 'z-index', this.zIndex );
+
+    var divLayer = CityDashboard.append(
+      container,
+      {
+        'type': 'div',
+        'attr': {
+          'id': this.id
+        },
+        'class': 'layer',
+        'style': {
+          'z-index': this.zIndex
+        }
+      });
 
     var svg = divLayer.append( 'svg' );
     svg.style('width', $( container ).innerWidth() );
