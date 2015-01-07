@@ -7,18 +7,12 @@ CityDashboard.LineChartVisualization = function ( props ) {
 CityDashboard.LineChartVisualization.prototype = Object.create( CityDashboard.Visualization.prototype );
 
 CityDashboard.LineChartVisualization.prototype.place = function ( container ) {
-
-  var chart = $('<div>');
-
-  // var data = this.getData();
   
-  // for (var i = 0; i < data.length; i++) {
+  var viz = CityDashboard.Visualization.prototype.place.call( this, container );//this.placeBasic(container);
+  viz.addClass('linechart-viz').append( $('<div>') );
 
-  //   $( this.id ).find('ul').append( $('<li>').append(data[i]) );
-  
-  // };
 
-  new Chartist.Line(chart, {
+  new Chartist.Line( this.id+' > div' , {
     labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
     series: [
       [12, 9, 7, 8, 5],
@@ -27,8 +21,6 @@ CityDashboard.LineChartVisualization.prototype.place = function ( container ) {
     ]
   });
 
-  var viz = CityDashboard.Visualization.prototype.place.call( this, container );//this.placeBasic(container);
-  viz.addClass('linechart-viz').append( chart );
   
 };
 

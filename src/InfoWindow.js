@@ -20,15 +20,14 @@ CityDashboard.InfoWindow.prototype = {
   },
 
   addVisualization: function ( props ) {
-
-    var id, data_source, properties;
-    
-    id = props['id'];
-    data_source = props['data-source'];
-    properties = props['properties'];
-
-    if ( props.visualization === 'summary-viz' ){
-      this.visualizations[this.visualizations.length] = new CityDashboard.SummaryVisualization(id, data_source, properties);
+    var type = props.visualization;
+    var viz;
+    if ( type === 'summary-viz' ){
+      viz = new CityDashboard.SummaryVisualization(props);
     }
+    else if ( type === 'linechart-viz' ) {
+      viz = new CityDashboard.LineChartVisualization(props);
+    }
+    this.visualizations[this.visualizations.length] = viz;
   }
 };
