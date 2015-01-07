@@ -9,7 +9,7 @@ CityDashboard.LineChartVisualization.prototype = Object.create( CityDashboard.Vi
 CityDashboard.LineChartVisualization.prototype.place = function ( container ) {
   
   var viz = CityDashboard.Visualization.prototype.place.call( this, container );//this.placeBasic(container);
-  viz.addClass('linechart-viz').append( $('<div>') );
+  viz.addClass('linechart-viz').append( $('<div>').addClass('ct-chart ct-golden-section') );
 
 
   new Chartist.Line( this.id+' > div' , {
