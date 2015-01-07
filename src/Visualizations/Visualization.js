@@ -1,16 +1,13 @@
-CityDashboard.Visualization = function ( id, data_source, properties) {
-  this.id = "id";
-  this.data_source = "data_source";
+CityDashboard.Visualization = function ( props ) {
 
-  var title, color, background_color;
+var id, data_source, title, properties;
+  
+  this.id = props['id'];
 
-  this.properties = {
-    'color' : properties['color'] || 'white',
-    'background-color': properties['background-color'] || 'blue',
-    'font-family': properties['font-family'] || '"Arial", sans-serif',
-  };
-
-  this.title = properties['title'] || '';
+  this.data_source = props['data-source'] || this.id;
+  this.properties = props['properties'] || {};
+  this.title = props['title'] || '';
+  this.data = props['data'];
 
 };
 
@@ -18,10 +15,27 @@ CityDashboard.Visualization.prototype = {
   constructor: CityDashboard.Visualization
 };
 
-CityDashboard.Visualization.prototype.placeBasic = function ( container ) {
+CityDashboard.Visualization.prototype.place = function ( container ) {
 
-  var viz = $('<div>').attr('id',this.id).addClass('visualization').append(this.title);
+  var id = this.id;
+
+  if ( id.charAt(0) === '#'){
+    id = this.id.substring(1);
+  }
+
+  var title = $( '<h4>' ).append(this.title);
+  var viz = $('<div>').attr('id',id).addClass('visualization').append(title).append('<hr>');
   container.append( viz );
-  return viz;
+  return viz.css(this.properties);
 
+}
+
+CityDashboard.Visualization.prototype.getData = function () {
+
+  if (this.id === this.data_source) {
+    return this.data;
+  }
+
+  //placeholder
+  return [];
 }

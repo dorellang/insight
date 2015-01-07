@@ -1,16 +1,23 @@
-CityDashboard.SummaryVisualization = function ( id, data_source, properties) {
+CityDashboard.SummaryVisualization = function ( props ) {
 
-  CityDashboard.Visualization.call(this, id, data_source, properties );
+  CityDashboard.Visualization.call( this, props );
   
 }
 
 CityDashboard.SummaryVisualization.prototype = Object.create( CityDashboard.Visualization.prototype );
 
-CityDashboard.SummaryVisualization.prototype.parent = CityDashboard.Visualization.prototype;
-
 CityDashboard.SummaryVisualization.prototype.place = function ( container ) {
 
-  var viz = this.placeBasic(container);
-  viz.addClass('summary-viz').css(this.properties);
+  var viz = CityDashboard.Visualization.prototype.place.call( this, container );//this.placeBasic(container);
+  viz.addClass('summary-viz').append( $('<ul>') );
+
+  var data = this.getData();
+  
+  for (var i = 0; i < data.length; i++) {
+
+    $( this.id ).find('ul').append( $('<li>').append(data[i]) );
+  
+  };
   
 };
+
