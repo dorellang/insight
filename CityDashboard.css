@@ -1,3 +1,7 @@
+#city-dashboard {
+  min-height: 100%;
+}
+
 #map-container {
   height: 100%;
   position: relative;
@@ -36,7 +40,6 @@
 .layout-left #infoWindow {
   /*display: inline-block;*/
   float: left;
-  height: 100%;
   min-width: 300px;
   resize: horizontal;
   overflow: auto;
@@ -56,10 +59,10 @@
 .layout-right #infoWindow {
   /*display: inline-block;*/
   float: right;
-  height: 100%;
   min-width: 300px;
   resize: horizontal;
   overflow: auto;
+  
 }
 
 .layout-right #mapWindow {
@@ -67,9 +70,48 @@
   /*margin-right: 300px;*/
 }
 
+.layout-left .visualization,
+.layout-right .visualization {
+  margin-top: 10px;
+}
+
 /* Visualizations */
+/*http://paletton.com/#uid=13i0u0kbRt14+E48dwffUpTkImm*/
+
+#infoWindow {
+  background-color: #578b8b;
+  border: 2px solid #266b6b;
+  height: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
 
 .visualization {
-  margin: 5px;
   padding: 5px;
+  margin: 5px;
+  background-color: #9ab6b6;
+  font-family: "Arial", sans-serif;
+  border: 2px solid #3e7c7c;
+  border-radius: 3px;
+  box-shadow: 2px 2px 2px black;
+}
+
+.visualization h4 {
+  color: #3e7c7c;
+  margin: 1px;
+  padding: 1px;
+}
+
+.visualization hr {
+  border: 0;
+  height: 1px;
+  background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(38,107,107,0.75), rgba(0,0,0,0)); 
+  background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(38,107,107,0.75), rgba(0,0,0,0)); 
+  background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(38,107,107,0.75), rgba(0,0,0,0)); 
+  background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(38,107,107,0.75), rgba(0,0,0,0)); 
+}
+
+.visualization li {
+  color: #266b6b;
 }
