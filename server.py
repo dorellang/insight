@@ -21,17 +21,22 @@ class Minifier:
     outF.close()
 
   def parseFolder(self, foldername):
+    config = open('server.config','r')
     self.filenames = []
-    currentPath = os.path.dirname(os.path.relpath(__file__))
+    for line in config:
+      self.filenames.append("src/"+line[:-1]+".js")
+    config.close()
+    # self.filenames = []
+    # currentPath = os.path.dirname(os.path.relpath(__file__))
 
-    for dir_, _, files in os.walk(foldername):
-      for fileName in files:
-        relDir = os.path.relpath(dir_, currentPath)
-        relFile = os.path.join(relDir, fileName)
+    # for dir_, _, files in os.walk(foldername):
+    #   for fileName in files:
+    #     relDir = os.path.relpath(dir_, currentPath)
+    #     relFile = os.path.join(relDir, fileName)
 
-        ext = os.path.splitext(relFile)[1]
-        if ext == '.js':
-          self.filenames.append(relFile)
+    #     ext = os.path.splitext(relFile)[1]
+    #     if ext == '.js':
+    #       self.filenames.append(relFile)
 
 #if __name__ == '__main__':
 #  m = Minifier()
