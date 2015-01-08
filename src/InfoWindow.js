@@ -11,11 +11,18 @@ CityDashboard.InfoWindow.prototype = {
 
   place: function ( containerID ) {
 
-    var cont = $( containerID )
+    var cont = $( containerID ).resizable('e');
     
     for (var i = this.visualizations.length - 1; i >= 0; i--) {
       this.visualizations[i].place( cont );
     };
+
+    var viz = this.visualizations;
+    $('#infoWindow').on('resize',function(){
+      for (var i = viz.length - 1; i >= 0; i--) {
+        viz[i].update();
+      };
+    });
 
   },
 
@@ -26,7 +33,13 @@ CityDashboard.InfoWindow.prototype = {
       viz = new CityDashboard.SummaryVisualization(props);
     }
     else if ( type === 'linechart-viz' ) {
-      viz = new CityDashboard.LineChartVisualization(props);
+      viz = new CityDashboard.ChartistVisualization(props,Chartist.Line);
+    }
+    else if ( type === 'barchart-viz' ) {
+      viz = new CityDashboard.ChartistVisualization(props,Chartist.Bar);
+    }
+    else if ( type === 'piechart-viz' ) {
+      viz = new CityDashboard.ChartistVisualization(props,Chartist.Pie);
     }
     this.visualizations[this.visualizations.length] = viz;
   }

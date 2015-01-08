@@ -28,7 +28,7 @@ CityDashboard.Visualization.prototype.place = function ( container ) {
   container.append( viz );
   return viz.css(this.properties);
 
-}
+};
 
 CityDashboard.Visualization.prototype.getData = function () {
 
@@ -38,4 +38,6 @@ CityDashboard.Visualization.prototype.getData = function () {
 
   //placeholder
   return [];
-}
+};
+
+CityDashboard.Visualization.prototype.update = function () {};

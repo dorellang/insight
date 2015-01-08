@@ -41,8 +41,8 @@
   /*display: inline-block;*/
   float: left;
   min-width: 300px;
-  resize: horizontal;
-  overflow: auto;
+  /*resize: horizontal;
+  overflow: auto;*/
 }
 
 .layout-left #mapWindow {
@@ -60,8 +60,8 @@
   /*display: inline-block;*/
   float: right;
   min-width: 300px;
-  resize: horizontal;
-  overflow: auto;
+  /*resize: horizontal;
+  overflow: auto;*/
   
 }
 
@@ -85,6 +85,7 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  overflow-y: scroll;
 }
 
 .visualization {
@@ -114,4 +115,92 @@
 
 .visualization li {
   color: #266b6b;
+}
+
+/* no selections */
+body{
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Rezisable */
+.resizable {
+  position: relative;
+  margin: 0;
+}
+
+.resizer {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: rgba(0,0,0,0);
+}
+
+.e-resize{
+  height: inherit;
+  right: 0;
+  top: 0;
+  cursor: e-resize;
+}
+.n-resize{
+  width: inherit;
+  top: 0;
+  cursor: n-resize;
+}
+.ne-resize{
+  top: 0;
+  right: 0;
+  cursor: ne-resize;
+}
+.nw-resize{
+  top: 0;
+  left: 0;
+  cursor: nw-resize;
+}
+.s-resize{
+  width: inherit;
+  bottom: 0;
+  cursor: s-resize;
+}
+.se-resize{
+  bottom: 0;
+  right: 0;
+  cursor: se-resize;
+}
+.sw-resize{
+  bottom: 0;
+  left: 0;
+  cursor: sw-resize;
+}
+.w-resize{
+  height: inherit;
+  left: 0;
+  top: 0;
+  cursor: w-resize;
+}
+
+/* scrollbar */
+
+/* IE 5.5 */
+body {  
+  scrollbar-face-color: #000000;  
+  scrollbar-shadow-color: #2D2C4D;  
+  scrollbar-highlight-color:#7D7E94;  
+  scrollbar-3dlight-color: #7D7E94;  
+  scrollbar-darkshadow-color: #2D2C4D;  
+  scrollbar-track-color: #7D7E94;  
+  scrollbar-arrow-color: #C1C1D1;   
+} 
+::-webkit-scrollbar{
+  width: 5px;
+}
+::-webkit-scrollbar-track-piece    {
+  background-color: #729a9a;
+}
+::-webkit-scrollbar-thumb  {
+  background-color: #9ab6b6;
 }
