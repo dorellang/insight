@@ -12,6 +12,9 @@ CityDashboard.Marker = function( marker_params, attr, map ){
   else if ( attr.type === 'image' )
     CityDashboard.ImageMarker( marker_params, attr, map.map );
 
+  else if ( attr.type === 'polyline' )
+    CityDashboard.PolylineMarker( marker_params, attr, map.map );
+
 };
 
 CityDashboard.Marker.prototype = {
