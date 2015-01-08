@@ -3,7 +3,8 @@ CityDashboard.Map = function () {
 };
 
 CityDashboard.Map.prototype = {
-	constructor: CityDashboard.Map,
+
+  constructor: CityDashboard.Map,
 
   addObserver: function ( observer ) {
     this.observers[ this.observers.length ] = observer;

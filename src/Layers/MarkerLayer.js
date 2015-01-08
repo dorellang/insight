@@ -1,4 +1,4 @@
-CityDashboard.MarkerLayer = function( parameters ){
+CityDashboard.MarkerLayer = function( parameters , map ){
 
   this.wrappedLayer = undefined;
 
@@ -10,8 +10,8 @@ CityDashboard.MarkerLayer = function( parameters ){
   this.dataSource = parameters.dataSource;
 
   this.elements = parameters.data.length ? parameters.data : [ parameters.data ];
-
-  this.elementFact = new CityDashboard.ElementFactory( parameters.marker_attr );
+  this.elementsAttr = parameters.marker_attr;
+  this.map = map;
 
 };
 
@@ -34,37 +34,12 @@ CityDashboard.MarkerLayer.prototype = {
 
   place: function ( container ) {
 
-    // creates a new div of class layer
-    var divLayer = d3.select( container ).append( 'div' )
-    .attr( 'class', 'layer' )
-    .attr( 'id', this.id)
-    .style( 'z-index', this.zIndex );
-
-    var svg = divLayer.append( 'svg' );
-    svg.style('width', $( container ).innerWidth() );
-
     for (var i = this.elements.length - 1; i >= 0; i--) {
       // asign a marker object to each data package
-      this.elements[i].marker =  this.elementFact.create( svg );
+      new CityDashboard.Marker( this.elements[i], this.elementsAttr, this.map );
     };
 
     this.wrappedLayer.place( container );
-  },
-
-  refreshElements: function ( pixelChangeMethod ) {
-    var coord, element;
-
-    for (var i = this.elements.length - 1; i >= 0; i--) {
-
-      element = this.elements[i];
-      
-      coord = pixelChangeMethod( { 'lat': element.lat, 'lng': element.lng } );
-      this.elementFact.moveElement ( element.marker, coord );
-    };
-  },
-
-  update: function ( message ) {
-    this.refreshElements( message.method );
   }
 
 };
