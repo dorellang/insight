@@ -27,7 +27,7 @@ CityDashboard.Dashboard.prototype = {
 
   addLayer: function ( parameters ) {
 
-    var newLayer = new CityDashboard.MarkerLayer( parameters, this.map );
+    var newLayer = new CityDashboard.Layer( parameters, this.map );
     this.layer = newLayer.wrap( this.layer );
     this.layer.refreshZIndex();
 

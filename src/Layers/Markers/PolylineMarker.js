@@ -9,10 +9,9 @@ CityDashboard.PolylineMarker = function( marker_params, attr, map ){
 
   var path = new google.maps.Polyline({
     path: myLatlngArray,
-    geodesic: true,
-    strokeColor: '#FF0000',
-    strokeOpacity: 1.0,
-    strokeWeight: 2
+    strokeColor: attr.strokeColor || '#FF0000',
+    strokeOpacity: attr.strokeOpacity || 1.0,
+    strokeWeight: attr.strokeWeight || 2
   });
   
   path.setMap(map);
