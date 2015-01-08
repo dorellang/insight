@@ -1,4 +1,4 @@
-CityDashboard.MarkerLayer = function( parameters , map ){
+CityDashboard.GridLayer = function( parameters , map ){
 
   this.wrappedLayer = undefined;
 
@@ -10,14 +10,14 @@ CityDashboard.MarkerLayer = function( parameters , map ){
   this.dataSource = parameters.dataSource;
 
   this.elements = parameters.data.length ? parameters.data : [ parameters.data ];
-  this.elementsAttr = parameters.marker_attr;
+  this.elementsAttr = parameters.grid_attr;
   this.map = map;
 
 };
 
-CityDashboard.MarkerLayer.prototype = {
+CityDashboard.GridLayer.prototype = {
 
-  constructor: CityDashboard.MarkerLayer,
+  constructor: CityDashboard.GridLayer,
 
   wrap: function ( wrappedLayer ){
 
@@ -36,7 +36,7 @@ CityDashboard.MarkerLayer.prototype = {
 
     for (var i = this.elements.length - 1; i >= 0; i--) {
       // asign a marker object to each data package
-      new CityDashboard.Marker( this.elements[i], this.elementsAttr, this.map );
+      new CityDashboard.Grid( this.elements[i], this.elementsAttr, this.map );
     };
 
     this.wrappedLayer.place( container );

@@ -4,7 +4,7 @@ CityDashboard.Dashboard = function ( parameters ) {
 		throw new Error( 'Anchor ID is required.' )
 	}
   
-	this.map = parameters.map;
+  this.map = parameters.map;
   this.info = parameters.info;
 
   var orientation = parameters.layout || 'none';
@@ -17,9 +17,9 @@ CityDashboard.Dashboard = function ( parameters ) {
 
 CityDashboard.Dashboard.prototype = {
 
-	constructor: CityDashboard.Dashboard,
+  constructor: CityDashboard.Dashboard,
 
-	show: function () {
+  show: function () {
 
     this.layout.place( this.map, this.info, this.layer );
     
@@ -27,7 +27,7 @@ CityDashboard.Dashboard.prototype = {
 
   addLayer: function ( parameters ) {
 
-    var newLayer = new CityDashboard.MarkerLayer( parameters );
+    var newLayer = new CityDashboard.Layer( parameters, this.map );
     this.layer = newLayer.wrap( this.layer );
     this.layer.refreshZIndex();
 
