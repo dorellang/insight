@@ -1,8 +1,5 @@
 CityDashboard.PolylineMarker = function( marker_params, attr, map ){
 
-console.log(marker_params);
-console.log(attr);
-
   var myLatlngArray = [];
   var n = marker_params.lat.length;
 
