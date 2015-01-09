@@ -17,7 +17,7 @@ CityDashboard.SimpleMarker = function( marker_id , marker_params, attr, map ){
 
   function triggerEvent() {
 
-    $('.visualization').trigger('marker-pressed', {'id': marker_id , 'value': marker_params});
+    $('.visualization').trigger('marker-pressed', {'id': marker_id , 'value': marker_params, 'attr': attr});
 
     for(var i = 0; i < markers.length; i++) {
       var myMarker = markers[i];
