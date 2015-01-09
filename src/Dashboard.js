@@ -1,10 +1,12 @@
 CityDashboard.Dashboard = function ( parameters ) {
 
 	if ( parameters.anchor === undefined ) {
+
 		throw new Error( 'Anchor ID is required.' )
 	}
   
   this.map = parameters.map;
+
   this.info = parameters.info;
 
   var orientation = parameters.layout || 'none';
@@ -28,7 +30,9 @@ CityDashboard.Dashboard.prototype = {
   addLayer: function ( parameters ) {
 
     var newLayer = new CityDashboard.Layer( parameters, this.map );
+
     this.layer = newLayer.wrap( this.layer );
+    
     this.layer.refreshZIndex();
 
     //subscribe the layer to the map events
