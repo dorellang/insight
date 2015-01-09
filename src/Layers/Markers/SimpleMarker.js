@@ -1,4 +1,7 @@
-CityDashboard.SimpleMarker = function( marker_params, attr, map ){
+var markers = [];
+var lastMarkerClicked;
+
+CityDashboard.SimpleMarker = function( marker_id , marker_params, attr, map ){
 
   var myLatlng = new google.maps.LatLng( parseFloat(marker_params.lat), parseFloat(marker_params.lng) );
 
@@ -8,11 +11,34 @@ CityDashboard.SimpleMarker = function( marker_params, attr, map ){
       title: marker_params.value.landmark || ''
   });
 
-  google.maps.event.addListener(marker, 'click', toggleBounce);
+  google.maps.event.addListener(marker, 'click', triggerEvent);
+  markers.push(marker);
+  
+  triggerEvent();
+
+  function triggerEvent() {
+
+    $('.visualization').trigger('marker-pressed', {'id': marker_id , 'value': marker_params});
+
+    for(var i = 0; i < markers.length; i++) {
+      var myMarker = markers[i];
+      if (myMarker == marker) {
+        toggleBounce(myMarker);
+      }
+      else {
+        toggleBounceOff(myMarker);
+      }
+    }
+
+  }
+
+  function toggleBounceOff(myMarker) {
+
+    myMarker.setAnimation(null);
+
+  }
 
   function toggleBounce() {
-
-    $('.visualization').trigger('marker-pressed', {'id': '#simpleMarker' , 'value': marker_params});
 
     if (marker.getAnimation() != null) {
       marker.setAnimation(null);
@@ -20,6 +46,7 @@ CityDashboard.SimpleMarker = function( marker_params, attr, map ){
       marker.setAnimation(google.maps.Animation.BOUNCE);
     }
   }
+
 
 };
 

@@ -1,19 +1,19 @@
-CityDashboard.Marker = function( marker_params, attr, map ){
+CityDashboard.Marker = function( marker_id, marker_params, attr, map ){
 
   // map is a GoogleMap Object
   // map.map is the actual map
 
   if ( attr.type === 'simple' )
-    CityDashboard.SimpleMarker( marker_params, attr, map.map );
+    CityDashboard.SimpleMarker( marker_id, marker_params, attr, map.map );
 
   else if ( attr.type === 'circle' )
-    CityDashboard.CircleMarker( marker_params, attr, map.map );
+    CityDashboard.CircleMarker( marker_id, marker_params, attr, map.map );
 
   else if ( attr.type === 'image' )
-    CityDashboard.ImageMarker( marker_params, attr, map.map );
+    CityDashboard.ImageMarker( marker_id, marker_params, attr, map.map );
 
   else if ( attr.type === 'polyline' )
-    CityDashboard.PolylineMarker( marker_params, attr, map.map );
+    CityDashboard.PolylineMarker( marker_id, marker_params, attr, map.map );
 
 };
 

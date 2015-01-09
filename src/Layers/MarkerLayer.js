@@ -36,7 +36,7 @@ CityDashboard.MarkerLayer.prototype = {
 
     for (var i = this.elements.length - 1; i >= 0; i--) {
       // asign a marker object to each data package
-      new CityDashboard.Marker( this.elements[i], this.elementsAttr, this.map );
+      new CityDashboard.Marker( this.id, this.elements[i], this.elementsAttr, this.map );
     };
 
     this.wrappedLayer.place( container );
