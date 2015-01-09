@@ -12,7 +12,7 @@ CityDashboard.SimpleMarker = function( marker_params, attr, map ){
 
   function toggleBounce() {
 
-    $(document).trigger('marker-pressed', marker_params.value.landmark);
+    $('.visualization').trigger('marker-pressed', marker_params.value.landmark);
 
     if (marker.getAnimation() != null) {
       marker.setAnimation(null);
