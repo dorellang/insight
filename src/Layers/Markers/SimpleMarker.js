@@ -8,6 +8,19 @@ CityDashboard.SimpleMarker = function( marker_params, attr, map ){
       title: marker_params.value.landmark || ''
   });
 
+  google.maps.event.addListener(marker, 'click', toggleBounce);
+
+  function toggleBounce() {
+
+    $(document).trigger('marker-pressed', marker_params.value.landmark);
+
+    if (marker.getAnimation() != null) {
+      marker.setAnimation(null);
+    } else {
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+  }
+
 };
 
 CityDashboard.SimpleMarker.prototype = {

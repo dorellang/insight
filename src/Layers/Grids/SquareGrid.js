@@ -31,34 +31,6 @@ CityDashboard.SquareGrid = function( grid_params, attr, map ){
     square.setOptions({fillOpacity: 0.2});
   });
 
-  /*var myLatlng = [
-    new google.maps.LatLng(parseFloat(grid_params.lat), parseFloat(grid_params.lng)),
-    new google.maps.LatLng(parseFloat(grid_params.lat)-0.01, parseFloat(grid_params.lng)),
-    new google.maps.LatLng(parseFloat(grid_params.lat)-0.01, parseFloat(grid_params.lng)+0.01),
-    new google.maps.LatLng(parseFloat(grid_params.lat), parseFloat(grid_params.lng)+0.01),
-    new google.maps.LatLng(parseFloat(grid_params.lat), parseFloat(grid_params.lng))
-  ];
-
-  square2 = new google.maps.Polygon({
-    paths: myLatlng,
-    strokeColor: 'blue',
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: 'blue',
-    fillOpacity: 0.2
-  });
-
-  square2.setMap(map);
-
-  google.maps.event.addListener(square2, 'mouseover', function(event) {
-    square2.setOptions({fillOpacity: 0.4});
-  });
-
-  google.maps.event.addListener(square2, 'mouseout', function(event) {
-    square2.setOptions({fillOpacity: 0.2});
-  });*/
-
-
 };
 
 CityDashboard.SquareGrid.prototype = {
