@@ -1,5 +1,4 @@
 var markers = [];
-var lastMarkerClicked;
 
 CityDashboard.SimpleMarker = function( marker_id , marker_params, attr, map ){
 
@@ -23,7 +22,7 @@ CityDashboard.SimpleMarker = function( marker_id , marker_params, attr, map ){
     for(var i = 0; i < markers.length; i++) {
       var myMarker = markers[i];
       if (myMarker == marker) {
-        toggleBounce(myMarker);
+        toggleBounceOn(myMarker);
       }
       else {
         toggleBounceOff(myMarker);
@@ -38,13 +37,10 @@ CityDashboard.SimpleMarker = function( marker_id , marker_params, attr, map ){
 
   }
 
-  function toggleBounce() {
+  function toggleBounceOn() {
 
-    if (marker.getAnimation() != null) {
-      marker.setAnimation(null);
-    } else {
-      marker.setAnimation(google.maps.Animation.BOUNCE);
-    }
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+
   }
 
 
