@@ -91,7 +91,44 @@
                 }}],
       'marker_attr': {
         'type': 'simple'
-    }});
+        }
+    })
+    .addLayer({
+      'id': '#chartLayer',
+      'layer': 'marker-layer',
+      'data-source': '#chartLayer',
+      'data': [{'lat': -33.43489,
+                'lng': -70.650172,
+                'value': {
+                  labels: ['1', '2', '3', '4', '5', '6'],
+                  series: [
+                    {
+                      data: [1, 2, 3, 5, 8, 13]
+                    }
+                  ]
+              }},
+               {'lat': -33.409851,
+                'lng': -70.567837,
+                'value': {
+                  labels: ['1', '2', '3', '4', '5', '6'],
+                  series: [
+                    {
+                      data: [1, 2, 3, 5, 8, 13]
+                    }
+                  ]
+              }}],
+      'marker_attr': {
+        'type': 'simple',
+        'action': 'create',//update,createthenupdate
+        'config': {
+          'visualization': 'linechart-viz',
+          'id': '#myLineChart',
+          'title': 'My amazing line Chart.',
+          'properties': {
+            'class': 'ct-chart ct-golden-section'
+          }
+      }}
+    });
 
     // Show the Dashboard
     myDashboard.show();

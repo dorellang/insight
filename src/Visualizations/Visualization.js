@@ -36,11 +36,10 @@ CityDashboard.Visualization.prototype = {
 
     $( this.id ).on('marker-pressed',function (event, arg){
 
-      if (arg.id === me.data_source){
+      if (arg.id === me.data_source)
 
         return me.update( arg.value );
 
-      }
       return;
 
     });

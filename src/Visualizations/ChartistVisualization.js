@@ -18,7 +18,7 @@ CityDashboard.ChartistVisualization.prototype.place = function ( container ) {
 
   var responsiveOptions = this.properties['responsiveOptions'] || {};
 
-  this.chart = new this.chartConstructor( this.id+' > div' , this.data, options, responsiveOptions);
+  this.chart = new this.chartConstructor( this.id+' > div' , this.data || {'series':[{data:[]}],'labels':[]}, options, responsiveOptions);
 
   return viz;
 };
@@ -26,6 +26,8 @@ CityDashboard.ChartistVisualization.prototype.place = function ( container ) {
 CityDashboard.ChartistVisualization.prototype.update = function ( data ) {
 
   CityDashboard.Visualization.prototype.update.call( this, data );
+
+  console.log(data);
 
   this.chart.update(data);
 };

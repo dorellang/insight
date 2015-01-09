@@ -30,6 +30,36 @@ CityDashboard.InfoWindow.prototype = {
 
     });
 
+    var me = this;
+
+    var fun = function(e, arg){
+
+      $('#infoWindow').off('marker-pressed',fun);
+
+      var act = arg['attr']['action'] || 'update';
+
+      if ( act === 'update' )
+
+        $( '.visualization' ).trigger('marker-pressed',arg);
+
+      else {
+
+        var props = arg['attr']['config'];
+
+        props['data-source'] = arg['id'];
+
+        props['data'] = arg.value.value;
+
+        me.addVisualization( props ).place( cont );
+
+      }
+
+      $('#infoWindow').on('marker-pressed',fun);
+
+    };
+
+    $('#infoWindow').on('marker-pressed',fun);
+
   },
 
   addVisualization: function ( props ) {
@@ -55,5 +85,7 @@ CityDashboard.InfoWindow.prototype = {
       viz = new CityDashboard.ChartistVisualization(props,Chartist.Pie);
     
     this.visualizations[this.visualizations.length] = viz;
+
+    return viz;
   }
 };
