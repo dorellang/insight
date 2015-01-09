@@ -12,7 +12,7 @@ CityDashboard.Marker = function( marker_id, marker_params, attr, map ){
   else if ( attr.type === 'polyline' )
     CityDashboard.PolylineMarker( marker_id, marker_params, attr, map.map );
 
-  else {
+  else if ( attr.type === 'simple' ){
     CityDashboard.SimpleMarker( marker_id, marker_params, attr, map.map );
   }
 
