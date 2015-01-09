@@ -10,7 +10,7 @@ CityDashboard.MarkerLayer = function( parameters , map ){
   this.dataSource = parameters.dataSource;
 
   this.elements = parameters.data.length ? parameters.data : [ parameters.data ];
-  this.elementsAttr = parameters.marker_attr;
+  this.elementsAttr = parameters.marker_attr || {'type': 'simple', 'action': 'update' } ;
   this.map = map;
 
 };

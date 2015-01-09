@@ -25,7 +25,8 @@ CityDashboard.GoogleMap.prototype.place  = function ( containerID ) {
   // create googlemaps
   this.map = new google.maps.Map( $(containerID)[0], {
     zoom: zoom,
-    center: new google.maps.LatLng(lat, lng)
+    center: new google.maps.LatLng(lat, lng),
+    disableDefaultUI: true
   });
 
 };
