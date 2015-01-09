@@ -1,4 +1,4 @@
-CityDashboard.ImageMarker = function( marker_params, attr, map ){
+CityDashboard.ImageMarker = function( marker_id, marker_params, attr, map ){
 
   var myLatlng = new google.maps.LatLng( parseFloat(marker_params.lat), parseFloat(marker_params.lng) );
 
