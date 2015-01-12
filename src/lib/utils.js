@@ -45,5 +45,11 @@
     };
 
     return this;
+  };
+  $.fn.setID = function( selector ) {
+    if ( selector.charAt(0) === '#' )
+      selector = selector.slice(1);
+    this.attr( 'id', selector);
+    return this;
   }
 }(jQuery));

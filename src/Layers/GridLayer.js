@@ -13,33 +13,15 @@ CityDashboard.GridLayer = function( parameters , map ){
   this.elementsAttr = parameters.grid_attr;
   this.map = map;
 
+  for (var i = this.elements.length - 1; i >= 0; i--) {
+    // asign a marker object to each data package
+    new CityDashboard.Grid( this.elements[i], this.elementsAttr, this.map );
+  };
+
 };
 
 CityDashboard.GridLayer.prototype = {
 
   constructor: CityDashboard.GridLayer,
-
-  wrap: function ( wrappedLayer ){
-
-    this.wrappedLayer = wrappedLayer;
-
-    return this;
-  },
-
-  refreshZIndex: function ( z ) {
-
-    this.zIndex = z || 1;
-    this.wrappedLayer.refreshZIndex( this.zIndex + 1 );
-  },
-
-  place: function ( container ) {
-
-    for (var i = this.elements.length - 1; i >= 0; i--) {
-      // asign a marker object to each data package
-      new CityDashboard.Grid( this.elements[i], this.elementsAttr, this.map );
-    };
-
-    this.wrappedLayer.place( container );
-  }
 
 };

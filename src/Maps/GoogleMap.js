@@ -1,6 +1,6 @@
 CityDashboard.GoogleMap = function ( parameters ) {
 	
-	CityDashboard.Map.call( this );
+	// this.observers = [];
 
   this.center = {
     'lat': parameters.lat || 0,
@@ -9,24 +9,20 @@ CityDashboard.GoogleMap = function ( parameters ) {
 
   this.zoom = parameters.zoom || 3;
 
-  this.map = undefined;
-};
+  var mapContainer = $(CityDashboard['mapWindowID'])[0];
 
-CityDashboard.GoogleMap.prototype = Object.create ( CityDashboard.Map.prototype );
-
-CityDashboard.GoogleMap.prototype.place  = function ( containerID ) {
-
-  var lat, lng, zoom;
-
-  lat = this.center.lat;
-  lng = this.center.lng;
-  zoom = this.zoom;
-
-  // create googlemaps
-  this.map = new google.maps.Map( $(containerID)[0], {
-    zoom: zoom,
-    center: new google.maps.LatLng(lat, lng),
+  this.googlemap = new google.maps.Map( mapContainer, {
+    zoom: this.zoom,
+    center: new google.maps.LatLng(this.center.lat, this.center.lng),
     disableDefaultUI: true
   });
+
+  $(CityDashboard['mainContainerID'])[0].data = this.googlemap;  
+  
+};
+
+CityDashboard.GoogleMap.prototype = {
+
+  constructor: CityDashboard.Map
 
 };
