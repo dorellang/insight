@@ -27,7 +27,5 @@ CityDashboard.ChartistVisualization.prototype.update = function ( data ) {
 
   CityDashboard.Visualization.prototype.update.call( this, data );
 
-  console.log(data);
-
   this.chart.update(data);
 };
