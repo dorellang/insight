@@ -40,6 +40,12 @@
   <body><div id="dashboard"></div></body>
 
   <script>
+    // Binding the map and the information window.
+    var myDashboard = new CityDashboard.Dashboard({
+      'anchor': '#dashboard',
+      'layout': 'left'
+    });
+
     // Setting up our map.
     var map = new CityDashboard.GoogleMap({
       'lat': -33.442909,
@@ -49,14 +55,6 @@
 
     // Setting up our information window.
     var infoWindow = new CityDashboard.InfoWindow({});
-
-    // Binding the map and the information window.
-    var myDashboard = new CityDashboard.Dashboard({
-      'anchor': '#dashboard',
-      'map': map,
-      'info': infoWindow,
-      'layout': 'left'
-    });
 
     myDashboard
     .addLayer({
@@ -81,7 +79,5 @@
         'type': 'square',
     }});
 
-    // Show the Dashboard
-    myDashboard.show();
   </script>
 </html>

@@ -1,42 +1,53 @@
 CityDashboard.Dashboard = function ( parameters ) {
 
-	if ( parameters.anchor === undefined ) {
+  if (!parameters.anchor)
+    throw new Error( 'Anchor ID is required.');
 
-		throw new Error( 'Anchor ID is required.' )
-	}
-  
-  this.map = parameters.map;
+  this.anchor = parameters.anchor;
 
-  this.info = parameters.info;
+  this.layout = 'layout-' + ( parameters.layout || 'none' );
 
-  var orientation = parameters.layout || 'none';
+  // placing
 
-  this.layout = new CityDashboard.Layout( parameters.anchor, 'layout-' + orientation );
+  var container = $( '<div>' )
+  .setID( CityDashboard['mainContainerID'] )
+  .addClass( this.layout );
 
-  this.layer = new CityDashboard.NullLayer();
+  var infoDiv;
+  if ( this.layout !== 'layout-none' ) {
+    infoDiv = $('<div>')
+    .setID( CityDashboard['infoWindowID'] );
 
-};
+    var resizeOrientation;
+    if ( this.layout === 'layout-left') 
+      resizeOrientation = 'e';
+    else if ( this.layout === 'layout-right') 
+      resizeOrientation = 'w';
+    // else if ( this.layout === 'layout-top') 
+    //   resizeOrientation = 's';
+    // else if ( this.layout === 'layout-bottom') 
+    //   resizeOrientation = 'n';
+
+    infoDiv.resizable( resizeOrientation );
+
+    container.append( infoDiv );
+  }
+
+  var mapDiv = $('<div>')
+  .setID( CityDashboard['mapWindowID'] );
+  container.append( mapDiv );
+
+  $( this.anchor ).append( container );
+
+}
 
 CityDashboard.Dashboard.prototype = {
 
   constructor: CityDashboard.Dashboard,
 
-  show: function () {
-
-    this.layout.place( this.map, this.info, this.layer );
-    
-  },
-
   addLayer: function ( parameters ) {
-
-    var newLayer = new CityDashboard.Layer( parameters, this.map );
-
-    this.layer = newLayer.wrap( this.layer );
     
-    this.layer.refreshZIndex();
-
-    //subscribe the layer to the map events
-    this.map.addObserver( this.layer );
+    new CityDashboard.Layer( parameters, $(CityDashboard['mainContainerID'])[0].data );
 
     return this;
 

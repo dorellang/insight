@@ -1,10 +1,14 @@
 CityDashboard.InfoWindow = function ( vizPropList ) {
 
-  this.visualizations = [];
+  this.visualizations = {};
 
-  for (var i = vizPropList.length - 1; i >= 0; i--)
-
+  for (var i = 0; i < vizPropList.length; i++) {
     this.addVisualization( vizPropList[i] );
+  };
+
+  //placing
+
+  var cont = $( CityDashboard['infoWindowID'] );
 
 };
 
@@ -12,55 +16,55 @@ CityDashboard.InfoWindow.prototype = {
 
   constructor: CityDashboard.InfoWindow,
 
-  place: function ( containerID ) {
+  // place: function ( containerID ) {
 
-    var cont = $( containerID ).resizable( 'e' );
+  //   var cont = $( containerID ).resizable( 'e' );
     
-    for (var i = this.visualizations.length - 1; i >= 0; i--) 
+  //   for (var i = this.visualizations.length - 1; i >= 0; i--) 
 
-      this.visualizations[i].place( cont );
+  //     this.visualizations[i].place( cont );
 
-    var viz = this.visualizations;
+  //   var viz = this.visualizations;
 
-    $('#infoWindow').on('resize',function () {
+  //   $('#infoWindow').on('resize',function () {
 
-      for (var i = viz.length - 1; i >= 0; i--)
+  //     for (var i = viz.length - 1; i >= 0; i--)
 
-        viz[i].update();
+  //       viz[i].update();
 
-    });
+  //   });
 
-    var me = this;
+  //   var me = this;
 
-    var fun = function(e, arg){
+  //   var fun = function(e, arg){
 
-      $('#infoWindow').off('marker-pressed',fun);
+  //     $('#infoWindow').off('marker-pressed',fun);
 
-      var act = arg['attr']['action'] || 'update';
+  //     var act = arg['attr']['action'] || 'update';
 
-      if ( act === 'update' )
+  //     if ( act === 'update' )
 
-        $( '.visualization' ).trigger('marker-pressed',arg);
+  //       $( '.visualization' ).trigger('marker-pressed',arg);
 
-      else {
+  //     else {
 
-        var props = arg['attr']['config'];
+  //       var props = arg['attr']['config'];
 
-        props['data-source'] = arg['id'];
+  //       props['data-source'] = arg['id'];
 
-        props['data'] = arg.value.value;
+  //       props['data'] = arg.value.value;
 
-        me.addVisualization( props ).place( cont );
+  //       me.addVisualization( props ).place( cont );
 
-      }
+  //     }
 
-      $('#infoWindow').on('marker-pressed',fun);
+  //     $('#infoWindow').on('marker-pressed',fun);
 
-    };
+  //   };
 
-    $('#infoWindow').on('marker-pressed',fun);
+  //   $('#infoWindow').on('marker-pressed',fun);
 
-  },
+ // },
 
   addVisualization: function ( props ) {
 
@@ -70,22 +74,22 @@ CityDashboard.InfoWindow.prototype = {
 
     if ( type === 'summary-viz' )
 
-      viz = new CityDashboard.SummaryVisualization(props);
+      viz = new CityDashboard.SummaryVisualization( props );
 
     else if ( type === 'linechart-viz' )
 
-      viz = new CityDashboard.ChartistVisualization(props,Chartist.Line);
+      viz = new CityDashboard.ChartistVisualization( props, Chartist.Line );
 
     else if ( type === 'barchart-viz' )
 
-      viz = new CityDashboard.ChartistVisualization(props,Chartist.Bar);
+      viz = new CityDashboard.ChartistVisualization( props, Chartist.Bar );
 
     else if ( type === 'piechart-viz' )
 
-      viz = new CityDashboard.ChartistVisualization(props,Chartist.Pie);
+      viz = new CityDashboard.ChartistVisualization( props, Chartist.Pie );
     
-    this.visualizations[this.visualizations.length] = viz;
+    this.visualizations[props.id] = viz;
 
     return viz;
-  }
+  },
 };

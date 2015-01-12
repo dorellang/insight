@@ -13,33 +13,15 @@ CityDashboard.MarkerLayer = function( parameters , map ){
   this.elementsAttr = parameters.marker_attr || {'type': 'simple', 'action': 'update' } ;
   this.map = map;
 
+  for (var i = this.elements.length - 1; i >= 0; i--) {
+    // asign a marker object to each data package
+    new CityDashboard.Marker( this.id, this.elements[i], this.elementsAttr, this.map );
+  };
+
 };
 
 CityDashboard.MarkerLayer.prototype = {
 
   constructor: CityDashboard.MarkerLayer,
-
-  wrap: function ( wrappedLayer ){
-
-    this.wrappedLayer = wrappedLayer;
-
-    return this;
-  },
-
-  refreshZIndex: function ( z ) {
-
-    this.zIndex = z || 1;
-    this.wrappedLayer.refreshZIndex( this.zIndex + 1 );
-  },
-
-  place: function ( container ) {
-
-    for (var i = this.elements.length - 1; i >= 0; i--) {
-      // asign a marker object to each data package
-      new CityDashboard.Marker( this.id, this.elements[i], this.elementsAttr, this.map );
-    };
-
-    this.wrappedLayer.place( container );
-  }
 
 };

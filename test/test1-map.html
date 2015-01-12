@@ -39,21 +39,18 @@
   <body><div id="dashboard"></div></body>
 
   <script>
+
+    // Binding the map and the information window.
+    var myDashboard = new CityDashboard.Dashboard({
+      'anchor': '#dashboard',
+    });
+
     // Setting up our map.
     var map = new CityDashboard.GoogleMap({
       'lat': -33.442909,
       'lng': -70.65387,
       'zoom': 12
     });
-
-    // Binding the map and the information window.
-    var myDashboard = new CityDashboard.Dashboard({
-      'anchor': '#dashboard',
-      'map': map
-    });
-
-    // Show the Dashboard
-    myDashboard.show();
 
   </script>
 </html>

@@ -1,30 +1,15 @@
 CityDashboard.SummaryVisualization = function ( props ) {
 
   CityDashboard.Visualization.call( this, props );
+
+  this.viz.addClass('summary-viz').append( $('<div>') );
+
+  this.refreshData();
   
 }
 
 CityDashboard.SummaryVisualization.prototype = Object.create( CityDashboard.Visualization.prototype );
 
-CityDashboard.SummaryVisualization.prototype.place = function ( container ) {
-
-  var viz = CityDashboard.Visualization.prototype.place.call( this, container );
-
-  viz.addClass('summary-viz').append( $('<div>').append( $('<ul>') ) );
-
-  this.refreshData();
-
-  return viz;
-  
-};
-
-CityDashboard.SummaryVisualization.prototype.update  = function ( data ){
-
-  CityDashboard.Visualization.prototype.update.call( this, data );
-
-  this.refreshData();
-
-};
 
 CityDashboard.SummaryVisualization.prototype.refreshData  = function () {
 
