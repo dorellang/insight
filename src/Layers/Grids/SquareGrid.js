@@ -55,19 +55,20 @@ CityDashboard.SquareGrid = function( grid_params, attr, map ){
 
         var square = new google.maps.Polygon({
           paths: myLatlng,
-          strokeColor: attr.color || 'blue',
-          strokeOpacity: 0.8,
+          strokeColor: attr.color || '#578b8b',
+          strokeOpacity: 0.5,
           strokeWeight: 2,
-          fillColor: attr.color || 'blue',
-          fillOpacity: 0.2
+          fillColor: attr.color || '#578b8b',
+          fillOpacity: 0.0,
+          geodesic: true
         });
 
         google.maps.event.addListener(square, 'mouseover', function(event) {
-            this.setOptions({fillOpacity: 0.4});
+            this.setOptions({fillOpacity: 0.2});
           });
 
         google.maps.event.addListener(square, 'mouseout', function(event) {
-            this.setOptions({fillOpacity: 0.2});
+            this.setOptions({fillOpacity: 0.0});
           });
 
         square.setMap(map);

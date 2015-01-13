@@ -7,7 +7,7 @@ CityDashboard.GoogleMap = function ( parameters ) {
     'lng': parameters.lng || 0
   };
 
-  this.zoom = parameters.zoom || 3;
+  this.zoom = parameters.zoom || 12;
 
   var mapContainer = $(CityDashboard['mapWindowID'])[0];
 
