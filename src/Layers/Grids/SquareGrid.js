@@ -1,35 +1,88 @@
+var squares = [];
+
 CityDashboard.SquareGrid = function( grid_params, attr, map ){
 
-  var square;
-  var square2;
+  l = attr.size || 0.03;
 
-  var myLatlng = [
-    new google.maps.LatLng(parseFloat(grid_params.lat), parseFloat(grid_params.lng)),
-    new google.maps.LatLng(parseFloat(grid_params.lat)+0.01, parseFloat(grid_params.lng)),
-    new google.maps.LatLng(parseFloat(grid_params.lat)+0.01, parseFloat(grid_params.lng)+0.01),
-    new google.maps.LatLng(parseFloat(grid_params.lat), parseFloat(grid_params.lng)+0.01),
-    new google.maps.LatLng(parseFloat(grid_params.lat), parseFloat(grid_params.lng))
-  ];
+  //draws the grid
+  var drawMeLikeOneOfYourFrenchGrids = function () {
 
-  square = new google.maps.Polygon({
-    paths: myLatlng,
-    strokeColor: attr.color || 'blue',
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: attr.color || 'blue',
-    fillOpacity: 0.2,
-    clickable:true
-  });
+    var n = squares.length;
 
-  square.setMap(map);
+    for(var i = 0; i < n; i++) {
+      squares[i].setMap(null);
+    }
+    squares = [];
 
-  google.maps.event.addListener(square, 'mouseover', function(event) {
-    square.setOptions({fillOpacity: 0.4});
-  });
+    var zoom = map.getZoom();
 
-  google.maps.event.addListener(square, 'mouseout', function(event) {
-    square.setOptions({fillOpacity: 0.2});
-  });
+    var mapBounds = map.getBounds();
+
+    var init = l*(Math.pow(2,12));
+    var array = [];
+    for(var i = 0; i < 22; i++) {
+      array.push(init);
+      init = init/2;
+    }
+
+    var size = array[zoom];
+
+    var NE = mapBounds.getNorthEast();
+    var SW = mapBounds.getSouthWest();
+
+    var h = Math.ceil(Math.abs(SW.lat()-NE.lat())/size);
+    var w = Math.ceil(Math.abs(SW.lng()-NE.lng())/size);
+
+    for (var i = 0; i < h; i++) {
+      for (var j = 0; j < w; j++) {
+
+        //var point = map.getProjection().fromLatLngToPoint(NE);
+        var x = NE.lat() - size*i;
+        var y = NE.lng() - size*j;
+
+        //console.log(point.x);
+
+        //var x = point.x - size*i;
+        //var y = point.y - size*j;
+
+        var myLatlng = [
+          new google.maps.LatLng(x, y),
+          new google.maps.LatLng(x-size, y),
+          new google.maps.LatLng(x-size, y-size),
+          new google.maps.LatLng(x, y-size),
+          new google.maps.LatLng(x, y)
+        ];
+
+        var square = new google.maps.Polygon({
+          paths: myLatlng,
+          strokeColor: attr.color || '#578b8b',
+          strokeOpacity: 0.5,
+          strokeWeight: 2,
+          fillColor: attr.color || '#578b8b',
+          fillOpacity: 0.0,
+          geodesic: true
+        });
+
+        google.maps.event.addListener(square, 'mouseover', function(event) {
+            this.setOptions({fillOpacity: 0.2});
+          });
+
+        google.maps.event.addListener(square, 'mouseout', function(event) {
+            this.setOptions({fillOpacity: 0.0});
+          });
+
+        square.setMap(map);
+
+        squares.push(square);
+
+      }
+    }
+
+  }
+
+  //google.maps.event.addDomListener(window, 'load', drawMeLikeOneOfYourFrenchGrids );
+
+  google.maps.event.addListener(map, 'bounds_changed', drawMeLikeOneOfYourFrenchGrids );
 
 };
 
