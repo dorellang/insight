@@ -1,6 +1,5 @@
 CityDashboard.Marker = function( layer_id, marker_params, attr, map ){
 
-  // map is a GoogleMap Object
   if ( attr.type === 'circle' )
     CityDashboard.CircleMarker( layer_id, marker_params, attr, map );
 
