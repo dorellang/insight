@@ -16,17 +16,18 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
   var handler = function ( event, arg ){
     infoWindow.off( 'marker-pressed' );
 
-    var action = arg['attr']['action'] || 'update';
+    // var action = arg['attr']['action'] || 'update';
 
-    var vizs = _this.dataSourceTable[ arg.id ];
+    var vizs = _this.dataSourceTable[ arg.id ] || [];
 
-    if ( action === 'update' || ( action === 'create' && arg.attr.id in _this.visualizations ) ) {
+    if ( vizs.length !== 0 && ( !arg.attr.id || arg.attr.id in _this.visualizations ) ) {
       for (var i = vizs.length - 1; i >= 0; i--) {
         vizs[i].setData( arg.value );
         vizs[i].refresh();
       };
     }
-    else if ( action === 'create' ) {
+    else {
+
       var config =
       {
         'visualization': arg['attr']['visualization'],
@@ -69,7 +70,10 @@ CityDashboard.InfoWindow.prototype = {
 
     var viz;
 
-    if ( type === 'summary-viz' )
+    if (!type)
+      return;
+
+    else if ( type === 'summary-viz' )
 
       viz = new CityDashboard.SummaryVisualization( props );
 

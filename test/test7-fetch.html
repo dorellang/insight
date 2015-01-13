@@ -90,7 +90,10 @@
                   'landmark': 'FCFM'
                 }}],
       'marker_attr': {
-        'type': 'simple'
+        'type': 'simple',
+        'id': '#summary',
+        'visualization': 'summary-viz',
+        'title': 'summary created by marker'
         }
     })
     .addLayer({
@@ -121,7 +124,7 @@
               }}],
       'marker_attr': {
         'type': 'simple',
-        'action': 'create',//update,createthenupdate
+        // 'action': 'create',//update,createthenupdate
         'visualization': 'linechart-viz',
         'id': '#myLineChart',
         'title': 'My amazing line Chart.',
