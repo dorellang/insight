@@ -1,13 +1,31 @@
+var squares = [];
+
 CityDashboard.SquareGrid = function( grid_params, attr, map ){
 
-  google.maps.event.addDomListener(window, 'load',function () {
+  l = attr.size || 0.03;
+
+  //draws the grid
+  var drawMeLikeOneOfYourFrenchGrids = function () {
+
+    var n = squares.length;
+
+    for(var i = 0; i < n; i++) {
+      squares[i].setMap(null);
+    }
+    squares = [];
+
+    var zoom = map.getZoom();
 
     var mapBounds = map.getBounds();
 
-    var size = attr.size || 0.03
+    var init = l*(Math.pow(2,12));
+    var array = [];
+    for(var i = 0; i < 22; i++) {
+      array.push(init);
+      init = init/2;
+    }
 
-    //var x = parseFloat(grid_params.lat);
-    //var y = parseFloat(grid_params.lng);
+    var size = array[zoom];
 
     var NE = mapBounds.getNorthEast();
     var SW = mapBounds.getSouthWest();
@@ -18,8 +36,14 @@ CityDashboard.SquareGrid = function( grid_params, attr, map ){
     for (var i = 0; i < h; i++) {
       for (var j = 0; j < w; j++) {
 
+        //var point = map.getProjection().fromLatLngToPoint(NE);
         var x = NE.lat() - size*i;
         var y = NE.lng() - size*j;
+
+        //console.log(point.x);
+
+        //var x = point.x - size*i;
+        //var y = point.y - size*j;
 
         var myLatlng = [
           new google.maps.LatLng(x, y),
@@ -35,8 +59,7 @@ CityDashboard.SquareGrid = function( grid_params, attr, map ){
           strokeOpacity: 0.8,
           strokeWeight: 2,
           fillColor: attr.color || 'blue',
-          fillOpacity: 0.2,
-          clickable:true
+          fillOpacity: 0.2
         });
 
         google.maps.event.addListener(square, 'mouseover', function(event) {
@@ -49,10 +72,16 @@ CityDashboard.SquareGrid = function( grid_params, attr, map ){
 
         square.setMap(map);
 
+        squares.push(square);
+
       }
     }
 
-  });
+  }
+
+  //google.maps.event.addDomListener(window, 'load', drawMeLikeOneOfYourFrenchGrids );
+
+  google.maps.event.addListener(map, 'bounds_changed', drawMeLikeOneOfYourFrenchGrids );
 
 };
 
