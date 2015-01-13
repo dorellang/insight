@@ -42,14 +42,19 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
     infoWindow.on( 'marker-pressed', handler );
   };
 
-  infoWindow.on( 'marker-pressed',handler );
+  infoWindow.on( 'marker-pressed', handler );
 
-  infoWindow.on('resize',function ( e ) {
+  infoWindow.on( 'resize', function ( e ) {
 
     for (var key in _this.visualizations) {
       _this.visualizations[key].refresh();
     };
 
+  });
+
+  infoWindow.on( 'remove-viz', function ( e, arg ) {
+    delete _this.visualizations[arg.id];
+    _this.dataSourceTable[arg['data-source']].splice(arg.id,1);
   });
 
 };

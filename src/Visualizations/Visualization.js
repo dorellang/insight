@@ -16,7 +16,19 @@ var id, data_source, title, properties;
 
   var title = $( '<h4>' ).append(this.title);
 
-  this.viz = $('<div>').setID( this.id ).addClass( 'visualization' ).append( title ).append( '<hr>' );
+  var close = $('<span>').addClass('close-button').text('X');
+
+  var _this = this;
+
+  close.on('click',function (event) {
+     _this.remove();
+     _this.viz.remove();
+  });
+
+  this.viz = $('<div>').setID( this.id ).addClass( 'visualization' )
+  .append( close )
+  .append( title )
+  .append( '<hr>' );
 
   this.viz.append( $( '<h6>' ) );
 
@@ -43,6 +55,10 @@ CityDashboard.Visualization.prototype = {
     if ( lat && lng)
       h6.text('lat: ' + lat + ', lng: ' + lng).insertAfter( $( this.id ).find('hr') );
 
+  },
+  remove: function () {
+    // signal infowindow to remove this viz.
+    $(CityDashboard['infoWindowID']).trigger('remove-viz',{'id':this.id,'data-source':this.data_source});
   }
 
 };

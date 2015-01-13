@@ -49,12 +49,8 @@ CityDashboard.ChartistVisualization.prototype.refresh = function () {
 
 };
 
+CityDashboard.ChartistVisualization.prototype.remove = function () {
+  CityDashboard.Visualization.prototype.remove.call( this );
 
-// CityDashboard.ChartistVisualization.prototype.update = function ( data ) {
-
-//   CityDashboard.Visualization.prototype.update.call( this, data );
-
-//   console.log(data);
-
-//   this.chart.update(data);
-// };
+  this.chart.detach();
+};

@@ -228,3 +228,24 @@ body {
 ::-webkit-scrollbar-thumb  {
   background-color: #9ab6b6;
 }
+
+/* close-button */
+
+.close-button {
+  float: right;
+  top: 0;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: inherit;
+  border-radius: 2px;
+  border: solid 2px #c8d7d7;
+  cursor: pointer;
+
+  width:10px;
+  height:10px;
+
+  font-size: 9px;
+  text-align: center;
+}
