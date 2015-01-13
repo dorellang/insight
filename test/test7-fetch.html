@@ -63,7 +63,7 @@
       'visualization': 'summary-viz',
       'id': '#egocentric-viz',
       'data-source': '#egocentric-viz',
-      'data': {'greeting':'hello!', 'My Name': 'I m a visualization'},
+      'data': {'greeting':'hello!','My Name': 'I m a visualization','ramble': 'lorem ipsum dolor sit amet consectetur adipiscing elit'},
       'title': 'Egocentric Summary'
     }]);
 
@@ -114,7 +114,7 @@
                   'labels': ['1', '2', '3', '4', '5', '6'],
                   'series': [
                     {
-                      data: [1, 2, 3, 5, 8, 13]
+                      data: [4, 8, 15, 16, 23, 42]
                     }
                   ],
                   'landmark': 'Apumanque'
@@ -122,14 +122,13 @@
       'marker_attr': {
         'type': 'simple',
         'action': 'create',//update,createthenupdate
-        'config': {
-          'visualization': 'linechart-viz',
-          'id': '#myLineChart',
-          'title': 'My amazing line Chart.',
-          'properties': {
-            'class': 'ct-chart ct-golden-section'
-          }
-      }}
+        'visualization': 'linechart-viz',
+        'id': '#myLineChart',
+        'title': 'My amazing line Chart.',
+        'properties': {
+          'class': 'ct-chart ct-golden-section'
+        }
+      }
     });
 
   </script>

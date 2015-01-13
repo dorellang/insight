@@ -2,27 +2,22 @@ CityDashboard.SummaryVisualization = function ( props ) {
 
   CityDashboard.Visualization.call( this, props );
 
-  this.viz.addClass('summary-viz').append( $('<div>') );
+  this.viz.addClass('summary-viz').append( $('<div>').addClass('def-list') );
 
-  this.refreshData();
+  this.refresh();
   
 }
 
 CityDashboard.SummaryVisualization.prototype = Object.create( CityDashboard.Visualization.prototype );
 
 
-CityDashboard.SummaryVisualization.prototype.refreshData  = function () {
+CityDashboard.SummaryVisualization.prototype.refresh  = function () {
 
-  var div = $( this.id ).find('div').empty();
-
-  var lat = this.data.lat, lng = this.data.lng;
-
-  if ( lat && lng)
-    div.append( '<h6>lat: ' + lat + ', lng: ' + lng + '</h6>');
-
-  div.append( $('<dl>') );
+  CityDashboard.Visualization.prototype.refresh.call( this );
 
   var id = this.id;
+
+  $( id +' > div').append( $('<dl>') );
   
   var value = this.data.value || this.data;
 

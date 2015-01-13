@@ -1,14 +1,56 @@
 CityDashboard.InfoWindow = function ( vizPropList ) {
 
   this.visualizations = {};
+  this.dataSourceTable = {};// better name?
 
   for (var i = 0; i < vizPropList.length; i++) {
-    this.addVisualization( vizPropList[i] );
+    this.createVisualization( vizPropList[i] );
   };
 
   //placing
 
-  var cont = $( CityDashboard['infoWindowID'] );
+  var infoWindow = $( CityDashboard['infoWindowID'] );
+
+  var _this = this;
+
+  var handler = function ( event, arg ){
+    infoWindow.off( 'marker-pressed' );
+
+    var action = arg['attr']['action'] || 'update';
+
+    var vizs = _this.dataSourceTable[ arg.id ];
+
+    if ( action === 'update' || ( action === 'create' && arg.attr.id in _this.visualizations ) ) {
+      for (var i = vizs.length - 1; i >= 0; i--) {
+        vizs[i].setData( arg.value );
+        vizs[i].refresh();
+      };
+    }
+    else if ( action === 'create' ) {
+      var config =
+      {
+        'visualization': arg['attr']['visualization'],
+        'id': arg['attr']['id'],
+        'data-source': arg['id'],
+        'data': arg.value,
+        'title': arg['attr']['title'],
+        'properties': arg['attr']['properties']
+      };
+      _this.createVisualization( config );
+    }      
+
+    infoWindow.on( 'marker-pressed', handler );
+  };
+
+  infoWindow.on( 'marker-pressed',handler );
+
+  infoWindow.on('resize',function ( e ) {
+
+    for (var key in _this.visualizations) {
+      _this.visualizations[key].refresh();
+    };
+
+  });
 
 };
 
@@ -16,57 +58,7 @@ CityDashboard.InfoWindow.prototype = {
 
   constructor: CityDashboard.InfoWindow,
 
-  // place: function ( containerID ) {
-
-  //   var cont = $( containerID ).resizable( 'e' );
-    
-  //   for (var i = this.visualizations.length - 1; i >= 0; i--) 
-
-  //     this.visualizations[i].place( cont );
-
-  //   var viz = this.visualizations;
-
-  //   $('#infoWindow').on('resize',function () {
-
-  //     for (var i = viz.length - 1; i >= 0; i--)
-
-  //       viz[i].update();
-
-  //   });
-
-  //   var me = this;
-
-  //   var fun = function(e, arg){
-
-  //     $('#infoWindow').off('marker-pressed',fun);
-
-  //     var act = arg['attr']['action'] || 'update';
-
-  //     if ( act === 'update' )
-
-  //       $( '.visualization' ).trigger('marker-pressed',arg);
-
-  //     else {
-
-  //       var props = arg['attr']['config'];
-
-  //       props['data-source'] = arg['id'];
-
-  //       props['data'] = arg.value.value;
-
-  //       me.addVisualization( props ).place( cont );
-
-  //     }
-
-  //     $('#infoWindow').on('marker-pressed',fun);
-
-  //   };
-
-  //   $('#infoWindow').on('marker-pressed',fun);
-
- // },
-
-  addVisualization: function ( props ) {
+  createVisualization: function ( props ) {
 
     var type = props.visualization;
 
@@ -88,7 +80,9 @@ CityDashboard.InfoWindow.prototype = {
 
       viz = new CityDashboard.ChartistVisualization( props, Chartist.Pie );
     
-    this.visualizations[props.id] = viz;
+    this.visualizations[viz.id] = viz;
+    this.dataSourceTable[viz.data_source] = this.dataSourceTable[viz.data_source] || [];
+    this.dataSourceTable[viz.data_source].push(viz);
 
     return viz;
   },
