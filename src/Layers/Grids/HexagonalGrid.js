@@ -1,11 +1,11 @@
 var squares = [];
 
-CityDashboard.SquareGrid = function( grid_params, attr, map ){
+CityDashboard.HexagonalGrid = function( grid_params, attr, map ){
 
-  l = attr.size || 0.03;
+  l = attr.size || 0.02;
 
   //draws the grid
-  var drawMeLikeOneOfYourFrenchGrids = function () {
+  var drawMeLikeOneOfYourFrenchHexagonalGrids = function () {
 
     var n = squares.length;
 
@@ -33,17 +33,26 @@ CityDashboard.SquareGrid = function( grid_params, attr, map ){
     var h = Math.ceil(Math.abs(SW.lat()-NE.lat())/size);
     var w = Math.ceil(Math.abs(SW.lng()-NE.lng())/size);
 
+    var v = size*Math.sin(Math.PI/6);
+    var v2 = size*Math.cos(Math.PI/6);
+
     for (var i = 0; i < h; i++) {
       for (var j = 0; j < w; j++) {
 
-        var x = NE.lat() - size*i;
-        var y = NE.lng() - size*j;
+        var x = NE.lat() - (size+v)*i;
+        var y;
+        if (i % 2 == 0)
+          y = NE.lng() - 2*v2*j + v2;
+        else
+          y = NE.lng() - 2*v2*j;
 
         var myLatlng = [
           new google.maps.LatLng(x, y),
           new google.maps.LatLng(x-size, y),
-          new google.maps.LatLng(x-size, y-size),
-          new google.maps.LatLng(x, y-size),
+          new google.maps.LatLng(x-size-v, y-v2),
+          new google.maps.LatLng(x-size, y-2*v2),
+          new google.maps.LatLng(x, y-2*v2),
+          new google.maps.LatLng(x+v, y-v2),
           new google.maps.LatLng(x, y)
         ];
 
@@ -74,13 +83,13 @@ CityDashboard.SquareGrid = function( grid_params, attr, map ){
 
   }
 
-  google.maps.event.addListener(map, 'bounds_changed', drawMeLikeOneOfYourFrenchGrids );
+  google.maps.event.addListener(map, 'bounds_changed', drawMeLikeOneOfYourFrenchHexagonalGrids );
 
 };
 
-CityDashboard.SquareGrid.prototype = {
+CityDashboard.HexagonalGrid.prototype = {
 
-  constructor: CityDashboard.SquareGrid,
+  constructor: CityDashboard.HexagonalGrid,
 
 };
 
