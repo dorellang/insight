@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <!--
+    THIS IS A TEST.
+
+    IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW
+
+    HEATMAP
+
+    -->
+
+    <title>Test 8 - Heatmap</title>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+      #dashboard {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="../CityDashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
+    
+    <script src="js/chartist.min.js"></script>
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization"></script>
+
+    <script src="js/CityDashboard.min.js"></script>
+
+  </head>
+
+  <body><div id="dashboard"></div></body>
+
+  <script>
+    // Binding the map and the information window.
+    var myDashboard = new CityDashboard.Dashboard({
+      'anchor': '#dashboard',
+      'layout': 'left'
+    });
+
+    // Setting up our map.
+    var map = new CityDashboard.GoogleMap({
+      'lat': -33.442909,
+      'lng': -70.65387,
+      'zoom': 11
+    });
+
+    // Setting up our information window.
+    var infoWindow = new CityDashboard.InfoWindow({});
+
+    var lats = [];
+    var lngs = [];
+
+    var maxlat = -33.34;
+    var minlat = -33.54;
+
+    var maxlng = -70.55;
+    var minlng = -70.75;
+
+    for(var i = 0; i < 3000; i++) {
+      lats[i] = Math.random() * (maxlat - minlat) + minlat;
+      lngs[i] = Math.random() * (maxlng - minlng) + minlng;
+    }
+
+    myDashboard
+    .addLayer({
+      'id': '#heatmap',
+      'layer': 'heatmap-layer',
+      'data-source': '#heatmap',
+      'data': [{'lat': lats,
+                'lng': lngs
+              }]
+    });
+
+  </script>
+</html>

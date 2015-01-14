@@ -6,6 +6,9 @@ CityDashboard.Layer = function( parameters, map ){
   else if ( parameters.layer === 'marker-layer' )
     return new CityDashboard.MarkerLayer( parameters, map );
 
+  else if ( parameters.layer === 'heatmap-layer' )
+    return new CityDashboard.HeatmapLayer( parameters, map );
+
 };
 
 CityDashboard.Layer.prototype = {

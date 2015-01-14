@@ -1,4 +1,4 @@
-CityDashboard.GridLayer = function( parameters , map ){
+CityDashboard.HeatmapLayer = function( parameters , map ){
 
   this.wrappedLayer = undefined;
 
@@ -13,12 +13,12 @@ CityDashboard.GridLayer = function( parameters , map ){
   this.elementsAttr = parameters.grid_attr;
   this.map = map;
 
-  new CityDashboard.Grid( this.elements[0], this.elementsAttr, this.map );
+  new CityDashboard.Heatmap( this.elements[0], this.elementsAttr, this.map );
 
 };
 
-CityDashboard.GridLayer.prototype = {
+CityDashboard.HeatmapLayer.prototype = {
 
-  constructor: CityDashboard.GridLayer,
+  constructor: CityDashboard.HeatmapLayer,
 
 };
