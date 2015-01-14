@@ -88,6 +88,10 @@ CityDashboard.InfoWindow.prototype = {
     else if ( type === 'piechart-viz' )
 
       viz = new CityDashboard.ChartistVisualization( props, Chartist.Pie );
+
+    else if ( type === 'd3-viz' )
+
+      viz = new CityDashboard.D3Visualization( props );
     
     this.visualizations[viz.id] = viz;
     this.dataSourceTable[viz.data_source] = this.dataSourceTable[viz.data_source] || [];
