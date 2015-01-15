@@ -16,16 +16,21 @@ CityDashboard.D3Visualization = function ( props ) {
 
   if (props['golden-ratio']){
     this._create = function () {
+
+      arguments[1] = arguments[1].value || arguments[1];
       arguments[3] = el.width()*0.61803398875;
       return props.viz.apply(props,arguments);
     }
   } else {
     this._create = function () {
       arguments[3] = initheight;
+      arguments[1] = arguments[1].value || arguments[1];
       return props.viz.apply(props,arguments);
     }
   }
-
+  
+  //need to call refresh so the lat-lng appears in the first call
+  CityDashboard.Visualization.prototype.refresh.call( this );
   this._create(this.svg,this.data,initwidth,initheight);
 
 };

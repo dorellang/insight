@@ -35,8 +35,10 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
         'data-source': arg['id'],
         'data': arg.value,
         'title': arg['attr']['title'],
-        'properties': arg['attr']['properties']
+        'properties': arg['attr']['properties'],
+        'viz': arg['attr']['viz'] || null
       };
+      
       _this.createVisualization( config );
     }      
 
