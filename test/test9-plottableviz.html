@@ -25,7 +25,6 @@
         height: 100%;
       }
     </style>
-    <link rel="stylesheet" type="text/css" href="../CityDashboard.css">
     <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
     <!-- <link rel="stylesheet" type="text/css" href="css/plottable.css"> -->
     
@@ -36,6 +35,7 @@
     <script src="//maps.googleapis.com/maps/api/js?v="></script>
 
     <script src="js/CityDashboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../CityDashboard.css">
 
   </head>
 
@@ -96,8 +96,9 @@
       'data': data,
       'data-source': '#myplot',
       'title': 'D3 chart',
-      create: function ( svg, data, width, height ) {
-        
+      'golden-ratio': true,
+      viz: function ( svg, data, width, height ) {
+  
         var m = [8, 20, 20, 50];
         var w = width - m[1] - m[3];
         var h = height - m[0] - m[2];
@@ -136,8 +137,7 @@
                 .call(yAxisLeft);
           
 
-            graph.append("svg:path").attr("d", line(data));
-            
+          graph.append("svg:path").attr("d", line(data));
       }
     }]);
   </script>

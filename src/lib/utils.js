@@ -51,5 +51,21 @@
       selector = selector.slice(1);
     this.attr( 'id', selector);
     return this;
-  }
+  };
+  // $.fn.onUnderflow = function ( fn ) {
+  //   var flow = false;
+  //   this.on('OverflowEvent' in window ? 'overflowChanged' : 'underflow', function (e) {
+  //     if (e.type == 'underflow' ||
+  //       ((e.orient == 0 && e.horizontalOverflow == flow) ||
+  //         (e.orient == 1 && e.verticalOverflow == flow) ||
+  //         (e.orient == 2 && e.horizontalOverflow == flow && e.verticalOverflow == flow))) {
+  //       return fn.call(this, e);
+  //     }
+  //   });
+  // };
+  // $.fn.noUnderflow = function () {
+  //   this.onUnderflow( function () {
+  //     this.width(this.parent().innerWidth());
+  //   });
+  // }
 }(jQuery));

@@ -101,6 +101,10 @@
   padding: 0;
 }
 
+.visualization div:first-of-type {
+  min-height:25px;
+}
+
 .visualization > h6 {
   padding-left: 20px;
   margin: 5px;
@@ -120,6 +124,12 @@
 .def-list > dl > dd {
   margin-left: 0;
   width: 250px;
+}
+
+/* D3 visualization */
+.d3-viz  svg {
+  top: 0;
+  left: 0;
 }
 
 /* no selections */
