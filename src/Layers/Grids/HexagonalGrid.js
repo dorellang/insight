@@ -30,8 +30,8 @@ CityDashboard.HexagonalGrid = function( grid_params, attr, map ){
     var NE = mapBounds.getNorthEast();
     var SW = mapBounds.getSouthWest();
 
-    var h = Math.ceil(Math.abs(SW.lat()-NE.lat())/size);
-    var w = Math.ceil(Math.abs(SW.lng()-NE.lng())/size);
+    var h = Math.ceil((3/4)*Math.abs(SW.lat()-NE.lat())/size);
+    var w = Math.ceil((5/8)*Math.abs(SW.lng()-NE.lng())/size);
 
     var v = size*Math.sin(Math.PI/6);
     var v2 = size*Math.cos(Math.PI/6);
@@ -83,7 +83,12 @@ CityDashboard.HexagonalGrid = function( grid_params, attr, map ){
 
   }
 
-  google.maps.event.addListener(map, 'bounds_changed', drawMeLikeOneOfYourFrenchHexagonalGrids );
+  // wait for better performance
+  var wait = function () {
+      window.setTimeout(drawMeLikeOneOfYourFrenchHexagonalGrids, 50);
+  }
+
+  google.maps.event.addListener(map, 'bounds_changed', wait );
 
 };
 

@@ -74,7 +74,12 @@ CityDashboard.SquareGrid = function( grid_params, attr, map ){
 
   }
 
-  google.maps.event.addListener(map, 'bounds_changed', drawMeLikeOneOfYourFrenchGrids );
+  // wait for better performance
+  var wait = function () {
+      window.setTimeout(drawMeLikeOneOfYourFrenchGrids, 50);
+  }
+
+  google.maps.event.addListener(map, 'bounds_changed', wait );
 
 };
 
