@@ -43,6 +43,34 @@ class Minifier:
 #  m.parseFolder('src')
 #  m.minify('CityDashboard.min.js')
 
+import sys
+import random
+import json
+
+def genJSON(arg):
+  coordinates = []
+
+  sample = xrange(1000000)
+
+  for i in range(arg):
+    coordinates.append({
+      "lat": random.uniform(-90,90),
+      "lng": random.uniform(-180,180),
+      "value": random.sample( sample, 5 )
+      })
+
+  a = open('json-test/'+str(arg)+".json","w")
+  a.write(json.dumps(coordinates))
+  a.close()
+
+# if __name__ == '__main__':
+#   arg = sys.argv
+#   if len(arg) == 1:
+#     arg = 500
+#   else:
+#     arg = int(arg[1])
+#   genJSON(arg);
+
 import SimpleHTTPServer
 import SocketServer
 import urlparse
@@ -63,9 +91,28 @@ class GetHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
       self.send_header('Content-type','application/javascript')
       self.end_headers()
       self.wfile.write(f.read())
+      f.close()
 
       os.remove('CityDashboard.min.js')
 
+    elif path.startswith("/test/position"): 
+      n = urlparse.urlparse(self.path).query
+      if len(n) == 0:
+        n = '500'
+
+      if not os.path.exists('json-test'):
+        os.makedirs('json-test')
+
+      if not os.path.exists('json-test/'+n+".json"):
+        genJSON(int(n))
+
+      f = open('json-test/'+n+'.json')
+      self.send_response(200)
+      self.send_header('Content-type','application/json')
+      self.end_headers()
+      self.wfile.write(f.read())
+      f.close()
+    
     else:
       SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
