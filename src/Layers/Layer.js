@@ -9,6 +9,9 @@ CityDashboard.Layer = function( parameters, map ){
   else if ( parameters.layer === 'heatmap-layer' )
     return new CityDashboard.HeatmapLayer( parameters, map );
 
+  else if ( parameters.layer === 'delaunay-layer' )
+    return new CityDashboard.DelaunayLayer( parameters, map );
+
 };
 
 CityDashboard.Layer.prototype = {
