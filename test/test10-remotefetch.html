@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <!--
+    THIS IS A TEST.
+
+    -->
+
+    <title>Test Template</title>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+      #dashboard {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="../CityDashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
+    
+    <script src="js/chartist.min.js"></script>
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="//maps.googleapis.com/maps/api/js?v="></script>
+
+    <script src="js/CityDashboard.min.js"></script>
+
+
+  </head>
+
+  <body><div id="dashboard"></div></body>
+
+  <script type="text/javascript">
+    var myDashboard = new CityDashboard.Dashboard({
+      'anchor': '#dashboard',
+      'layout': 'left'
+    });
+
+    var map = new CityDashboard.GoogleMap({
+      'lat': -33.442909,
+      'lng': -70.65387,
+      'zoom': 12
+    });
+
+    var infoWindow = new CityDashboard.InfoWindow([]);
+
+    myDashboard.addLayer({
+      'id': '#RandomPoints',
+      'layer': 'marker-layer',
+      'data-source': 'position?300',
+      'marker_attr': {
+        'type': 'simple',
+        'visualization': 'linechart-viz',
+        'id': '#randomLineChart',
+        'title': 'Random Point Data',
+        'labels': function (data) { 
+          var N = data[0].length;
+          var a = Array.apply(null, {length: N}).map(Number.call, Number);
+          return a.map(function (el) {return el+"";});
+        },
+        'properties': {
+          'class': 'ct-chart ct-golden-section'
+        }
+      }
+    });
+
+  </script>
+</html>

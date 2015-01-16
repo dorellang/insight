@@ -46,6 +46,7 @@ class Minifier:
 import sys
 import random
 import json
+import string
 
 def genJSON(arg):
   coordinates = []
@@ -54,9 +55,10 @@ def genJSON(arg):
 
   for i in range(arg):
     coordinates.append({
-      "lat": random.uniform(-90,90),
+      "lat": random.uniform(-80,80),
       "lng": random.uniform(-180,180),
-      "value": random.sample( sample, 5 )
+      "value": [random.sample( sample, 5 ),random.sample( sample, 5 )],
+      "gibberish": ''.join(random.choice(string.lowercase) for i in range(15))
       })
 
   a = open('json-test/'+str(arg)+".json","w")
