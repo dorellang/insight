@@ -7,7 +7,7 @@
 
     -->
 
-    <title>Test Template</title>
+    <title>Test 10 - JSON Fetch</title>
 
     <style>
       html,
@@ -44,10 +44,33 @@
     var map = new CityDashboard.GoogleMap({
       'lat': -33.442909,
       'lng': -70.65387,
-      'zoom': 12
+      'zoom': 0
     });
 
-    var infoWindow = new CityDashboard.InfoWindow([]);
+    var infoWindow = new CityDashboard.InfoWindow([{
+      'visualization': 'barchart-viz',
+      'id': '#mybarchart',
+      'data-source': 'position?1',
+      'labels': ['Mon','Tue','Wed','Thu','Fri'],
+      'title': 'Bars',
+      'preprocess':function (data) {return data[0];},
+      'properties': {
+        'class': 'ct-chart',
+        options: {
+          seriesBarDistance: 10
+        },
+        responsiveOptions: [
+          ['screen and (max-width: 640px)', {
+            seriesBarDistance: 5,
+            axisX: {
+              labelInterpolationFnc: function (value) {
+                return value[0];
+              }
+            }
+          }]
+        ]
+      }
+    }]);
 
     myDashboard.addLayer({
       'id': '#RandomPoints',

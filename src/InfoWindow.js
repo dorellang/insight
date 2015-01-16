@@ -34,6 +34,7 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
         'id': arg['attr']['id'],
         'data-source': arg['id'],
         'data': arg.value,
+        'preprocess': arg['attr']['preprocess'],
         'title': arg['attr']['title'],
         'properties': arg['attr']['properties'],
         'viz': arg['attr']['viz'] || null,
@@ -70,37 +71,43 @@ CityDashboard.InfoWindow.prototype = {
 
   createVisualization: function ( props ) {
 
+    var _this = this;
     var type = props.visualization;
 
-    var viz;
+    var callback = function(pr) {
 
-    if (!type)
-      return;
+      var viz;
 
-    else if ( type === 'summary-viz' )
+      if (!type)
+        return;
 
-      viz = new CityDashboard.SummaryVisualization( props );
+      else if ( type === 'summary-viz' )
 
-    else if ( type === 'linechart-viz' )
+        viz = new CityDashboard.SummaryVisualization( pr );
 
-      viz = new CityDashboard.ChartistVisualization( props, Chartist.Line );
+      else if ( type === 'linechart-viz' )
 
-    else if ( type === 'barchart-viz' )
+        viz = new CityDashboard.ChartistVisualization( pr, Chartist.Line );
 
-      viz = new CityDashboard.ChartistVisualization( props, Chartist.Bar );
+      else if ( type === 'barchart-viz' )
 
-    else if ( type === 'piechart-viz' )
+        viz = new CityDashboard.ChartistVisualization( pr, Chartist.Bar );
 
-      viz = new CityDashboard.ChartistVisualization( props, Chartist.Pie );
+      else if ( type === 'piechart-viz' )
 
-    else if ( type === 'd3-viz' )
+        viz = new CityDashboard.ChartistVisualization( pr, Chartist.Pie );
 
-      viz = new CityDashboard.D3Visualization( props );
-    
-    this.visualizations[viz.id] = viz;
-    this.dataSourceTable[viz.data_source] = this.dataSourceTable[viz.data_source] || [];
-    this.dataSourceTable[viz.data_source].push(viz);
+      else if ( type === 'd3-viz' )
 
-    return viz;
+        viz = new CityDashboard.D3Visualization( pr );
+
+      _this.visualizations[viz.id] = viz;
+      _this.dataSourceTable[viz.data_source] = _this.dataSourceTable[viz.data_source] || [];
+      _this.dataSourceTable[viz.data_source].push(viz);
+
+      return viz;
+    }
+
+    return CityDashboard.getData(props['data-source'],callback,props);
   },
 };

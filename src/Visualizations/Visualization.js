@@ -12,6 +12,8 @@ var id, data_source, title, properties;
 
   this.data = props['data'] || {};
 
+  this.dataPreprocess = props['preprocess'] || function (a) {return a;};
+
   //placing
 
   var title = $( '<h4>' ).append(this.title);
@@ -42,7 +44,8 @@ CityDashboard.Visualization.prototype = {
 
   constructor: CityDashboard.Visualization,
   setData: function (data) {
-    this.data = data || this.data;
+    if (data)
+      this.data = this.dataPreprocess(data);
   },
   refresh: function () {
     

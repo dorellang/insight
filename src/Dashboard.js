@@ -47,17 +47,11 @@ CityDashboard.Dashboard.prototype = {
 
   addLayer: function ( parameters ) {
 
-    if ( parameters['data-source'].charAt(0) !== '#' ){
-      $.getJSON(parameters['data-source'],function( json ){
-        parameters.data = json;
-
-        new CityDashboard.Layer( parameters, $(CityDashboard['mainContainerID'])[0].data );
-
-      });
+    var callback = function (pr) {
+      new CityDashboard.Layer( pr, $(CityDashboard['mainContainerID'])[0].data );
     }
-    else {    
-      new CityDashboard.Layer( parameters, $(CityDashboard['mainContainerID'])[0].data );
-    }
+
+    CityDashboard.getData(parameters['data-source'],callback,parameters);
 
     return this;
 
