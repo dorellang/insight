@@ -36,7 +36,9 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
         'data': arg.value,
         'title': arg['attr']['title'],
         'properties': arg['attr']['properties'],
-        'viz': arg['attr']['viz'] || null
+        'viz': arg['attr']['viz'] || null,
+        'labels': arg['attr']['labels']
+
       };
       
       _this.createVisualization( config );
