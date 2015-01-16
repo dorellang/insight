@@ -69,13 +69,8 @@
       'visualization': 'barchart-viz',
       'id': '#mybarchart',
       'data-source': '#mybarchart',
-      'data': {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        series: [
-          [5, 4, 3, 7, 5, 10, 3, 4, 8, 10, 6, 8],
-          [3, 2, 9, 5, 4, 6, 4, 6, 7, 8, 7, 4]
-        ]
-      },
+      'labels': ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      'data':[[5, 4, 3, 7, 5, 10, 3, 4, 8, 10, 6, 8],[3, 2, 9, 5, 4, 6, 4, 6, 7, 8, 7, 4]],
       'title': 'Bars',
       'properties': {
         'class': 'ct-chart',
@@ -97,10 +92,8 @@
       'visualization': 'piechart-viz',
       'id': '#piechart-viz',
       'data-source': '#piechart-viz',
-      'data': {
-        labels: ['Bananas', 'Apples', 'Grapes'],
-        series: [20, 15, 40]
-      },
+      'labels': ['Bananas', 'Apples', 'Grapes'],
+      'data': [20, 15, 40],
       'title': 'A delicious pie... chart.',
       'properties': {
         'class': 'ct-chart',
@@ -128,14 +121,12 @@
       'visualization': 'linechart-viz',
       'id': '#myline-viz',
       'data-source': '#myline-viz',
-      'data': {
-        labels: ['1', '2', '3', '4', '5', '6'],
-        series: [
+      'labels': ['1', '2', '3', '4', '5', '6'],
+      'data': [
           {
             data: [1, 2, 3, 5, 8, 13]
           }
-        ]
-      },
+        ],
       'title': 'A line chart.',
       'properties':{
         'class': 'ct-chart ct-golden-section',

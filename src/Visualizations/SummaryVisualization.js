@@ -19,11 +19,12 @@ CityDashboard.SummaryVisualization.prototype.refresh  = function () {
 
   $( id +' > div').append( $('<dl>') );
   
-  var value = this.data.value || this.data;
+  var value =  this.data;
 
   $.each(value, function (key, value) {
 
-    $( id ).find('dl').append( $('<dt>').text( key) ).append( $( '<dd>' ).text(value) );
+    if (key !== 'lat' && key !== 'lng') 
+      $( id ).find('dl').append( $('<dt>').text( key) ).append( $( '<dd>' ).text(value) );
 
   });
 

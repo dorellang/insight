@@ -35,8 +35,12 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
         'data-source': arg['id'],
         'data': arg.value,
         'title': arg['attr']['title'],
-        'properties': arg['attr']['properties']
+        'properties': arg['attr']['properties'],
+        'viz': arg['attr']['viz'] || null,
+        'labels': arg['attr']['labels']
+
       };
+      
       _this.createVisualization( config );
     }      
 
@@ -88,6 +92,10 @@ CityDashboard.InfoWindow.prototype = {
     else if ( type === 'piechart-viz' )
 
       viz = new CityDashboard.ChartistVisualization( props, Chartist.Pie );
+
+    else if ( type === 'd3-viz' )
+
+      viz = new CityDashboard.D3Visualization( props );
     
     this.visualizations[viz.id] = viz;
     this.dataSourceTable[viz.data_source] = this.dataSourceTable[viz.data_source] || [];

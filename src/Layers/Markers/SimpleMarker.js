@@ -8,7 +8,7 @@ CityDashboard.SimpleMarker = function( layer_id , marker_params, attr, map ){
   var marker = new google.maps.Marker({
       position: myLatlng,
       map: map,
-      title: marker_params.value.landmark || ''
+      title: marker_params.landmark || ''
   });
 
   google.maps.event.addListener(marker, 'click', triggerEvent);

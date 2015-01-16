@@ -11,15 +11,10 @@ CityDashboard.ChartistVisualization = function ( props, chartConstructor ) {
   this.options = props['options'] || {};
 
   this.responsiveOptions = props['responsiveOptions'] || {};
-  // console.log(props);
-  // console.log(options);
-  // console.log(responsiveOptions);
 
-  var data  = this.data.value || this.data || {'series':[{data:[]}],'labels':[]};
+  this.labels = props['labels'];
 
   this.refresh();
-
-  var _this = this;
   
 };
 
@@ -29,7 +24,10 @@ CityDashboard.ChartistVisualization.prototype.refresh = function () {
 
   CityDashboard.Visualization.prototype.refresh.call( this );
 
-  var data  = this.data.value || this.data || {'series':[{data:[]}],'labels':[]};
+  var data  = {
+    'series': this.data.value || this.data,
+    'labels': typeof this.labels === 'function' ? this.labels(this.data.value || this.data) : this.labels
+  };
 
   if ( this.chart )
     this.chart.update( data );
@@ -40,12 +38,14 @@ CityDashboard.ChartistVisualization.prototype.refresh = function () {
 
   $( this.id + '> div').last().append( dl );//.find('div').filter(':eq(2)')
 
-  $.each(data, function (key, value) {
+  if (! (this.data instanceof Array))
 
-    if( key !== 'labels' && key !== 'series')
-      dl.append( $('<dt>').text( key) ).append( $( '<dd>' ).text(value) );
+    $.each(this.data, function (key, value) {
 
-  });
+      if( key !== 'lat' && key !== 'lng' && key !== 'value')
+        dl.append( $('<dt>').text( key) ).append( $( '<dd>' ).text(value) );
+
+    });
 
 };
 
