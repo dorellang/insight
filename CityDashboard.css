@@ -240,3 +240,9 @@ body {
   font-size: 9px;
   text-align: center;
 }
+
+/* search bar */
+.search {
+  padding: 2px;
+  'width': 500px;
+}

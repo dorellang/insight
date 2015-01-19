@@ -1,5 +1,7 @@
 CityDashboard.InfoWindow = function ( vizPropList ) {
 
+  vizPropList = vizPropList || [];
+
   this.visualizations = {};
   this.dataSourceTable = {};// better name?
 

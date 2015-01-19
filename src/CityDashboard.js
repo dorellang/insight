@@ -3,6 +3,7 @@ var CityDashboard = {
   mainContainerID:'#city-dashboard',
   mapWindowID: '#mapWindow',
   infoWindowID: '#infoWindow',
+  filterBarID: '#filterBar',
   getData: function ( url, callback, props ) {
     if ( url.charAt(0) !== '#' ){
       $.getJSON(url,function( json ){

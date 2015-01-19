@@ -39,6 +39,8 @@ CityDashboard.Dashboard = function ( parameters ) {
 
   $( this.anchor ).append( container );
 
+  this.filters = new CityDashboard.FilterBar(parameters['filter-number'] || 0);
+
 }
 
 CityDashboard.Dashboard.prototype = {
@@ -55,6 +57,13 @@ CityDashboard.Dashboard.prototype = {
 
     return this;
 
+  },
+
+  addFilter: function ( filters ) {
+
+    this.filters.addFilter( filters );
+
+    return this;
   }
 
 };
