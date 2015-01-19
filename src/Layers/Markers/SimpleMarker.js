@@ -55,4 +55,8 @@ CityDashboard.SimpleMarker.prototype = {
 
   constructor: CityDashboard.SimpleMarker,
 
+  filter: function ( filterFun ) {
+    console.log('hi');
+  }
+
 };

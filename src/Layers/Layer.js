@@ -1,24 +1,26 @@
 CityDashboard.Layer = function( parameters, map ){
 
-  if ( parameters.layer === 'grid-layer' )
-    return new CityDashboard.GridLayer( parameters, map );
+  this.wrappedLayer = undefined;
 
-  else if ( parameters.layer === 'marker-layer' )
-    return new CityDashboard.MarkerLayer( parameters, map );
+  if ( parameters.id === undefined ){
+    throw Error( "All layers must have an ID." )
+  }
 
-  else if ( parameters.layer === 'heatmap-layer' )
-    return new CityDashboard.HeatmapLayer( parameters, map );
+  this.id = parameters.id;
+  this.dataSource = parameters.dataSource;
 
-  else if ( parameters.layer === 'delaunay-layer' )
-    return new CityDashboard.DelaunayLayer( parameters, map );
+  this.elements = parameters.data.length ? parameters.data : [ parameters.data ];
+  this.elementsAttr = parameters.layer_attr || {'type': 'simple', 'action': 'update' } ;
+  this.map = map;
 
 };
 
 CityDashboard.Layer.prototype = {
 
   constructor: CityDashboard.Layer,
+
   filter: function ( filterFun ) {
-    
+    console.log(":3");
   }
 
 };

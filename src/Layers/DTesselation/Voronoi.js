@@ -44,10 +44,8 @@ CityDashboard.Voronoi = function( delaunay_params, attr, map ){
 		var edge = DT.vor_edges[i];
 		if (edge[0] < 0) continue;
 		if (edge[1] < 0) continue;
-		Add_GMapLine(MapNgbrLines, DT.vor_positions, edge,
-			attr.color || '#578b8b', 2, 1, map);
+		Add_GMapLine(MapNgbrLines, DT.vor_positions, edge, attr.color || '#578b8b', 2, 1, map);
 	}
-        
   }
 
   PointsChanged();
@@ -76,6 +74,20 @@ CityDashboard.Voronoi = function( delaunay_params, attr, map ){
   for (var i=0; i< data.length; i++) {
     google.maps.event.addListener(markers[i], 'drag', f);
   }
+
+  /*var placeMarker = function(position, map) {
+    var marker = new google.maps.Marker({
+      position: position,
+          map: map
+    });
+  }
+
+  google.maps.event.addListener(map, 'click', function(e){
+      console.log('sup')
+  	  placeMarker(e.latLng,map);
+  	  data.push(e.latLng);
+  	  PointsChanged();
+  	});*/
 
 };
 
@@ -155,5 +167,3 @@ CityDashboard.Voronoi.prototype = {
   constructor: CityDashboard.Voronoi,
 
 };
-
-
