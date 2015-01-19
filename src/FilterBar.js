@@ -1,14 +1,8 @@
-CityDashboard.FilterBar = function ( filterNumber, filters ) {
-  this.filters = filters || { none: function(data){return data;} };
+CityDashboard.FilterBar = function ( filterNumber ) {
+  this.filters = { none: function(data){return true;} };
   this.filterNumber = filterNumber;
 
-  var bar = $('<div>').setID(CityDashboard['filterBarID'])
-  .css({
-    'z-index': 1,
-    'position': 'fixed',
-    'right': 0,
-    'top': 0
-  });
+  this.bar = $('<div>').setID(CityDashboard['filterBarID']).addClass('filterBar');
 
   /* Google maps geocoder and search bar*/
 
@@ -31,37 +25,61 @@ CityDashboard.FilterBar = function ( filterNumber, filters ) {
     });
   }
 
-  $( CityDashboard['mainContainerID'] ).append(bar);
+  $( CityDashboard['mainContainerID'] ).append(this.bar);
 
-  bar.append( $('<input>').addClass('search').attr('type','search').on('change',geocode) );
+  this.bar.append( $('<input>').addClass('search').attr('type','search').on('change',geocode) );
 
-  /* filter options */
-  for (var j = 0; j < this.filterNumber; j++) {
-    var select = $('<select>');
-    for (var key in this.filters) {
-      var option = $('<option>');
+  var _this = this;
+  this.select = [];
 
-      option.val(this.filters[key]);
-      option.text(key);
-      select.append(option)
-    };
-    bar.append(select);
-  };
+  for (var i = 0; i < this.filterNumber; i++) {
+    this.select[i] = $( '<select>' ).on('change',function(){
 
-  /*<input type="search">
-  <select>
-  <option value="filer1">Filter1</option>
-  <option value="filer2">Filter2</option>
-  <option value="filer3">Filter3</option>
-  <option value="filer4">Filter4</option>
-  <option value="filer5">Filter5</option>
-  </select>
-  */
+      $( CityDashboard['mainContainerID'] ).trigger('filterChanged',function () {
+        return _this.composeFilters();
+      });
+
+    });
+    this.bar.append(this.select[i]);
+  }
+  this.placeFilters();
+
 };
 
 CityDashboard.FilterBar.prototype = {
   constructor: CityDashboard.FilterBar,
   addFilter: function ( filters ) {
-    
+    for( var key in filters){
+      this.filters[key] = filters[key];
+    }
+    for (var i = this.select.length - 1; i >= 0; i--) {
+      this.select[i].empty();
+    };
+    this.placeFilters();
+  },
+  placeFilters: function () {
+    var _this = this;
+    for (var j = 0; j < this.filterNumber; j++) {
+      for (var key in this.filters) {
+        var option = $('<option>');
+
+        option.val(function(){return _this.filters[key];});
+        option.text(key);
+        this.select[j].append(option)
+      };
+    };
+  },
+  composeFilters: function () {
+    var l = [];
+    for (var i = this.select.length - 1; i >= 0; i--) {
+      l[l.length] = this.select[i].val();
+    };
+    return function (data) {
+      for (var i = l.length - 1; i >= 0; i--) {
+        if ( !l[i](data) )
+          return false;
+      };
+      return true;
+    }
   }
 }

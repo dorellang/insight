@@ -16,6 +16,9 @@ CityDashboard.Layer = function( parameters, map ){
 
 CityDashboard.Layer.prototype = {
 
-  constructor: CityDashboard.Layer
+  constructor: CityDashboard.Layer,
+  filter: function ( filterFun ) {
+    
+  }
 
 };

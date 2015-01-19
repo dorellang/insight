@@ -59,5 +59,25 @@
       }
     });
 
+    myDashboard.addLayer({
+      'id': '#RandomPoints',
+      'layer': 'marker-layer',
+      'data-source': 'position?300',
+      'marker_attr': {
+        'type': 'simple',
+        'visualization': 'linechart-viz',
+        'id': '#randomLineChart',
+        'title': 'Random Point Data',
+        'labels': function (data) { 
+          var N = data[0].length;
+          var a = Array.apply(null, {length: N}).map(Number.call, Number);
+          return a.map(function (el) {return el+"";});
+        },
+        'properties': {
+          'class': 'ct-chart ct-golden-section'
+        }
+      }
+    });
+
   </script>
 </html>

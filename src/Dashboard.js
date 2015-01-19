@@ -1,5 +1,7 @@
 CityDashboard.Dashboard = function ( parameters ) {
 
+  this.layers = [];
+
   if (!parameters.anchor)
     throw new Error( 'Anchor ID is required.');
 
@@ -41,6 +43,15 @@ CityDashboard.Dashboard = function ( parameters ) {
 
   this.filters = new CityDashboard.FilterBar(parameters['filter-number'] || 0);
 
+  var layers = this.layers;
+
+  container.on('filterChanged',function (e, fun) {
+    var f = fun()
+    for (var i = layers.length - 1; i >= 0; i--) {
+      layers[i].filter(f);
+    };
+  });
+
 }
 
 CityDashboard.Dashboard.prototype = {
@@ -49,8 +60,11 @@ CityDashboard.Dashboard.prototype = {
 
   addLayer: function ( parameters ) {
 
+    var layers = this.layers;
+
     var callback = function (pr) {
-      new CityDashboard.Layer( pr, $(CityDashboard['mainContainerID'])[0].data );
+      layers[layers.length] = new CityDashboard.Layer( pr,
+                                  $(CityDashboard['mainContainerID'])[0].data );
     }
 
     CityDashboard.getData(parameters['data-source'],callback,parameters);
