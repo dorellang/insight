@@ -9,7 +9,7 @@ CityDashboard.Grid = function( grid_params, attr, map ){
 
 };
 
-CityDashboard.Marker.prototype = {
+CityDashboard.Grid.prototype = {
 
   constructor: CityDashboard.Grid
 

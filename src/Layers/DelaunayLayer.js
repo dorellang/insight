@@ -10,10 +10,12 @@ CityDashboard.DelaunayLayer = function( parameters , map ){
   this.dataSource = parameters.dataSource;
 
   this.elements = parameters.data.length ? parameters.data : [ parameters.data ];
-  this.elementsAttr = parameters.grid_attr;
+  this.elementsAttr = parameters.delaunay_attr;
   this.map = map;
 
-  new CityDashboard.Delaunay( this.elements[0], this.elementsAttr, this.map );
+  console.log
+
+  new CityDashboard.DTesselation( this.elements[0], this.elementsAttr, this.map );
 
 };
 

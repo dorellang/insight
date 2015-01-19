@@ -1,0 +1,16 @@
+CityDashboard.Grid = function( grid_params, attr, map ){
+
+
+  if ( attr.type === 'delaunay' )
+    CityDashboard.Delaunay( grid_params, attr, map);
+
+  else if ( attr.type === 'voronoi' )
+    CityDashboard.Voronoi( grid_params, attr, map);
+
+};
+
+CityDashboard.Marker.prototype = {
+
+  constructor: CityDashboard.Grid
+
+};

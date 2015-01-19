@@ -1,7 +1,5 @@
 CityDashboard.Delaunay = function( delaunay_params, attr, map ){
 
-  console.log(delaunay_params);
-
   var data = [];
   var n = delaunay_params.lat.length;
 
@@ -17,8 +15,6 @@ CityDashboard.Delaunay = function( delaunay_params, attr, map ){
 
   var PointsChanged = function() {
 	ClearOvlyArray(MapTriLines);
-	//ClearOvlyArray(MapBdryLines);
-	ClearOvlyArray(MapNgbrLines);
 	
 	var MapPositions = [];
 
@@ -47,16 +43,7 @@ CityDashboard.Delaunay = function( delaunay_params, attr, map ){
 	{
 		var edge = DT.edges[i];
 		Add_GMapLine(MapTriLines, DT.positions, edge.verts,
-			'blue', 2, 1, map);
-	}
-
-	for (var i=0; i<DT.vor_edges.length; i++)
-	{
-		var edge = DT.vor_edges[i];
-		if (edge[0] < 0) continue;
-		if (edge[1] < 0) continue;
-		Add_GMapLine(MapNgbrLines, DT.vor_positions, edge,
-			'green', 2, 1, map);
+			attr.color || '#578b8b', 2, 1, map);
 	}
         
   }
@@ -85,7 +72,7 @@ CityDashboard.Delaunay = function( delaunay_params, attr, map ){
   };
 
   for (var i=0; i< data.length; i++) {
-    google.maps.event.addListener(markers[i], 'dragend', f);
+    google.maps.event.addListener(markers[i], 'drag', f);
   }
 
 };
