@@ -1,23 +1,12 @@
 CityDashboard.DelaunayLayer = function( parameters , map ){
 
-  this.wrappedLayer = undefined;
-
-  if ( parameters.id === undefined ){
-    throw Error( "All layers must have an ID." )
-  }
-
-  this.id = parameters.id;
-  this.dataSource = parameters.dataSource;
-
-  this.elements = parameters.data.length ? parameters.data : [ parameters.data ];
-  this.elementsAttr = parameters.delaunay_attr;
-  this.map = map;
-
-  console.log
+  CityDashboard.Layer.call(this, parameters, map);
 
   new CityDashboard.DTesselation( this.elements[0], this.elementsAttr, this.map );
 
 };
+
+CityDashboard.DelaunayLayer.prototype = Object.create(CityDashboard.Layer.prototype);
 
 CityDashboard.DelaunayLayer.prototype = {
 

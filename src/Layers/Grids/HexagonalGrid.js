@@ -1,22 +1,27 @@
-var squares = [];
+CityDashboard.HexagonalGrid = function( grid_params, attr, map, assoc_layer ){
 
-CityDashboard.HexagonalGrid = function( grid_params, attr, map ){
+  CityDashboard.Grid.call(this, grid_params, attr, map, assoc_layer);
 
-  l = attr.size || 0.02;
+};
 
-  //draws the grid
-  var drawMeLikeOneOfYourFrenchHexagonalGrids = function () {
+CityDashboard.HexagonalGrid.prototype = Object.create(CityDashboard.Grid.prototype);
 
-    var n = squares.length;
+CityDashboard.HexagonalGrid.prototype = {
+
+  constructor: CityDashboard.HexagonalGrid,
+
+  build: function(mapBounds) {
+
+    l = this.attr.size || 0.02;
+
+    var n = this.tiles.length;
 
     for(var i = 0; i < n; i++) {
-      squares[i].setMap(null);
+      this.tiles[i].setMap(null);
     }
-    squares = [];
+    this.tiles = [];
 
-    var zoom = map.getZoom();
-
-    var mapBounds = map.getBounds();
+    var zoom = this.map.getZoom();
 
     var init = l*(Math.pow(2,12));
     var array = [];
@@ -56,45 +61,42 @@ CityDashboard.HexagonalGrid = function( grid_params, attr, map ){
           new google.maps.LatLng(x, y)
         ];
 
-        var square = new google.maps.Polygon({
+        var hexagon = new google.maps.Polygon({
           paths: myLatlng,
-          strokeColor: attr.color || '#578b8b',
+          strokeColor: this.attr.color || '#578b8b',
           strokeOpacity: 0.5,
           strokeWeight: 2,
-          fillColor: attr.color || '#578b8b',
+          fillColor: this.attr.color || '#578b8b',
           fillOpacity: 0.0,
           geodesic: true
         });
 
-        google.maps.event.addListener(square, 'mouseover', function(event) {
+        google.maps.event.addListener(hexagon, 'mouseover', function(event) {
             this.setOptions({fillOpacity: 0.2});
           });
 
-        google.maps.event.addListener(square, 'mouseout', function(event) {
+        google.maps.event.addListener(hexagon, 'mouseout', function(event) {
             this.setOptions({fillOpacity: 0.0});
           });
 
-        square.setMap(map);
+        hexagon.setMap(this.map);
 
-        squares.push(square);
+        this.tiles.push(hexagon);
 
       }
     }
 
+  },
+
+  addEvents: function() {
+
+    var myself = this;
+
+    google.maps.event.addListener(this.map, 'bounds_changed', function() {
+        window.setTimeout(myself.build(this.getBounds()), 50); 
+      });
+
   }
-
-  // wait for better performance
-  var wait = function () {
-      window.setTimeout(drawMeLikeOneOfYourFrenchHexagonalGrids, 50);
-  }
-
-  google.maps.event.addListener(map, 'bounds_changed', wait );
-
-};
-
-CityDashboard.HexagonalGrid.prototype = {
-
-  constructor: CityDashboard.HexagonalGrid,
 
 };
 

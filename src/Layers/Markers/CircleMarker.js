@@ -1,4 +1,6 @@
-CityDashboard.CircleMarker = function( layer_id, marker_params, attr, map ){
+CityDashboard.CircleMarker = function( marker_params, attr, map, assoc_layer ){
+
+  CityDashboard.Marker.call(this, marker_params, attr, map, assoc_layer);
 
   var myLatlng = new google.maps.LatLng( parseFloat(marker_params.lat), parseFloat(marker_params.lng) );
 
@@ -16,9 +18,15 @@ CityDashboard.CircleMarker = function( layer_id, marker_params, attr, map ){
 
 };
 
+CityDashboard.CircleMarker.prototype = Object.create(CityDashboard.Marker.prototype);
+
 CityDashboard.CircleMarker.prototype = {
 
   constructor: CityDashboard.CircleMarker,
+
+  addEvents: function () {},
+
+  triggerInitialEvent: function() {}
 
 };
 

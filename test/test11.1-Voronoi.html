@@ -7,11 +7,11 @@
 
     IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW
 
-    DELAUNAY
+    VORONOI
 
     -->
 
-    <title>Test 11 - Delaunay</title>
+    <title>Test 11 - Voronoi</title>
 
     <style>
       html,
@@ -73,12 +73,12 @@
 
     myDashboard
     .addLayer({
-      'id': '#delaunay',
+      'id': '#voronoi',
       'layer': 'delaunay-layer',
-      'data-source': '#delaunay',
+      'data-source': '#voronoi',
       'data': [{'lat': lats,
                 'lng': lngs}],
-      'delaunay_attr': {
+      'layer_attr': {
         'type': 'voronoi'}
     });
 

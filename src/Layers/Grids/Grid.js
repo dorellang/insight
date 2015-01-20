@@ -1,16 +1,19 @@
-CityDashboard.Grid = function( grid_params, attr, map ){
+CityDashboard.Grid = function( grid_params, attr, map, assoc_layer ){
 
-
-  if ( attr.type === 'square' )
-    CityDashboard.SquareGrid( grid_params, attr, map);
-
-  else if ( attr.type === 'hexagonal' )
-    CityDashboard.HexagonalGrid( grid_params, attr, map);
+	this.grid_params = grid_params;
+	this.attr = attr;
+	this.map = map;
+	this.layer = assoc_layer;
+	this.tiles = []
 
 };
 
 CityDashboard.Grid.prototype = {
 
-  constructor: CityDashboard.Grid
+  constructor: CityDashboard.Grid,
+
+  build: function() {},
+
+  addEvents: function() {}
 
 };
