@@ -16,6 +16,7 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
   var _this = this;
 
   var handler = function ( event, arg ){
+
     infoWindow.off( 'marker-pressed' );
 
     // var action = arg['attr']['action'] || 'update';

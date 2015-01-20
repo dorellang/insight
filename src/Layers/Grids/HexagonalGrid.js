@@ -1,6 +1,8 @@
 var squares = [];
 
-CityDashboard.HexagonalGrid = function( grid_params, attr, map ){
+CityDashboard.HexagonalGrid = function( grid_params, attr, map, assoc_layer ){
+
+  CityDashboard.Grid.call(this, grid_params, attr, map, assoc_layer);
 
   l = attr.size || 0.02;
 
@@ -92,9 +94,15 @@ CityDashboard.HexagonalGrid = function( grid_params, attr, map ){
 
 };
 
+CityDashboard.HexagonalGrid.prototype = Object.create(CityDashboard.Grid.prototype);
+
 CityDashboard.HexagonalGrid.prototype = {
 
   constructor: CityDashboard.HexagonalGrid,
+
+  build: function() {},
+
+  addEvents: function() {}
 
 };
 

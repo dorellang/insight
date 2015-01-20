@@ -1,9 +1,8 @@
 CityDashboard.GridLayer = function( parameters , map ){
 
   CityDashboard.Layer.call(this, parameters, map);
-  console.log(this.elementsAttr)
 
-  new CityDashboard.Grid( this.elements[0], this.elementsAttr, this.map );
+  var grid = GridSelector( this.elements[0], this.elementsAttr, this.map );
 
 };
 

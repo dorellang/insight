@@ -1,5 +1,5 @@
 CityDashboard.FilterBar = function ( filterNumber ) {
-  this.filters = { none: function(data){return true;} };
+  this.filters = { none: function (data) {return true;} };
   this.filterNumber = filterNumber;
 
   this.bar = $('<div>').setID(CityDashboard['filterBarID']).addClass('filterBar');
@@ -76,7 +76,7 @@ CityDashboard.FilterBar.prototype = {
     };
     return function (data) {
       for (var i = l.length - 1; i >= 0; i--) {
-        if ( !l[i](data) )
+        if ( !Function('data',l[i].substring(16))(data) )
           return false;
       };
       return true;

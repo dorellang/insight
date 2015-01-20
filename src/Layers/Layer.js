@@ -19,8 +19,8 @@ CityDashboard.Layer.prototype = {
 
   constructor: CityDashboard.Layer,
 
-  filter: function ( filterFun ) {
-    console.log(":3");
-  }
+  filter: function ( filterFun ) {},
+
+  show: function () {}
 
 };

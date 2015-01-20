@@ -1,4 +1,6 @@
-CityDashboard.PolylineMarker = function( layer_id, marker_params, attr, map ){
+CityDashboard.PolylineMarker = function( marker_params, attr, map, assoc_layer ){
+
+  CityDashboard.Marker.call(this, marker_params, attr, map, assoc_layer);
 
   var myLatlngArray = [];
   var n = marker_params.lat.length;
@@ -18,8 +20,14 @@ CityDashboard.PolylineMarker = function( layer_id, marker_params, attr, map ){
 
 };
 
+CityDashboard.PolylineMarker.prototype = Object.create(CityDashboard.Marker.prototype);
+
 CityDashboard.PolylineMarker.prototype = {
 
   constructor: CityDashboard.PolylineMarker,
+
+  addEvents: function () {},
+
+  triggerInitialEvent: function() {}
 
 };

@@ -63,7 +63,6 @@ CityDashboard.Dashboard.prototype = {
     var layers = this.layers;
 
     var callback = function (pr) {
-      console.log(pr)
       layers[layers.length] = LayerSelector( pr,
                                   $(CityDashboard['mainContainerID'])[0].data );
     }

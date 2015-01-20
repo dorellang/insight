@@ -1,6 +1,8 @@
 var squares = [];
 
-CityDashboard.SquareGrid = function( grid_params, attr, map ){
+CityDashboard.SquareGrid = function( grid_params, attr, map, assoc_layer ){
+
+  CityDashboard.Grid.call(this, grid_params, attr, map, assoc_layer);
 
   l = attr.size || 0.03;
 
@@ -83,9 +85,15 @@ CityDashboard.SquareGrid = function( grid_params, attr, map ){
 
 };
 
+CityDashboard.SquareGrid.prototype = Object.create(CityDashboard.Grid.prototype);
+
 CityDashboard.SquareGrid.prototype = {
 
   constructor: CityDashboard.SquareGrid,
+
+  build: function() {},
+
+  addEvents: function() {}
 
 };
 
