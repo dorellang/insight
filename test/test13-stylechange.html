@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <!--
+    THIS IS A TEST.
+
+    IT SHOULD SHOW A GOOGLE MAPS AND A SUMMARY ON THE INFOWINDOW.
+
+    -->
+
+    <title>Test 13 - Style Change</title>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+      #dashboard {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="../CityDashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
+    
+    <script src="js/chartist.min.js"></script>
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="//maps.googleapis.com/maps/api/js?v="></script>
+    <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+    <script src="js/CityDashboard.min.js"></script>
+
+  </head>
+
+  <!-- Here goes the change from default styles -->
+  <style type="text/css">
+
+    .infoWindow {
+      background-color: red;
+    }
+
+    .visualization {
+      background-color: orange;
+    }
+
+    .infoWindow * {
+      color: yellow;
+    }
+
+    .viz-title {
+      color: blue;
+    }
+
+    .viz-bar {
+      background-color: black;
+    }
+
+    .options-panel {
+      background-color: blue;
+    }
+
+    .latlngView {
+      color: red;
+    }
+
+    .deflist {
+      background-color: beige;
+    }
+
+    .deflist-key {
+      color: black;
+    }
+
+    .deflist-value {
+      color: orange;
+    }
+
+    .filterBar {
+      background-color: green;
+    }
+
+    .close-button {
+      background-color: white;
+      color: black;
+    }
+
+    .up-button {
+      color: green;
+    }
+
+    .down-button {
+      color: white;
+    }
+
+  </style>
+
+  <body><div id="dashboard"></div></body>
+
+  <style>
+    /* tell the SVG path to be a thin blue line without any area fill */
+    path {
+      stroke: steelblue;
+      stroke-width: 1;
+      fill: none;
+    }
+    
+    .axis {
+      shape-rendering: crispEdges;
+    }
+
+    .x.axis line {
+      stroke: lightgrey;
+    }
+
+    .x.axis .minor {
+      stroke-opacity: .5;
+    }
+
+    .x.axis path {
+      display: none;
+    }
+
+    .y.axis line, .y.axis path {
+      fill: none;
+      stroke: #000;
+    }
+  </style>
+
+  <script>
+    // Binding the map and the information window.
+    var myDashboard = new CityDashboard.Dashboard({
+      'anchor': '#dashboard',
+      'layout': 'left'
+    });
+
+    // Setting up our map.
+    var map = new CityDashboard.GoogleMap({
+      'lat': -33.442909,
+      'lng': -70.65387,
+      'zoom': 12
+    });
+
+    var data = [3, 6, 2, 7, 5, 2, 0, 3, 8, 9, 2, 5, 9, 3, 6, 3, 6, 2, 7, 5, 2, 1, 3, 8, 9, 2, 5, 9, 2, 7];
+
+    // Setting up our information window.
+    var infoWindow = new CityDashboard.InfoWindow([{
+      'visualization': 'summary-viz',
+      'id': '#egocentric-viz',
+      'data-source': '#egocentric-viz',
+      'data': {'greeting':'hello!', 'My Name': 'I m a visualization'},
+      'title': 'Egocentric Summary'
+    },{
+      'visualization': 'barchart-viz',
+      'id': '#mybarchart',
+      'data-source': '#mybarchart',
+      'labels': ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      'data':[[5, 4, 3, 7, 5, 10, 3, 4, 8, 10, 6, 8],[3, 2, 9, 5, 4, 6, 4, 6, 7, 8, 7, 4]],
+      'title': 'Bars',
+      'properties': {
+        'class': 'ct-chart',
+        options: {
+          seriesBarDistance: 10
+        },
+        responsiveOptions: [
+          ['screen and (max-width: 640px)', {
+            seriesBarDistance: 5,
+            axisX: {
+              labelInterpolationFnc: function (value) {
+                return value[0];
+              }
+            }
+          }]
+        ]
+      }
+    },{
+      'visualization': 'piechart-viz',
+      'id': '#piechart-viz',
+      'data-source': '#piechart-viz',
+      'labels': ['Bananas', 'Apples', 'Grapes'],
+      'data': [20, 15, 40],
+      'title': 'A delicious pie... chart.',
+      'properties': {
+        'class': 'ct-chart',
+        options: {
+          labelInterpolationFnc: function(value) {
+            return value[0]
+          }
+        },
+        responsiveOptions: [
+          ['screen and (min-width: 640px)', {
+            chartPadding: 30,
+            labelOffset: 100,
+            labelDirection: 'explode',
+            labelInterpolationFnc: function(value) {
+              return value;
+            }
+          }],
+          ['screen and (min-width: 1024px)', {
+            labelOffset: 80,
+            chartPadding: 20
+          }]
+        ]
+      }
+    },{
+      'visualization': 'linechart-viz',
+      'id': '#myline-viz',
+      'data-source': '#myline-viz',
+      'labels': ['1', '2', '3', '4', '5', '6'],
+      'data': [
+          {
+            data: [1, 2, 3, 5, 8, 13]
+          }
+        ],
+      'title': 'A line chart.',
+      'properties':{
+        'class': 'ct-chart ct-golden-section',
+        responsiveOptions: [
+          ['screen and (min-width: 641px) and (max-width: 1024px)', {
+            showPoint: false,
+            axisX: {
+              labelInterpolationFnc: function(value) {
+                return 'Week ' + value;
+              }
+            }
+          }],
+          ['screen and (max-width: 640px)', {
+            showLine: false,
+            axisX: {
+              labelInterpolationFnc: function(value) {
+                return 'W' + value;
+              }
+            }
+          }]],
+        responsiveOptions: [
+          ['screen and (min-width: 641px) and (max-width: 1024px)', {
+            showPoint: false,
+            axisX: {
+              labelInterpolationFnc: function(value) {
+                return 'Week ' + value;
+              }
+            }
+          }],
+          ['screen and (max-width: 640px)', {
+            showLine: false,
+            axisX: {
+              labelInterpolationFnc: function(value) {
+                return 'W' + value;
+              }
+            }
+          }]]
+      }
+    },{
+      'visualization': 'd3-viz',
+      'id': '#myplot',
+      'data': data,
+      'data-source': '#myplot',
+      'title': 'D3 chart',
+      'golden-ratio': true,
+      viz: function ( svg, data, width, height ) {
+  
+        var m = [8, 20, 20, 50];
+        var w = width - m[1] - m[3];
+        var h = height - m[0] - m[2];
+        
+        var x = d3.scale.linear().domain([0, data.length]).range([0, w]);
+
+        var y = d3.scale.linear().domain([0, 10]).range([h, 0]);
+
+        var line = d3.svg.line()
+
+          .x(function(d,i) {
+            return x(i); 
+          })
+          .y(function(d) { 
+            return y(d); 
+          })
+
+          var graph = svg
+                .attr("width", w + m[1] + m[3])
+                .attr("height", h + m[0] + m[2])
+              .append("svg:g")
+                .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+          var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true);
+
+          graph.append("svg:g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + h + ")")
+                .call(xAxis);
+
+          var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
+
+          graph.append("svg:g")
+                .attr("class", "y axis")
+                .attr("transform", "translate(-25,0)")
+                .call(yAxisLeft);
+          
+
+          graph.append("svg:path").attr("d", line(data));
+      }
+    }]);
+
+  </script>
+</html>

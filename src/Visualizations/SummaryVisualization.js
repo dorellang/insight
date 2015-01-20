@@ -15,18 +15,9 @@ CityDashboard.SummaryVisualization.prototype.refresh  = function () {
 
   CityDashboard.Visualization.prototype.refresh.call( this );
 
-  var id = this.id;
+  $( this.id +' > div').append( $('<dl>').addClass('deflist') );
 
-  $( id +' > div').append( $('<dl>') );
-  
-  var value =  this.data;
-
-  $.each(value, function (key, value) {
-
-    if (key !== 'lat' && key !== 'lng') 
-      $( id ).find('dl').append( $('<dt>').text( key) ).append( $( '<dd>' ).text(value) );
-
-  });
+  this.createDefList(this.data);
 
 };
 

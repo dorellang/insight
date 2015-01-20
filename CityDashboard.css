@@ -1,4 +1,4 @@
-#city-dashboard {
+.mainDashboard {
   min-height: 100%;
 }
 
@@ -8,7 +8,7 @@
   height: 100%;
 }
 
-.layout-none #mapWindow{
+.layout-none .mapWindow{
   height: 100%;
 }
 
@@ -18,12 +18,12 @@
   height: 100%;
 }
 
-.layout-left #infoWindow {
+.layout-left .infoWindow {
   float: left;
   min-width: 300px;
 }
 
-.layout-left #mapWindow {
+.layout-left .mapWindow {
   height: 100%;
 }
 
@@ -33,13 +33,13 @@
   height: 100%;
 }
 
-.layout-right #infoWindow {
+.layout-right .infoWindow {
   float: right;
   min-width: 300px;
   
 }
 
-.layout-right #mapWindow {
+.layout-right .mapWindow {
   height: 100%;
 }
 
@@ -51,9 +51,9 @@
 /* Visualizations */
 /*http://paletton.com/#uid=13i0u0kbRt14+E48dwffUpTkImm*/
 
-#infoWindow {
-  background-color: #578b8b;
-  border: 2px solid #266b6b;
+.infoWindow {
+  /*background-color: #578b8b;*/
+  border: 2px solid;/* #266b6b;*/
   height: 100%;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -64,15 +64,15 @@
 .visualization {
   padding: 5px;
   margin: 5px;
-  background-color: #9ab6b6;
+  /*background-color: #9ab6b6;*/
   font-family: "Arial", sans-serif;
-  border: 2px solid #3e7c7c;
+  border: 2px solid;/* #3e7c7c;*/
   border-radius: 3px;
   box-shadow: 2px 2px 2px black;
 }
 
 .visualization h4 {
-  color: #3e7c7c;
+  /*color: #3e7c7c;*/
   margin: 1px;
   padding: 1px;
 }
@@ -110,7 +110,7 @@
   clear: left;
   margin-right: 5px;
   font-weight: bold;
-  color: #266b6b;
+  /*color: #266b6b;*/
 }
 
 .def-list > dl > dd {
@@ -137,7 +137,7 @@ body{
 /* scrollbar */
 
 /* IE 5.5 */
-body {  
+/*body {  
   scrollbar-face-color: #000000;  
   scrollbar-shadow-color: #2D2C4D;  
   scrollbar-highlight-color:#7D7E94;  
@@ -145,7 +145,7 @@ body {
   scrollbar-darkshadow-color: #2D2C4D;  
   scrollbar-track-color: #7D7E94;  
   scrollbar-arrow-color: #C1C1D1;   
-} 
+}
 ::-webkit-scrollbar{
   width: 5px;
 }
@@ -154,7 +154,7 @@ body {
 }
 ::-webkit-scrollbar-thumb  {
   background-color: #9ab6b6;
-}
+}*/
 
 /* search bar */
 .filterBar {
@@ -164,7 +164,7 @@ body {
     top: 0;
     margin: 5px;
     padding: 1px;
-    background-color: #9ab6b6;
+    /*background-color: #9ab6b6;*/
 }
 .filterBar * {
   margin: 2px;
@@ -185,7 +185,7 @@ body {
   position: absolute;
   width: 10px;
   height: 10px;
-  background-color: rgba(0,0,0,0);
+  background-color: transparent;
 }
 
 .e-resize{
@@ -199,30 +199,10 @@ body {
   top: 0;
   cursor: n-resize;
 }
-.ne-resize{
-  top: 0;
-  right: 0;
-  cursor: ne-resize;
-}
-.nw-resize{
-  top: 0;
-  left: 0;
-  cursor: nw-resize;
-}
 .s-resize{
   width: inherit;
   bottom: 0;
   cursor: s-resize;
-}
-.se-resize{
-  bottom: 0;
-  right: 0;
-  cursor: se-resize;
-}
-.sw-resize{
-  bottom: 0;
-  left: 0;
-  cursor: sw-resize;
 }
 .w-resize{
   height: inherit;
@@ -233,8 +213,8 @@ body {
 
 /* arrows - movable */
 
-.upArrow,
-.downArrow,
+.up-button,
+.down-button,
 .close-button {
   cursor:pointer; cursor: hand;
   -webkit-touch-callout: none;
@@ -253,11 +233,15 @@ body {
   overflow: hidden;
   background: inherit;
   border-radius: 2px;
-  border: solid 2px #c8d7d7;
+  border: solid 2px;/* #c8d7d7;*/
+
+  padding: 0 2px 0;
 
   width:10px;
   height:10px;
 
+  position: relative;
+  top: -2px;
   font-size: 9px;
   text-align: center;
 }
@@ -265,6 +249,7 @@ body {
 /* options panel */
 .options-panel {
   float: right;
-  top: 0;
+  top: -2px;
   position: relative;
+  padding: 2px;
 }

@@ -12,13 +12,13 @@ CityDashboard.Dashboard = function ( parameters ) {
   // placing
 
   var container = $( '<div>' )
-  .setID( CityDashboard['mainContainerID'] )
+  .setID( CityDashboard['mainContainerID'] ).addClass('mainDashboard')
   .addClass( this.layout );
 
   var infoDiv;
   if ( this.layout !== 'layout-none' ) {
     infoDiv = $('<div>')
-    .setID( CityDashboard['infoWindowID'] );
+    .setID( CityDashboard['infoWindowID'] ).addClass('infoWindow');
 
     var resizeOrientation;
     if ( this.layout === 'layout-left') 
@@ -36,7 +36,7 @@ CityDashboard.Dashboard = function ( parameters ) {
   }
 
   var mapDiv = $('<div>')
-  .setID( CityDashboard['mapWindowID'] );
+  .setID( CityDashboard['mapWindowID'] ).addClass('mapWindow');
   container.append( mapDiv );
 
   $( this.anchor ).append( container );

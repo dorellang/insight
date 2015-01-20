@@ -16,7 +16,7 @@ var id, data_source, title, properties;
 
   //placing
 
-  var title = $( '<h4>' ).append(this.title);
+  var title = $( '<h4>' ).append(this.title).addClass('viz-title');
 
   // var close = $('<span>').addClass('close-button').text('X');
 
@@ -30,9 +30,11 @@ var id, data_source, title, properties;
   var _this = this;
   this.viz = $('<div>').setID( this.id ).addClass( 'visualization' )
   .append( title )
-  .append( '<hr>' ).movable().closable(function () {return _this.remove();});
+  .append( $('<hr>').addClass('viz-bar') )
+  .movable()
+  .closable(function () {return _this.remove();});
 
-  this.viz.append( $( '<h6>' ) );
+  this.viz.append( $( '<h6>' ).addClass('latlngView') );
 
   $( CityDashboard['infoWindowID'] ).append( this.viz );
 
@@ -62,6 +64,17 @@ CityDashboard.Visualization.prototype = {
   remove: function () {
     // signal infowindow to remove this viz.
     $(CityDashboard['infoWindowID']).trigger('remove-viz',{'id':this.id,'data-source':this.data_source});
+  },
+  createDefList: function ( value ) {
+    var id = this.id;
+    $.each(value, function (key, value) {
+
+      if (key !== 'lat' && key !== 'lng' && key !=='value') {
+        $( id ).find('.deflist').append( $('<dt>').text( key).addClass('deflist-key') )
+        .append( $( '<dd>' ).text(value).addClass('deflist-value') );
+      }
+
+    });
   }
 
 };

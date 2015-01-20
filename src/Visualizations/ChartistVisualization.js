@@ -34,19 +34,11 @@ CityDashboard.ChartistVisualization.prototype.refresh = function () {
   else
     this.chart = new this.chartConstructor( this.id+' > div' , data , this.options, this.responsiveOptions);
 
-  var dl = $('<dl>');
-
-  $( this.id + '> div').last().append( dl );//.find('div').filter(':eq(2)')
+  $( this.id + '> div').last().append( $('<dl>').addClass('deflist') );
 
   if (! (this.data instanceof Array))
 
-    $.each(this.data, function (key, value) {
-
-      if( key !== 'lat' && key !== 'lng' && key !== 'value')
-        dl.append( $('<dt>').text( key) ).append( $( '<dd>' ).text(value) );
-
-    });
-
+    this.createDefList(this.data);
 };
 
 CityDashboard.ChartistVisualization.prototype.remove = function () {

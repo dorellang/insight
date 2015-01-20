@@ -44,6 +44,12 @@ CityDashboard.D3Visualization.prototype.refresh = function () {
 
   var el = $( this.id );
   this._create(this.svg,this.data,el.width(),el.height());
+
+  $( this.id + '> div').last().append( $('<dl>').addClass('deflist') );
+
+  if (! (this.data instanceof Array))
+
+    this.createDefList(this.data);
 };
 
 CityDashboard.D3Visualization.prototype.remove = function () {
