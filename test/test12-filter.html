@@ -56,6 +56,12 @@
     myDashboard.addFilter({
       'Under Latitude 30': function (data) {
         return data.lat < 30;
+      },
+      'Over Latitude -60': function (data) {
+        return data.lat > -60;
+      },
+      'Between Longitude 50 and -50': function (data) {
+        return data.lng < 50 && data.lng > -50;
       }
     });
 

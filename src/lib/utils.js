@@ -52,6 +52,57 @@
     this.attr( 'id', selector);
     return this;
   };
+  $.fn.movable = function () {
+
+    var panel = this.children('.options-panel');
+    if ( !panel.length ){
+      panel = $('<span>').addClass('options-panel');
+      this.prepend(panel);
+    }
+
+    var up = $('<span>').addClass('upArrow').append('&#x25B2;');
+    var down = $('<span>').addClass('downArrow').append('&#x25BC;');
+    panel.append(up);
+    panel.append(down);
+
+    var _this = this;
+
+    up.on('click',function(){
+
+      _this.insertBefore( _this.prev() );
+    
+    });
+
+    down.on('click',function(){
+
+      _this.insertAfter(_this.next());
+    
+    });
+
+    return this;
+  };
+  $.fn.closable = function( handler ){
+
+    var panel = this.children('.options-panel');
+    if ( !panel.length ){
+      panel = $('<span>').addClass('options-panel');
+      this.prepend(panel);
+    }
+
+    var close = $('<span>').addClass('close-button').text('X');
+
+    panel.append(close);
+
+    var _this = this;
+
+    close.on('click',function () {
+      _this.remove();
+      handler();
+    });
+
+
+    return this;
+  };
   // $.fn.onUnderflow = function ( fn ) {
   //   var flow = false;
   //   this.on('OverflowEvent' in window ? 'overflowChanged' : 'underflow', function (e) {

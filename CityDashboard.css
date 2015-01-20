@@ -19,16 +19,12 @@
 }
 
 .layout-left #infoWindow {
-  /*display: inline-block;*/
   float: left;
   min-width: 300px;
-  /*resize: horizontal;
-  overflow: auto;*/
 }
 
 .layout-left #mapWindow {
   height: 100%;
-  /*margin-left: 300px;*/
 }
 
 /* right layout */
@@ -38,17 +34,13 @@
 }
 
 .layout-right #infoWindow {
-  /*display: inline-block;*/
   float: right;
   min-width: 300px;
-  /*resize: horizontal;
-  overflow: auto;*/
   
 }
 
 .layout-right #mapWindow {
   height: 100%;
-  /*margin-right: 300px;*/
 }
 
 .layout-left .visualization,
@@ -142,6 +134,47 @@ body{
   user-select: none;
 }
 
+/* scrollbar */
+
+/* IE 5.5 */
+body {  
+  scrollbar-face-color: #000000;  
+  scrollbar-shadow-color: #2D2C4D;  
+  scrollbar-highlight-color:#7D7E94;  
+  scrollbar-3dlight-color: #7D7E94;  
+  scrollbar-darkshadow-color: #2D2C4D;  
+  scrollbar-track-color: #7D7E94;  
+  scrollbar-arrow-color: #C1C1D1;   
+} 
+::-webkit-scrollbar{
+  width: 5px;
+}
+::-webkit-scrollbar-track-piece    {
+  background-color: #729a9a;
+}
+::-webkit-scrollbar-thumb  {
+  background-color: #9ab6b6;
+}
+
+/* search bar */
+.filterBar {
+    z-index: 1;
+    position: fixed;
+    right: 0;
+    top: 0;
+    margin: 5px;
+    padding: 1px;
+    background-color: #9ab6b6;
+}
+.filterBar * {
+  margin: 2px;
+}
+.search {
+  padding: 2px;
+}
+
+/* Utils */
+
 /* Rezisable */
 .resizable {
   position: relative;
@@ -198,41 +231,29 @@ body{
   cursor: w-resize;
 }
 
-/* scrollbar */
+/* arrows - movable */
 
-/* IE 5.5 */
-body {  
-  scrollbar-face-color: #000000;  
-  scrollbar-shadow-color: #2D2C4D;  
-  scrollbar-highlight-color:#7D7E94;  
-  scrollbar-3dlight-color: #7D7E94;  
-  scrollbar-darkshadow-color: #2D2C4D;  
-  scrollbar-track-color: #7D7E94;  
-  scrollbar-arrow-color: #C1C1D1;   
-} 
-::-webkit-scrollbar{
-  width: 5px;
-}
-::-webkit-scrollbar-track-piece    {
-  background-color: #729a9a;
-}
-::-webkit-scrollbar-thumb  {
-  background-color: #9ab6b6;
+.upArrow,
+.downArrow,
+.close-button {
+  cursor:pointer; cursor: hand;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  margin: 2px;
 }
 
 /* close-button */
 
 .close-button {
-  float: right;
-  top: 0;
-  position: relative;
-  margin: 0;
-  padding: 0;
   overflow: hidden;
   background: inherit;
   border-radius: 2px;
   border: solid 2px #c8d7d7;
-  cursor: pointer;
 
   width:10px;
   height:10px;
@@ -241,19 +262,9 @@ body {
   text-align: center;
 }
 
-/* search bar */
-.filterBar {
-    z-index: 1;
-    position: fixed;
-    right: 0;
-    top: 0;
-    margin: 5px;
-    padding: 1px;
-    background-color: #9ab6b6;
-}
-.filterBar * {
-  margin: 2px;
-}
-.search {
-  padding: 2px;
+/* options panel */
+.options-panel {
+  float: right;
+  top: 0;
+  position: relative;
 }

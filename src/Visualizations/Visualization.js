@@ -18,19 +18,19 @@ var id, data_source, title, properties;
 
   var title = $( '<h4>' ).append(this.title);
 
-  var close = $('<span>').addClass('close-button').text('X');
+  // var close = $('<span>').addClass('close-button').text('X');
+
+  // var _this = this;
+
+  // close.on('click',function (event) {
+  //    _this.remove();
+  //    _this.viz.remove();
+  // });
 
   var _this = this;
-
-  close.on('click',function (event) {
-     _this.remove();
-     _this.viz.remove();
-  });
-
   this.viz = $('<div>').setID( this.id ).addClass( 'visualization' )
-  .append( close )
   .append( title )
-  .append( '<hr>' );
+  .append( '<hr>' ).movable().closable(function () {return _this.remove();});
 
   this.viz.append( $( '<h6>' ) );
 

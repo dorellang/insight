@@ -11,7 +11,7 @@ CityDashboard.CircleMarker = function( layer_id, marker_params, attr, map ){
       strokeWeight: attr.strokeWeight || 2,
       fillColor: attr.fillColor || '#FF0000',
       fillOpacity: attr.fillOpacity || 0.35,
-      title: marker_params.value.landmark || ''
+      title: marker_params.landmark || ''
   });
 
 };

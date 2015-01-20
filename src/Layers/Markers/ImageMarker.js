@@ -8,7 +8,7 @@ CityDashboard.ImageMarker = function( layer_id, marker_params, attr, map ){
       position: myLatlng,
       map: map,
       icon: image,
-      title: marker_params.value.landmark || ''
+      title: marker_params.landmark || ''
   });
 
 };
