@@ -30,7 +30,6 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
       };
     }
     else {
-
       var config =
       {
         'visualization': arg['attr']['visualization'],
