@@ -23,7 +23,6 @@ CityDashboard.SegmentHeatmap = function( layer_params, attr, map, assoc_layer ){
     for(var j = 0; j < n; j++){
       var lat = data[i].lati;
       var lng = data[i].lngi;
-      //myData.push(new google.maps.LatLng(lat + delta.lat*j, lng + delta.lng*j));
       myData.push({location: new google.maps.LatLng(lat + delta.lat*j, lng + delta.lng*j), weight: layer_params.weights[i]})
     }
 
@@ -33,9 +32,6 @@ CityDashboard.SegmentHeatmap = function( layer_params, attr, map, assoc_layer ){
 
   var heatmap = new google.maps.visualization.HeatmapLayer({
     data: myData,
-    //opacity: 0.6,
-    //radius: 10,
-    //dissipating: false
   });
 
   heatmap.setMap(map);
