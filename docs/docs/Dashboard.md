@@ -4,11 +4,10 @@ A dashboard.
 ## Example
 ``` javascript
 var myDashboard = new CityDashboard.Dashboard({
-        'anchor': '#dashboard',
-        'map': map,
-        'info': infoWindow,
-        'layout': 'left'
-      });
+  'anchor': '#dashboard',
+  'layout': 'left',
+  'filter-number': 3
+});
 ```
 
 ## Constructor
@@ -17,29 +16,27 @@ var myDashboard = new CityDashboard.Dashboard({
 parameters is an object with the properties that define the dashboard.
 
 > anchor - The id of the DOM element that will contain the map.
-> 
-> map - A Map object.
-> 
-> info - An InfoWindow object.
 >
 > layout - The position of the window relative to the map. Default is a `none` Layout.
+>
+> filter-number - The number of filter selections on the filter bar. Default is 0.
 
-## Parameters
+## Properties
 
-#### `.layer`
-  A Layer object. These layers are superposed over each other using the method `addLayer`.
+#### `.layers`
+  An array of layer objects.
 
 ---
 #### `.layout`
-  A Layout object. `left`, `right` or `none`.
+  An string. `layout-left`, `layout-right` or `layout-none`.
 
 ---
-#### `.map`
-  A Map object.
+#### `.anchor`
+  The string of the DOM element id where the dashboard is anchored.
 
 ---
-#### `.info`
-  An InfoWindow object.
+#### `.filters`
+  The FilterBar object.
 
 ---
 ## Methods
@@ -47,10 +44,21 @@ parameters is an object with the properties that define the dashboard.
 #### `.addLayer` ( parameters : `Object` ) : `Dashboard`
   Adds a new layer to the map visualization.
 
-  parameters is an object with one or more properties definig the layer's configuration.
+  parameters is an object with one or more properties defining the layer's configuration.
+
+  > id - The id of the layer.
+  >
+  > layer - Type of the layer.
+  >
+  > data-source - The source of data for the layer, can be an url or its own id.
+  >
+  > data - if the sata-source and id are the same, this data is used.
+  >
+  > layer_attr - The layer configuration attributes.
+  >
 
 ---
-#### `.show` ()
-  Places the dashboard inside the container, and starts the visualization.
+#### `.addFilter` ( filters : `Object` ) : `Dashboard`
+  Adds new filter options to the filterbar.
 
 ---

@@ -33,23 +33,19 @@ parameters is an object with one or more properties definig the map's initial co
 
 ---
 #### `.zoom`
-  The current value of the map's zoom.
+  The value of the map's zoom.
 
 ---
 #### `.map`
   The GoogleMaps map instance.
-
-  **Note**: undefined until method `.place` is called.
   
 ---
 
-## Methods
+## Note
 
-#### `.place` ( containerID : `String` )
-  Places the map inside the container with the given id.
+The main container DOM element contains a reference to the google.maps.Map object.
+Using jQuery:
+```javascript
+var googlemap = $(CityDashboard['mainContainerID'])[0].data;
 
-  Adds Listeners to the GoogleMap's `idle`, `zoom_changed` and `center_changed` events.
-
-  See `Map`'s `.notify` method.
-
----
+```

@@ -1,55 +1,34 @@
-# GoogleMap
+# Utils
 
-A map using GoogleMaps.
+Useful jQuery plugins.
 
 ## Example
 
+``` javascript
+$('#MyDiv').resizable('w');
+
+$('#MyDiv').movable();
+
+$('#MyDiv').closable();
 ```
-var map = new CityDashboard.GoogleMap({
-  'lat': 48.8583,
-  'lng': 2.2944,
-  'zoom': 15
-});
-```
 
-## Constructor
+#### resizable ( orientation : `String` )
+Transforms the DOM element so its resizable.
+Adds a resizing bar.
 
-#### GoogleMap ( parameters : `Object` )
-parameters is an object with one or more properties definig the map's initial configuration.
-
-> lat - Map center's initial latitude. Default is 0.
->
-> lng - Map center's initial longitude. Default is 0.
->
-> zoom - Map's initial zoom. Deafult is 3.
-
-## Properties
-
-#### `.center`
-  An object containing the coordinates of the current map's center, has two fields:
-
-  * lat
-  * lng
+The orientation is a string containing 'n','s','e' or 'w'.
 
 ---
-#### `.zoom`
-  The current value of the map's zoom.
+#### setID ( selector : `String` )
+Sets the ID of the DOM element. If the given ID start with '#', it is ignored.
 
 ---
-#### `.map`
-  The GoogleMaps map instance.
+#### movable ()
+Adds arrows so this element can be moved between its siblings.
 
-  **Note**: undefined until method `.place` is called.
-  
 ---
-
-## Methods
-
-#### `.place` ( containerID : `String` )
-  Places the map inside the container with the given id.
-
-  Adds Listeners to the GoogleMap's `idle`, `zoom_changed` and `center_changed` events.
-
-  See `Map`'s `.notify` method.
+#### closable ( handler : `function` )
+Adds a close button.
+Handler function its executed before the element is removed.
 
 ---

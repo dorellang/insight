@@ -1,56 +1,29 @@
-# Dashboard
-A dashboard.
+# CityDashboard
+The namespace for the entire module.
 
-## Example
-``` javascript
-var myDashboard = new CityDashboard.Dashboard({
-        'anchor': '#dashboard',
-        'map': map,
-        'info': infoWindow,
-        'layout': 'left'
-      });
-```
+## Properties
 
-## Constructor
-
-#### Dashboard ( parameters :  `Object` )
-parameters is an object with the properties that define the dashboard.
-
-> anchor - The id of the DOM element that will contain the map.
-> 
-> map - A Map object.
-> 
-> info - An InfoWindow object.
->
-> layout - The position of the window relative to the map. Default is a `none` Layout.
-
-## Parameters
-
-#### `.layer`
-  A Layer object. These layers are superposed over each other using the method `addLayer`.
+#### `.mainContainerID`
+  The ID of the main container. This element is the only child of the given anchor.
 
 ---
-#### `.layout`
-  A Layout object. `left`, `right` or `none`.
+#### `.mapWindowID`
+  The id of the DOM element that contains the map..
 
 ---
-#### `.map`
-  A Map object.
+#### `.infoWindowID`
+  The id of the infoWindow element.
 
 ---
-#### `.info`
-  An InfoWindow object.
+#### `.filterBarID`
+  The id of the filter bar element.
 
 ---
 ## Methods
 
-#### `.addLayer` ( parameters : `Object` ) : `Dashboard`
-  Adds a new layer to the map visualization.
+#### `getData` ( url : `String`, callback : `function`, props : `Object` )
+  If the url string does not start with '#', asynchronously gets the data from the url.
 
-  parameters is an object with one or more properties definig the layer's configuration.
-
----
-#### `.show` ()
-  Places the dashboard inside the container, and starts the visualization.
+  If url does start with '#', executes callback synchronously without fetching data.
 
 ---
