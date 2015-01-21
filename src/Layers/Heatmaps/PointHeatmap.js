@@ -11,9 +11,7 @@ CityDashboard.PointHeatmap = function( layer_params, attr, map, assoc_layer ){
 
   var heatmap = new google.maps.visualization.HeatmapLayer({
     data: pointArray,
-    //gradient: ['rgba(0,0,0,0)', '#9AB6B6', '#729A9A', '#578B8B', '#266B6B'],
-    opacity: 0.6,
-    radius: 7
+    radius: attr.radius || 10
   });
 
   heatmap.setMap(map);

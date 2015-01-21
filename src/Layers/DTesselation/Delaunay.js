@@ -1,7 +1,9 @@
-CityDashboard.Delaunay = function( delaunay_params, attr, map ){
+CityDashboard.Delaunay = function( layer_params, attr, map, assoc_layer ){
+
+  CityDashboard.DTesselation.call(this, layer_params, attr, map, assoc_layer);
 
   var data = [];
-  var n = delaunay_params.lat.length;
+  var n = layer_params.lat.length;
 
   var deg2rad = Math.PI/180;
   var rad2deg = 180/Math.PI;
@@ -10,11 +12,13 @@ CityDashboard.Delaunay = function( delaunay_params, attr, map ){
   var MapNgbrLines = [];
 
   for(var i = 0; i < n; i++){
-    data[i] = new google.maps.LatLng( parseFloat(delaunay_params.lat[i]), parseFloat(delaunay_params.lng[i]) );
+    data[i] = new google.maps.LatLng( parseFloat(layer_params.lat[i]), parseFloat(layer_params.lng[i]) );
   }
+  var myself = this;
 
   var PointsChanged = function() {
-	ClearOvlyArray(MapTriLines);
+
+	myself.ClearOvlyArray(MapTriLines);
 	
 	var MapPositions = [];
 
@@ -42,7 +46,7 @@ CityDashboard.Delaunay = function( delaunay_params, attr, map ){
 	for (var i=0; i<DT.edges.length; i++)
 	{
 		var edge = DT.edges[i];
-		Add_GMapLine(MapTriLines, DT.positions, edge.verts,
+		myself.Add_GMapLine(MapTriLines, DT.positions, edge.verts,
 			attr.color || '#578b8b', 2, 1, map);
 	}
         
@@ -77,8 +81,18 @@ CityDashboard.Delaunay = function( delaunay_params, attr, map ){
 
 };
 
-function Add_GMapLine(StoreArr, Positions, Verts, Color, Thickness, Opacity, map)
-{
+CityDashboard.Delaunay.prototype = Object.create(CityDashboard.DTesselation.prototype);
+
+CityDashboard.Delaunay.prototype = {
+
+  constructor: CityDashboard.Delaunay,
+
+  build: function () {},
+
+  addEvents: function () {},
+
+  Add_GMapLine: function (StoreArr, Positions, Verts, Color, Thickness, Opacity, map) {
+
 	var rad2deg = 180/Math.PI;
 	if (Verts.length < 2) return;
 	
@@ -88,7 +102,7 @@ function Add_GMapLine(StoreArr, Positions, Verts, Color, Thickness, Opacity, map
 	for (var i=1; i<Verts.length; i++)
 	{
 		var p = Positions[Verts[i]];
-		poss = poss.concat(SplitSegment(p0,p),[p]);
+		poss = poss.concat(this.SplitSegment(p0,p),[p]);
 		p0 = p;
 	}
 	
@@ -110,10 +124,10 @@ function Add_GMapLine(StoreArr, Positions, Verts, Color, Thickness, Opacity, map
 	});
         GPln.setMap(map);
 	StoreArr.push(GPln);
-}
+  },
 
-function SplitSegment(p0,p1)
-{
+  SplitSegment: function (p0,p1) {
+
 	var diff = 0.0;
 	for (var ic=0; ic<3; ic++)
 	{
@@ -136,23 +150,16 @@ function SplitSegment(p0,p1)
 	for (var ic=0; ic<3; ic++)
 		px[ic] *= normmult;
 	
-	return empty.concat(SplitSegment(p0,px),[px],SplitSegment(px,p1));
-}
+	return empty.concat(this.SplitSegment(p0,px),[px],this.SplitSegment(px,p1));
+  },
 
-function ClearOvlyArray(OvlyArray)
-{
+  ClearOvlyArray: function (OvlyArray) {
 	while (OvlyArray.length > 0)
 	{
 		var ovly = OvlyArray.pop();
 		ovly.setMap(null);
 	}
-}
-
-CityDashboard.Delaunay.prototype = Object.create(CityDashboard.DTesselation.prototype);
-
-CityDashboard.Delaunay.prototype = {
-
-  constructor: CityDashboard.Delaunay,
+  }
 
 };
 

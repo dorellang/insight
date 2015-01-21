@@ -7,11 +7,11 @@
 
     IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW
 
-    HEATMAP
+    SEGMENT HEATMAP
 
     -->
 
-    <title>Test 8 - Heatmap</title>
+    <title>Test 8 - Segment Heatmap</title>
 
     <style>
       html,
@@ -50,7 +50,7 @@
     var map = new CityDashboard.GoogleMap({
       'lat': -33.442909,
       'lng': -70.65387,
-      'zoom': 12
+      'zoom': 14
     });
 
     // Setting up our information window.
@@ -58,6 +58,7 @@
 
     var lats = [];
     var lngs = [];
+    var weights = [];
 
     var maxlat = -33.34;
     var minlat = -33.54;
@@ -65,9 +66,14 @@
     var maxlng = -70.55;
     var minlng = -70.75;
 
-    for(var i = 0; i < 3000; i++) {
-      lats[i] = Math.random() * (maxlat - minlat) + minlat;
-      lngs[i] = Math.random() * (maxlng - minlng) + minlng;
+    for(var i = 0; i < 50; i++) {
+      lats[i] = [];
+      lngs[i] = [];
+      lats[i][0] = Math.random() * (maxlat - minlat) + minlat;
+      lngs[i][0] = Math.random() * (maxlng - minlng) + minlng;
+      lats[i][1] = Math.random() * (maxlat - minlat) + minlat;
+      lngs[i][1] = Math.random() * (maxlng - minlng) + minlng;
+      weights[i] = Math.floor(Math.random() * (4 - 1) + 1);
     }
 
     myDashboard
@@ -76,11 +82,11 @@
       'layer': 'heatmap-layer',
       'data-source': '#heatmap',
       'data': [{'lat': lats,
-                'lng': lngs
+                'lng': lngs,
+                'weights': weights
               }],
       'layer_attr': {
-        'type': 'point-heatmap',
-        'radius': 12
+        'type': 'segment-heatmap'
         }
     });
 
