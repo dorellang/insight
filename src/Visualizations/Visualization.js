@@ -36,9 +36,18 @@ var id, data_source, title, properties;
 
   this.viz.append( $( '<h6>' ).addClass('latlngView') );
 
+  // this.addCheckbox({mon:true,tue:false,wen:true,thu:false,fri:true,sat:true,sun:false});
+
   $( CityDashboard['infoWindowID'] ).append( this.viz );
 
   this.viz.css( this.properties );
+
+  // checkbox handling
+
+  this.checkbox_handler = props['checkbox-handler'];
+
+  if (props.checkbox)
+    this.addCheckbox( props['checkbox'] );
 
 };
 
@@ -49,13 +58,18 @@ CityDashboard.Visualization.prototype = {
     if (data)
       this.data = this.dataPreprocess(data);
   },
+  getData: function () {
+    return this.data;
+  },
   refresh: function () {
     
     var h6 = $( this.id ).find('h6').empty();
 
-  $( this.id ).find('div').last().empty();    
+    $( this.id ).find('div').last().empty();
 
-    var lat = this.data.lat, lng = this.data.lng;
+    var data = this.getData();
+
+    var lat = data.lat, lng = data.lng;
 
     if ( lat && lng)
       h6.text('lat: ' + lat + ', lng: ' + lng).insertAfter( $( this.id ).find('hr') );
@@ -75,6 +89,47 @@ CityDashboard.Visualization.prototype = {
       }
 
     });
+  },
+  addCheckbox: function ( keys ) {
+    //keys: {name1:true,name2:false,name3:true,...}
+    //each element of the object indicates the label of each checkbox. The number of keys indicates the number of checboxes.
+    //handler :  function ([true, false, true, ...],data)
+    //each element of the array corresponds to each checkbox state.
+    
+    var checkpanel = $( "<span>" ).addClass('checkbox-panel');
+
+    var arr = [];
+
+    for (var key in keys) {
+      var checkbox = $('<input>').attr('type','checkbox');
+
+      arr[arr.length] = checkbox[0].checked = keys[key];
+      checkpanel.append(checkbox);
+
+      var _this = this;
+
+      checkbox.on('change',function () {
+
+        var array = $(this).parent().children('input:checkbox').map(function(){
+          return $(this).prop('checked');
+        }).get();
+
+        _this.getData = function () {
+          return _this.checkbox_handler(array,_this.data);
+        };
+
+        _this.refresh();
+
+      })
+
+      checkbox.after( $('<label>').text(key) );
+    }
+
+    this.viz.append(checkpanel);
+
+    _this.getData = function () {
+      return _this.checkbox_handler(arr,_this.data);
+    };
   }
 
 };

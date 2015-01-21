@@ -31,7 +31,7 @@ CityDashboard.D3Visualization = function ( props ) {
   
   //need to call refresh so the lat-lng appears in the first call
   CityDashboard.Visualization.prototype.refresh.call( this );
-  this._create(this.svg,this.data,initwidth,initheight);
+  this._create(this.svg,this.getData(),initwidth,initheight);
 
 };
 
@@ -42,14 +42,16 @@ CityDashboard.D3Visualization.prototype.refresh = function () {
 
   this.svg.selectAll("*").remove();
 
+  var data = this.getData();
+
   var el = $( this.id );
-  this._create(this.svg,this.data,el.width(),el.height());
+  this._create(this.svg,data,el.width(),el.height());
 
   $( this.id + '> div').last().append( $('<dl>').addClass('deflist') );
 
-  if (! (this.data instanceof Array))
+  if (! (data instanceof Array))
 
-    this.createDefList(this.data);
+    this.createDefList(data);
 };
 
 CityDashboard.D3Visualization.prototype.remove = function () {

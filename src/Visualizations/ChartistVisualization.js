@@ -14,6 +14,18 @@ CityDashboard.ChartistVisualization = function ( props, chartConstructor ) {
 
   this.labels = props['labels'];
 
+  //checkbox
+
+  this.checkbox_handler = props['checkbox-handler'] || function (array,data) {
+        var out = [];
+        for (var i = 0; i < array.length; i++) {
+          if (array[i]){
+            out[out.length] = data[i];
+          }
+        };
+        return out;
+      };
+
   this.refresh();
   
 };
@@ -24,9 +36,11 @@ CityDashboard.ChartistVisualization.prototype.refresh = function () {
 
   CityDashboard.Visualization.prototype.refresh.call( this );
 
+  var d = this.getData();
+
   var data  = {
-    'series': this.data.value || this.data,
-    'labels': typeof this.labels === 'function' ? this.labels(this.data.value || this.data) : this.labels
+    'series': d.value || d,
+    'labels': typeof this.labels === 'function' ? this.labels(d.value || d) : this.labels
   };
 
   if ( this.chart )

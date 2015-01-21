@@ -40,7 +40,9 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
         'title': arg['attr']['title'],
         'properties': arg['attr']['properties'],
         'viz': arg['attr']['viz'] || null,
-        'labels': arg['attr']['labels']
+        'labels': arg['attr']['labels'],
+        'checkbox': arg['attr']['checkbox'],
+        'checkbox-handler': arg['attr']['checkbox-handler'],
 
       };
       
