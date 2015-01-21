@@ -3,6 +3,7 @@ CityDashboard.DelaunayLayer = function( parameters , map ){
   CityDashboard.Layer.call(this, parameters, map);
 
   var DT = DTesselationSelector( this.elements[0], this.elementsAttr, this.map, this );
+  DT.addEvents();
 
 };
 
