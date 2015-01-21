@@ -10,22 +10,13 @@ var id, data_source, title, properties;
 
   this.title = props['title'] || '';
 
-  this.data = props['data'] || {};
-
   this.dataPreprocess = props['preprocess'] || function (a) {return a;};
+
+  this.setData( props['data'] || {});
 
   //placing
 
   var title = $( '<h4>' ).append(this.title).addClass('viz-title');
-
-  // var close = $('<span>').addClass('close-button').text('X');
-
-  // var _this = this;
-
-  // close.on('click',function (event) {
-  //    _this.remove();
-  //    _this.viz.remove();
-  // });
 
   var _this = this;
   this.viz = $('<div>').setID( this.id ).addClass( 'visualization' )
@@ -35,8 +26,6 @@ var id, data_source, title, properties;
   .closable(function () {return _this.remove();});
 
   this.viz.append( $( '<h6>' ).addClass('latlngView') );
-
-  // this.addCheckbox({mon:true,tue:false,wen:true,thu:false,fri:true,sat:true,sun:false});
 
   $( CityDashboard['infoWindowID'] ).append( this.viz );
 

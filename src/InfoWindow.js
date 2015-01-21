@@ -39,7 +39,6 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
         'preprocess': arg['attr']['preprocess'],
         'title': arg['attr']['title'],
         'properties': arg['attr']['properties'],
-        'viz': arg['attr']['viz'] || null,
         'labels': arg['attr']['labels'],
         'checkbox': arg['attr']['checkbox'],
         'checkbox-handler': arg['attr']['checkbox-handler'],
@@ -74,7 +73,6 @@ CityDashboard.InfoWindow.prototype = {
   constructor: CityDashboard.InfoWindow,
 
   createVisualization: function ( props ) {
-console.log(props)
 
     var _this = this;
     var type = props.visualization;

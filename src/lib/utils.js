@@ -83,6 +83,10 @@
   };
   $.fn.closable = function( handler ){
 
+    if (!handler) {
+      handler = function () {return;};
+    }
+
     var panel = this.children('.options-panel');
     if ( !panel.length ){
       panel = $('<span>').addClass('options-panel');

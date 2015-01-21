@@ -1,6 +1,5 @@
 var CityDashboard = {
-  REVISION: '0',
-  mainContainerID:'#city-dashboard',
+  mainContainerID: '#city-dashboard',
   mapWindowID: '#mapWindow',
   infoWindowID: '#infoWindow',
   filterBarID: '#filterBar',
