@@ -2,7 +2,7 @@ CityDashboard.HeatmapLayer = function( parameters , map ){
 
   CityDashboard.Layer.call(this, parameters, map);
 
-  new CityDashboard.Heatmap( this.elements[0], this.elementsAttr, this.map );
+  var heatmap = new HeatmapSelector( this.elements[0], this.elementsAttr, this.map, this );
 
 };
 

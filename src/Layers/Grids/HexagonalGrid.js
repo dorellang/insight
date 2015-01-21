@@ -1,6 +1,6 @@
-CityDashboard.HexagonalGrid = function( grid_params, attr, map, assoc_layer ){
+CityDashboard.HexagonalGrid = function( layer_params, attr, map, assoc_layer ){
 
-  CityDashboard.Grid.call(this, grid_params, attr, map, assoc_layer);
+  CityDashboard.Grid.call(this, layer_params, attr, map, assoc_layer);
 
 };
 

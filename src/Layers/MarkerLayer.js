@@ -22,7 +22,7 @@ CityDashboard.MarkerLayer.prototype = {
 
   filter: function ( filterFun ) {
     for(i = 0; i < this.markers.length; i++) {
-      if(!filterFun(this.markers[i].marker_params))
+      if(!filterFun(this.markers[i].layer_params))
         this.markers[i].marker.setVisible(false);
       else
         this.markers[i].marker.setVisible(true);

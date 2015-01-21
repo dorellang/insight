@@ -75,20 +75,6 @@ CityDashboard.Voronoi = function( delaunay_params, attr, map ){
     google.maps.event.addListener(markers[i], 'drag', f);
   }
 
-  /*var placeMarker = function(position, map) {
-    var marker = new google.maps.Marker({
-      position: position,
-          map: map
-    });
-  }
-
-  google.maps.event.addListener(map, 'click', function(e){
-      console.log('sup')
-  	  placeMarker(e.latLng,map);
-  	  data.push(e.latLng);
-  	  PointsChanged();
-  	});*/
-
 };
 
 function Add_GMapLine(StoreArr, Positions, Verts, Color, Thickness, Opacity, map)
@@ -161,6 +147,8 @@ function ClearOvlyArray(OvlyArray)
 		ovly.setMap(null);
 	}
 }
+
+CityDashboard.Voronoi.prototype = Object.create(CityDashboard.DTesselation.prototype);
 
 CityDashboard.Voronoi.prototype = {
 

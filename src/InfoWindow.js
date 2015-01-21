@@ -72,6 +72,7 @@ CityDashboard.InfoWindow.prototype = {
   constructor: CityDashboard.InfoWindow,
 
   createVisualization: function ( props ) {
+console.log(props)
 
     var _this = this;
     var type = props.visualization;

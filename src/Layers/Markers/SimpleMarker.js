@@ -28,7 +28,7 @@ CityDashboard.SimpleMarker.prototype = {
 
     function triggerEvent() {
 
-      $('#infoWindow').trigger('marker-pressed', {'id': myself.layer.id , 'value': myself.marker_params, 'attr': myself.attr});
+      $('#infoWindow').trigger('marker-pressed', {'id': myself.layer.id , 'value': myself.layer_params, 'attr': myself.attr});
 
       for(var i = 0; i < myself.layer.markers.length; i++) {
         var myMarker = myself.layer.markers[i].marker;
@@ -45,7 +45,7 @@ CityDashboard.SimpleMarker.prototype = {
   },
 
   triggerInitialEvent: function() {
-    $('#infoWindow').trigger('marker-pressed', {'id': this.layer.id , 'value': this.marker_params, 'attr': this.attr});
+    $('#infoWindow').trigger('marker-pressed', {'id': this.layer.id , 'value': this.layer_params, 'attr': this.attr});
     for(i = 0; i < this.layer.markers.length; i++) {
       this.layer.markers[i].marker.setAnimation(null);
     }
