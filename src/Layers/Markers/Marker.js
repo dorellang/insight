@@ -1,22 +1,19 @@
-CityDashboard.Marker = function( layer_id, marker_params, attr, map ){
+CityDashboard.Marker = function( layer_params, attr, map, assoc_layer ){
 
-  if ( attr.type === 'circle' )
-    CityDashboard.CircleMarker( layer_id, marker_params, attr, map );
-
-  else if ( attr.type === 'image' )
-    CityDashboard.ImageMarker( layer_id, marker_params, attr, map );
-
-  else if ( attr.type === 'polyline' )
-    CityDashboard.PolylineMarker( layer_id, marker_params, attr, map );
-
-  else if ( attr.type === 'simple' ){
-    CityDashboard.SimpleMarker( layer_id, marker_params, attr, map );
-  }
+  this.layer_params = layer_params;
+  this.attr =  attr;
+  this.map = map;
+  this.marker = undefined;
+  this.layer = assoc_layer;
 
 };
 
 CityDashboard.Marker.prototype = {
 
-  constructor: CityDashboard.Marker
+  constructor: CityDashboard.Marker,
+
+  addEvents: function () {},
+
+  triggerInitialEvent: function() {}
 
 };

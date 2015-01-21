@@ -53,7 +53,7 @@
       'data-source': 'position?1',
       'labels': ['Mon','Tue','Wed','Thu','Fri'],
       'title': 'Bars',
-      'preprocess':function (data) {return data[0];},
+      'preprocess':function (data) { return data[0];},
       'properties': {
         'class': 'ct-chart',
         options: {
@@ -76,7 +76,7 @@
       'id': '#RandomPoints',
       'layer': 'marker-layer',
       'data-source': 'position?300',
-      'marker_attr': {
+      'layer_attr': {
         'type': 'simple',
         'visualization': 'linechart-viz',
         'id': '#randomLineChart',

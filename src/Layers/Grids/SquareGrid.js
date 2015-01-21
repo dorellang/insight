@@ -1,22 +1,27 @@
-var squares = [];
+CityDashboard.SquareGrid = function( layer_params, attr, map, assoc_layer ){
 
-CityDashboard.SquareGrid = function( grid_params, attr, map ){
+  CityDashboard.Grid.call(this, layer_params, attr, map, assoc_layer);
 
-  l = attr.size || 0.03;
+};
 
-  //draws the grid
-  var drawMeLikeOneOfYourFrenchGrids = function () {
+CityDashboard.SquareGrid.prototype = Object.create(CityDashboard.Grid.prototype);
 
-    var n = squares.length;
+CityDashboard.SquareGrid.prototype = {
+
+  constructor: CityDashboard.SquareGrid,
+
+  build: function(mapBounds) {
+
+    var l = this.attr.size || 0.03;
+
+    var n = this.tiles.length;
 
     for(var i = 0; i < n; i++) {
-      squares[i].setMap(null);
+      this.tiles[i].setMap(null);
     }
-    squares = [];
+    this.tiles = [];
 
-    var zoom = map.getZoom();
-
-    var mapBounds = map.getBounds();
+    var zoom = this.map.getZoom();
 
     var init = l*(Math.pow(2,12));
     var array = [];
@@ -27,8 +32,8 @@ CityDashboard.SquareGrid = function( grid_params, attr, map ){
 
     var size = array[zoom];
 
-    var NE = mapBounds.getNorthEast();
-    var SW = mapBounds.getSouthWest();
+    var NE = mapBounds.getNorthEast() || 0;
+    var SW = mapBounds.getSouthWest() || 0;
 
     var h = Math.ceil(Math.abs(SW.lat()-NE.lat())/size);
     var w = Math.ceil(Math.abs(SW.lng()-NE.lng())/size);
@@ -49,10 +54,10 @@ CityDashboard.SquareGrid = function( grid_params, attr, map ){
 
         var square = new google.maps.Polygon({
           paths: myLatlng,
-          strokeColor: attr.color || '#578b8b',
+          strokeColor: this.attr.color || '#578b8b',
           strokeOpacity: 0.5,
           strokeWeight: 2,
-          fillColor: attr.color || '#578b8b',
+          fillColor: this.attr.color || '#578b8b',
           fillOpacity: 0.0,
           geodesic: true
         });
@@ -65,27 +70,24 @@ CityDashboard.SquareGrid = function( grid_params, attr, map ){
             this.setOptions({fillOpacity: 0.0});
           });
 
-        square.setMap(map);
+        square.setMap(this.map);
 
-        squares.push(square);
+        this.tiles.push(square);
 
       }
     }
 
+  },
+
+  addEvents: function() {
+
+    var myself = this;
+
+    google.maps.event.addListener(this.map, 'bounds_changed', function() {
+        window.setTimeout(myself.build(this.getBounds()), 50); 
+      });
+
   }
-
-  // wait for better performance
-  var wait = function () {
-      window.setTimeout(drawMeLikeOneOfYourFrenchGrids, 50);
-  }
-
-  google.maps.event.addListener(map, 'bounds_changed', wait );
-
-};
-
-CityDashboard.SquareGrid.prototype = {
-
-  constructor: CityDashboard.SquareGrid,
 
 };
 

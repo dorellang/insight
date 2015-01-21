@@ -16,6 +16,7 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
   var _this = this;
 
   var handler = function ( event, arg ){
+
     infoWindow.off( 'marker-pressed' );
 
     // var action = arg['attr']['action'] || 'update';
@@ -29,7 +30,6 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
       };
     }
     else {
-
       var config =
       {
         'visualization': arg['attr']['visualization'],
@@ -74,6 +74,7 @@ CityDashboard.InfoWindow.prototype = {
   constructor: CityDashboard.InfoWindow,
 
   createVisualization: function ( props ) {
+console.log(props)
 
     var _this = this;
     var type = props.visualization;

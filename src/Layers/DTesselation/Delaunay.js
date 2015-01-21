@@ -148,6 +148,8 @@ function ClearOvlyArray(OvlyArray)
 	}
 }
 
+CityDashboard.Delaunay.prototype = Object.create(CityDashboard.DTesselation.prototype);
+
 CityDashboard.Delaunay.prototype = {
 
   constructor: CityDashboard.Delaunay,

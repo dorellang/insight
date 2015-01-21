@@ -72,7 +72,7 @@ CityDashboard.FilterBar.prototype = {
   composeFilters: function () {
     var l = [];
     for (var i = this.select.length - 1; i >= 0; i--) {
-      l[l.length] = Function(this.select[i].val());
+      l[l.length] = Function('return ' + this.select[i].val())();
     };
     return function (data) {
       for (var i = l.length - 1; i >= 0; i--) {

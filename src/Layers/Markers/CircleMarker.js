@@ -1,6 +1,8 @@
-CityDashboard.CircleMarker = function( layer_id, marker_params, attr, map ){
+CityDashboard.CircleMarker = function( layer_params, attr, map, assoc_layer ){
 
-  var myLatlng = new google.maps.LatLng( parseFloat(marker_params.lat), parseFloat(marker_params.lng) );
+  CityDashboard.Marker.call(this, layer_params, attr, map, assoc_layer);
+
+  var myLatlng = new google.maps.LatLng( parseFloat(layer_params.lat), parseFloat(layer_params.lng) );
 
   var circle = new google.maps.Circle({
       center: myLatlng,
@@ -11,14 +13,20 @@ CityDashboard.CircleMarker = function( layer_id, marker_params, attr, map ){
       strokeWeight: attr.strokeWeight || 2,
       fillColor: attr.fillColor || '#FF0000',
       fillOpacity: attr.fillOpacity || 0.35,
-      title: marker_params.landmark || ''
+      title: layer_params.landmark || ''
   });
 
 };
 
+CityDashboard.CircleMarker.prototype = Object.create(CityDashboard.Marker.prototype);
+
 CityDashboard.CircleMarker.prototype = {
 
   constructor: CityDashboard.CircleMarker,
+
+  addEvents: function () {},
+
+  triggerInitialEvent: function() {}
 
 };
 

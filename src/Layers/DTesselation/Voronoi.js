@@ -44,10 +44,8 @@ CityDashboard.Voronoi = function( delaunay_params, attr, map ){
 		var edge = DT.vor_edges[i];
 		if (edge[0] < 0) continue;
 		if (edge[1] < 0) continue;
-		Add_GMapLine(MapNgbrLines, DT.vor_positions, edge,
-			attr.color || '#578b8b', 2, 1, map);
+		Add_GMapLine(MapNgbrLines, DT.vor_positions, edge, attr.color || '#578b8b', 2, 1, map);
 	}
-        
   }
 
   PointsChanged();
@@ -150,10 +148,10 @@ function ClearOvlyArray(OvlyArray)
 	}
 }
 
+CityDashboard.Voronoi.prototype = Object.create(CityDashboard.DTesselation.prototype);
+
 CityDashboard.Voronoi.prototype = {
 
   constructor: CityDashboard.Voronoi,
 
 };
-
-
