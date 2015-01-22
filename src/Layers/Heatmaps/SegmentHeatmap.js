@@ -1,13 +1,15 @@
 CityDashboard.SegmentHeatmap = function( layer_params, attr, map, assoc_layer ){
 
   var data = [];
-  var n = layer_params.lat.length;
-  
+
+  var n = layer_params.segments.length;
+
   for(var i = 0; i < n; i++){
     data[i] = [];
-    for (var j = 0; j < layer_params.lat[i].length; j++) {
-      data[i][j] = { lat: parseFloat(layer_params.lat[i][j]), lng: parseFloat(layer_params.lng[i][j]) };
-    }; 
+    for(var j = 0; j < layer_params.segments[i].length; j++) {
+      data[i][j] =  {lat: parseFloat(layer_params.segments[i][j].lat),
+                     lng: parseFloat(layer_params.segments[i][j].lng)};
+    }
   }
 
   var myData = [];
@@ -37,8 +39,6 @@ CityDashboard.SegmentHeatmap = function( layer_params, attr, map, assoc_layer ){
     }
 
   }
-
-  var pointArray = new google.maps.MVCArray(myData);
 
   var heatmap = new google.maps.visualization.HeatmapLayer({
     data: myData,
