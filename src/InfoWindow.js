@@ -27,7 +27,7 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
         vizs[i].refresh();
       };
     }
-    else {
+    else if ( arg.attr.id && !(arg.attr.id in _this.visualizations) ){
       var config =
       {
         'visualization': arg['attr']['visualization'],
