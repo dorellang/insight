@@ -3,8 +3,10 @@ CityDashboard.D3Visualization = function ( props ) {
 
   this.viz.addClass('d3-viz').append( $('<div>') );
 
+  var goldenRatio = 0.61803398875;
+
   var initwidth = el.width();
-  var initheight = 0.61803398875*initwidth;
+  var initheight = goldenRatio*initwidth;
 
   this.svg = d3.select( this.id+' div' ).append('svg');
 
@@ -12,7 +14,7 @@ CityDashboard.D3Visualization = function ( props ) {
     this._create = function () {
 
       arguments[1] = arguments[1].value || arguments[1];
-      arguments[3] = el.width()*0.61803398875;
+      arguments[3] = el.width()*goldenRatio;
       return props.viz.apply(props,arguments);
     }
   } else {
