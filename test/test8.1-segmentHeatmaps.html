@@ -56,8 +56,7 @@
     // Setting up our information window.
     var infoWindow = new CityDashboard.InfoWindow({});
 
-    var lats = [];
-    var lngs = [];
+    /*var segments = [];
     var weights = [];
 
     var maxlat = -33.34;
@@ -67,34 +66,58 @@
     var minlng = -70.75;
 
     for(var i = 0; i < 20; i++) {
-      lats[i] = [];
-      lngs[i] = [];
-      lats[i][0] = Math.random() * (maxlat - minlat) + minlat;
-      lngs[i][0] = Math.random() * (maxlng - minlng) + minlng;
-      lats[i][1] = Math.random() * (maxlat - minlat) + minlat;
-      lngs[i][1] = Math.random() * (maxlng - minlng) + minlng;
-      lats[i][2] = Math.random() * (maxlat - minlat) + minlat;
-      lngs[i][2] = Math.random() * (maxlng - minlng) + minlng;
+      segments[i] = [];
+      segments[i][0] = {lat: Math.random() * (maxlat - minlat) + minlat,
+                        lng: Math.random() * (maxlng - minlng) + minlng};
+      segments[i][1] = {lat: Math.random() * (maxlat - minlat) + minlat, 
+                        lng: Math.random() * (maxlng - minlng) + minlng};
+      segments[i][2] = {lat: Math.random() * (maxlat - minlat) + minlat,
+                        lng: Math.random() * (maxlng - minlng) + minlng};
       weights[i] = Math.floor(Math.random() * (4 - 1) + 1);
-    }
+    }*/
 
-    //lngs = [[0,0.01,0.02,0.04]];
-    //lats = [[0,0.01,0.03,0.03]];
+    var segments = [];
+    var weights = [];
 
-    /*xmlhttp=new XMLHttpRequest();
+    xmlhttp=new XMLHttpRequest();
     xmlhttp.open("GET","map.xml",false);
     xmlhttp.send();
     xmlDoc=xmlhttp.responseXML;
 
-    console.log(xmlDoc.getElementsByTagName("way")[0].getElementsByTagName("nd")[0].get);*/
+    var ways = xmlDoc.getElementsByTagName("way");
+    var nways = ways.length;
+
+    for(var i = 0; i < nways; i++) {
+      var segment = [];
+      var tags = ways[i].getElementsByTagName("tag");
+      isStreet = false;
+      for(var b = 0; b < tags.length; b++) {
+        if (ways[i].getElementsByTagName("tag")[0].getAttribute('k') == 'highway') isStreet = true;
+      }
+      if (isStreet) {
+      var nodes = ways[i].getElementsByTagName("nd")
+      var nnodes = nodes.length;
+      var references = [];
+      for(var j = 0; j < nnodes; j++) {
+        var reference = nodes[j].getAttribute('ref');
+        var refnode = xmlDoc.getElementById(reference);
+        var lat = refnode.getAttribute('lat');
+        var lng = refnode.getAttribute('lon');
+        segment.push({lat: lat, lng: lng});
+      }
+      segments.push(segment);
+      weights.push(Math.floor(Math.random() * (4 - 1) + 1));
+      }
+    }
+
+    //console.log(segments.slice(0,1));
 
     myDashboard
     .addLayer({
       'id': '#heatmap',
       'layer': 'heatmap-layer',
       'data-source': '#heatmap',
-      'data': [{'lat': lats,
-                'lng': lngs,
+      'data': [{'segments': segments,
                 'weights': weights
               }],
       'layer_attr': {
