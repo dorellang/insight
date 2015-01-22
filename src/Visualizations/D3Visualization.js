@@ -1,7 +1,9 @@
 CityDashboard.D3Visualization = function ( props ) {
   CityDashboard.Visualization.call( this, props );
 
-  this.viz.addClass('d3-viz').append( $('<div>') );
+  var el = $('<div>');
+
+  this.viz.addClass('d3-viz').append( el );
 
   var goldenRatio = 0.61803398875;
 

@@ -42,7 +42,7 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
         'labels': arg['attr']['labels'],
         'checkbox': arg['attr']['checkbox'],
         'checkbox-handler': arg['attr']['checkbox-handler'],
-
+        'viz': arg['attr']['viz']
       };
       
       _this.createVisualization( config );
