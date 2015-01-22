@@ -14,7 +14,7 @@ var infoWindow = new CityDashboard.InfoWindow([{
 
 ## Constructor
 
-#### InfoWindow( `visualizations` )
+#### InfoWindow( vizPropList: `Array[Object]` )
 Creates an information window with all the visualizations.
 
 > visualizations - An array of visualization properties.
@@ -62,6 +62,8 @@ Creates an information window with all the visualizations.
   > checkbox - A hash. The keys are the labels of the checkboxes, and the values are booleans indicating if they must start checked.
   >
   > checkbox-handler - A function, receives an array of booleans (indicating the checked checkboxes) and the preprocessed data array. Must return a filtered array.
+  >
+  > viz - A function receiving the container svg, the data, and the containers width, and height. Only for D3 visualizations.
 
 ---
 

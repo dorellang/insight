@@ -1,70 +1,100 @@
-# MarkerLayer
-A marker based layer.
-Supports basic svg shapes as circles and rectangles.
-It also supports external svg images.
+# Visualization
+The base class for all visualizations.
 
 ## Constructor
 
-#### MarkerLayer ( parameters : `Object` )
- Configures a new layer.
+#### Visualization ( props : `Object` )
+ Creates a Visualization.
 
- parameters is an object with the properties that define the marker layer.
+ > id - The id of the visualization.
+ >
+ > data-source - The source where CityDashboard will find the data.
+ >
+ > title - The title of the visualization.
+ >
+ > properties - The CSS properties of the visualization.
+ >
+ > preprocess - A function. It modifies the data before being used by the visualization.
+ >
+ > data - If data-source matches this visualization's id, this values are used.
+ >
+ > checkbox - A hash of pairs: ___label___, ___boolean___.
+ >
+ > checkbox-handler - A function. It takes an array of booleans and the data. Its output must be the data processed according to the selected checkboxes.
+ >
 
- > id - The id of the layer.
- >
- > dataSource - The source where CityDashboard will find the data.
- >
- > data - If dataSource matches this layer's id, this values are used.
- >
- > marker_attr - The attributes for the markers appearence.
-
-## Parameters
+## Properties
 
 #### `.id`
-  The id of this layer.
+  The id of this visualization.
 
 ---
-#### `.dataSource`
-  The source of data for the markers.
+#### `.data_source`
+  The source of data for this visualization.
 
 ---
-#### `.elements`
-  The list of markers data.
+#### `.properties`
+  The CSS properties of the visualization DOM element.
 
 ---
-#### `.elementFact`
-  The marker factory.
+#### `.title`
+  The visualization title.
 
 ---
-#### `.wrappedLayer`
-  A Layer.
+#### `.dataPreprocess`
+  A function, receives the data and must return the processed data.
+
+---
+#### `.data`
+  The raw data. If data-source and id are the same this values are used.
+
+---
+#### `.viz`
+  The visualization's jQuery element.
+
+---
+#### `.checkbox_handler`
+  A function. Receives an array of booleans and the preprocessed data. Must return the data processed according to the selected checkboxes.
 
 ---
 
 ## Methods
 
-#### `.wrap` ( wrappedLayer : `Layer` ) : `Layer`
-  Wraps the given layer
+#### `setData` ( data )
+  Sets the data parameter with the data argument, preprocessing it.
+  If no data is given the previous data value is maintained.
 
 ---
 
-#### `.refreshZIndex` ( zIndex : `number` )
-  Refreshes the zIndex of the elements.
-
-  The last inserted layer is always over the older ones.
+#### `getData` () : data
+  Returns the current value of data.
 
 ---
-#### `.place` ( container : `String` )
-  Places the markers in the map.
+#### `refresh` ()
+  Clears the visualization. If the data properties contain lat lng values, updates latlngView.
 
 ---
-#### `.refreshElements` ( pixelChangeMethod : `function` )
-  Updates the position of the markers.
-
-  The `pixelChangeMethod` is a function that transforms the given `{ lat : number, lng : number }` object, using the GoogleMaps coordinate system. In the layer's div pixel coordinates.
+#### `remove` ()
+  Signals the infoWindow to remove this visualization.
+  Triggers event `'remove-viz'`.
 
 ---
-#### `.update` ( message : `Object` )
-  MarkerLayer observes Map objects.
+#### `createDefList` ( value : `Object` )
+  Creates a definition list. This list contains all keys that are not named `lat` `lng` or `value`.
+
+---
+#### `addCheckbox` ( keys : `Object` )
+  Creates a checkbox panel.
+
+---
+
+## Events
+#### `remove-viz`
+  This event is triggered upon InfoWindow when the user clicks the close button.
+
+---
+#### `change`
+  Checkboxes listen to `change` event.
+  The visualization processes the data according to the selected checkboxes, and refreshes.
 
 ---

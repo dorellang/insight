@@ -1,70 +1,61 @@
-# MarkerLayer
-A marker based layer.
-Supports basic svg shapes as circles and rectangles.
-It also supports external svg images.
+# ChartistVisualization
+Inherits from Visualization.
+
+Requires Chartist.js to be previously imported.
 
 ## Constructor
 
-#### MarkerLayer ( parameters : `Object` )
- Configures a new layer.
+#### Visualization ( props : `Object`, chartConstructor : `function` )
+  Creates a Visualization.
 
- parameters is an object with the properties that define the marker layer.
+  chartConstructor is th Chartist.js chart constructor.
 
- > id - The id of the layer.
- >
- > dataSource - The source where CityDashboard will find the data.
- >
- > data - If dataSource matches this layer's id, this values are used.
- >
- > marker_attr - The attributes for the markers appearence.
+  > properties - The CSS properties of the visualization. `class` property will set the chart container classes.
+  >
+  > options - Will set Chartist.js options.
+  >
+  > responsiveOptions - Will set Chartist.js responsive options.
+  >
+  > labels - The chartist labels. Can be an array of strings, or a function that receives data and returns an array of strings.
+  >
+  > checkbox-handler - A function. It takes an array of booleans and the data. Its output must be the data processed according to the selected checkboxes.
+  >
 
-## Parameters
+## Properties
 
-#### `.id`
-  The id of this layer.
-
----
-#### `.dataSource`
-  The source of data for the markers.
-
----
-#### `.elements`
-  The list of markers data.
+#### `.chartConstructor`
+  The corresponding chart constructor.
+  `Chatist.Line | Chartist.Bar | Chartist.Pie`
 
 ---
-#### `.elementFact`
-  The marker factory.
+#### `.options`
+  The chartist options.
 
 ---
-#### `.wrappedLayer`
-  A Layer.
+#### `.responsiveOptions`
+  The chartist responsive options.
+
+---
+#### `.labels`
+  The chartist visualization labels.
+
+---
+#### `.checkbox_handler`
+  A function. Receives an array of booleans and the preprocessed data. Must return the data processed according to the selected checkboxes.
+  
+  By default expects data being an array of elements, the same length of the number of checkboxes, filters according the selected checkboxes.
 
 ---
 
 ## Methods
 
-#### `.wrap` ( wrappedLayer : `Layer` ) : `Layer`
-  Wraps the given layer
+#### `refresh` ()
+  Clears the visualization. If the data properties contain lat lng values, updates latlngView.
+
+  Updates chartist chart with data, resizes and updates the deflist.
 
 ---
-
-#### `.refreshZIndex` ( zIndex : `number` )
-  Refreshes the zIndex of the elements.
-
-  The last inserted layer is always over the older ones.
-
----
-#### `.place` ( container : `String` )
-  Places the markers in the map.
-
----
-#### `.refreshElements` ( pixelChangeMethod : `function` )
-  Updates the position of the markers.
-
-  The `pixelChangeMethod` is a function that transforms the given `{ lat : number, lng : number }` object, using the GoogleMaps coordinate system. In the layer's div pixel coordinates.
-
----
-#### `.update` ( message : `Object` )
-  MarkerLayer observes Map objects.
+#### `remove` ()
+  Detaches chartist chart and removes this visualization.
 
 ---
