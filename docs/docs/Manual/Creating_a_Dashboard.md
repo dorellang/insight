@@ -1,15 +1,15 @@
 # Creating a Dashboard
 
-The goal of this section is to give a brief introduction to citydashboard.js. We will start setting up a map with a two marker.
+Welcome to CityDashboard.js. On this brief introduction we will start setting up a map with a two markers.
 
-## What is citydashboard.js?
+## What is CityDashboard.js?
 
-citydashboard.js is a library that helps create a dashboard intended to be used with maps, especifically with city visualiations.
+CityDashboard.js is a generic Web Dashboard for Urban Based Visualization Projects.
 
 ## Before we start
 
-Before you can use citydashboard.js, you need somewhere to display it.
-Save the following HTML to a file on your computer, along with a copy of citydashboard.min.js in the js/ directory, and open it on your browser.
+Before you can use CityDashboard.js, you need somewhere to display it.
+Save the following HTML to a file on your computer, along with a copy of CityDashboard.min.js in the js/ directory, and open it on your browser.
 
 ``` html
 <!DOCTYPE html>
@@ -20,21 +20,33 @@ Save the following HTML to a file on your computer, along with a copy of citydas
       html,
       body {
         margin: 0;
+        width: 100%;
+        height: 100%;
       }
-      #Dashboard {
+      #dashboard {
         width: 100%;
         height: 100%;
       }
     </style>
+    <!-- CityDashboard Styles -->
+    <link rel="stylesheet" type="text/css" href="css/CityDashboard.css">
+
+    <!-- jQuery -->
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <!-- Google Maps import -->
+    `<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>`
+
+    <!-- CityDashboard import -->
+    <script src="js/CityDashboard.min.js"></script>
   </head>
+
   <body>
-    <!-- GoogleMaps script import goes here -->
-    <script src="js/citydashboard.min.js"></script>
-    <script>
-      //our Javascript code goes here.
-    </script>
-    <div id="Dashboard"></div>
+    <div id="dashboard"></div>
   </body>
+
+  <script>
+    //our Javascript code goes here.
+  </script>
 </html>
 ```
 
@@ -44,13 +56,26 @@ That's all you need. All code below goes into the empty `<script>` tag.
 
 A City Dashboard consists on two things: A map and an information window.
 
-citydashboard.js has an easy support of GoogleMaps. You must include the Javascript API of GoogleMaps, and remember to add your developer key.
+CityDashboard.js has an easy support of GoogleMaps. You must include the Javascript API of GoogleMaps, and remember to add your developer key.
 
 `<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>`
 
 For more information about the GoogleMaps API and developers key, please visit [Google Developers](https://developers.google.com/maps/documentation/javascript/tutorial?).
 
-Now we can create a map for our visualization.
+First let's set up our Dashboard.
+
+``` javascript
+var myDashboard = new CityDashboard.Dashboard({
+  'anchor': '#dashboard',
+  'layout': 'left'
+});
+```
+
+This will place our Dashbord on the container, and add a layout. The left layout will place our information window to the left of the map.
+
+The next thing we will do is to set our map.
+
+The map requires the center coordinates and the zoom level.
 
 ``` javascript
 var map = new CityDashboard.GoogleMap({
@@ -59,7 +84,6 @@ var map = new CityDashboard.GoogleMap({
   'zoom': 15
 });
 ```
-This will set up our map. Let's give a closer look at the configuration parameters. `lat` and `lng` are the map's initial center coordinates, and `zoom` is the map's zoom level.
 
 Now we have a map setted up, but we want this dashboard to give us some information.
 
@@ -68,42 +92,14 @@ We want to have a marker, when we click it the information window must show a su
 Let's set up the information window with a `summary-viz`.
 
 ``` javascript
-var infoWindow = new CityDashboard.InfoWindow({
-  'contents': [{
-    'visualization': 'summary-viz',
-    'data-source': '#myMarker',
-    'id': '#summary',
-    'properties': {
-      'title': 'My Marker Summary'
-    }
-  }]
-});
+var infoWindow = new CityDashboard.InfoWindow([{
+  'visualization': 'summary-viz',
+  'data-source': '#myMarker',
+  'id': '#summary',
+  'title': 'My Marker Summary'
+}]);
 ```
 We just configurated the information window, adding a summary visualization with "My Marker Summary" as title, and we pointed out that the data comes from a map element called `'#myMarker'`.
-
-The next step is to bind together the map and the information window.
-
-``` javascript
-var myDashboard = new CityDashboard.Dashboard({
-        'anchor': '#dashboard',
-        'map': map,
-        'info': infoWindow,
-        'layout': 'left'
-      });
-```
-The Dashboard is now binded with its map and information window.We tell the Dashboard that `'#dashboard'` is the container of our visualization.
-
-We also choose to place the information window to the left, relative to the map.
-
-```
-myDashboard.show();
-```
-
-Until now if you refresh your page you won't see any visualization. When you call the method `show()` the dashboard is placed inside the `'#dashboard'` container and the visualization begins.
-
-Now you can see the map over Paris, near the Eiffel Tower. At the left of the map is a bar with a single visualization, with 'My Marker Summary' as its title and without data.
-
-We configured the summary to look for an element `'#myMarker'` on the map, but there are no elements on it.
 
 ## Adding a Marker
 
@@ -114,16 +110,16 @@ myDashboard.addLayer({
   'id': '#myMarker',
   'layer': 'marker-layer',
   'data-source': '#myMarker',
-  'data': {'lat': 48.8556,
+  'data': [{'lat': 48.8556,
           'lng': 2.2986,
-          'value': {
-            'landmark': 'Champ de Mars'
-          }},
-  'marker-action': {
-    'action': 'update-viz',
+          'landmark': 'Champ de Mars'
+          }],
+  'layer_attr': {
+    'type': 'simple',
+    'id': '#summary',
     'visualization': 'summary-viz',
-    'target': '#summary'
-  }
+    'title': 'My Summary from Marker.'
+    }
 });
 ```
 
@@ -133,52 +129,65 @@ We choose a marker-type layer.
 
 The data-source of our markers are themselves, because we give them their data manually using the `'data'` property.
 
-Finally we give them an action when clicked. The `'action'` property tells the marker what kind of action must perform. In this case an update of the visualization configuration.
+The `layer_attr` property sets the type of our marker and the behaviour of the marker when clicked.
+In this case it is set to send it's data to a visualization of type `summary-viz` with an ID `#summary`.
 
-The `'visualization'` property tells the marker the type of the target visualization and the `'target'` property contains the id of the visualization we want to change.
+Notice that the title is not the same as the one we setted on infoWindow. If you close the ***My Marker Summary*** visualization and click again on the marker, the visualization that appears has ***My Summary from Marker*** as its title.
+
 
 > **About the data**
 >
-> The data property must be a single JSON or an Array of them, with properties `'lat'`, `'lng'` and `'value'`.
+> The data property must be an Array of JSON objects, with properties `'lat'`, `'lng'` and `value`. All other properties will be shown at the visualization as a defintion list.
+> The value property is used on charts.
 
-If you refresh the page now you will see a black dot over the Champ de Mars. The summary now contains the information added.The latitude and longitude of the element, and the values given.
+If you refresh the page now you will see a marker over the Champ de Mars. The summary now contains the information added. The latitude and longitude of the element, and the values given.
+
+![Marker over Champ de Mars](Creating_a_Dashboard.png)
 
 Let's add a second marker so we can see the change happen.
 
-Change the data parameter on the `'#myMarker'`, adding the JSON for the Eiffel Tower.
+Change the data parameter on the `'#myMarker'`, adding the data for the Eiffel Tower.
 
 ``` javascript
-'data': [{'lat': 48.8556,
-          'lng': 2.2986,
-          'value': {
-            'landmark': 'Champ de Mars'
-          }},
-         {'lat': 48.8583,
-          'lng': 2.2944,
-          'value': {
-            'landmark': 'Eiffel Tower'
-          }}],
+'data': [
+  {
+    'lat': 48.8556,
+    'lng': 2.2986,
+    'landmark': 'Champ de Mars'
+  },
+  {
+    'lat': 48.8583,
+    'lng': 2.2944,
+    'landmark': 'Eiffel Tower',
+    'fun-fact': 'Was built in 1889.'
+  }],
 ```
 
-You can see now two black dots. Click on them and you'll see the summary change.
+You can see now two markers. Click on them and you'll see the summary change.
 
 ## Customize Markers
 
-Let's customize it a bit. We don't want a black dot, instead we want a blue square.
+Let's customize it a bit. We don't want a red marker, but a blue circle.
 
-``` javascript
-'marker-attr': {
-  'type': 'rect',
-  'width': 50,
-  'height': 50,
-  'fill': 'blue'
-}
+Just change `layer_attr`.
+
+```javascript
+'layer_attr': {
+  'type': 'circle',
+  'radius': 30,
+  'strokeColor': '#00f',
+  'fillColor': '#00f',
+
+  'id': '#summary',
+  'visualization': 'summary-viz',
+  'title': 'My Summary from Marker'
+  }
 ```
-Now we replaced the black dots with blue squares!
+
 
 ## The result
 
-Congratulations! You have completed your first CityDashboard.js visualization. It's simple, you have to start somewhere.
+Now you have completed your first CityDashboard.js visualization!
 
 The full code is available below. Play around with it to get a better understanding of how it works.
 
@@ -191,77 +200,73 @@ The full code is available below. Play around with it to get a better understand
       html,
       body {
         margin: 0;
+        width: 100%;
+        height: 100%;
       }
-      #Dashboard {
+      #dashboard {
         width: 100%;
         height: 100%;
       }
     </style>
-  </head>
-  <body>
+    <!-- CityDashboard Styles -->
+    <link rel="stylesheet" type="text/css" href="css/CityDashboard.css">
+
+    <!-- jQuery -->
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <!-- Google Maps import -->
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-    <script src="js/citydashboard.min.js"></script>
-    <script>
-      // Setting up our map.
-      var map = new CityDashboard.GoogleMap({
-        'lat': 48.8583,
-        'lng': 2.2944,
-        'zoom': 15
-      });
 
-      // Setting up our information window.
-      var infoWindow = new CityDashboard.InfoWindow({
-        'contents': [{
-          'visualization': 'summary-viz',
-          'data-source': '#myMarker',
-          'id': '#summary',
-          'properties': {
-            'title': 'My Marker Summary'
-          }
-        }]
-      });
+    <!-- CityDashboard import -->
+    <script src="js/CityDashboard.min.js"></script>
+  </head>
 
-      // Binding the map and the information window.
-      var myDashboard = new CityDashboard.Dashboard({
-        'anchor': '#dashboard',
-        'map': map,
-        'info': infoWindow,
-        'layout': 'left'
-      });
-
-      // Adding a Marker Layer
-      myDashboard.addLayer({
-        'id': '#myMarker',
-        'layer': 'marker-layer',
-        'data-source': '#myMarker',
-        'data': [{'lat': 48.8556,
-                  'lng': 2.2986,
-                  'value': {
-                    'landmark': 'Champ de Mars'
-                  }},
-                 {'lat': 48.8583,
-                  'lng': 2.2944,
-                  'value': {
-                    'landmark': 'Eiffel Tower'
-                  }}],
-        'marker-action': {
-          'action': 'update-viz',
-          'visualization': 'summary-viz',
-          'target': '#summary'
-        },
-        'marker-attr': {
-          'type': 'rect',
-          'width': 50,
-          'height': 50,
-          'fill': 'blue'
-        }
-      });
-
-      // Show the Dashboard
-      myDashboard.show();
-
-    </script>
-    <div id="Dashboard"></div>
+  <body>
+    <div id="dashboard"></div>
   </body>
+
+  <script>
+    var myDashboard = new CityDashboard.Dashboard({
+      'anchor': '#dashboard',
+      'layout': 'left'
+    });
+
+    var map = new CityDashboard.GoogleMap({
+      'lat': 48.8583,
+      'lng': 2.2944,
+      'zoom': 15
+    });
+
+    var infoWindow = new CityDashboard.InfoWindow([{
+      'visualization': 'summary-viz',
+      'data-source': '#myMarker',
+      'id': '#summary',
+      'title': 'My Marker Summary'
+    }]);
+
+    myDashboard.addLayer({
+      'id': '#myMarker',
+      'layer': 'marker-layer',
+      'data-source': '#myMarker',
+      'data': [{'lat': 48.8556,
+              'lng': 2.2986,
+              'landmark': 'Champ de Mars'
+              },
+              {'lat': 48.8583,
+                'lng': 2.2944,
+                'landmark': 'Eiffel Tower',
+                'fun-fact': 'Was built in 1889.'
+                }],
+      'layer_attr': {
+        'type': 'circle',
+        'radius': 30,
+        'strokeColor': '#00f',
+        'fillColor': '#00f',
+
+        'id': '#summary',
+        'visualization': 'summary-viz',
+        'title': 'My Summary from Marker'
+        }
+    });
+  </script>
 </html>
 ```

@@ -83,7 +83,7 @@ class GetHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     path = urlparse.urlparse(self.path).path
 
     # handle the request for the development library
-    if path == "/test/js/CityDashboard.min.js":
+    if path.endswith("/js/CityDashboard.min.js"):
       m = Minifier()
       m.parseFolder('src')
       m.minify('CityDashboard.min.js')

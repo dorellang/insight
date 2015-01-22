@@ -19,8 +19,6 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
 
     infoWindow.off( 'marker-pressed' );
 
-    // var action = arg['attr']['action'] || 'update';
-
     var vizs = _this.dataSourceTable[ arg.id ] || [];
 
     if ( vizs.length !== 0 && ( !arg.attr.id || arg.attr.id in _this.visualizations ) ) {

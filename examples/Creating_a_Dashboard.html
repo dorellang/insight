@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My first Dashboard</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+      #dashboard {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <!-- CityDashboard Styles -->
+    <link rel="stylesheet" type="text/css" href="css/CityDashboard.css">
+
+    <!-- jQuery -->
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <!-- Google Maps import -->
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+
+    <!-- CityDashboard import -->
+    <script src="js/CityDashboard.min.js"></script>
+  </head>
+
+  <body>
+    <div id="dashboard"></div>
+  </body>
+
+  <script>
+    var myDashboard = new CityDashboard.Dashboard({
+      'anchor': '#dashboard',
+      'layout': 'left'
+    });
+
+    var map = new CityDashboard.GoogleMap({
+      'lat': 48.8583,
+      'lng': 2.2944,
+      'zoom': 15
+    });
+
+    var infoWindow = new CityDashboard.InfoWindow([{
+      'visualization': 'summary-viz',
+      'data-source': '#myMarker',
+      'id': '#summary',
+      'title': 'My Marker Summary'
+    }]);
+
+    myDashboard.addLayer({
+      'id': '#myMarker',
+      'layer': 'marker-layer',
+      'data-source': '#myMarker',
+      'data': [{'lat': 48.8556,
+              'lng': 2.2986,
+              'landmark': 'Champ de Mars'
+              },
+              {'lat': 48.8583,
+                'lng': 2.2944,
+                'landmark': 'Eiffel Tower',
+                'fun-fact': 'Was built in 1889.'
+                }],
+      'layer_attr': {
+        'type': 'circle',
+        'radius': 30,
+        'strokeColor': '#00f',
+        'fillColor': '#00f',
+
+        'id': '#summary',
+        'visualization': 'summary-viz',
+        'title': 'My Summary from Marker'
+        }
+    });
+  </script>
+</html>
