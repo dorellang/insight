@@ -66,15 +66,27 @@
     var maxlng = -70.55;
     var minlng = -70.75;
 
-    for(var i = 0; i < 50; i++) {
+    for(var i = 0; i < 20; i++) {
       lats[i] = [];
       lngs[i] = [];
       lats[i][0] = Math.random() * (maxlat - minlat) + minlat;
       lngs[i][0] = Math.random() * (maxlng - minlng) + minlng;
       lats[i][1] = Math.random() * (maxlat - minlat) + minlat;
       lngs[i][1] = Math.random() * (maxlng - minlng) + minlng;
+      lats[i][2] = Math.random() * (maxlat - minlat) + minlat;
+      lngs[i][2] = Math.random() * (maxlng - minlng) + minlng;
       weights[i] = Math.floor(Math.random() * (4 - 1) + 1);
     }
+
+    //lngs = [[0,0.01,0.02,0.04]];
+    //lats = [[0,0.01,0.03,0.03]];
+
+    /*xmlhttp=new XMLHttpRequest();
+    xmlhttp.open("GET","map.xml",false);
+    xmlhttp.send();
+    xmlDoc=xmlhttp.responseXML;
+
+    console.log(xmlDoc.getElementsByTagName("way")[0].getElementsByTagName("nd")[0].get);*/
 
     myDashboard
     .addLayer({

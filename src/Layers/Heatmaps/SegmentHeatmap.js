@@ -2,28 +2,38 @@ CityDashboard.SegmentHeatmap = function( layer_params, attr, map, assoc_layer ){
 
   var data = [];
   var n = layer_params.lat.length;
-
-  console.log(layer_params.weights);
   
   for(var i = 0; i < n; i++){
-    data[i] = { lati: parseFloat(layer_params.lat[i][0]), lngi: parseFloat(layer_params.lng[i][0]),
-                latf: parseFloat(layer_params.lat[i][1]), lngf: parseFloat(layer_params.lng[i][1]) };
+    data[i] = [];
+    for (var j = 0; j < layer_params.lat[i].length; j++) {
+      data[i][j] = { lat: parseFloat(layer_params.lat[i][j]), lng: parseFloat(layer_params.lng[i][j]) };
+    }; 
   }
 
   var myData = [];
 
   for(var i = 0; i < data.length; i++) {
 
-    var d = Math.sqrt( Math.pow((data[i].latf - data[i].lati),2) + Math.pow((data[i].lngf - data[i].lngi),2) );
+    var m = data[i].length
 
-    var n = Math.floor(d/0.0001);
+    for(var j = 0; j < m-1; j++){
 
-    var delta = { lat: (data[i].latf - data[i].lati)/n , lng: (data[i].lngf - data[i].lngi)/n };
+      var d = Math.sqrt( Math.pow((data[i][j+1].lat - data[i][j].lat),2) 
+        + Math.pow((data[i][j+1].lng - data[i][j].lng),2) );
 
-    for(var j = 0; j < n; j++){
-      var lat = data[i].lati;
-      var lng = data[i].lngi;
-      myData.push({location: new google.maps.LatLng(lat + delta.lat*j, lng + delta.lng*j), weight: layer_params.weights[i]})
+      //var n = Math.floor(d/0.000005);
+      var l = Math.floor(d/0.00001);
+
+      var delta = { lat: (data[i][j+1].lat - data[i][j].lat)/l , lng: (data[i][j+1].lng - data[i][j].lng)/l };
+
+      for(var k = 0; k < l; k++){
+        
+        var lat = data[i][j].lat;
+        var lng = data[i][j].lng;
+        myData.push({
+          location: new google.maps.LatLng(lat + delta.lat*k, lng + delta.lng*k), 
+          weight: layer_params.weights[i] || 1})
+      }
     }
 
   }
