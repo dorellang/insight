@@ -12,7 +12,7 @@ The base class for all visualizations.
  >
  > title - The title of the visualization.
  >
- > properties - The CSS properties of the visualization.
+ > properties - The CSS properties of the visualization. Attribute `closable` will add a close button. Attribute `movable` will add arrow buttons and let the visualization be moved between it's siblings. Both Attributes are setted by default.
  >
  > preprocess - A function. It modifies the data before being used by the visualization.
  >
@@ -91,6 +91,7 @@ The base class for all visualizations.
 ## Events
 #### `remove-viz`
   This event is triggered upon InfoWindow when the user clicks the close button.
+  See utils.
 
 ---
 #### `change`

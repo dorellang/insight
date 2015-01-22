@@ -21,9 +21,14 @@ var id, data_source, title, properties;
   var _this = this;
   this.viz = $('<div>').setID( this.id ).addClass( 'visualization' )
   .append( title )
-  .append( $('<hr>').addClass('viz-bar') )
-  .movable()
-  .closable(function () {return _this.remove();});
+  .append( $('<hr>').addClass('viz-bar') );
+
+  if (this.properties['closable'] === undefined || this.properties['closable']){
+    this.viz.closable(function () {return _this.remove();});
+  }
+  if (this.properties['movable'] === undefined || this.properties['movable']){
+    this.viz.movable();
+  }
 
   this.viz.append( $( '<h6>' ).addClass('latlngView') );
 
