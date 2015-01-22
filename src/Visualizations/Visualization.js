@@ -52,16 +52,16 @@ CityDashboard.Visualization.prototype = {
   },
   refresh: function () {
     
-    var h6 = $( this.id ).find('h6').empty();
+    var latlngView = $( this.id ).find('.latlngView').empty();
 
-    $( this.id ).find('div').last().empty();
+    this.viz.find('.deflist').remove();
 
     var data = this.getData();
 
     var lat = data.lat, lng = data.lng;
 
     if ( lat && lng)
-      h6.text('lat: ' + lat + ', lng: ' + lng).insertAfter( $( this.id ).find('hr') );
+      latlngView.text('lat: ' + lat + ', lng: ' + lng).insertAfter( $( this.id ).find('hr') );
 
   },
   remove: function () {

@@ -3,12 +3,6 @@ CityDashboard.D3Visualization = function ( props ) {
 
   this.viz.addClass('d3-viz').append( $('<div>') );
 
-  var el = $('<div>').addClass('def-list');
-
-  this.viz.append( el );
-
-  // el.find('svg').noUnderflow();
-
   var initwidth = el.width();
   var initheight = 0.61803398875*initwidth;
 
@@ -47,7 +41,7 @@ CityDashboard.D3Visualization.prototype.refresh = function () {
   var el = $( this.id );
   this._create(this.svg,data,el.width(),el.height());
 
-  $( this.id + '> div').last().append( $('<dl>').addClass('deflist') );
+  this.viz.append( $('<dl>').addClass('deflist') );
 
   if (! (data instanceof Array))
 

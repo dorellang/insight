@@ -6,8 +6,6 @@ CityDashboard.ChartistVisualization = function ( props, chartConstructor ) {
 
   this.viz.addClass('chartist-viz').append( $('<div>').addClass(this.properties['class']) );
 
-  this.viz.append( $('<div>').addClass('def-list') );
-
   this.options = props['options'] || {};
 
   this.responsiveOptions = props['responsiveOptions'] || {};
@@ -48,7 +46,7 @@ CityDashboard.ChartistVisualization.prototype.refresh = function () {
   else
     this.chart = new this.chartConstructor( this.id+' > div' , data , this.options, this.responsiveOptions);
 
-  $( this.id + '> div').last().append( $('<dl>').addClass('deflist') );
+  this.viz.append( $('<dl>').addClass('deflist') );
 
   if (! (this.data instanceof Array))
 
