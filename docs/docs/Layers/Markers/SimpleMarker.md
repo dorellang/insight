@@ -4,7 +4,7 @@ A generic abstract marker.
 ## Constructor
 
 #### SimpleMarker ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
- Configures a new simple marker. Inherits from [Marker](/docs/docs/Layers/Marker/Marker.md)
+ Configures a new simple marker. Inherits from [Marker](/docs/docs/Layers/Markers/Marker.md)
 
  layer_params is an object with properties that define the simple marker. Normally contains these attributes:
 
