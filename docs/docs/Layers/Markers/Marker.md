@@ -16,7 +16,7 @@ A generic abstract marker.
 
  attr is an object with properties that defines any attribute of the marker. Normally contains the marker type, color and any param needed for the specific non-abstract marker.
 
- > type - Marker type (String)
+ > type - Marker type (String).
 
  map is an instance of a [GoogleMap](https://developers.google.com/maps/documentation/javascript/reference#Map) object.
 

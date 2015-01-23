@@ -1,10 +1,10 @@
 # SimpleMarker
-A generic abstract marker.
+A Simple marker.
 
 ## Constructor
 
 #### SimpleMarker ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
- Configures a new simple marker. Inherits from [Marker](/docs/docs/Layers/Markers/Marker.md)
+ Configures a new simple marker. Extends [Marker](/docs/docs/Layers/Markers/Marker.md)
 
  layer_params is an object with properties that define the simple marker. Normally contains these attributes:
 
@@ -16,7 +16,7 @@ A generic abstract marker.
 
  attr is an object with properties that defines any attribute of the simple marker. Should contain the marker type as `simple`.
 
- > type - Marker type (String)
+ > type - Marker type (String).
 
  map is an instance of a [GoogleMap](https://developers.google.com/maps/documentation/javascript/reference#Map) object.
 
