@@ -19,15 +19,7 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
 
     infoWindow.off( 'marker-pressed' );
 
-    var vizs = _this.dataSourceTable[ arg.id ] || [];
-
-    if ( vizs.length !== 0 && ( !arg.attr.id || arg.attr.id in _this.visualizations ) ) {
-      for (var i = vizs.length - 1; i >= 0; i--) {
-        vizs[i].setData( arg.value );
-        vizs[i].refresh();
-      };
-    }
-    else if ( arg.attr.id && !(arg.attr.id in _this.visualizations) ){
+    if ( arg.attr.id && !(arg.attr.id in _this.visualizations) ) {
       var config =
       {
         'visualization': arg['attr']['visualization'],
@@ -42,9 +34,15 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
         'checkbox-handler': arg['attr']['checkbox-handler'],
         'viz': arg['attr']['viz']
       };
-      
+
       _this.createVisualization( config );
-    }      
+    }
+    
+    var vizs = _this.dataSourceTable[ arg.id ] || [];
+    for (var i = vizs.length - 1; i >= 0; i--) {
+      vizs[i].setData( arg.value );
+      vizs[i].refresh();
+    };
 
     infoWindow.on( 'marker-pressed', handler );
   };
@@ -61,7 +59,8 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
 
   infoWindow.on( 'remove-viz', function ( e, arg ) {
     delete _this.visualizations[arg.id];
-    _this.dataSourceTable[arg['data-source']].splice(arg.id,1);
+    var index = jQuery.inArray(_this.dataSourceTable[arg['data-source']],arg.id);
+    _this.dataSourceTable[arg['data-source']].splice(index,1);
   });
 
 };
@@ -110,5 +109,5 @@ CityDashboard.InfoWindow.prototype = {
     }
 
     return CityDashboard.getData(props['data-source'],callback,props);
-  },
+  }
 };
