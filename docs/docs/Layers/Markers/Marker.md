@@ -6,7 +6,7 @@ A generic abstract marker.
 #### Marker ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
  Configures a new marker.
 
- layer_params is an object with properties that define the marker. Normally contains these attributes:
+ layer_params is an object with properties that define the marker. Normally (with the exception of [PolylineMarker](/docs/docs/Layers/Markers/PolylineMarker.md)) contains these properties:
 
  > lat - Marker latitude (Number).
  >

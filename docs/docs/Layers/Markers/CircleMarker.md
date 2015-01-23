@@ -1,12 +1,12 @@
-# SimpleMarker
+# CircleMarker
 A Circle marker.
 
 ## Constructor
 
-#### SimpleMarker ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
+#### CircleMarker ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
  Configures a new circle marker. Extends [Marker](/docs/docs/Layers/Markers/Marker.md)
 
- layer_params is an object with properties that define the circle marker. Normally contains these attributes:
+ layer_params is an object with properties that define the circle marker. Normally contains these properties:
 
  > lat - Marker latitude (Number).
  >

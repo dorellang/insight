@@ -6,7 +6,7 @@ A Simple marker.
 #### SimpleMarker ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
  Configures a new simple marker. Extends [Marker](/docs/docs/Layers/Markers/Marker.md)
 
- layer_params is an object with properties that define the simple marker. Normally contains these attributes:
+ layer_params is an object with properties that define the simple marker. Normally contains these properties:
 
  > lat - Marker latitude (Number).
  >
