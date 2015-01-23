@@ -22,6 +22,8 @@ An polyline based marker.
  >
  > strokeWeight - The stroke width in pixels.
 
+ For more info about these properties [GoogleMap API StyleOptions](https://developers.google.com/maps/documentation/javascript/reference#Data.StyleOptions)
+
  map is an instance of a [GoogleMap](https://developers.google.com/maps/documentation/javascript/reference#Map) object.
 
  assoc_layer is a [Layer](/docs/docs/Layers/Layer.md) Object.
