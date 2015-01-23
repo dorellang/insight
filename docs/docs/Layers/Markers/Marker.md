@@ -20,7 +20,7 @@ A generic abstract marker.
 
  map is an instance of a [GoogleMap](https://developers.google.com/maps/documentation/javascript/reference#Map) object.
 
- assoc_layer is a [Layer](/docs/docs/docs/Layers/Layer.md) Object.
+ assoc_layer is a [Layer](/docs/docs/Layers/Layer.md) Object.
 
 ## Parameters
 
