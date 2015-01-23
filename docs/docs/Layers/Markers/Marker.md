@@ -3,7 +3,7 @@ A generic abstract marker.
 
 ## Constructor
 
-#### MarkerLayer ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
+#### Marker ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
  Configures a new marker.
 
  layer_params is an object with properties that define the marker. Normally contains these attributes:
@@ -42,7 +42,7 @@ A generic abstract marker.
 ## Methods
 
 #### `.addEvents` ( )
-  Adds any events. Like clicking or dragging. Abstract.
+  Adds any event listeners. Like clicking or dragging. Abstract.
 
 ---
 
