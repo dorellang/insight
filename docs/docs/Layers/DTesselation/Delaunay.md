@@ -1,70 +1,38 @@
-# MarkerLayer
-A marker based layer.
-Supports basic svg shapes as circles and rectangles.
-It also supports external svg images.
+# Delaunay
+A Delaunay tesselation.
 
 ## Constructor
 
-#### MarkerLayer ( parameters : `Object` )
- Configures a new layer.
+#### Delaunay ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
+ Configures a new Delaunay.
 
- parameters is an object with the properties that define the marker layer.
+ layer_params is an object with properties that define the Delaunay. Normally contains these properties:
 
- > id - The id of the layer.
+ > points - Array of objects `{lat,lng}`.
  >
- > dataSource - The source where CityDashboard will find the data.
- >
- > data - If dataSource matches this layer's id, this values are used.
- >
- > marker_attr - The attributes for the markers appearence.
+ > weights - Array of numbers with the corresponding point weight.
 
-## Parameters
+ attr is an object with properties that defines any attribute of the Delaunay. Normally contains the Delaunay type, color and any param needed for the specific non-abstract DTesselation.
 
-#### `.id`
-  The id of this layer.
+ > type - DTesselation type (String). Should be `delaunay`.
 
----
-#### `.dataSource`
-  The source of data for the markers.
+ map is an instance of a [GoogleMap](https://developers.google.com/maps/documentation/javascript/reference#Map) object.
 
----
-#### `.elements`
-  The list of markers data.
-
----
-#### `.elementFact`
-  The marker factory.
-
----
-#### `.wrappedLayer`
-  A Layer.
-
----
+ assoc_layer is a [Layer](/docs/docs/Layers/Layer.md) Object.
 
 ## Methods
 
-#### `.wrap` ( wrappedLayer : `Layer` ) : `Layer`
-  Wraps the given layer
+#### `Add_GMapLine` ( StoreArr : `Object`, Positions : `Object`, Verts : `Object`, Color : `String`, Thickness : `Number`, Opacity : `Number`, map : `Object` )
+  Adds a googlemap polyline to StoreArr.
+
+  StoreArr is an array of googlemap polyline. Positions is an array with the point position. Verts is an array with the polyline vertex.
 
 ---
 
-#### `.refreshZIndex` ( zIndex : `number` )
-  Refreshes the zIndex of the elements.
-
-  The last inserted layer is always over the older ones.
+#### `ClearOvlyArray` ( OvlyArray : `Object` )
+  Clears all lines of OvlyArray.
 
 ---
-#### `.place` ( container : `String` )
-  Places the markers in the map.
 
----
-#### `.refreshElements` ( pixelChangeMethod : `function` )
-  Updates the position of the markers.
-
-  The `pixelChangeMethod` is a function that transforms the given `{ lat : number, lng : number }` object, using the GoogleMaps coordinate system. In the layer's div pixel coordinates.
-
----
-#### `.update` ( message : `Object` )
-  MarkerLayer observes Map objects.
-
----
+#### `SplitSegment` ( po : `Object`, p1 : `Object` )
+  Split a segment.

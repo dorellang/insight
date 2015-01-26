@@ -20,6 +20,23 @@ A generic abstract Voronoi/Delaunay tesselation.
 
  assoc_layer is a [Layer](/docs/docs/Layers/Layer.md) Object.
 
+## Methods
+
+#### `Add_GMapLine` ( StoreArr : `Object`, Positions : `Object`, Verts : `Object`, Color : `String`, Thickness : `Number`, Opacity : `Number`, map : `Object` )
+  Adds a googlemap polyline to StoreArr.
+
+  StoreArr is an array of googlemap polyline. Positions is an array with the point position. Verts is an array with the polyline vertex.
+
+---
+
+#### `ClearOvlyArray` ( OvlyArray : `Object` )
+  Clears all lines of OvlyArray.
+
+---
+
+#### `SplitSegment` ( po : `Object`, p1 : `Object` )
+  Split a segment.
+
 ## Important Note
 
  Voronoi/Delaunay requires an extra library. 
