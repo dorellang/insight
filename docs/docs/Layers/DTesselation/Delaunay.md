@@ -1,5 +1,5 @@
 # Delaunay
-A Delaunay tesselation.
+A Delaunay tesselation. Extends [DTesselation](/docs/docs/Layers/DTesselation/DTesselation.md).
 
 ## Constructor
 

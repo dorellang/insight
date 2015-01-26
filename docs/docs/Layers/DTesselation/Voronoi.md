@@ -1,5 +1,5 @@
 # Voronoi
-A Voronoi tesselation.
+A Voronoi tesselation. Extends [DTesselation](/docs/docs/Layers/DTesselation/DTesselation.md).
 
 ## Constructor
 
