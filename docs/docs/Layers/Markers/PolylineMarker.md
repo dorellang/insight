@@ -1,10 +1,10 @@
 # PolylineMarker
-An polyline based marker.
+An polyline based marker. Extends [Marker](/docs/docs/Layers/Markers/Marker.md).
 
 ## Constructor
 
 #### PolylineMarker ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
- Configures a new polyline marker. Extends [Marker](/docs/docs/Layers/Markers/Marker.md)
+ Configures a new polyline marker.
 
  layer_params is an object with properties that define the polyline marker. Normally contains these properties:
 

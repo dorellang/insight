@@ -1,11 +1,11 @@
 # ImageMarker
-An Image based marker. Support svg shapes.
+An Image based marker. Support svg shapes. Extends [Marker](/docs/docs/Layers/Markers/Marker.md).
 
 ## Constructor
 
 #### ImageMarker ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
- Configures a new image marker. Extends [Marker](/docs/docs/Layers/Markers/Marker.md)
-
+ Configures a new image marker.
+ 
  layer_params is an object with properties that define the image marker. Normally contains these properties:
 
  > lat - Marker latitude (Number).

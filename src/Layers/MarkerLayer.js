@@ -36,8 +36,4 @@ CityDashboard.MarkerLayer.prototype = {
     
   },
 
-  getMarkers: function () {
-  	return this.markers;
-  }
-
 };

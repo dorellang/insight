@@ -1,10 +1,10 @@
 # SimpleMarker
-A Simple marker.
+A Simple marker. Extends [Marker](/docs/docs/Layers/Markers/Marker.md).
 
 ## Constructor
 
 #### SimpleMarker ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
- Configures a new simple marker. Extends [Marker](/docs/docs/Layers/Markers/Marker.md)
+ Configures a new simple marker.
 
  layer_params is an object with properties that define the simple marker. Normally contains these properties:
 
