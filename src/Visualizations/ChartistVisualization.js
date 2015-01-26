@@ -14,15 +14,15 @@ CityDashboard.ChartistVisualization = function ( props, chartConstructor ) {
 
   //checkbox
 
-  this.checkbox_handler = props['checkbox-handler'] || function (array,data) {
-        var out = [];
-        for (var i = 0; i < array.length; i++) {
-          if (array[i]){
-            out[out.length] = data[i];
-          }
-        };
-        return out;
-      };
+  // this.checkbox_handler = props['checkbox-handler'] || function (array,data) {
+  //       var out = [];
+  //       for (var i = 0; i < array.length; i++) {
+  //         if (array[i]){
+  //           out[out.length] = data[i];
+  //         }
+  //       };
+  //       return out;
+  //     };
 
   this.refresh();
   

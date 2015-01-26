@@ -38,7 +38,7 @@ var id, data_source, title, properties;
 
   // checkbox handling
 
-  this.checkbox_handler = props['checkbox-handler'];
+  this.checkbox_handler = props['checkbox-handler'] || function (a,d){return d;};
 
   if (props.checkbox)
     this.addCheckbox( props['checkbox'] );
@@ -114,7 +114,7 @@ CityDashboard.Visualization.prototype = {
         }).get();
 
         _this.getData = function () {
-          return _this.checkbox_handler(array,_this.data);
+          return _this.checkbox_handler(array,jQuery.extend({}, _this.data));
         };
 
         _this.refresh();
@@ -127,7 +127,7 @@ CityDashboard.Visualization.prototype = {
     this.viz.append(checkpanel);
 
     _this.getData = function () {
-      return _this.checkbox_handler(arr,_this.data);
+      return _this.checkbox_handler(arr,jQuery.extend({}, _this.data));
     };
   }
 

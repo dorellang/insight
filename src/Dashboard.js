@@ -47,7 +47,6 @@ CityDashboard.Dashboard = function ( parameters ) {
 
   container.on('filterChanged',function (e, fun) {
     var f = fun()
-    console.log(layers);
     for (var i = layers.length - 1; i >= 0; i--) {
       layers[i].filter(f);
     };
