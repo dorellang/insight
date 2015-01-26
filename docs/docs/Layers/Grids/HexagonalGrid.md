@@ -1,70 +1,46 @@
-# MarkerLayer
-A marker based layer.
-Supports basic svg shapes as circles and rectangles.
-It also supports external svg images.
+# HexagonalGrid
+A hexagonal grid. Extends [Grid](/docs/docs/Layers/Grids/Grid.md).
 
 ## Constructor
 
-#### MarkerLayer ( parameters : `Object` )
- Configures a new layer.
+#### HexagonalGrid ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
+ Configures a new hexagonal grid.
 
- parameters is an object with the properties that define the marker layer.
+ layer_params is an object with properties that define the grid. Normally contains these properties:
 
- > id - The id of the layer.
+ > points - Array of objectes `{lat,lng}`.
  >
- > dataSource - The source where CityDashboard will find the data.
- >
- > data - If dataSource matches this layer's id, this values are used.
- >
- > marker_attr - The attributes for the markers appearence.
+ > weights - Array of numbers with the corresponding point weight.
+
+ attr is an object with properties that defines any attribute of the grid. Normally contains the grid type, color and any param needed for the specific non-abstract grid.
+
+ > type - Grid type (String).
+
+ map is an instance of a [GoogleMap](https://developers.google.com/maps/documentation/javascript/reference#Map) object.
+
+ assoc_layer is a [Layer](/docs/docs/Layers/Layer.md) Object.
 
 ## Parameters
 
-#### `.id`
-  The id of this layer.
+#### `.layer_params`
+  Properties that define the grid.
 
 ---
-#### `.dataSource`
-  The source of data for the markers.
+#### `.attr`
+  Attributes that define the grid, such as type.
 
 ---
-#### `.elements`
-  The list of markers data.
+#### `.map`
+  Map where the grid is shown.
 
 ---
-#### `.elementFact`
-  The marker factory.
-
----
-#### `.wrappedLayer`
-  A Layer.
-
----
+#### `.layer`
+  Associated layer where this grid belongs.
 
 ## Methods
 
-#### `.wrap` ( wrappedLayer : `Layer` ) : `Layer`
-  Wraps the given layer
+#### `.addEvents` ( )
+  Adds any event listeners. Adds events to move the grid according to pan and zoom
 
----
-
-#### `.refreshZIndex` ( zIndex : `number` )
-  Refreshes the zIndex of the elements.
-
-  The last inserted layer is always over the older ones.
-
----
-#### `.place` ( container : `String` )
-  Places the markers in the map.
-
----
-#### `.refreshElements` ( pixelChangeMethod : `function` )
-  Updates the position of the markers.
-
-  The `pixelChangeMethod` is a function that transforms the given `{ lat : number, lng : number }` object, using the GoogleMaps coordinate system. In the layer's div pixel coordinates.
-
----
-#### `.update` ( message : `Object` )
-  MarkerLayer observes Map objects.
-
----
+#### `.build` ( )
+  Builds the grid.
