@@ -49,7 +49,8 @@ CityDashboard.Visualization.prototype = {
 
   constructor: CityDashboard.Visualization,
   setData: function (data) {
-    data =  jQuery.extend({}, data);
+    if ( !(data instanceof Array) )
+      data =  jQuery.extend({}, data);
 
     if (!data || Object.keys(data).length === 0)
       this.data = {};
