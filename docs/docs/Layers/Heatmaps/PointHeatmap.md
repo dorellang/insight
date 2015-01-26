@@ -1,70 +1,19 @@
-# MarkerLayer
-A marker based layer.
-Supports basic svg shapes as circles and rectangles.
-It also supports external svg images.
+# PointHeatmap
+A point heatmap. Extends [Heatmap](/docs/docs/Layers/Heatmaps/Heatmap.md).
 
 ## Constructor
 
-#### MarkerLayer ( parameters : `Object` )
- Configures a new layer.
+#### PointHeatmap ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
+ Configures a new heatmap.
 
- parameters is an object with the properties that define the marker layer.
+ layer_params is an object with properties that define the heatmap. Normally contains these properties:
 
- > id - The id of the layer.
- >
- > dataSource - The source where CityDashboard will find the data.
- >
- > data - If dataSource matches this layer's id, this values are used.
- >
- > marker_attr - The attributes for the markers appearence.
+ > points - Array of objects `{lat,lng}`.
 
-## Parameters
+ attr is an object with properties that defines any attribute of the heatmap. Normally contains the heatmap type, color and any param needed for the specific non-abstract heatmap.
 
-#### `.id`
-  The id of this layer.
+ > type - Heatmap type (String).
 
----
-#### `.dataSource`
-  The source of data for the markers.
+ map is an instance of a [GoogleMap](https://developers.google.com/maps/documentation/javascript/reference#Map) object.
 
----
-#### `.elements`
-  The list of markers data.
-
----
-#### `.elementFact`
-  The marker factory.
-
----
-#### `.wrappedLayer`
-  A Layer.
-
----
-
-## Methods
-
-#### `.wrap` ( wrappedLayer : `Layer` ) : `Layer`
-  Wraps the given layer
-
----
-
-#### `.refreshZIndex` ( zIndex : `number` )
-  Refreshes the zIndex of the elements.
-
-  The last inserted layer is always over the older ones.
-
----
-#### `.place` ( container : `String` )
-  Places the markers in the map.
-
----
-#### `.refreshElements` ( pixelChangeMethod : `function` )
-  Updates the position of the markers.
-
-  The `pixelChangeMethod` is a function that transforms the given `{ lat : number, lng : number }` object, using the GoogleMaps coordinate system. In the layer's div pixel coordinates.
-
----
-#### `.update` ( message : `Object` )
-  MarkerLayer observes Map objects.
-
----
+ assoc_layer is a [Layer](/docs/docs/Layers/Layer.md) Object.

@@ -8,7 +8,7 @@ A generic abstract grid.
 
  layer_params is an object with properties that define the grid. Normally contains these properties:
 
- > points - Array of objectes `{lat,lng}`.
+ > points - Array of objects `{lat,lng}`.
  >
  > weights - Array of numbers with the corresponding point weight.
 
