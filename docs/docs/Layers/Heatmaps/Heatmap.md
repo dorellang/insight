@@ -20,7 +20,7 @@ A generic abstract heatmap.
 
  assoc_layer is a [Layer](/docs/docs/Layers/Layer.md) Object.
 
- ## Important Note
+## Important Note
 
  Heatmap requires the [visualization library](https://developers.google.com/maps/documentation/javascript/visualization) of google maps. 
 
