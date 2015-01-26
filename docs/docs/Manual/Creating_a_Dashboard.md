@@ -15,6 +15,7 @@ Save the following HTML to a file on your computer, along with a copy of CityDas
 <!DOCTYPE html>
 <html>
   <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>My first Dashboard</title>
     <style>
       html,

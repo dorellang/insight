@@ -39,7 +39,7 @@ CityDashboard.ChartistVisualization.prototype.refresh = function () {
 
   var data  = {
     'series': d,
-    'labels': typeof this.labels === 'function' ? this.labels(d.value || d) : this.labels
+    'labels': typeof this.labels === 'function' ? this.labels(d) : this.labels
   };
 
   if ( this.chart && this.chart.optionsProvider){
