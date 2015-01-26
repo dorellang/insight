@@ -56,16 +56,40 @@
     // Setting up our information window.
     var infoWindow = new CityDashboard.InfoWindow({});
 
+    var maxlat = -33.34;
+    var minlat = -33.54;
+
+    var maxlng = -70.55;
+    var minlng = -70.75;
+
+    var points = [];
+    var weights = [];
+    for(var i = 0; i < 200; i++) {
+      points[i] = {lat: Math.random() * (maxlat - minlat) + minlat,
+                   lng: Math.random() * (maxlng - minlng) + minlng};
+      weights[i] = Math.random() * (6 - 1) + 1;
+    }
+
     myDashboard
     .addLayer({
       'id': '#hexagonalGrid',
       'layer': 'grid-layer',
       'data-source': '#hexagonalGrid',
-      'data': [],
+      'data': [{'points': points,
+                'weights': weights
+              }],
       'layer_attr': {
         'type': 'hexagonal',
-        //'color': 'green',
+        //'color': 'red',
         'size': '0.02'
+    }})
+    .addLayer({
+      'id': '#simpleMarker',
+      'layer': 'marker-layer',
+      'data-source': '#simpleMarker',
+      'data': points,
+      'layer_attr': {
+        'type': 'simple'
     }});
 
   </script>

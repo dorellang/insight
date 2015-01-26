@@ -1,11 +1,9 @@
 # MarkerLayer
-A marker based layer.
-Supports basic svg shapes as circles and rectangles.
-It also supports external svg images.
+A marker based layer. Extends [Layer](/docs/docs/Layers/Layer.md).
 
 ## Constructor
 
-#### MarkerLayer ( parameters : `Object` )
+#### MarkerLayer ( parameters : `Object`, map: `Object` )
  Configures a new layer.
 
  parameters is an object with the properties that define the marker layer.
@@ -16,7 +14,9 @@ It also supports external svg images.
  >
  > data - If dataSource matches this layer's id, this values are used.
  >
- > marker_attr - The attributes for the markers appearence.
+ > layer_attr - The layer attributes for the markers appearence.
+ 
+ map is an instance of a [GoogleMap](https://developers.google.com/maps/documentation/javascript/reference#Map) object.
 
 ## Parameters
 
@@ -25,46 +25,21 @@ It also supports external svg images.
 
 ---
 #### `.dataSource`
-  The source of data for the markers.
+  The source of data for the layer.
 
 ---
 #### `.elements`
   The list of markers data.
 
 ---
-#### `.elementFact`
-  The marker factory.
+#### `.elementsAtrr`
+  Atrributes of markers data. Defaults to `{'type': 'simple', 'action': 'update' }`.
 
 ---
-#### `.wrappedLayer`
-  A Layer.
-
----
+#### `.markers`
+  Array of [Marker](/docs/docs/Layers/Markers/Marker.md) objects drawn on the map.
 
 ## Methods
 
-#### `.wrap` ( wrappedLayer : `Layer` ) : `Layer`
-  Wraps the given layer
-
----
-
-#### `.refreshZIndex` ( zIndex : `number` )
-  Refreshes the zIndex of the elements.
-
-  The last inserted layer is always over the older ones.
-
----
-#### `.place` ( container : `String` )
-  Places the markers in the map.
-
----
-#### `.refreshElements` ( pixelChangeMethod : `function` )
-  Updates the position of the markers.
-
-  The `pixelChangeMethod` is a function that transforms the given `{ lat : number, lng : number }` object, using the GoogleMaps coordinate system. In the layer's div pixel coordinates.
-
----
-#### `.update` ( message : `Object` )
-  MarkerLayer observes Map objects.
-
----
+#### `.filter` ( filterFun : `function` )
+  Filters data based on `filterFun`

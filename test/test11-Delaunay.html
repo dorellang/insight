@@ -66,9 +66,11 @@
     var maxlng = -70.55;
     var minlng = -70.75;
 
+    points = [];
+
     for(var i = 0; i < 30; i++) {
-      lats[i] = Math.random() * (maxlat - minlat) + minlat;
-      lngs[i] = Math.random() * (maxlng - minlng) + minlng;
+      points[i] = {lat: Math.random() * (maxlat - minlat) + minlat,
+                   lng: Math.random() * (maxlng - minlng) + minlng};
     }
 
     myDashboard
@@ -76,8 +78,8 @@
       'id': '#delaunay',
       'layer': 'delaunay-layer',
       'data-source': '#delaunay',
-      'data': [{'lat': lats,
-                'lng': lngs}],
+      'data': [{'points': points
+        }],
       'layer_attr': {
         'type': 'delaunay'}
     });

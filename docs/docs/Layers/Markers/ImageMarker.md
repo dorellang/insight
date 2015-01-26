@@ -1,70 +1,52 @@
-# MarkerLayer
-A marker based layer.
-Supports basic svg shapes as circles and rectangles.
-It also supports external svg images.
+# ImageMarker
+An Image based marker. Support svg shapes. Extends [Marker](/docs/docs/Layers/Markers/Marker.md).
 
 ## Constructor
 
-#### MarkerLayer ( parameters : `Object` )
- Configures a new layer.
+#### ImageMarker ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
+ Configures a new image marker.
+ 
+ layer_params is an object with properties that define the image marker. Normally contains these properties:
 
- parameters is an object with the properties that define the marker layer.
+ > lat - Marker latitude (Number).
+ >
+ > lng - Marker longitude (Number).
+ >
+ > landmark - Marker landmark text (String).
 
- > id - The id of the layer.
+ attr is an object with properties that defines any attribute of the image marker. Should contain the marker type as `image`.
+
+ > type - Marker type (String).
  >
- > dataSource - The source where CityDashboard will find the data.
- >
- > data - If dataSource matches this layer's id, this values are used.
- >
- > marker_attr - The attributes for the markers appearence.
+ > src - svg url (String).
+
+ map is an instance of a [GoogleMap](https://developers.google.com/maps/documentation/javascript/reference#Map) object.
+
+ assoc_layer is a [Layer](/docs/docs/Layers/Layer.md) Object.
 
 ## Parameters
 
-#### `.id`
-  The id of this layer.
+#### `.layer_params`
+  Properties that define the marker.
 
 ---
-#### `.dataSource`
-  The source of data for the markers.
+#### `.attr`
+  Attributes that define the marker, such as type.
 
 ---
-#### `.elements`
-  The list of markers data.
+#### `.map`
+  Map where the marker is shown.
 
 ---
-#### `.elementFact`
-  The marker factory.
-
----
-#### `.wrappedLayer`
-  A Layer.
-
----
+#### `.layer`
+  Associated layer where this marker belongs.
 
 ## Methods
 
-#### `.wrap` ( wrappedLayer : `Layer` ) : `Layer`
-  Wraps the given layer
+#### `.addEvents` ( )
+  Adds specific image marker event listeners.
 
 ---
 
-#### `.refreshZIndex` ( zIndex : `number` )
-  Refreshes the zIndex of the elements.
-
-  The last inserted layer is always over the older ones.
-
----
-#### `.place` ( container : `String` )
-  Places the markers in the map.
-
----
-#### `.refreshElements` ( pixelChangeMethod : `function` )
-  Updates the position of the markers.
-
-  The `pixelChangeMethod` is a function that transforms the given `{ lat : number, lng : number }` object, using the GoogleMaps coordinate system. In the layer's div pixel coordinates.
-
----
-#### `.update` ( message : `Object` )
-  MarkerLayer observes Map objects.
-
----
+#### `.triggerInitialEvent` ( )
+  Trigger startup event.
