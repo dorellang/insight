@@ -204,6 +204,12 @@
       'data-source': '#myplot',
       'title': 'D3 chart',
       'golden-ratio': true,
+      'checkbox': {'x2':false},
+      'checkbox-handler': function (state,data){
+        if (state[0])
+          data = data.map(function(e){return e*2;});
+        return data;
+      },
       viz: function ( svg, data, width, height ) {
   
         var m = [8, 20, 20, 50];

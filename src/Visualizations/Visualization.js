@@ -114,7 +114,10 @@ CityDashboard.Visualization.prototype = {
         }).get();
 
         _this.getData = function () {
-          return _this.checkbox_handler(array,jQuery.extend({}, _this.data));
+          var clone  = _this.data;
+          if(!(_this.data instanceof Array))
+            clone = jQuery.extend({}, _this.data);
+          return _this.checkbox_handler(array,clone);
         };
 
         _this.refresh();
@@ -127,7 +130,10 @@ CityDashboard.Visualization.prototype = {
     this.viz.append(checkpanel);
 
     _this.getData = function () {
-      return _this.checkbox_handler(arr,jQuery.extend({}, _this.data));
+      var clone  = _this.data;
+      if(!(_this.data instanceof Array))
+        clone = jQuery.extend({}, _this.data);
+      return _this.checkbox_handler(arr,clone);
     };
   }
 
