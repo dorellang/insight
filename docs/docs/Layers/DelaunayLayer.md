@@ -1,12 +1,12 @@
-# HeatmapLayer
-A heatmap based layer. Extends [Layer](/docs/docs/Layers/Layer.md).
+# DelaunayLayer
+A Delaunay/Voronoi based layer. Extends [Layer](/docs/docs/Layers/Layer.md).
 
 ## Constructor
 
-#### HeatmapLayer ( parameters : `Object`, map: `Object` )
+#### DelaunayLayer ( parameters : `Object`, map: `Object` )
  Configures a new layer.
 
- parameters is an object with the properties that define the heatmap layer.
+ parameters is an object with the properties that define the Delaunay/Voronoi layer.
 
  > id - The id of the layer.
  >
@@ -14,7 +14,7 @@ A heatmap based layer. Extends [Layer](/docs/docs/Layers/Layer.md).
  >
  > data - If dataSource matches this layer's id, this values are used.
  >
- > layer_attr - The layer attributes for the heatmap appearence.
+ > layer_attr - The layer attributes for the Delaunay/Voronoi appearence.
  
  map is an instance of a [GoogleMap](https://developers.google.com/maps/documentation/javascript/reference#Map) object.
 
@@ -29,11 +29,11 @@ A heatmap based layer. Extends [Layer](/docs/docs/Layers/Layer.md).
 
 ---
 #### `.elements`
-  The list of heatmap data.
+  The list of Delaunay/Voronoi data.
 
 ---
 #### `.elementsAtrr`
-  Atrributes of heatmap data. Defaults to `{'type': 'simple', 'action': 'update' }`.
+  Atrributes of Delaunay/Voronoi data. Defaults to `{'type': 'simple', 'action': 'update' }`.
 
 ## Methods
 

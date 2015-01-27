@@ -3,7 +3,6 @@ CityDashboard.Voronoi = function( layer_params, attr, map, assoc_layer ){
   CityDashboard.DTesselation.call(this, layer_params, attr, map, assoc_layer);
 
   var data = [];
-  var n = layer_params.lat.length;
 
   var deg2rad = Math.PI/180;
   var rad2deg = 180/Math.PI;
@@ -11,9 +10,12 @@ CityDashboard.Voronoi = function( layer_params, attr, map, assoc_layer ){
   var MapTriLines = [];
   var MapNgbrLines = [];
 
+  var n = layer_params.points.length;
+
   for(var i = 0; i < n; i++){
-    data[i] = new google.maps.LatLng( parseFloat(layer_params.lat[i]), parseFloat(layer_params.lng[i]) );
+    data[i] = new google.maps.LatLng( parseFloat(layer_params.points[i].lat), parseFloat(layer_params.points[i].lng) );
   }
+
   var myself = this;
 
   var PointsChanged = function() {

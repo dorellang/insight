@@ -65,9 +65,11 @@
     var maxlng = -70.55;
     var minlng = -70.75;
 
+    points = [];
+
     for(var i = 0; i < 3000; i++) {
-      lats[i] = Math.random() * (maxlat - minlat) + minlat;
-      lngs[i] = Math.random() * (maxlng - minlng) + minlng;
+      points[i] = {lat: Math.random() * (maxlat - minlat) + minlat,
+                   lng: Math.random() * (maxlng - minlng) + minlng};
     }
 
     myDashboard
@@ -75,9 +77,8 @@
       'id': '#heatmap',
       'layer': 'heatmap-layer',
       'data-source': '#heatmap',
-      'data': [{'lat': lats,
-                'lng': lngs
-              }],
+      'data': [{'points': points
+        }],
       'layer_attr': {
         'type': 'point-heatmap',
         'radius': 12

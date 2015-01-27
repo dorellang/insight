@@ -1,70 +1,56 @@
-# MarkerLayer
-A marker based layer.
-Supports basic svg shapes as circles and rectangles.
-It also supports external svg images.
+# PolylineMarker
+An polyline based marker. Extends [Marker](/docs/docs/Layers/Markers/Marker.md).
 
 ## Constructor
 
-#### MarkerLayer ( parameters : `Object` )
- Configures a new layer.
+#### PolylineMarker ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
+ Configures a new polyline marker.
 
- parameters is an object with the properties that define the marker layer.
+ layer_params is an object with properties that define the polyline marker. Normally contains these properties:
 
- > id - The id of the layer.
+ > points - Marker latitude and longitude (Object Array).
  >
- > dataSource - The source where CityDashboard will find the data.
+ > landmark - Marker landmark text (String Array).
+
+ attr is an object with properties that defines any attribute of the polyline marker. Should contain the marker type as `polyline`.
+
+ > type - Marker type (String).
  >
- > data - If dataSource matches this layer's id, this values are used.
+ > strokeColor - Stroke Color. All CSS3 colors are supported except for extended named colors. (String).
  >
- > marker_attr - The attributes for the markers appearence.
+ > strokeOpacity - The stroke opacity between 0.0 and 1.0 (Number).
+ >
+ > strokeWeight - The stroke width in pixels.
+
+ For more info about these properties [GoogleMap API StyleOptions](https://developers.google.com/maps/documentation/javascript/reference#Data.StyleOptions)
+
+ map is an instance of a [GoogleMap](https://developers.google.com/maps/documentation/javascript/reference#Map) object.
+
+ assoc_layer is a [Layer](/docs/docs/Layers/Layer.md) Object.
 
 ## Parameters
 
-#### `.id`
-  The id of this layer.
+#### `.layer_params`
+  Properties that define the marker.
 
 ---
-#### `.dataSource`
-  The source of data for the markers.
+#### `.attr`
+  Attributes that define the marker, such as type.
 
 ---
-#### `.elements`
-  The list of markers data.
+#### `.map`
+  Map where the marker is shown.
 
 ---
-#### `.elementFact`
-  The marker factory.
-
----
-#### `.wrappedLayer`
-  A Layer.
-
----
+#### `.layer`
+  Associated layer where this marker belongs.
 
 ## Methods
 
-#### `.wrap` ( wrappedLayer : `Layer` ) : `Layer`
-  Wraps the given layer
+#### `.addEvents` ( )
+  Adds specific polyline marker event listeners.
 
 ---
 
-#### `.refreshZIndex` ( zIndex : `number` )
-  Refreshes the zIndex of the elements.
-
-  The last inserted layer is always over the older ones.
-
----
-#### `.place` ( container : `String` )
-  Places the markers in the map.
-
----
-#### `.refreshElements` ( pixelChangeMethod : `function` )
-  Updates the position of the markers.
-
-  The `pixelChangeMethod` is a function that transforms the given `{ lat : number, lng : number }` object, using the GoogleMaps coordinate system. In the layer's div pixel coordinates.
-
----
-#### `.update` ( message : `Object` )
-  MarkerLayer observes Map objects.
-
----
+#### `.triggerInitialEvent` ( )
+  Trigger startup event.
