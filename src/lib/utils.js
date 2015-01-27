@@ -62,8 +62,8 @@
 
     var up = $('<span>').addClass('up-button').append('&#x25B2;');
     var down = $('<span>').addClass('down-button').append('&#x25BC;');
-    panel.append(up);
-    panel.append(down);
+    panel.prepend(down);
+    panel.prepend(up);
 
     var _this = this;
 

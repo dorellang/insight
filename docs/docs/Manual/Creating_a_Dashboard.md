@@ -9,7 +9,7 @@ CityDashboard.js is a generic Web Dashboard for Urban Based Visualization Projec
 ## Before we start
 
 Before you can use CityDashboard.js, you need somewhere to display it.
-Save the following HTML to a file on your computer, along with a copy of CityDashboard.min.js in the js/ directory, and open it on your browser.
+Save the following HTML to a file on your computer, along with a copy of CityDashboard.min.js in the js/ directory and a copy of CityDashboard.css in the css/ directory, and open it on your browser.
 
 ``` html
 <!DOCTYPE html>
@@ -35,7 +35,7 @@ Save the following HTML to a file on your computer, along with a copy of CityDas
     <!-- jQuery -->
     <script src="js/jquery-1.11.1.min.js"></script>
     <!-- Google Maps import -->
-    `<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>`
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
 
     <!-- CityDashboard import -->
     <script src="js/CityDashboard.min.js"></script>
