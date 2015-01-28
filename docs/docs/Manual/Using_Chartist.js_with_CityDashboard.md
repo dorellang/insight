@@ -2,6 +2,10 @@
 
 On this tutorial we will learn how to use Chartist.js charts with CityDashboard, we will also learn about the two ways we can create visualizations.
 
+Previous: [Creating a Dashboard.](Creating_a_Dashboard.md)
+
+Next: [Pie Charts, labels and preprocess.](Pie_Charts_labels_and_preprocess.md)
+
 ## Before we start.
 
 Before we can start configuring our dashboard, we must import the necessary libraries. Besides jQuery and GoogleMaps, you must import the Chartist.js library, with its CSS file.
@@ -300,3 +304,7 @@ The full code is available below.
   </script>
 </html>
 ```
+
+Previous: [Creating a Dashboard.](Creating_a_Dashboard.md)
+
+Next: [Pie Charts, labels and preprocess.](Pie_Charts_labels_and_preprocess.md)

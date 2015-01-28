@@ -8,6 +8,8 @@ The base class for all visualizations.
 
 All visualizations are [closable and movable](../lib/utils.md) by default.
 
+If you are interested on creatinga brand new visualization, please look the manual: [Extending Visualizations](Extending_Visualizations.md)
+
 ## Constructor
 
 #### Visualization ( props : `Object` )

@@ -2,6 +2,8 @@
 
 On this tutorial we will learn how to add styles to our dashboard.
 
+Previous: [Filters and Checkboxes](Filters_and_Checkboxes.md)
+
 ## Before we start
 
 We will use the next dashboard for styling.
@@ -302,3 +304,5 @@ The full code is available below.
   </script>
 </html>
 ```
+
+Previous: [Filters and Checkboxes](Filters_and_Checkboxes.md)

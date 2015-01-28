@@ -2,6 +2,8 @@
 
 Welcome to CityDashboard.js. On this brief introduction we will start setting up a map with a two markers.
 
+Next: [Using Chartist.js with CityDashboard](Using_Chartist.js_with_CityDashboard.md)
+
 ## What is CityDashboard.js?
 
 CityDashboard.js is a generic Web Dashboard for Urban Based Visualization Projects.
@@ -271,3 +273,5 @@ The full code is available below. Play around with it to get a better understand
   </script>
 </html>
 ```
+
+Next: [Using Chartist.js with CityDashboard](Using_Chartist.js_with_CityDashboard.md)

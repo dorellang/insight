@@ -2,6 +2,10 @@
 
 This is a continuation for the tutorial "Using Chartis.js with CityDashboard". We will add a Chartist.Pie chart to our visualization. We will also lear about preprocess and labels.
 
+Previous: [Using Chartist.js with CityDashboard](Using_Chartist.js_with_CityDashboard.md)
+
+Next: [Using D3 with CityDashboard](Using_D3_with_CityDashboard.md)
+
 ## Before we start
 
 We will use the code as it was left on the last tutorial.
@@ -396,3 +400,7 @@ The full code is available below.
 </html>
 
 ```
+
+Previous: [Using Chartist.js with CityDashboard](Using_Chartist.js_with_CityDashboard.md)
+
+Next: [Using D3 with CityDashboard](Using_D3_with_CityDashboard.md)

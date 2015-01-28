@@ -2,6 +2,10 @@
 
 CityDashboard can use D3.js for its visualizations. The created svg element is ready to be used.
 
+Previous: [Pie Charts, labels and preprocess.](Pie_Charts_labels_and_preprocess.md)
+
+Next: [Filters and Checkboxes](Filters_and_Checkboxes.md)
+
 ## Before we start
 
 Please remember to import of the D3.js library.
@@ -263,3 +267,7 @@ Here goes the full code.
   </script>
 </html>
 ```
+
+Previous: [Pie Charts, labels and preprocess.](Pie_Charts_labels_and_preprocess.md)
+
+Next: [Filters and Checkboxes](Filters_and_Checkboxes.md)

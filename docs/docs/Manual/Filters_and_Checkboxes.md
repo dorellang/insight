@@ -1,7 +1,11 @@
-# Using Chartist.js with CityDashboard
+# Filters and Checkboxes
 
 On this tutorial we will learn how to use filters and checkboxes.
 We will use Chartist charts so you may want to take a look to "Using Chartist.js with CityDashboard".
+
+Previous: [Using D3 with CityDashboard](Using_D3_with_CityDashboard.md)
+
+Next: [Styling CityDashboard.md](Styling_CityDashboard.md.md)
 
 ## Before we start.
 
@@ -311,3 +315,7 @@ The full code is available below.
   </script>
 </html>
 ```
+
+Previous: [Using D3 with CityDashboard](Using_D3_with_CityDashboard.md)
+
+Next: [Styling CityDashboard.md](Styling_CityDashboard.md.md)
