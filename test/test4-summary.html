@@ -165,6 +165,16 @@
             }
           }]]
       }
+    },{
+      'visualization': 'general-viz',
+      'data-source': '#general',
+      'id': '#general',
+      'title': 'GeneralViz',
+      'dom': (function(){
+                    var p = document.createElement('button');
+                    p.innerText = 'Hello World!';
+                    return p;
+                  })()
     }]);
 
   </script>

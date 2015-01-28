@@ -20,20 +20,22 @@ CityDashboard.InfoWindow = function ( vizPropList ) {
     infoWindow.off( 'marker-pressed' );
 
     if ( arg.attr.id && !(arg.attr.id in _this.visualizations) ) {
-      var config =
-      {
-        'visualization': arg['attr']['visualization'],
-        'id': arg['attr']['id'],
-        'data-source': arg['id'],
-        'data': arg.value,
-        'preprocess': arg['attr']['preprocess'],
-        'title': arg['attr']['title'],
-        'properties': arg['attr']['properties'],
-        'labels': arg['attr']['labels'],
-        'checkbox': arg['attr']['checkbox'],
-        'checkbox-handler': arg['attr']['checkbox-handler'],
-        'viz': arg['attr']['viz']
-      };
+      var config = jQuery.extend({}, arg['attr']);
+      config['data'] = arg.value;
+      config['data-source'] = arg.id;
+      // {
+      //   'visualization': arg['attr']['visualization'],
+      //   'id': arg['attr']['id'],
+      //   'data-source': arg['id'],
+      //   'data': arg.value,
+      //   'preprocess': arg['attr']['preprocess'],
+      //   'title': arg['attr']['title'],
+      //   'properties': arg['attr']['properties'],
+      //   'labels': arg['attr']['labels'],
+      //   'checkbox': arg['attr']['checkbox'],
+      //   'checkbox-handler': arg['attr']['checkbox-handler'],
+      //   'viz': arg['attr']['viz']
+      // };
 
       _this.createVisualization( config );
     }
@@ -100,6 +102,10 @@ CityDashboard.InfoWindow.prototype = {
       else if ( type === 'd3-viz' )
 
         viz = new CityDashboard.D3Visualization( pr );
+
+      else if ( type === 'general-viz' )
+
+        viz = new CityDashboard.GeneralVisualization( pr );
 
       _this.visualizations[viz.id] = viz;
       _this.dataSourceTable[viz.data_source] = _this.dataSourceTable[viz.data_source] || [];
