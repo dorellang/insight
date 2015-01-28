@@ -3,6 +3,8 @@ The information window is a bar adjacent to the map containing the [visualizatio
 
 This bar is [resizable](lib/utils.md).
 
+Look at [Dashboard](Dashboard.md) for more information.
+
 ## Example
 
 ``` javascript
