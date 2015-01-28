@@ -36,4 +36,10 @@ CityDashboard.MarkerLayer.prototype = {
     
   },
 
+  clear: function() {
+    for (var j = 0; j < this.markers.length; j++) {
+      this.markers[j].marker.setMap(null);
+    };
+  }
+
 };

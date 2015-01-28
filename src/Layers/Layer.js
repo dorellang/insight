@@ -21,4 +21,6 @@ CityDashboard.Layer.prototype = {
 
   filter: function ( filterFun ) {},
 
+  clear: function () {},
+
 };

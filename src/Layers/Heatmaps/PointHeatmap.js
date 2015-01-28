@@ -10,12 +10,12 @@ CityDashboard.PointHeatmap = function( layer_params, attr, map, assoc_layer ){
 
   var pointArray = new google.maps.MVCArray(data);
 
-  var heatmap = new google.maps.visualization.HeatmapLayer({
+  this.heatmap = new google.maps.visualization.HeatmapLayer({
     data: pointArray,
     radius: attr.radius || 10
   });
 
-  heatmap.setMap(map);
+  this.heatmap.setMap(map);
 
 };
 

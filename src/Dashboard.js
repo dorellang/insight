@@ -83,9 +83,6 @@ CityDashboard.Dashboard.prototype = {
   clear: function () {
     for (var i = 0; i < this.layers.length; i++) {
       this.layers[i].clear();
-      // for (var j = 0; j < this.layers[i].markers.length; j++) {
-      //   this.layers[i].markers[j].marker.setMap(null);
-      // };
     };
     this.layers = [];
   }

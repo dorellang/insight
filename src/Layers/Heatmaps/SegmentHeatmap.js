@@ -40,11 +40,11 @@ CityDashboard.SegmentHeatmap = function( layer_params, attr, map, assoc_layer ){
 
   }
 
-  var heatmap = new google.maps.visualization.HeatmapLayer({
+  this.heatmap = new google.maps.visualization.HeatmapLayer({
     data: myData,
   });
 
-  heatmap.setMap(map);
+  this.heatmap.setMap(map);
 
 };
 
