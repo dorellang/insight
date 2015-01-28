@@ -1,5 +1,5 @@
 # HeatmapLayer
-A heatmap based layer. Extends [Layer](/docs/docs/Layers/Layer.md).
+A heatmap based layer. Extends [Layer](Layer.md).
 
 ## Constructor
 
