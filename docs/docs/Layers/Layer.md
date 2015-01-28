@@ -38,4 +38,4 @@ An abstract layer.
 ## Methods
 
 #### `.filter` ( filterFun : `function` )
-  Abstract filtering function called by [Dasboard](/docs/docs/Dashboard.md).
+  Abstract filtering function called by [Dashboard](../Dashboard.md).

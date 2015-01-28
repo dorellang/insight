@@ -1,5 +1,5 @@
 # MarkerLayer
-A marker based layer. Extends [Layer](/docs/docs/Layers/Layer.md).
+A marker based layer. Extends [Layer](Layer.md).
 
 ## Constructor
 
@@ -37,7 +37,7 @@ A marker based layer. Extends [Layer](/docs/docs/Layers/Layer.md).
 
 ---
 #### `.markers`
-  Array of [Marker](/docs/docs/Layers/Markers/Marker.md) objects drawn on the map.
+  Array of [Marker](Markers/Marker.md) objects drawn on the map.
 
 ## Methods
 

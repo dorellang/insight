@@ -1,5 +1,5 @@
 # CircleMarker
-A Circle marker. Extends [Marker](/docs/docs/Layers/Markers/Marker.md).
+A Circle marker. Extends [Marker](Marker.md).
 
 ## Constructor
 
@@ -34,7 +34,7 @@ A Circle marker. Extends [Marker](/docs/docs/Layers/Markers/Marker.md).
 
  map is an instance of a [GoogleMap](https://developers.google.com/maps/documentation/javascript/reference#Map) object.
 
- assoc_layer is a [Layer](/docs/docs/Layers/Layer.md) Object.
+ assoc_layer is a [Layer](../Layer.md) Object.
 
 ## Parameters
 
