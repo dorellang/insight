@@ -13,4 +13,6 @@ CityDashboard.DelaunayLayer.prototype = {
 
   constructor: CityDashboard.DelaunayLayer,
 
+  clear: function() {}
+
 };

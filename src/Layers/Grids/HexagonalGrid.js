@@ -99,8 +99,6 @@ CityDashboard.HexagonalGrid.prototype = {
             fill = fill+weightsInScreen[p];
         }
 
-        console.log(Math.ceil(fill*6))
-
         var hexagon = new google.maps.Polygon({
           paths: myLatlng,
           strokeColor: this.attr.color || '#000000',
