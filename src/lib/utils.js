@@ -44,6 +44,10 @@
       resizable.trigger('resize');
     };
 
+    this.scroll(function(e){
+      resizer.css('top',resizable.scrollTop());
+    });
+
     return this;
   };
   $.fn.setID = function( selector ) {
