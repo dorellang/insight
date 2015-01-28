@@ -6,7 +6,7 @@ A generic abstract marker.
 #### Marker ( layer_params: `Object`, attr: `Object`, map: `Object`, assoc_layer: `Object` )
  Configures a new marker.
 
- layer_params is an object with properties that define the marker. Normally (with the exception of [PolylineMarker](/docs/docs/Layers/Markers/PolylineMarker.md)) contains these properties:
+ layer_params is an object with properties that define the marker. Normally (with the exception of [PolylineMarker](PolylineMarker.md)) contains these properties:
 
  > lat - Marker latitude (Number).
  >
@@ -20,7 +20,7 @@ A generic abstract marker.
 
  map is an instance of a [GoogleMap](https://developers.google.com/maps/documentation/javascript/reference#Map) object.
 
- assoc_layer is a [Layer](/docs/docs/Layers/Layer.md) Object.
+ assoc_layer is a [Layer](../Layer.md) Object.
 
 ## Parameters
 
