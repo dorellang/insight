@@ -4,11 +4,11 @@ On this tutorial we will learn how to extend our Dashboard to add new marker typ
 
 ## Where to work
 
-Each marker is located in `\src\Layers\Markers`. We start by adding a new type of marker, for example, consider `Rectangle` as a new marker.
+Each marker is located in `\src\Layers\Markers`. We start by adding a new type of marker, for example, consider `Circle` as a new marker.
 
 ## How to:
 
-To do so, we create our new `Rectangle.js` extending the marker class, replacing constructor and marker methods, such as `addEvents` and `triggerInitialEvent`. Consider the code of our Circle type:
+To do so, we create our new `Circle.js` extending the marker class, replacing constructor and marker methods, such as `addEvents` and `triggerInitialEvent`. Consider the code of our Circle type:
 
 ``` javascript
 CityDashboard.CircleMarker = function( layer_params, attr, map, assoc_layer ){
@@ -75,6 +75,7 @@ We now have to add the new type in `MarkerSelector.js` so the new type can be pa
 ``` javascript
 function MarkerSelector( layer_params, attr, map, assoc_layer ){
 
+  // Our new type
   if ( attr.type === 'circle' )
     return new CityDashboard.CircleMarker( layer_params, attr, map, assoc_layer );
 
