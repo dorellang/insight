@@ -65,7 +65,7 @@ CityDashboard.Dashboard.prototype = {
     var callback = function (pr) {
       layers[layers.length] = LayerSelector( pr,
                                   $(CityDashboard['mainContainerID'])[0].data );
-    }
+    }// gmap: $(CityDashboard['mainContainerID'])[0].data
 
     CityDashboard.getData(parameters['data-source'],callback,parameters);
 
@@ -78,6 +78,15 @@ CityDashboard.Dashboard.prototype = {
     this.filters.addFilter( filters );
 
     return this;
-  }
+  },
 
+  clear: function () {
+    for (var i = 0; i < this.layers.length; i++) {
+      this.layers[i].clear();
+      // for (var j = 0; j < this.layers[i].markers.length; j++) {
+      //   this.layers[i].markers[j].marker.setMap(null);
+      // };
+    };
+    this.layers = [];
+  }
 };
