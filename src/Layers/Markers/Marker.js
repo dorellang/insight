@@ -38,6 +38,4 @@ CityDashboard.Marker.prototype = {
 
   triggerInitialEvent: function() {},
 
-  sup: function() { console.log('sup')}
-
 };
