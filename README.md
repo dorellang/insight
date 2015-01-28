@@ -12,7 +12,3 @@ This proyect includes these visualizations over maps:
 * Polylines.
 
 Check our [tutorials](docs/docs/index.md)!
-
-Uses this arquitecture:
-
-![uml diagram](http://i.imgur.com/0uHFguU.png)
