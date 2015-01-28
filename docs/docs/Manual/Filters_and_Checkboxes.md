@@ -5,7 +5,7 @@ We will use Chartist charts so you may want to take a look to "Using Chartist.js
 
 Previous: [Using D3 with CityDashboard](Using_D3_with_CityDashboard.md)
 
-Next: [Styling CityDashboard.md](Styling_CityDashboard.md.md)
+Next: [Styling CityDashboard.md](Styling_CityDashboard.md)
 
 ## Before we start.
 
@@ -318,4 +318,4 @@ The full code is available below.
 
 Previous: [Using D3 with CityDashboard](Using_D3_with_CityDashboard.md)
 
-Next: [Styling CityDashboard.md](Styling_CityDashboard.md.md)
+Next: [Styling CityDashboard.md](Styling_CityDashboard.md)
