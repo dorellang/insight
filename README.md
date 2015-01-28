@@ -12,3 +12,5 @@ This proyect includes these visualizations over maps:
 * Polylines.
 
 Check our [tutorials](docs/docs/index.md)!
+
+![UML](http://i.imgur.com/H7QeJC4.png)
