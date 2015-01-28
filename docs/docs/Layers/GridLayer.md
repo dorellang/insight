@@ -1,5 +1,5 @@
 # GridLayer
-A grid based layer. Extends [Layer](/docs/docs/Layers/Layer.md).
+A grid based layer. Extends [Layer](Layer.md).
 
 ## Constructor
 
