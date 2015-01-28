@@ -1,6 +1,8 @@
 # Dashboard
 A dashboard.
 
+Requires [InfoWindow](InfoWindow.md) and [GoogleMap](Maps/GoogleMap.md) to be already created.
+
 ## Example
 ``` javascript
 var myDashboard = new CityDashboard.Dashboard({

@@ -1,5 +1,5 @@
 # SummaryVisualization
-Inherits from Visualization.
+Inherits from [Visualization](Visualization.md).
 
 ## Constructor
 

@@ -1,6 +1,13 @@
 # Visualization
 The base class for all visualizations.
 
+* [SummaryVisualization](SummaryVisualization.md)
+* [GeneralVisualization](GeneralVisualization.md)
+* [D3Visualization](D3Visualization.md)
+* [ChartistVisualization](ChartistVisualization.md)
+
+All visualizations are [closable and movable](../lib/utils.md) by default.
+
 ## Constructor
 
 #### Visualization ( props : `Object` )

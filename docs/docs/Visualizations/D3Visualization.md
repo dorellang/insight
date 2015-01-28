@@ -1,5 +1,5 @@
 # D3Visualization
-Inherits from Visualization.
+Inherits from [Visualization](Visualization.md).
 
 Requires D3.js to be previously imported.
 

@@ -1,6 +1,8 @@
 # FilterBar
 The FilterBar contains the map search bar and a variable number of filter selections.
 
+This Bar is used by [Dashboard](Dashboard.md).
+
 ## Example
 
 The number of filters is configured with the Dashboard.

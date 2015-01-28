@@ -1,5 +1,5 @@
 # ChartistVisualization
-Inherits from Visualization.
+Inherits from [Visualization](Visualization.md).
 
 Requires Chartist.js to be previously imported.
 

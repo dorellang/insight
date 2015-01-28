@@ -2,6 +2,8 @@
 
 A map using GoogleMaps.
 
+Related: [Dashboard](../Dashboard.md), [Layers](../Layers/Layer.md)
+
 ## Example
 
 ```

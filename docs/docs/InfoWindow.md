@@ -1,5 +1,7 @@
 # InfoWindow
-The information window is a bar adyacent to the map containing the visualizations.
+The information window is a bar adjacent to the map containing the [visualizations](Visualizations/Visualization.md).
+
+This bar is [resizable](lib/utils.md).
 
 ## Example
 
