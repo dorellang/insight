@@ -1,5 +1,5 @@
 # DelaunayLayer
-A Delaunay/Voronoi based layer. Extends [Layer](/docs/docs/Layers/Layer.md).
+A Delaunay/Voronoi based layer. Extends [Layer](Layer.md).
 
 ## Constructor
 
