@@ -6,9 +6,11 @@ The base class for all visualizations.
 * [D3Visualization](D3Visualization.md)
 * [ChartistVisualization](ChartistVisualization.md)
 
+Look at [InfoWindow](../InfoWindow.md) for more information.
+
 All visualizations are [closable and movable](../lib/utils.md) by default.
 
-If you are interested on creatinga brand new visualization, please look the manual: [Extending Visualizations](../Manual/Extending_Visualizations.md)
+If you are interested on creating a brand new visualization, please look the manual: [Extending Visualizations](../Manual/Extending_Visualizations.md)
 
 ## Constructor
 
