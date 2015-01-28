@@ -15,7 +15,7 @@ CityDashboard.GridLayer.prototype = {
 
   clear: function() {
     for (var j = 0; j < this.grid.tiles.length; j++) {
-      this.grid.tiles[i].setMap(null);
+      this.grid.tiles[j].setMap(null);
     };
   }
 

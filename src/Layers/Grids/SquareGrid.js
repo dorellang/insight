@@ -62,14 +62,6 @@ CityDashboard.SquareGrid.prototype = {
           geodesic: true
         });
 
-        google.maps.event.addListener(square, 'mouseover', function(event) {
-            this.setOptions({fillOpacity: 0.2});
-          });
-
-        google.maps.event.addListener(square, 'mouseout', function(event) {
-            this.setOptions({fillOpacity: 0.0});
-          });
-
         square.setMap(this.map);
 
         this.tiles.push(square);
