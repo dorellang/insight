@@ -68,7 +68,7 @@ CityDashboard.CircleMarker.prototype = {
 
 ```
 
-We now have to add the new type in `MarkerSelector.js` so the new type can be parsed:
+Now we have to add the new type in `MarkerSelector.js` so the new type can be parsed:
 
 ``` javascript
 function MarkerSelector( layer_params, attr, map, assoc_layer ){
@@ -91,7 +91,7 @@ function MarkerSelector( layer_params, attr, map, assoc_layer ){
 
 ## Before we finish
 
-We should add the new path `Layers/Markers/CircleMarker` in `server.config` (right below the parent class), so the server knows where to look for our new class.
+Finally, we should add the new path `Layers/Markers/CircleMarker` in `server.config` (right below the parent class), so the server knows where to look for our new class.
 
 ```
 lib/utils
