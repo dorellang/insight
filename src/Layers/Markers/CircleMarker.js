@@ -16,6 +16,8 @@ CityDashboard.CircleMarker = function( layer_params, attr, map, assoc_layer ){
       title: layer_params.landmark || ''
   });
 
+  this.marker = circle;
+
 };
 
 CityDashboard.CircleMarker.prototype = Object.create(CityDashboard.Marker.prototype);
@@ -24,9 +26,23 @@ CityDashboard.CircleMarker.prototype = {
 
   constructor: CityDashboard.CircleMarker,
 
-  addEvents: function () {},
+  addEvents: function () {
 
-  triggerInitialEvent: function() {}
+    google.maps.event.addListener(this.marker, 'click', triggerEvent);
+
+    var myself = this;
+
+    function triggerEvent() {
+
+      $('#infoWindow').trigger('marker-pressed', {'id': myself.layer.id , 'value': myself.layer_params, 'attr': myself.attr});
+
+    }
+
+  },
+
+  triggerInitialEvent: function() {
+    $('#infoWindow').trigger('marker-pressed', {'id': this.layer.id , 'value': this.layer_params, 'attr': this.attr});
+  }
 
 };
 
