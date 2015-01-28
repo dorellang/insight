@@ -1,5 +1,5 @@
 # HexagonalGrid
-A hexagonal grid. Extends [Grid](/docs/docs/Layers/Grids/Grid.md).
+A hexagonal grid. Extends [Grid](Grid.md).
 
 ## Constructor
 
@@ -18,7 +18,7 @@ A hexagonal grid. Extends [Grid](/docs/docs/Layers/Grids/Grid.md).
 
  map is an instance of a [GoogleMap](https://developers.google.com/maps/documentation/javascript/reference#Map) object.
 
- assoc_layer is a [Layer](/docs/docs/Layers/Layer.md) Object.
+ assoc_layer is a [Layer](../Layer.md) Object.
 
 ## Parameters
 

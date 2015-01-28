@@ -1,5 +1,5 @@
 # Delaunay
-A Delaunay tesselation. Extends [DTesselation](/docs/docs/Layers/DTesselation/DTesselation.md).
+A Delaunay tesselation. Extends [DTesselation](DTesselation.md).
 
 ## Constructor
 
@@ -18,7 +18,7 @@ A Delaunay tesselation. Extends [DTesselation](/docs/docs/Layers/DTesselation/DT
 
  map is an instance of a [GoogleMap](https://developers.google.com/maps/documentation/javascript/reference#Map) object.
 
- assoc_layer is a [Layer](/docs/docs/Layers/Layer.md) Object.
+ assoc_layer is a [Layer](../Layer.md) Object.
 
 ## Methods
 
