@@ -54,7 +54,7 @@ CityDashboard supports several visualizations over maps!
 ![Heatmaps](http://i.imgur.com/CvjkQUb.png)
 
 
-Check our [tutorials](docs/docs/index.md)!
+Check out our [tutorials](docs/docs/index.md)!
 
 Contribute by extending CityDashboard!
 
