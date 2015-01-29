@@ -64,3 +64,7 @@ parameters is an object with the properties that define the dashboard.
   Adds new filter options to the filterbar.
 
 ---
+#### `.clear` ()
+  Removes all layers.
+
+---
