@@ -2,7 +2,7 @@
 
 This folder contains the Visualizations documentation
 
-Visualizations are elements contained on the InfoWindow. This visualizations show information using
+Visualizations are elements contained on the InfoWindow. These visualizations show information using
 definition list or a variety of charts.
 
 CityDashboard is highly customizable. You can use the responsive charts from Chartist or the powerful D3.
