@@ -1,3 +1,5 @@
+# Layers
+
 This folder contains the layers documentation
 
 Layers are elements contained on the Dashboard. These layers displays info on a predefined way, such as grids or markers.
