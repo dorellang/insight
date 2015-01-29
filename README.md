@@ -33,11 +33,16 @@ You need something even more customizable? Try our General Visualization! You ca
 
 CityDashboard supports several visualizations over maps!
 
-* Markers  
+* Markers
 ![Markers](http://i.imgur.com/SzurorW.png)
-* Grids ![Grids](http://i.imgur.com/IzZ8d0m.png)
-* Voronoi ![Voronoi](http://i.imgur.com/cdAqll4.png)
-* Delaunay ![Delaunay](http://i.imgur.com/DmVCNcY.png)
+* Grids
+![Grids](http://i.imgur.com/IzZ8d0m.png)
+* Voronoi
+![Voronoi](http://i.imgur.com/cdAqll4.png)
+* Delaunay
+![Delaunay](http://i.imgur.com/DmVCNcY.png)
+* Heatmaps
+![Heatmaps](http://i.imgur.com/CvjkQUb.png)
 
 
 Check our [tutorials](docs/docs/index.md)!
