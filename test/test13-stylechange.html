@@ -23,9 +23,9 @@
         height: 100%;
       }
     </style>
-    <link rel="stylesheet" type="text/css" href="../CityDashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/CityDashboard.css">
     <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
-    
+
     <script src="js/chartist.min.js"></script>
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="//maps.googleapis.com/maps/api/js?v="></script>
@@ -106,7 +106,7 @@
       stroke-width: 1;
       fill: none;
     }
-    
+
     .axis {
       shape-rendering: crispEdges;
     }
@@ -260,11 +260,11 @@
       'title': 'D3 chart',
       'golden-ratio': true,
       viz: function ( svg, data, width, height ) {
-  
+
         var m = [8, 20, 20, 50];
         var w = width - m[1] - m[3];
         var h = height - m[0] - m[2];
-        
+
         var x = d3.scale.linear().domain([0, data.length]).range([0, w]);
 
         var y = d3.scale.linear().domain([0, 10]).range([h, 0]);
@@ -272,10 +272,10 @@
         var line = d3.svg.line()
 
           .x(function(d,i) {
-            return x(i); 
+            return x(i);
           })
-          .y(function(d) { 
-            return y(d); 
+          .y(function(d) {
+            return y(d);
           })
 
           var graph = svg
@@ -297,7 +297,7 @@
                 .attr("class", "y axis")
                 .attr("transform", "translate(-25,0)")
                 .call(yAxisLeft);
-          
+
 
           graph.append("svg:path").attr("d", line(data));
       }
