@@ -76,4 +76,4 @@ gulp.task('watch', function() {
 });
 
 // Default Task
-gulp.task('default', ['css', 'scripts', 'watch']);
+gulp.task('default', ['lint', 'css', 'scripts', 'watch']);
