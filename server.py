@@ -1,44 +1,46 @@
 import os
 
+
 class Minifier:
-  def __init__(self):
-    self.filenames = []
 
-  def minify(self, outputname):
+    def __init__(self):
+        self.filenames = []
 
-    outF = open(outputname,'w')
+    def minify(self, outputname):
 
-    for filename in self.filenames:
-      inF = open(filename,'r')
+        outF = open(outputname, 'w')
 
-      for line in inF:
-        outF.write(line)
+        for filename in self.filenames:
+            inF = open(filename, 'r')
 
-      inF.close()
+            for line in inF:
+                outF.write(line)
 
-      outF.write('\n\n')
+            inF.close()
 
-    outF.close()
+            outF.write('\n\n')
 
-  def parseFolder(self, foldername):
-    config = open('server.config','r')
-    self.filenames = []
-    for line in config:
-      self.filenames.append("src/"+line[:-1]+".js")
-    config.close()
-    # self.filenames = []
-    # currentPath = os.path.dirname(os.path.relpath(__file__))
+        outF.close()
 
-    # for dir_, _, files in os.walk(foldername):
-    #   for fileName in files:
-    #     relDir = os.path.relpath(dir_, currentPath)
-    #     relFile = os.path.join(relDir, fileName)
+    def parseFolder(self, foldername):
+        config = open('server.config', 'r')
+        self.filenames = []
+        for line in config:
+            self.filenames.append("src/" + line[:-1] + ".js")
+        config.close()
+        # self.filenames = []
+        # currentPath = os.path.dirname(os.path.relpath(__file__))
 
-    #     ext = os.path.splitext(relFile)[1]
-    #     if ext == '.js':
-    #       self.filenames.append(relFile)
+        # for dir_, _, files in os.walk(foldername):
+        #   for fileName in files:
+        #     relDir = os.path.relpath(dir_, currentPath)
+        #     relFile = os.path.join(relDir, fileName)
 
-#if __name__ == '__main__':
+        #     ext = os.path.splitext(relFile)[1]
+        #     if ext == '.js':
+        #       self.filenames.append(relFile)
+
+# if __name__ == '__main__':
 #  m = Minifier()
 #  m.parseFolder('src')
 #  m.minify('CityDashboard.min.js')
@@ -48,22 +50,23 @@ import random
 import json
 import string
 
+
 def genJSON(arg):
-  coordinates = []
+    coordinates = []
 
-  sample = xrange(1000000)
+    sample = xrange(1000000)
 
-  for i in range(arg):
-    coordinates.append({
-      "lat": random.uniform(-80,80),
-      "lng": random.uniform(-180,180),
-      "value": [random.sample( sample, 5 ),random.sample( sample, 5 )],
-      "gibberish": ''.join(random.choice(string.lowercase) for i in range(15))
-      })
+    for i in range(arg):
+        coordinates.append({
+            "lat": random.uniform(-80, 80),
+            "lng": random.uniform(-180, 180),
+            "value": [random.sample(sample, 5), random.sample(sample, 5)],
+            "gibberish": ''.join(random.choice(string.lowercase) for i in range(15))
+        })
 
-  a = open('json-test/'+str(arg)+".json","w")
-  a.write(json.dumps(coordinates))
-  a.close()
+    a = open('json-test/' + str(arg) + ".json", "w")
+    a.write(json.dumps(coordinates))
+    a.close()
 
 # if __name__ == '__main__':
 #   arg = sys.argv
@@ -77,54 +80,65 @@ import SimpleHTTPServer
 import SocketServer
 import urlparse
 
+
 class GetHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
-    
-  def do_GET(self):
-    path = urlparse.urlparse(self.path).path
 
-    # handle the request for the development library
-    if path.endswith("/js/CityDashboard.min.js"):
-      m = Minifier()
-      m.parseFolder('src')
-      m.minify('CityDashboard.min.js')
+    def do_GET(self):
+        path = urlparse.urlparse(self.path).path
 
-      f = open('CityDashboard.min.js')
-      self.send_response(200)
-      self.send_header('Content-type','application/javascript')
-      self.end_headers()
-      self.wfile.write(f.read())
-      f.close()
+        # handle the request for the development library
+        if path.endswith("/js/CityDashboard.min.js"):
+            if not os.path.exists('dist'):
+                os.makedirs('dist')
 
-      os.remove('CityDashboard.min.js')
+            if not os.path.isfile('dist/CityDashboard.min.js'):
+                m = Minifier()
+                m.parseFolder('src')
+                m.minify('dist/CityDashboard.min.js')
 
-    elif path.startswith("/test/position"): 
-      n = urlparse.urlparse(self.path).query
-      if len(n) == 0:
-        n = '500'
+            f = open('dist/CityDashboard.min.js')
+            self.send_response(200)
+            self.send_header('Content-type', 'application/javascript')
+            self.end_headers()
+            self.wfile.write(f.read())
+            f.close()
 
-      if not os.path.exists('json-test'):
-        os.makedirs('json-test')
+        elif path.endswith('/css/CityDashboard.min.css') or path.endswith('/css/CityDashboard.css'):
+            f = open('dist/CityDashboard.min.css')
+            self.send_response(200)
+            self.send_header('Content-type', 'text/css')
+            self.end_headers()
+            self.wfile.write(f.read())
+            f.close()
 
-      if not os.path.exists('json-test/'+n+".json"):
-        genJSON(int(n))
+        elif path.startswith("/test/position"):
+            n = urlparse.urlparse(self.path).query
+            if len(n) == 0:
+                n = '500'
 
-      f = open('json-test/'+n+'.json')
-      self.send_response(200)
-      self.send_header('Content-type','application/json')
-      self.end_headers()
-      self.wfile.write(f.read())
-      f.close()
-    
-    else:
-      SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
+            if not os.path.exists('json-test'):
+                os.makedirs('json-test')
+
+            if not os.path.exists('json-test/' + n + ".json"):
+                genJSON(int(n))
+
+            f = open('json-test/' + n + '.json')
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(f.read())
+            f.close()
+
+        else:
+            SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
 if __name__ == '__main__':
-  
-  PORT = 8000
 
-  handler = GetHandler
+    PORT = 8000
 
-  server = SocketServer.TCPServer(('localhost', PORT), handler)
-  print 'Starting server, use <Ctrl-C> to stop'
-  print 'Server working at port %s, visit http://localhost:%s' % (PORT, PORT)
-  server.serve_forever()
+    handler = GetHandler
+
+    server = SocketServer.TCPServer(('localhost', PORT), handler)
+    print 'Starting server, use <Ctrl-C> to stop'
+    print 'Server working at port %s, visit http://localhost:%s' % (PORT, PORT)
+    server.serve_forever()
