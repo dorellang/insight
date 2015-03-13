@@ -24,7 +24,7 @@ gulp.task('css', function() {
 
 // Concatenate & Minify JS
 gulp.task('scripts', function() {
-    return gulp.src(['src/lib/utils.js',
+    return gulp.src(['src/Utils.js',
             'src/CityDashboard.js',
             'src/Maps/GoogleMap.js',
             'src/Layers/Markers/Marker.js',
