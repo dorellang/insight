@@ -5,11 +5,13 @@
     <!--
     THIS IS A TEST.
 
-    IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW.
+    IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW
+
+    GRIDS
 
     -->
 
-    <title>Test 2 - Information Window</title>
+    <title>Test 6 - Grids</title>
 
     <style>
       html,
@@ -23,7 +25,8 @@
         height: 100%;
       }
     </style>
-    <link rel="stylesheet" type="text/css" href="../CityDashboard.css">
+
+    <link rel="stylesheet" type="text/css" href="css/CityDashboard.css">
     <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
     
     <script src="js/chartist.min.js"></script>
@@ -32,13 +35,11 @@
 
     <script src="js/CityDashboard.min.js"></script>
 
-
   </head>
 
   <body><div id="dashboard"></div></body>
 
   <script>
-
     // Binding the map and the information window.
     var myDashboard = new CityDashboard.Dashboard({
       'anchor': '#dashboard',
@@ -54,6 +55,18 @@
 
     // Setting up our information window.
     var infoWindow = new CityDashboard.InfoWindow({});
+
+    myDashboard
+    .addLayer({
+      'id': '#squareGrid',
+      'layer': 'grid-layer',
+      'data-source': '#squareGrid',
+      'data': [],
+      'layer_attr': {
+        'type': 'square',
+        //'color': 'green',
+        'size': '0.03'
+    }});
 
   </script>
 </html>

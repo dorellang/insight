@@ -7,11 +7,11 @@
 
     IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW
 
-    VORONOI
+    DELAUNAY
 
     -->
 
-    <title>Test 11 - Voronoi</title>
+    <title>Test 11 - Delaunay</title>
 
     <style>
       html,
@@ -26,9 +26,9 @@
       }
     </style>
 
-    <link rel="stylesheet" type="text/css" href="../CityDashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/CityDashboard.css">
     <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
-    
+
     <script src="js/chartist.min.js"></script>
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization"></script>
@@ -75,13 +75,13 @@
 
     myDashboard
     .addLayer({
-      'id': '#voronoi',
+      'id': '#delaunay',
       'layer': 'delaunay-layer',
-      'data-source': '#voronoi',
+      'data-source': '#delaunay',
       'data': [{'points': points
         }],
       'layer_attr': {
-        'type': 'voronoi'}
+        'type': 'delaunay'}
     });
 
   </script>

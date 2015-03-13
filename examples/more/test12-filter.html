@@ -21,9 +21,9 @@
         height: 100%;
       }
     </style>
-    <link rel="stylesheet" type="text/css" href="../CityDashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/CityDashboard.css">
     <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
-    
+
     <script src="js/chartist.min.js"></script>
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="//maps.googleapis.com/maps/api/js?v=3.exp"></script>
@@ -74,7 +74,7 @@
         'visualization': 'linechart-viz',
         'id': '#randomLineChart',
         'title': 'Random Point Data',
-        'labels': function (data) { 
+        'labels': function (data) {
           var N = data[0].length;
           var a = Array.apply(null, {length: N}).map(Number.call, Number);
           return a.map(function (el) {return el+"";});

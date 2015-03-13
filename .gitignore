@@ -1,2 +1,4 @@
 json-test/
 test/map.xml
+node_modules/
+tmp/

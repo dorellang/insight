@@ -7,11 +7,11 @@
 
     IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW
 
-    GRIDS
+    POLYLINE
 
     -->
 
-    <title>Test 6 - Grids</title>
+    <title>Test 5 - Polylines</title>
 
     <style>
       html,
@@ -26,7 +26,7 @@
       }
     </style>
 
-    <link rel="stylesheet" type="text/css" href="../CityDashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/CityDashboard.css">
     <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
     
     <script src="js/chartist.min.js"></script>
@@ -40,11 +40,12 @@
   <body><div id="dashboard"></div></body>
 
   <script>
-    // Binding the map and the information window.
+     // Binding the map and the information window.
     var myDashboard = new CityDashboard.Dashboard({
       'anchor': '#dashboard',
       'layout': 'left'
     });
+
 
     // Setting up our map.
     var map = new CityDashboard.GoogleMap({
@@ -58,14 +59,17 @@
 
     myDashboard
     .addLayer({
-      'id': '#squareGrid',
-      'layer': 'grid-layer',
-      'data-source': '#squareGrid',
-      'data': [],
+      'id': '#simpleMarker',
+      'layer': 'marker-layer',
+      'data-source': '#simpleMarker',
+      'data': [{'points': [{lat: -33.442909, lng: -70.65387},
+                           {lat: -33.457669, lng: -70.662319},
+                           {lat: -33.464628, lng: -70.610676}],
+                'value': {
+                  'landmark': ['La Moneda', 'FCFM', 'Estadio Nacional']
+              }}],
       'layer_attr': {
-        'type': 'square',
-        //'color': 'green',
-        'size': '0.03'
+        'type': 'polyline'
     }});
 
   </script>

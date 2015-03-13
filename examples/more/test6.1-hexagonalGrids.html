@@ -7,11 +7,11 @@
 
     IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW
 
-    POLYLINE
+    HEXAGONAL GRIDS
 
     -->
 
-    <title>Test 5 - Polylines</title>
+    <title>Test 6.1 - Hexagonal Grids</title>
 
     <style>
       html,
@@ -26,7 +26,7 @@
       }
     </style>
 
-    <link rel="stylesheet" type="text/css" href="../CityDashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/CityDashboard.css">
     <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
     
     <script src="js/chartist.min.js"></script>
@@ -40,12 +40,11 @@
   <body><div id="dashboard"></div></body>
 
   <script>
-     // Binding the map and the information window.
+    // Binding the map and the information window.
     var myDashboard = new CityDashboard.Dashboard({
       'anchor': '#dashboard',
       'layout': 'left'
     });
-
 
     // Setting up our map.
     var map = new CityDashboard.GoogleMap({
@@ -57,19 +56,40 @@
     // Setting up our information window.
     var infoWindow = new CityDashboard.InfoWindow({});
 
+    var maxlat = -33.34;
+    var minlat = -33.54;
+
+    var maxlng = -70.55;
+    var minlng = -70.75;
+
+    var points = [];
+    var weights = [];
+    for(var i = 0; i < 200; i++) {
+      points[i] = {lat: Math.random() * (maxlat - minlat) + minlat,
+                   lng: Math.random() * (maxlng - minlng) + minlng};
+      weights[i] = Math.random() * (6 - 1) + 1;
+    }
+
     myDashboard
+    .addLayer({
+      'id': '#hexagonalGrid',
+      'layer': 'grid-layer',
+      'data-source': '#hexagonalGrid',
+      'data': [{'points': points,
+                'weights': weights
+              }],
+      'layer_attr': {
+        'type': 'hexagonal',
+        //'color': 'red',
+        'size': '0.02'
+    }})
     .addLayer({
       'id': '#simpleMarker',
       'layer': 'marker-layer',
       'data-source': '#simpleMarker',
-      'data': [{'points': [{lat: -33.442909, lng: -70.65387},
-                           {lat: -33.457669, lng: -70.662319},
-                           {lat: -33.464628, lng: -70.610676}],
-                'value': {
-                  'landmark': ['La Moneda', 'FCFM', 'Estadio Nacional']
-              }}],
+      'data': points,
       'layer_attr': {
-        'type': 'polyline'
+        'type': 'simple'
     }});
 
   </script>

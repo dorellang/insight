@@ -7,11 +7,11 @@
 
     IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW
 
-    HEXAGONAL GRIDS
+    VORONOI
 
     -->
 
-    <title>Test 6.1 - Hexagonal Grids</title>
+    <title>Test 11 - Voronoi</title>
 
     <style>
       html,
@@ -26,12 +26,13 @@
       }
     </style>
 
-    <link rel="stylesheet" type="text/css" href="../CityDashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/CityDashboard.css">
     <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
-    
+
     <script src="js/chartist.min.js"></script>
     <script src="js/jquery-1.11.1.min.js"></script>
-    <script src="//maps.googleapis.com/maps/api/js?v="></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization"></script>
+    <script src="js/delaunayTraingles.js"></script>
 
     <script src="js/CityDashboard.min.js"></script>
 
@@ -56,41 +57,32 @@
     // Setting up our information window.
     var infoWindow = new CityDashboard.InfoWindow({});
 
+    var lats = [];
+    var lngs = [];
+
     var maxlat = -33.34;
     var minlat = -33.54;
 
     var maxlng = -70.55;
     var minlng = -70.75;
 
-    var points = [];
-    var weights = [];
-    for(var i = 0; i < 200; i++) {
+    points = [];
+
+    for(var i = 0; i < 30; i++) {
       points[i] = {lat: Math.random() * (maxlat - minlat) + minlat,
                    lng: Math.random() * (maxlng - minlng) + minlng};
-      weights[i] = Math.random() * (6 - 1) + 1;
     }
 
     myDashboard
     .addLayer({
-      'id': '#hexagonalGrid',
-      'layer': 'grid-layer',
-      'data-source': '#hexagonalGrid',
-      'data': [{'points': points,
-                'weights': weights
-              }],
+      'id': '#voronoi',
+      'layer': 'delaunay-layer',
+      'data-source': '#voronoi',
+      'data': [{'points': points
+        }],
       'layer_attr': {
-        'type': 'hexagonal',
-        //'color': 'red',
-        'size': '0.02'
-    }})
-    .addLayer({
-      'id': '#simpleMarker',
-      'layer': 'marker-layer',
-      'data-source': '#simpleMarker',
-      'data': points,
-      'layer_attr': {
-        'type': 'simple'
-    }});
+        'type': 'voronoi'}
+    });
 
   </script>
 </html>

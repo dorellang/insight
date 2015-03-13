@@ -5,13 +5,11 @@
     <!--
     THIS IS A TEST.
 
-    IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW
-
-    HEATMAP
+    IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW.
 
     -->
 
-    <title>Test 8 - Heatmap</title>
+    <title>Test 2 - Information Window</title>
 
     <style>
       html,
@@ -25,21 +23,22 @@
         height: 100%;
       }
     </style>
-
-    <link rel="stylesheet" type="text/css" href="../CityDashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/CityDashboard.css">
     <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
-    
+
     <script src="js/chartist.min.js"></script>
     <script src="js/jquery-1.11.1.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization"></script>
+    <script src="//maps.googleapis.com/maps/api/js?v="></script>
 
     <script src="js/CityDashboard.min.js"></script>
+
 
   </head>
 
   <body><div id="dashboard"></div></body>
 
   <script>
+
     // Binding the map and the information window.
     var myDashboard = new CityDashboard.Dashboard({
       'anchor': '#dashboard',
@@ -55,35 +54,6 @@
 
     // Setting up our information window.
     var infoWindow = new CityDashboard.InfoWindow({});
-
-    var lats = [];
-    var lngs = [];
-
-    var maxlat = -33.34;
-    var minlat = -33.54;
-
-    var maxlng = -70.55;
-    var minlng = -70.75;
-
-    points = [];
-
-    for(var i = 0; i < 3000; i++) {
-      points[i] = {lat: Math.random() * (maxlat - minlat) + minlat,
-                   lng: Math.random() * (maxlng - minlng) + minlng};
-    }
-
-    myDashboard
-    .addLayer({
-      'id': '#heatmap',
-      'layer': 'heatmap-layer',
-      'data-source': '#heatmap',
-      'data': [{'points': points
-        }],
-      'layer_attr': {
-        'type': 'point-heatmap',
-        'radius': 12
-        }
-    });
 
   </script>
 </html>

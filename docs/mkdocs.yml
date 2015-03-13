@@ -31,5 +31,5 @@ pages:
 - ['Visualizations/Visualization.md', 'Visualizations', 'Visualization']
 - ['Visualizations/SummaryVisualization.md', 'Visualizations', 'SummaryVisualization']
 - ['Visualizations/ChartistVisualization.md', 'Visualizations', 'ChartistVisualization']
-- ['lib/utils.md', 'Utils']
+- ['Utils.md', 'Utils']
 theme: readthedocs
