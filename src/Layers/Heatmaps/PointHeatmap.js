@@ -1,21 +1,21 @@
 CityDashboard.PointHeatmap = function(layer_params, attr, map, assoc_layer) {
-
+    var i;
     var data = [];
 
     var len = layer_params.points.length;
 
     if (layer_params.weights && layer_params.weights.length >= len) {
-        for (var i = 0; i < len; i++) {
+        for (i = 0; i < len; i++) {
             data[i] = {
                 location: new google.maps.LatLng(
                     parseFloat(layer_params.points[i].lat),
                     parseFloat(layer_params.points[i].lng)
                 ),
                 weight: layer_params.weights[i]
-            }
+            };
         }
     } else {
-        for (var i = 0; i < len; i++) {
+        for (i = 0; i < len; i++) {
             data[i] = new google.maps.LatLng(
                 parseFloat(layer_params.points[i].lat),
                 parseFloat(layer_params.points[i].lng)
