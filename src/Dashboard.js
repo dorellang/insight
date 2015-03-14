@@ -1,89 +1,111 @@
-CityDashboard.Dashboard = function(parameters) {
+CityDashboard = CityDashboard || {};
 
-    this.layers = [];
+/**
+ * Configure the Dashboard of the CityDashboard
+ * TODO: explain what is the dashboard as an element
+ */
+CityDashboard.Dashboard = (function(CityDashboard, $) {
+    "use strict";
 
-    if (!parameters.anchor)
-        throw new Error('Anchor ID is required.');
+    /**
+     * Constructor for the dashboard
+     * TODO: documentation missing
+     */
+    var Dashboard = function(parameters) {
+        this.layers = [];
 
-    this.anchor = parameters.anchor;
+        if (!parameters.anchor)
+            throw new Error('Anchor ID is required.');
 
-    this.layout = 'layout-' + (parameters.layout || 'none');
+        this.anchor = parameters.anchor;
 
-    // placing
+        this.layout = 'layout-' + (parameters.layout || 'none');
 
-    var container = $('<div>')
-        .setID(CityDashboard.id('main')).addClass('mainDashboard')
-        .addClass(this.layout);
+        // placing
 
-    var infoDiv;
-    if (this.layout !== 'layout-none') {
-        infoDiv = $('<div>')
-            .setID(CityDashboard.id('info')).addClass('infoWindow');
+        var container = $('<div>')
+            .setID(CityDashboard.id('main')).addClass('mainDashboard')
+            .addClass(this.layout);
 
-        var resizeOrientation;
-        if (this.layout === 'layout-left')
-            resizeOrientation = 'e';
-        else if (this.layout === 'layout-right')
-            resizeOrientation = 'w';
-        // else if ( this.layout === 'layout-top')
-        //   resizeOrientation = 's';
-        // else if ( this.layout === 'layout-bottom')
-        //   resizeOrientation = 'n';
+        var infoDiv;
+        if (this.layout !== 'layout-none') {
+            infoDiv = $('<div>')
+                .setID(CityDashboard.id('info')).addClass('infoWindow');
 
-        infoDiv.resizable(resizeOrientation);
+            var resizeOrientation;
+            if (this.layout === 'layout-left')
+                resizeOrientation = 'e';
+            else if (this.layout === 'layout-right')
+                resizeOrientation = 'w';
+            // else if ( this.layout === 'layout-top')
+            //   resizeOrientation = 's';
+            // else if ( this.layout === 'layout-bottom')
+            //   resizeOrientation = 'n';
 
-        container.append(infoDiv);
-    }
+            infoDiv.resizable(resizeOrientation);
 
-    var mapDiv = $('<div>')
-        .setID(CityDashboard.id('map')).addClass('mapWindow');
-    container.append(mapDiv);
-
-    $(this.anchor).append(container);
-
-    this.filters = new CityDashboard.FilterBar(parameters['filter-number'] || 0);
-
-    var layers = this.layers;
-
-    container.on('filterChanged', function(e, fun) {
-        var f = fun();
-        for (var i = layers.length - 1; i >= 0; i--) {
-            layers[i].filter(f);
+            container.append(infoDiv);
         }
-    });
 
-};
+        var mapDiv = $('<div>')
+            .setID(CityDashboard.id('map')).addClass('mapWindow');
+        container.append(mapDiv);
 
-CityDashboard.Dashboard.prototype = {
+        $(this.anchor).append(container);
 
-    constructor: CityDashboard.Dashboard,
-
-    addLayer: function(parameters) {
+        this.filters = new CityDashboard.FilterBar(parameters['filter-number'] || 0);
 
         var layers = this.layers;
 
-        var callback = function(pr) {
-                layers[layers.length] = LayerSelector(pr,
-                    CityDashboard.select('main')[0].data);
-            } // gmap: $(CityDashboard['mainContainerID'])[0].data
+        container.on('filterChanged', function(e, fun) {
+            var f = fun();
+            for (var i = layers.length - 1; i >= 0; i--) {
+                layers[i].filter(f);
+            }
+        });
 
-        CityDashboard.getData(parameters['data-source'], callback, parameters);
+    };
 
-        return this;
+    Dashboard.prototype = {
+        constructor: CityDashboard.Dashboard,
 
-    },
+        /**
+         * TODO: Documentation missing
+         */
+        addLayer: function(parameters) {
 
-    addFilter: function(filters) {
+            var layers = this.layers;
 
-        this.filters.addFilter(filters);
+            var callback = function(pr) {
+                    layers[layers.length] = new LayerSelector(pr, CityDashboard.select('main')[0].data);
+                }; // gmap: $(CityDashboard['mainContainerID'])[0].data
 
-        return this;
-    },
+            CityDashboard.getData(parameters['data-source'], callback, parameters);
 
-    clear: function() {
-        for (var i = 0; i < this.layers.length; i++) {
-            this.layers[i].clear();
-        };
-        this.layers = [];
-    }
-};
+            return this;
+
+        },
+
+        /**
+         * TODO: Documentation missing
+         */
+        addFilter: function(filters) {
+
+            this.filters.addFilter(filters);
+
+            return this;
+        },
+
+        /**
+         * TODO: documentation missing
+         */
+        clear: function() {
+            for (var i = 0; i < this.layers.length; i++) {
+                this.layers[i].clear();
+            }
+            this.layers = [];
+        }
+    };
+
+    return Dashboard;
+})(CityDashboard, jQuery);
