@@ -12,13 +12,13 @@ CityDashboard.Dashboard = function(parameters) {
     // placing
 
     var container = $('<div>')
-        .setID(CityDashboard['mainContainerID']).addClass('mainDashboard')
+        .setID(CityDashboard.id('main')).addClass('mainDashboard')
         .addClass(this.layout);
 
     var infoDiv;
     if (this.layout !== 'layout-none') {
         infoDiv = $('<div>')
-            .setID(CityDashboard['infoWindowID']).addClass('infoWindow');
+            .setID(CityDashboard.id('info')).addClass('infoWindow');
 
         var resizeOrientation;
         if (this.layout === 'layout-left')
@@ -36,7 +36,7 @@ CityDashboard.Dashboard = function(parameters) {
     }
 
     var mapDiv = $('<div>')
-        .setID(CityDashboard['mapWindowID']).addClass('mapWindow');
+        .setID(CityDashboard.id('map')).addClass('mapWindow');
     container.append(mapDiv);
 
     $(this.anchor).append(container);
@@ -64,7 +64,7 @@ CityDashboard.Dashboard.prototype = {
 
         var callback = function(pr) {
                 layers[layers.length] = LayerSelector(pr,
-                    $(CityDashboard['mainContainerID'])[0].data);
+                    CityDashboard.select('main')[0].data);
             } // gmap: $(CityDashboard['mainContainerID'])[0].data
 
         CityDashboard.getData(parameters['data-source'], callback, parameters);
