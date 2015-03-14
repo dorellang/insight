@@ -16,7 +16,7 @@ var CityDashboard = (function($) {
     };
 
     var that = {
-        // TODO: This properties must eventually disappear
+        // TODO: These properties must eventually disappear
         mainContainerID: identifiers.main,
         mapWindowID: identifiers.map,
         infoWindowID: identifiers.info,
@@ -64,11 +64,11 @@ var CityDashboard = (function($) {
         /**
          * Get a jQuery selector for the dashboard container element.
          *
-         * @param (String) container identifier of the container to get
+         * @param (String) name identifier of the container to get
          * @return (jQuery) selector for the container;
          */
-        select: function(container) {
-            return $(that.id(container));
+        container: function(name) {
+            return $(that.id(name));
         }
     };
 

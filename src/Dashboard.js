@@ -77,7 +77,7 @@ CityDashboard.Dashboard = (function(CityDashboard, $) {
             var layers = this.layers;
 
             var callback = function(pr) {
-                    layers[layers.length] = new LayerSelector(pr, CityDashboard.select('main')[0].data);
+                    layers[layers.length] = new LayerSelector(pr, CityDashboard.container('main')[0].data);
                 }; // gmap: $(CityDashboard['mainContainerID'])[0].data
 
             CityDashboard.getData(parameters['data-source'], callback, parameters);
