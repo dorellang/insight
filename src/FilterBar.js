@@ -6,15 +6,15 @@ CityDashboard.FilterBar = function(filterNumber) {
     };
     this.filterNumber = filterNumber;
 
-    this.bar = $('<div>').setID(CityDashboard['filterBarID']).addClass('filterBar');
+    this.bar = $('<div>').setID(CityDashboard.id('filters')).addClass('filterBar');
 
     /* Google maps geocoder and search bar*/
 
     var geocoder = new google.maps.Geocoder();
 
     var geocode = function() {
-        var map = $(CityDashboard['mainContainerID'])[0].data;
-        var address = $(CityDashboard['filterBarID'] + ' > .search').val();
+        var map = $(CityDashboard.id('main'))[0].data;
+        var address = $(CityDashboard.id('filters') + ' > .search').val();
         geocoder.geocode({
             'address': address
         }, function(results, status) {
@@ -23,12 +23,12 @@ CityDashboard.FilterBar = function(filterNumber) {
                 // map.setZoom(12);
                 map.fitBounds(results[0].geometry.bounds);
             } else {
-                $(CityDashboard['filterBarID'] + ' > .search').val('not found: ' + address);
+                $(CityDashboard.id('filters') + ' > .search').val('not found: ' + address);
             }
         });
-    }
+    };
 
-    $(CityDashboard['mainContainerID']).append(this.bar);
+    CityDashboard.container('main').append(this.bar);
 
     this.bar.append($('<input>')
         .addClass('search')
@@ -39,14 +39,15 @@ CityDashboard.FilterBar = function(filterNumber) {
     var _this = this;
     this.select = [];
 
-    for (var i = 0; i < this.filterNumber; i++) {
-        this.select[i] = $('<select>').on('change', function() {
-
-            $(CityDashboard['mainContainerID']).trigger('filterChanged', function() {
-                return _this.composeFilters();
-            });
-
+    var onChange = function() {
+        CityDashboard.container('main').trigger('filterChanged', function() {
+            return _this.composeFilters();
         });
+
+    };
+
+    for (var i = 0; i < this.filterNumber; i++) {
+        this.select[i] = $('<select>').on('change', onChange);
         this.bar.append(this.select[i]);
     }
     this.placeFilters();
@@ -55,40 +56,58 @@ CityDashboard.FilterBar = function(filterNumber) {
 
 CityDashboard.FilterBar.prototype = {
     constructor: CityDashboard.FilterBar,
+
+    /**
+     * TODO: missing documentation
+     */
     addFilter: function(filters) {
         for (var key in filters) {
             this.filters[key] = filters[key];
         }
         for (var i = this.select.length - 1; i >= 0; i--) {
             this.select[i].empty();
-        };
+        }
         this.placeFilters();
     },
+
+    /**
+     * TODO: missing documentation
+     */
     placeFilters: function() {
         var _this = this;
+
+        var getFilter = function(key) {
+            return function() {
+                return _this.filters[key];
+            };
+        };
+
         for (var j = 0; j < this.filterNumber; j++) {
             for (var key in this.filters) {
                 var option = $('<option>');
 
-                option.val(function() {
-                    return _this.filters[key];
-                });
+                option.val(getFilter(key));
                 option.text(key);
-                this.select[j].append(option)
-            };
-        };
+                this.select[j].append(option);
+            }
+        }
     },
+
+    /**
+     * TODO: missing documentation
+     */
     composeFilters: function() {
         var l = [];
         for (var i = this.select.length - 1; i >= 0; i--) {
+            // TODO: why this definition? Using eval is bad practice
             l[l.length] = Function('return ' + this.select[i].val())();
-        };
+        }
         return function(data) {
             for (var i = l.length - 1; i >= 0; i--) {
                 if (!l[i](data))
                     return false;
-            };
+            }
             return true;
-        }
+        };
     }
-}
+};
