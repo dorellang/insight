@@ -126,6 +126,15 @@
 
         return this;
     };
+
+    /**
+     * Check if indexOf exists in Array.prototype or use jQuery.inArray();
+     */
+     Array.prototype.indexOf = 'indexOf' in Array.prototype ? Array.prototype.indexOf : function(item, start) {
+         return $.inArray(item, this, start);
+     };
+
+
     // $.fn.onUnderflow = function ( fn ) {
     //   var flow = false;
     //   this.on('OverflowEvent' in window ? 'overflowChanged' : 'underflow', function (e) {
