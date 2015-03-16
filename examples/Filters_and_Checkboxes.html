@@ -104,9 +104,12 @@
     });
 
     myDashboard.addFilter({
-      'More than 20s': function (data) {return data.seconds > 20;},
-      'Over Equator': function (data) {return data.lat > 0;},
-      'By Type: a,f,g,e,t,h': function (data) {return "afgeth".indexOf(data['event type'])> 0;}
+        description: 'Geographic Location',
+        options: [
+            {name: 'More than 20s', filter: function (data) {return data.seconds > 20;}},
+            {name: 'Over Equator', filter: function (data) {return data.lat > 0;}},
+            {name: 'By Type: a,f,g,e,t,h', filter: function (data) {return "afgeth".indexOf(data['event type'])> 0;}}
+        ]
     });
   </script>
 </html>
