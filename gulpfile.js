@@ -54,7 +54,7 @@ gulp.task('lint', function() {
 });
 
 gulp.task('css', function() {
-    gulp.src('style/**/*.css')
+    gulp.src('css/**/*.css')
         .pipe(cssmin())
         .pipe(rename('CityDashboard.min.css'))
         .pipe(gulp.dest('dist'));
