@@ -1,119 +1,113 @@
-CityDashboard.InfoWindow = function(vizPropList) {
+var CityDashboard = CityDashboard || {};
 
-    vizPropList = vizPropList || [];
+CityDashboard.InfoWindow = (function(CityDashboard, $) {
+    "use strict";
 
-    this.visualizations = {};
-    this.dataSourceTable = {}; // better name?
+    return function(vizPropList) {
+        // Default visualization property list
+        vizPropList = vizPropList || [];
 
-    for (var i = 0; i < vizPropList.length; i++) {
-        this.createVisualization(vizPropList[i]);
-    }
+        var visualizations = {};
+        var dataSourceTable = {};
 
-    //placing
+        /**
+         * Create a visualization according to the type provided in
+         * props.visualization
+         *
+         * TODO: there must be a better way to do this
+         *
+         * @param (Object) props properties for the visualization
+         * @return (Object) visualization after data is loaded
+         */
+        function createVisualization(props) {
+            var type = props.visualization;
 
-    var infoWindow = CityDashboard.container('info');
+            var callback = function(pr) {
+                var viz;
 
-    var _this = this;
+                if (!type)
+                    return;
 
-    var handler = function(event, arg) {
+                else if (type === 'summary-viz')
+                    viz = new CityDashboard.SummaryVisualization(pr);
+                else if (type === 'linechart-viz')
+                    // TODO: check that the library is loaded first
+                    viz = new CityDashboard.ChartistVisualization(pr, Chartist.Line);
+                else if (type === 'barchart-viz')
+                    viz = new CityDashboard.ChartistVisualization(pr, Chartist.Bar);
+                else if (type === 'piechart-viz')
+                    viz = new CityDashboard.ChartistVisualization(pr, Chartist.Pie);
+                else if (type === 'd3-viz')
+                    viz = new CityDashboard.D3Visualization(pr);
+                else if (type === 'general-viz')
+                    viz = new CityDashboard.GeneralVisualization(pr);
 
-        infoWindow.off('marker-pressed');
+                visualizations[viz.id] = viz;
+                dataSourceTable[viz.data_source] = dataSourceTable[viz.data_source] || [];
+                dataSourceTable[viz.data_source].push(viz);
 
-        if (arg.attr.id && !(arg.attr.id in _this.visualizations)) {
-            var config = jQuery.extend({}, arg.attr);
-            config.data = arg.value;
-            config['data-source'] = arg.id;
-            // {
-            //   'visualization': arg['attr']['visualization'],
-            //   'id': arg['attr']['id'],
-            //   'data-source': arg['id'],
-            //   'data': arg.value,
-            //   'preprocess': arg['attr']['preprocess'],
-            //   'title': arg['attr']['title'],
-            //   'properties': arg['attr']['properties'],
-            //   'labels': arg['attr']['labels'],
-            //   'checkbox': arg['attr']['checkbox'],
-            //   'checkbox-handler': arg['attr']['checkbox-handler'],
-            //   'viz': arg['attr']['viz']
-            // };
+                return viz;
+            };
 
-            _this.createVisualization(config);
+            return CityDashboard.getData(props['data-source'], callback, props);
         }
 
-        var vizs = _this.dataSourceTable[arg.id] || [];
-        for (var i = vizs.length - 1; i >= 0; i--) {
-            vizs[i].setData(arg.value);
-            vizs[i].refresh();
+        // Create the visualizations in the property list
+        for (var i = 0; i < vizPropList.length; i++) {
+            createVisualization(vizPropList[i]);
+        }
+
+        // Get the window element
+        var infoWindow = CityDashboard.container('info');
+
+        var handler = function(event, arg) {
+            infoWindow.off('marker-pressed');
+
+            if (arg.attr.id && !(arg.attr.id in visualizations)) {
+                var config = $.extend({}, arg.attr);
+                config.data = arg.value;
+                config['data-source'] = arg.id;
+                // {
+                //   'visualization': arg['attr']['visualization'],
+                //   'id': arg['attr']['id'],
+                //   'data-source': arg['id'],
+                //   'data': arg.value,
+                //   'preprocess': arg['attr']['preprocess'],
+                //   'title': arg['attr']['title'],
+                //   'properties': arg['attr']['properties'],
+                //   'labels': arg['attr']['labels'],
+                //   'checkbox': arg['attr']['checkbox'],
+                //   'checkbox-handler': arg['attr']['checkbox-handler'],
+                //   'viz': arg['attr']['viz']
+                // };
+
+                createVisualization(config);
+            }
+
+            var vizs = dataSourceTable[arg.id] || [];
+            for (var i = vizs.length - 1; i >= 0; i--) {
+                vizs[i].setData(arg.value);
+                vizs[i].refresh();
+            }
+
+            infoWindow.on('marker-pressed', handler);
         };
 
+        // Add the handler
         infoWindow.on('marker-pressed', handler);
+
+        // Add a resize handler
+        infoWindow.on('resize', function(e) {
+            for (var key in visualizations) {
+                visualizations[key].refresh();
+            }
+        });
+
+        // Perform cleanup on visualization removal
+        infoWindow.on('remove-viz', function(e, arg) {
+            delete visualizations[arg.id];
+            var index = $.inArray(dataSourceTable[arg['data-source']], arg.id);
+            dataSourceTable[arg['data-source']].splice(index, 1);
+        });
     };
-
-    infoWindow.on('marker-pressed', handler);
-
-    infoWindow.on('resize', function(e) {
-
-        for (var key in _this.visualizations) {
-            _this.visualizations[key].refresh();
-        };
-
-    });
-
-    infoWindow.on('remove-viz', function(e, arg) {
-        delete _this.visualizations[arg.id];
-        var index = jQuery.inArray(_this.dataSourceTable[arg['data-source']], arg.id);
-        _this.dataSourceTable[arg['data-source']].splice(index, 1);
-    });
-
-};
-
-CityDashboard.InfoWindow.prototype = {
-
-    constructor: CityDashboard.InfoWindow,
-
-    createVisualization: function(props) {
-
-        var _this = this;
-        var type = props.visualization;
-
-        var callback = function(pr) {
-
-            var viz;
-
-            if (!type)
-                return;
-
-            else if (type === 'summary-viz')
-
-                viz = new CityDashboard.SummaryVisualization(pr);
-
-            else if (type === 'linechart-viz')
-
-                viz = new CityDashboard.ChartistVisualization(pr, Chartist.Line);
-
-            else if (type === 'barchart-viz')
-
-                viz = new CityDashboard.ChartistVisualization(pr, Chartist.Bar);
-
-            else if (type === 'piechart-viz')
-
-                viz = new CityDashboard.ChartistVisualization(pr, Chartist.Pie);
-
-            else if (type === 'd3-viz')
-
-                viz = new CityDashboard.D3Visualization(pr);
-
-            else if (type === 'general-viz')
-
-                viz = new CityDashboard.GeneralVisualization(pr);
-
-            _this.visualizations[viz.id] = viz;
-            _this.dataSourceTable[viz.data_source] = _this.dataSourceTable[viz.data_source] || [];
-            _this.dataSourceTable[viz.data_source].push(viz);
-
-            return viz;
-        };
-
-        return CityDashboard.getData(props['data-source'], callback, props);
-    }
-};
+})(CityDashboard, jQuery);
