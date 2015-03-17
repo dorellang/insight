@@ -12,6 +12,7 @@ var sass   = require('gulp-sass');
 // Source list
 var sources = ['src/Utils.js',
     'src/CityDashboard.js',
+    'src/Maps/Map.js',
     'src/Maps/GoogleMap.js',
     'src/Layers/Markers/Marker.js',
     'src/Layers/Markers/CircleMarker.js',

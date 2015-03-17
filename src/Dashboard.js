@@ -15,7 +15,6 @@ CityDashboard.Dashboard = (function(CityDashboard, $) {
         var layers = [];
         var layoutOptions = ['left', 'right', 'none'];
 
-        console.log(parameters);
         if (!('anchor' in parameters)) throw new Error('Anchor id is required for creating a dashboard');
         var anchor = parameters.anchor;
 
