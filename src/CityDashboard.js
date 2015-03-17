@@ -1,3 +1,8 @@
+/**
+ * Here goes the documentation for the entire namespace
+ * 
+ * @namespace CityDashboard
+ */
 var CityDashboard = (function($) {
     "use strict";
 

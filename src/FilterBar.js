@@ -2,10 +2,15 @@ var CityDashboard = CityDashboard || {};
 
 /**
  * Defines the behavior of the filter bar of the dashboard
+ * @class CityDashboard.FilterBar
  */
 CityDashboard.FilterBar = (function(CityDashboard, google, $) {
     "use strict";
 
+    /**
+     * TODO: document constructor
+     * @constructs CityDashboard.FilterBar
+     */
     return function() {
         // Bar element
         var bar = $('<div>').setID(CityDashboard.id('filters')).addClass('filterBar');
@@ -77,11 +82,11 @@ CityDashboard.FilterBar = (function(CityDashboard, google, $) {
 
         return {
             /**
-             * Add a new filter to the filter bar, displayed as a <select> object in the UI, it returns the jquery element
+             * Add a new filter to the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
              * of the filter for further customizations
              *
              * Example:
-             * ```
+             * ```javascript
              * myDashboard.addFilter({
              *  description: 'Geographic Location', // the empty string is used if not provided
              *  options: [
@@ -91,9 +96,9 @@ CityDashboard.FilterBar = (function(CityDashboard, google, $) {
              *  ]
              * });
              * ```
-             *
-             * @param (Object) filter configuration for the filter
-             * @return (jQuery) reference to the added element for further customization
+             * @memberof CityDashboard.FilterBar
+             * @param {Object} filter configuration for the filter
+             * @return {jQuery} reference to the added element for further customization
              */
             addFilter: function(filter) {
                 var select = $('<select>');
