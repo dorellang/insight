@@ -1,6 +1,8 @@
 var CityDashboard = CityDashboard || {};
 
 CityDashboard.GoogleMap = (function(CityDashboard, $) {
+	"use strict";
+
     return function(options) {
         // Initialize parent
         var map = CityDashboard.Map(options);

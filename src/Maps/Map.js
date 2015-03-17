@@ -11,7 +11,7 @@ CityDashboard.Map = (function(CityDashboard, $){
 
         var zoom = options.zoom || 12;
 
-        // Javascript container for the map
+        // jQuery container for the map
         var container = CityDashboard.container('map');
 
         return {
