@@ -45,10 +45,13 @@ CityDashboard.FilterBar = (function(CityDashboard, google, $) {
         var geocoder = new google.maps.Geocoder();
 
         // Create the search box
-        var search = bar.append($('<input>')
+        var search = $('<input>')
             .addClass('search')
             .attr('type', 'search')
-            .attr('placeholder', 'Enter location'));
+            .attr('placeholder', 'Enter location');
+
+        // Append search box to bar
+        bar.append(search);
 
         var geocode = function() {
             var map = CityDashboard.container('main')[0].data;
