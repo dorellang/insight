@@ -59,3 +59,31 @@ Check out our [tutorials](docs/docs/index.md)!
 Contribute by extending CityDashboard!
 
 ![UML](http://i.imgur.com/H7QeJC4.png)
+
+
+
+Building City Dashboard
+-----------------------
+
+* Make sure you have the node package manager installed
+* Clone this repo
+```bash
+> git clone https://github.com/niclabs/city-dashboard.git
+```
+
+* Install developer dependencies
+```bash
+> cd city-dashboard
+> npm install
+```
+
+* Run [Gulp](http://gulpjs.com/).
+ ```bash
+ > gulp
+ ```
+
+ This will generate the distribution files for testing the dashboard and watch for changes on the files. If you just want to build the sources you can run
+
+ ```bash
+ > gulp sources
+ ```

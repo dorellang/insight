@@ -1,11 +1,31 @@
+/**
+ * Here goes the documentation for the entire namespace
+ * 
+ * @namespace CityDashboard
+ */
 var CityDashboard = (function($) {
     "use strict";
 
-    return {
-        mainContainerID: '#city-dashboard',
-        mapWindowID: '#mapWindow',
-        infoWindowID: '#infoWindow',
-        filterBarID: '#filterBar',
+    var identifiers = {
+        'main' : '#city-dashboard',
+        'map' : '#mapWindow',
+        'info': '#infoWindow',
+        'filters': '#filterBar'
+    };
+
+    var properties = {
+        'main' : 'mainContainerID',
+        'map' : 'mapWindowID',
+        'info': 'infoWindowID',
+        'filters': 'filterBarID'
+    };
+
+    var that = {
+        // TODO: These properties must eventually disappear
+        mainContainerID: identifiers.main,
+        mapWindowID: identifiers.map,
+        infoWindowID: identifiers.info,
+        filterBarID: identifiers.filters,
 
         /**
          * Get the data for the dashboard
@@ -26,6 +46,36 @@ var CityDashboard = (function($) {
             } else {
                 return callback(props);
             }
+        },
+
+        /**
+         * Get/set the id of the dashboard container. The container options are
+         * - 'main': main container of the dashboard
+         * - 'map': container for the map element
+         * - 'info': container information window
+         * - 'filters': container for the 'filters bar'
+         *
+         * @param (String) container for which to get/set the id
+         * @param (String) id optional identifier to set for the container
+         * @return (String) identifier for the container
+         */
+        id: function(container, id) {
+            if (!(container in identifiers)) throw new Error('The container '+container+' does not exist');
+            id = (typeof id === 'undefined') ? identifiers[container] : id;
+            that[properties[container]] = identifiers[container] = id;
+            return id;
+        },
+
+        /**
+         * Get a jQuery selector for the dashboard container element.
+         *
+         * @param (String) name identifier of the container to get
+         * @return (jQuery) selector for the container;
+         */
+        container: function(name) {
+            return $(that.id(name));
         }
     };
+
+    return that;
 })(jQuery);

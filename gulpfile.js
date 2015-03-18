@@ -7,10 +7,13 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var cssmin = require('gulp-cssmin');
+var sass   = require('gulp-sass');
+var jsdoc  = require("gulp-jsdoc-to-markdown");
 
 // Source list
 var sources = ['src/Utils.js',
     'src/CityDashboard.js',
+    'src/Maps/Map.js',
     'src/Maps/GoogleMap.js',
     'src/Layers/Markers/Marker.js',
     'src/Layers/Markers/CircleMarker.js',
@@ -53,15 +56,31 @@ gulp.task('lint', function() {
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('css', function() {
-    gulp.src('style/**/*.css')
+
+gulp.task('sass', function() {
+    gulp.src('scss/**/*.scss')
+        .pipe(sass())
+        .pipe(gulp.dest('tmp'))
+        .pipe(concat('CityDashboard.css'))
+        .pipe(gulp.dest('css'));
+});
+
+gulp.task('css', ['sass'], function() {
+    gulp.src('css/**/*.css')
         .pipe(cssmin())
         .pipe(rename('CityDashboard.min.css'))
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task("docs", function() {
+    return gulp.src(sources)
+        .pipe(concat("DOCS.md"))
+        .pipe(jsdoc())
+        .pipe(gulp.dest('.'));
+});
+
 // Concatenate & Minify JS
-gulp.task('scripts', function() {
+gulp.task('scripts', ['lint'], function() {
     return gulp.src(sources)
         .pipe(concat('CityDashboard.js'))
         .pipe(gulp.dest('tmp'))
@@ -72,8 +91,9 @@ gulp.task('scripts', function() {
 
 // Watch Files For Changes
 gulp.task('watch', function() {
-    gulp.watch('src/**/*.js', ['lint', 'scripts']);
+    gulp.watch('src/**/*.js', ['scripts', 'docs']);
+    gulp.watch('scss/**/*.scss', ['css']);
 });
 
 // Default Task
-gulp.task('default', ['lint', 'css', 'scripts', 'watch']);
+gulp.task('default', ['css', 'scripts', 'docs', 'watch']);

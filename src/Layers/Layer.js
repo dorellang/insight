@@ -1,26 +1,37 @@
-CityDashboard.Layer = function( parameters, map ){
+var CityDashboard = CityDashboard || {};
 
-  this.wrappedLayer = undefined;
+CityDashboard.Layer = (function(CityDashboard) {
+    "use strict";
 
-  if ( parameters.id === undefined ){
-    throw Error( "All layers must have an ID." )
-  }
+    var Layer = function(parameters, map) {
 
-  this.id = parameters.id;
-  this.dataSource = parameters.dataSource;
+        this.wrappedLayer = undefined;
 
-  this.elements = parameters.data.length ? parameters.data : [ parameters.data ];
-  this.elementsAttr = parameters.layer_attr || {'type': 'simple', 'action': 'update' } ;
-  this.map = map;
+        if (parameters.id === undefined) {
+            throw Error("All layers must have an ID.")
+        }
 
-};
+        this.id = parameters.id;
+        this.dataSource = parameters.dataSource;
 
-CityDashboard.Layer.prototype = {
+        this.elements = parameters.data.length ? parameters.data : [parameters.data];
+        this.elementsAttr = parameters.layer_attr || {
+            'type': 'simple',
+            'action': 'update'
+        };
+        this.map = map;
 
-  constructor: CityDashboard.Layer,
+    };
 
-  filter: function ( filterFun ) {},
+    Layer.prototype = {
 
-  clear: function () {},
+        constructor: CityDashboard.Layer,
 
-};
+        filter: function(filterFun) {},
+
+        clear: function() {},
+
+    };
+
+    return Layer;
+})(CityDashboard);

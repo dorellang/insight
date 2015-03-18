@@ -52,17 +52,13 @@
 
     var infoWindow = new CityDashboard.InfoWindow();
 
-
     myDashboard.addFilter({
-      'Under Latitude 30': function (data) {
-        return data.lat < 30;
-      },
-      'Over Latitude -60': function (data) {
-        return data.lat > -60;
-      },
-      'Between Longitude 50 and -50': function (data) {
-        return data.lng < 50 && data.lng > -50;
-      }
+        'description': 'By lat/lon',
+        'options': [
+            {name: 'Under Latitude 30', filter: function (data) {return data.lat < 30;}},
+            {name: 'Over Latitude -60', filter: function (data) {return data.lat > -60;}},
+            {name: 'Between Longitude 50 and -50', filter: function (data) {return data.lng < 50 && data.lng > -50;}}
+        ]
     });
 
     myDashboard.addLayer({
