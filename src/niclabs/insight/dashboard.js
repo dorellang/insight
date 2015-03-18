@@ -1,14 +1,18 @@
-CityDashboard = CityDashboard || {};
-
-
-CityDashboard.Dashboard = (function(CityDashboard, $) {
+niclabs.insight.Dashboard = (function(CityDashboard, $) {
     "use strict";
 
     /**
-     * Constructor for the dashboard
-     * TODO: documentation missing
+     * Constructs the dashboard
      *
-     * @class CityDashboard.Dashboard
+     * The dashboard is composed of multiple, replaceable parts.
+     * - An information view, with conveys information to the user, throught visualizations or text.
+     * the information view can be composed contain multiple blocks of information
+     * - A map view, which provides the geospatial information to the user. The map and the information view can interact for
+     *  clearer information
+     * - A filter bar, which allows to interact with the data shown in the map, through filtering or modifying the location
+     * - A notification bar, usually invisible, which reports events back to the user
+     *
+     * @class niclabs.insight.Dashboard
      * @param {Object} parameters - configuration options for the dashboard
      * @param {string} [parameters.layout='none'] - Dashboard layout, one of ['left', 'right', 'none'], puts the info window to the left, to the right or it removes it
      * @param {string} parameters.anchor - Required id for anchoring the dashboard
