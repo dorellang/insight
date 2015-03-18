@@ -151,6 +151,8 @@ niclabs.insight = (function($) {
      var handlers = {};
 
      /**
+      * Constructs an insight element (visualization, layer, etc.)
+      * 
       * @callback niclabs.insight~handler
       * @param {Object} options - configuration options for the handler, dependent on the type
       */
