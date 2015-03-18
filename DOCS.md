@@ -133,7 +133,7 @@ the underlying google map zoom level as well
 ###GoogleMap.map.center([lat], [lng])
 Set/get the map center.
 
-Overrides the functionality of CityDashboard.Map.center() by modifying
+Overrides the functionality of [center](#CityDashboard.Map.center) by modifying
 the underlying google map center as well
 
 **Params**

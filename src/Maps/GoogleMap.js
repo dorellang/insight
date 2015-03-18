@@ -74,7 +74,7 @@ CityDashboard.GoogleMap = (function(CityDashboard, $) {
         /**
          * Set/get the map center.
          *
-         * Overrides the functionality of CityDashboard.Map.center() by modifying
+         * Overrides the functionality of {@link CityDashboard.Map.center} by modifying
          * the underlying google map center as well
          *
          * @override
