@@ -7,8 +7,8 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var cssmin = require('gulp-cssmin');
-var sass = require('gulp-sass');
-var jsdoc = require("gulp-jsdoc-to-markdown");
+var sass   = require('gulp-sass');
+var jsdoc  = require("gulp-jsdoc-to-markdown");
 
 // Source list
 var sources = ['src/Utils.js',

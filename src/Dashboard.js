@@ -69,7 +69,7 @@ CityDashboard.Dashboard = (function(CityDashboard, $) {
         });
 
 
-        var that = {
+        var self = {
             /**
              * TODO: Documentation missing
              */
@@ -80,7 +80,7 @@ CityDashboard.Dashboard = (function(CityDashboard, $) {
 
                 CityDashboard.getData(parameters['data-source'], callback, parameters);
 
-                return that;
+                return self;
             },
 
             /**
@@ -88,7 +88,7 @@ CityDashboard.Dashboard = (function(CityDashboard, $) {
              */
             addFilter: function(filter) {
                 filterBar.addFilter(filter);
-                return that;
+                return self;
             },
 
             /**
@@ -102,6 +102,6 @@ CityDashboard.Dashboard = (function(CityDashboard, $) {
             }
         };
 
-        return that;
+        return self;
     };
 })(CityDashboard, jQuery);
