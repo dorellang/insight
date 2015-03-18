@@ -1,13 +1,3 @@
-/**
- * Insight is a generic web dashboard for smart city projects.
- *
- * It allows to combine different chart and visualization tools to better understand what is going on in the city
- *
- * The module provides a collection of helper functions to configure, initialize the dashboard
- *
- *
- * @requires jQuery 1.11.1+
- */
 niclabs.insight = (function($) {
     "use strict";
 
@@ -161,7 +151,7 @@ niclabs.insight = (function($) {
      var handlers = {};
 
      /**
-      * @callback insight~handler
+      * @callback niclabs.insight~handler
       * @param {Object} options - configuration options for the handler, dependent on the type
       */
 
@@ -174,6 +164,7 @@ niclabs.insight = (function($) {
           * elements with this function for the dashboard UI to correctly recognize them
           * TODO: improve this
           *
+          * @memberof niclabs.insight
           * @param {string} name - name for the handler to return, register
           * @param {string=} type - type for the handler
           * @param {insight~handler=} callback - function to create the element
