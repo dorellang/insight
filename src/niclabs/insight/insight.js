@@ -1,6 +1,23 @@
-(function($) {
+/**
+ * Insight is a generic web dashboard for smart city projects.
+ *
+ * It allows to combine different chart and visualization tools to better understand what is going on in the city
+ *
+ * The module provides a collection of helper functions to configure, initialize the dashboard
+ *
+ *
+ * @requires jQuery 1.11.1+
+ */
+niclabs.insight = (function($) {
+    "use strict";
+
     /**
-     * TODO: missing documentation
+     * Initial required configurations
+     */
+
+    /**
+     * JQuery plugin to make an element resizable
+     * TODO: missing documentation/source
      */
     $.fn.resizable = function(orientation) {
         var resizer = $('<div>').addClass('resizer').addClass(orientation + '-resize');
@@ -65,6 +82,7 @@
     };
 
     /**
+     * JQuery plugin to make an element movable
      * TODO: missing documentation/source
      */
     $.fn.movable = function() {
@@ -98,6 +116,7 @@
     };
 
     /**
+     * JQuery plugin to make an element closeable
      * TODO: Missing documentation
      */
     $.fn.closable = function(handler) {
@@ -135,20 +154,58 @@
      };
 
 
-    // $.fn.onUnderflow = function ( fn ) {
-    //   var flow = false;
-    //   this.on('OverflowEvent' in window ? 'overflowChanged' : 'underflow', function (e) {
-    //     if (e.type == 'underflow' ||
-    //       ((e.orient == 0 && e.horizontalOverflow == flow) ||
-    //         (e.orient == 1 && e.verticalOverflow == flow) ||
-    //         (e.orient == 2 && e.horizontalOverflow == flow && e.verticalOverflow == flow))) {
-    //       return fn.call(this, e);
-    //     }
-    //   });
-    // };
-    // $.fn.noUnderflow = function () {
-    //   this.onUnderflow( function () {
-    //     this.width(this.parent().innerWidth());
-    //   });
-    // }
-}(jQuery));
+     var dashboard;
+     var map;
+     var info;
+
+     var handlers = {};
+
+     /**
+      * @callback insight~handler
+      * @param {Object} options - configuration options for the handler, dependent on the type
+      */
+
+     return {
+         /**
+          * Register a handler of a specific insight element ('layer', 'visualization', etc.)
+          * to manage the creation, rendering of a specific part of the UI.
+          *
+          * Third-party extensions to the insight need only to register their visualization
+          * elements with this function for the dashboard UI to correctly recognize them
+          * TODO: improve this
+          *
+          * @param {string} name - name for the handler to return, register
+          * @param {string=} type - type for the handler
+          * @param {insight~handler=} callback - function to create the element
+          * @returns {insight~handler} handler for the registered name
+          */
+         handler: function(name, type, callback) {
+             if (name in handlers) {
+                 type = type === 'undefined' ? handlers[name].type : type;
+                 callback = callback === 'undefined' ? handlers[name].callback : callback;
+
+                 if (type !== handlers[name].type) {
+                     throw new Error('There already exists a handler with name '+name+' for type '+type);
+                 }
+             }
+             else if (type === 'undefined' && callback === 'undefined') {
+                 throw new Error('Handler ' + name + ' does not exist');
+             }
+
+             handlers[name] = {'type': type, 'callback': callback};
+             return callback;
+         },
+
+         /**
+          * Construct and configure a {@link niclabs.insight.Dashboard}
+          *
+          * @memberof niclabs.insight
+          * @param {Object} options - list of configuration options for the dashboard see {@link niclabs.insight.Dashboard}
+          * @returns {niclabs.insight.Dashboard} dashboard object
+          */
+         init: function(options) {
+             dashboard = niclabs.insight.Dashboard(options);
+             return dashboard;
+         },
+     };
+})(jQuery);
