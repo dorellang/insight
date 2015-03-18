@@ -1,17 +1,17 @@
 var CityDashboard = CityDashboard || {};
 
-/**
- * Defines general functionality for dashboard map
- *
- * @class
- */
+
 CityDashboard.Map = (function(CityDashboard, $) {
 	"use strict";
 
 	/**
 	 * Constructs a new map
 	 *
-	 * @constructs CityDashboard.Map
+	 * @class CityDashboard.Map 
+	 * @param {Object} options - configuration options for the map
+	 * @param {integer} [options.zoom=12] - starting zoom level of the map
+	 * @param {float} [options.lat=0] - latitude for the map center
+	 * @param {float} [options.lng=0] - lng for the map center
 	 */
 	return function(options) {
 		/**

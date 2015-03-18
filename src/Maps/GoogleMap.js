@@ -1,19 +1,17 @@
 var CityDashboard = CityDashboard || {};
 
-/**
- * Extends {@link CityDashboard.Map} to use google maps as the
- * base
- *
- * @class
- * @extends CityDashboard.Map
- */
 CityDashboard.GoogleMap = (function(CityDashboard, $) {
     "use strict";
 
     /**
      * Constructor of GoogleMap
      *
+     * @class CityDashboard.GoogleMap
+     * @extends {CityDashboard.Map}
      * @param {Object} options - configuration options for the map
+     * @param {integer} [options.zoom=12] - starting zoom level of the map
+     * @param {float} [options.lat=0] - latitude for the map center
+     * @param {float} [options.lng=0] - lng for the map center
      */
     return function(options) {
 

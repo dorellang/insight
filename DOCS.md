@@ -5,9 +5,8 @@ Here goes the documentation for the entire namespace
 **Members**
 
 * [CityDashboard](#CityDashboard)
-  * [CityDashboard.Dashboard](#CityDashboard.Dashboard)
   * [class: CityDashboard.Map](#CityDashboard.Map)
-    * [new CityDashboard.Map()](#new_CityDashboard.Map)
+    * [new CityDashboard.Map(options)](#new_CityDashboard.Map)
     * [Map.center([lat], [lng])](#CityDashboard.Map.center)
     * [Map.lat()](#CityDashboard.Map.lat)
     * [Map.lng()](#CityDashboard.Map.lng)
@@ -15,24 +14,21 @@ Here goes the documentation for the entire namespace
     * [Map.container()](#CityDashboard.Map.container)
     * [type: Map.Coordinates](#CityDashboard.Map.Coordinates)
   * [class: CityDashboard.GoogleMap](#CityDashboard.GoogleMap)
-    * [new CityDashboard.GoogleMap()](#new_CityDashboard.GoogleMap)
+    * [new CityDashboard.GoogleMap(options)](#new_CityDashboard.GoogleMap)
     * [GoogleMap.map.zoom([zoom])](#CityDashboard.GoogleMap.map.zoom)
     * [GoogleMap.map.center([lat], [lng])](#CityDashboard.GoogleMap.map.center)
+  * [class: CityDashboard.Dashboard](#CityDashboard.Dashboard)
+    * [new CityDashboard.Dashboard(parameters)](#new_CityDashboard.Dashboard)
   * [class: CityDashboard.FilterBar](#CityDashboard.FilterBar)
     * [new CityDashboard.FilterBar()](#new_CityDashboard.FilterBar)
     * [FilterBar.addFilter(filter)](#CityDashboard.FilterBar.addFilter)
-
-<a name="CityDashboard.Dashboard"></a>
-##CityDashboard.Dashboard
-Configure the Dashboard of the CityDashboard
-TODO: explain what is the dashboard as an element
 
 <a name="CityDashboard.Map"></a>
 ##class: CityDashboard.Map
 **Members**
 
 * [class: CityDashboard.Map](#CityDashboard.Map)
-  * [new CityDashboard.Map()](#new_CityDashboard.Map)
+  * [new CityDashboard.Map(options)](#new_CityDashboard.Map)
   * [Map.center([lat], [lng])](#CityDashboard.Map.center)
   * [Map.lat()](#CityDashboard.Map.lat)
   * [Map.lng()](#CityDashboard.Map.lng)
@@ -41,8 +37,15 @@ TODO: explain what is the dashboard as an element
   * [type: Map.Coordinates](#CityDashboard.Map.Coordinates)
 
 <a name="new_CityDashboard.Map"></a>
-###new CityDashboard.Map()
-Defines general functionality for dashboard map
+###new CityDashboard.Map(options)
+Constructs a new map
+
+**Params**
+
+- options `Object` - configuration options for the map  
+  - \[zoom=12\] `integer` - starting zoom level of the map  
+  - \[lat=0\] `float` - latitude for the map center  
+  - \[lng=0\] `float` - lng for the map center  
 
 <a name="CityDashboard.Map.center"></a>
 ###Map.center([lat], [lng])
@@ -98,14 +101,20 @@ Object to represent geographic coordinates
 **Members**
 
 * [class: CityDashboard.GoogleMap](#CityDashboard.GoogleMap)
-  * [new CityDashboard.GoogleMap()](#new_CityDashboard.GoogleMap)
+  * [new CityDashboard.GoogleMap(options)](#new_CityDashboard.GoogleMap)
   * [GoogleMap.map.zoom([zoom])](#CityDashboard.GoogleMap.map.zoom)
   * [GoogleMap.map.center([lat], [lng])](#CityDashboard.GoogleMap.map.center)
 
 <a name="new_CityDashboard.GoogleMap"></a>
-###new CityDashboard.GoogleMap()
-Extends [Map](#CityDashboard.Map) to use google maps as the
-base
+###new CityDashboard.GoogleMap(options)
+Constructor of GoogleMap
+
+**Params**
+
+- options `Object` - configuration options for the map  
+  - \[zoom=12\] `integer` - starting zoom level of the map  
+  - \[lat=0\] `float` - latitude for the map center  
+  - \[lng=0\] `float` - lng for the map center  
 
 **Extends**: `CityDashboard.Map`  
 <a name="CityDashboard.GoogleMap.map.zoom"></a>
@@ -133,6 +142,24 @@ the underlying google map center as well
 - \[lng\] `float` - longitude for the map center  
 
 **Returns**: [Coordinates](#CityDashboard.Map.Coordinates) - coordinates for the map center  
+<a name="CityDashboard.Dashboard"></a>
+##class: CityDashboard.Dashboard
+**Members**
+
+* [class: CityDashboard.Dashboard](#CityDashboard.Dashboard)
+  * [new CityDashboard.Dashboard(parameters)](#new_CityDashboard.Dashboard)
+
+<a name="new_CityDashboard.Dashboard"></a>
+###new CityDashboard.Dashboard(parameters)
+Constructor for the dashboard
+TODO: documentation missing
+
+**Params**
+
+- parameters `Object` - configuration options for the dashboard  
+  - \[layout='none'\] `string` - Dashboard layout, one of ['left', 'right', 'none'], puts the info window to the left, to the right or it removes it  
+  - anchor `string` - Required id for anchoring the dashboard  
+
 <a name="CityDashboard.FilterBar"></a>
 ##class: CityDashboard.FilterBar
 **Members**

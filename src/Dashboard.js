@@ -1,15 +1,17 @@
 CityDashboard = CityDashboard || {};
 
-/**
- * Configure the Dashboard of the CityDashboard
- * TODO: explain what is the dashboard as an element
- */
+
 CityDashboard.Dashboard = (function(CityDashboard, $) {
     "use strict";
 
     /**
      * Constructor for the dashboard
      * TODO: documentation missing
+     *
+     * @class CityDashboard.Dashboard
+     * @param {Object} parameters - configuration options for the dashboard
+     * @param {string} [parameters.layout='none'] - Dashboard layout, one of ['left', 'right', 'none'], puts the info window to the left, to the right or it removes it
+     * @param {string} parameters.anchor - Required id for anchoring the dashboard
      */
     return function(parameters) {
         var layers = [];
