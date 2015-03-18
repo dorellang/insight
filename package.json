@@ -1,6 +1,10 @@
 {
 	"name": "niclabs-city-dashboard",
 	"description": "City Dashboard is a Generic Web Dashboard for Urban Based Visualization Projects. https://github.com/niclabs/city-dashboard",
+	"version": "0.0.2b",
+	"dependencies": {
+		"jquery": "^1.11.1",
+	},
 	"devDependencies": {
 		"gulp": "^3.8.11",
 		"gulp-concat": "^2.5.2",
