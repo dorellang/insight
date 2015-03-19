@@ -1,196 +1,408 @@
-<a name="CityDashboard"></a>
-#CityDashboard
-Here goes the documentation for the entire namespace
+<a name="niclabs"></a>
+#niclabs
+[NIC Chile Research Labs](http://niclabs.cl/) is the Internet Laboratory of the
+[Faculty of Physical and Mathematical Sciences of the University of Chile (FCFM)](http://www.fcfm.uchile.cl/),
+founded by [NIC Chile](http://www.nic.cl) and host of [INRIA Chile Internet Project](http://www.inria.cl/?page_id=23&lang=en).
+
+Our main research areas are: Internet protocols (layer 3-4), DNS, Internet QoS, Internet QoE, and computer networks.
+
+We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
 
 **Members**
 
-* [CityDashboard](#CityDashboard)
-  * [class: CityDashboard.Map](#CityDashboard.Map)
-    * [new CityDashboard.Map(options)](#new_CityDashboard.Map)
-    * [Map.center([lat], [lng])](#CityDashboard.Map.center)
-    * [Map.lat()](#CityDashboard.Map.lat)
-    * [Map.lng()](#CityDashboard.Map.lng)
-    * [Map.zoom([zoom])](#CityDashboard.Map.zoom)
-    * [Map.container()](#CityDashboard.Map.container)
-    * [type: Map.Coordinates](#CityDashboard.Map.Coordinates)
-  * [class: CityDashboard.GoogleMap](#CityDashboard.GoogleMap)
-    * [new CityDashboard.GoogleMap(options)](#new_CityDashboard.GoogleMap)
-    * [GoogleMap.map.zoom([zoom])](#CityDashboard.GoogleMap.map.zoom)
-    * [GoogleMap.map.center([lat], [lng])](#CityDashboard.GoogleMap.map.center)
-  * [class: CityDashboard.Dashboard](#CityDashboard.Dashboard)
-    * [new CityDashboard.Dashboard(parameters)](#new_CityDashboard.Dashboard)
-  * [class: CityDashboard.FilterBar](#CityDashboard.FilterBar)
-    * [new CityDashboard.FilterBar()](#new_CityDashboard.FilterBar)
-    * [FilterBar.addFilter(filter)](#CityDashboard.FilterBar.addFilter)
+* [niclabs](#niclabs)
+  * [niclabs.insight](#niclabs.insight)
+    * [insight.handler(name, [kind], [handler])](#niclabs.insight.handler)
+    * [insight.init(options)](#niclabs.insight.init)
+    * [insight.infoView([obj])](#niclabs.insight.infoView)
+    * [insight.event](#niclabs.insight.event)
+      * [event.on(event, listener)](#niclabs.insight.event.on)
+      * [event.off(event, listener)](#niclabs.insight.event.off)
+      * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
+      * [callback: event~listener](#niclabs.insight.event..listener)
+    * [insight.info](#niclabs.insight.info)
+      * [class: info.Block](#niclabs.insight.info.Block)
+        * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+        * [Block.id](#niclabs.insight.info.Block.id)
+        * [Block.element](#niclabs.insight.info.Block.element)
+        * [Block.$](#niclabs.insight.info.Block.$)
+        * [Block.remove()](#niclabs.insight.info.Block.remove)
+        * [Block.data([data])](#niclabs.insight.info.Block.data)
+        * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
+      * [class: info.Summary](#niclabs.insight.info.Summary)
+        * [new info.Summary(dashboard, options)](#new_niclabs.insight.info.Summary)
+    * [callback: insight~handler](#niclabs.insight..handler)
+    * [class: insight.Dashboard](#niclabs.insight.Dashboard)
+      * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
+      * [Dashboard.element](#niclabs.insight.Dashboard.element)
+      * [Dashboard.$](#niclabs.insight.Dashboard.$)
+      * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
+      * [Dashboard.infoView([obj])](#niclabs.insight.Dashboard.infoView)
+    * [class: insight.InfoView](#niclabs.insight.InfoView)
+      * [new insight.InfoView(dashboard, options)](#new_niclabs.insight.InfoView)
+      * [InfoView.element](#niclabs.insight.InfoView.element)
+      * [InfoView.$](#niclabs.insight.InfoView.$)
+      * [InfoView.block(obj)](#niclabs.insight.InfoView.block)
 
-<a name="CityDashboard.Map"></a>
-##class: CityDashboard.Map
+<a name="niclabs.insight"></a>
+##niclabs.insight
+Insight is a generic web dashboard for smart city projects.
+
+It allows to combine different chart and visualization tools to better
+understand what is going on in the city
+
 **Members**
 
-* [class: CityDashboard.Map](#CityDashboard.Map)
-  * [new CityDashboard.Map(options)](#new_CityDashboard.Map)
-  * [Map.center([lat], [lng])](#CityDashboard.Map.center)
-  * [Map.lat()](#CityDashboard.Map.lat)
-  * [Map.lng()](#CityDashboard.Map.lng)
-  * [Map.zoom([zoom])](#CityDashboard.Map.zoom)
-  * [Map.container()](#CityDashboard.Map.container)
-  * [type: Map.Coordinates](#CityDashboard.Map.Coordinates)
+* [niclabs.insight](#niclabs.insight)
+  * [insight.handler(name, [kind], [handler])](#niclabs.insight.handler)
+  * [insight.init(options)](#niclabs.insight.init)
+  * [insight.infoView([obj])](#niclabs.insight.infoView)
+  * [insight.event](#niclabs.insight.event)
+    * [event.on(event, listener)](#niclabs.insight.event.on)
+    * [event.off(event, listener)](#niclabs.insight.event.off)
+    * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
+    * [callback: event~listener](#niclabs.insight.event..listener)
+  * [insight.info](#niclabs.insight.info)
+    * [class: info.Block](#niclabs.insight.info.Block)
+      * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+      * [Block.id](#niclabs.insight.info.Block.id)
+      * [Block.element](#niclabs.insight.info.Block.element)
+      * [Block.$](#niclabs.insight.info.Block.$)
+      * [Block.remove()](#niclabs.insight.info.Block.remove)
+      * [Block.data([data])](#niclabs.insight.info.Block.data)
+      * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
+    * [class: info.Summary](#niclabs.insight.info.Summary)
+      * [new info.Summary(dashboard, options)](#new_niclabs.insight.info.Summary)
+  * [callback: insight~handler](#niclabs.insight..handler)
+  * [class: insight.Dashboard](#niclabs.insight.Dashboard)
+    * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
+    * [Dashboard.element](#niclabs.insight.Dashboard.element)
+    * [Dashboard.$](#niclabs.insight.Dashboard.$)
+    * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
+    * [Dashboard.infoView([obj])](#niclabs.insight.Dashboard.infoView)
+  * [class: insight.InfoView](#niclabs.insight.InfoView)
+    * [new insight.InfoView(dashboard, options)](#new_niclabs.insight.InfoView)
+    * [InfoView.element](#niclabs.insight.InfoView.element)
+    * [InfoView.$](#niclabs.insight.InfoView.$)
+    * [InfoView.block(obj)](#niclabs.insight.InfoView.block)
 
-<a name="new_CityDashboard.Map"></a>
-###new CityDashboard.Map(options)
-Constructs a new map
+<a name="niclabs.insight.handler"></a>
+###insight.handler(name, [kind], [handler])
+Register a handler of a specific insight element ('layer', 'visualization', etc.)
+to manage the creation, rendering of a specific part of the UI.
 
-**Params**
-
-- options `Object` - configuration options for the map  
-  - \[zoom=12\] `integer` - starting zoom level of the map  
-  - \[lat=0\] `float` - latitude for the map center  
-  - \[lng=0\] `float` - lng for the map center  
-
-<a name="CityDashboard.Map.center"></a>
-###Map.center([lat], [lng])
-Set/get the map center.
-Overriding implementations should modify this method so the
-map reflects the new center.
-
-**Params**
-
-- \[lat\] `float` - latitude for the map center  
-- \[lng\] `float` - longitude for the map center  
-
-**Returns**: [Coordinates](#CityDashboard.Map.Coordinates) - coordinates for the map center  
-<a name="CityDashboard.Map.lat"></a>
-###Map.lat()
-Get the latitude for the map center
-
-**Returns**: `float` - latitude for the map center  
-<a name="CityDashboard.Map.lng"></a>
-###Map.lng()
-Get the longitude for the map center
-
-**Returns**: `float` - longitude for the map center  
-<a name="CityDashboard.Map.zoom"></a>
-###Map.zoom([zoom])
-Set/get the map zoom level.
-Overriding implementations should modify this method so the
-map reflects the new zoom.
+Third-party extensions to the insight need only to register their visualization
+elements with this function for the dashboard UI to correctly recognize them
+TODO: improve this
 
 **Params**
 
-- \[zoom\] `int` - zoom  
+- name `string` - name for the handler to return, register  
+- \[kind\] `string` - kind for the handler  
+- \[handler\] <code>[handler](#niclabs.insight..handler)</code> - callback to create the element  
 
-**Returns**: `int` - zoom level of the map  
-<a name="CityDashboard.Map.container"></a>
-###Map.container()
-Get the jquery object for the html element of the map
+**Returns**: [handler](#niclabs.insight..handler) - handler for the registered name  
+<a name="niclabs.insight.init"></a>
+###insight.init(options)
+Construct and configure a [Dashboard](#niclabs.insight.Dashboard)
 
-**Returns**: `jQuery` - container for the map  
-<a name="CityDashboard.Map.Coordinates"></a>
-###type: Map.Coordinates
-Object to represent geographic coordinates
+**Params**
 
-**Properties**
+- options `Object` - list of configuration options for the dashboard see [Dashboard](#niclabs.insight.Dashboard)  
 
-- lat `float` - latitude for the map center  
-- lng `float` - longitude for the map center  
+**Returns**: [Dashboard](#niclabs.insight.Dashboard) - dashboard object  
+<a name="niclabs.insight.infoView"></a>
+###insight.infoView([obj])
+Helper method to assign/get the information view to/from the dashboard
 
-**Type**: `Object`  
-<a name="CityDashboard.GoogleMap"></a>
-##class: CityDashboard.GoogleMap
-**Extends**: `CityDashboard.Map`  
+**Params**
+
+- \[obj\] `Object` | <code>[InfoView](#niclabs.insight.InfoView)</code> - configuration for the information view or information view object  
+  - handler `String` - name of the handler to construct the info view  
+
+**Returns**: [InfoView](#niclabs.insight.InfoView) - the dashboard information view  
+<a name="niclabs.insight.event"></a>
+###insight.event
+Very basic event manager for the dashboard
+
+**Example**  
+```javascript
+// Subscribe to the event
+var eventId = niclabs.insight.event.on('hello', function(who) {
+     alert("HELLO "+who+"!!!");
+});
+
+// Trigger the event
+niclabs.insight.event.trigger('hello', "John"); // Shows alert 'HELLO John!!!'
+
+// Unsubscribe
+niclabs.insight.event.off('hello', eventId);
+```
+
 **Members**
 
-* [class: CityDashboard.GoogleMap](#CityDashboard.GoogleMap)
-  * [new CityDashboard.GoogleMap(options)](#new_CityDashboard.GoogleMap)
-  * [GoogleMap.map.zoom([zoom])](#CityDashboard.GoogleMap.map.zoom)
-  * [GoogleMap.map.center([lat], [lng])](#CityDashboard.GoogleMap.map.center)
+* [insight.event](#niclabs.insight.event)
+  * [event.on(event, listener)](#niclabs.insight.event.on)
+  * [event.off(event, listener)](#niclabs.insight.event.off)
+  * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
+  * [callback: event~listener](#niclabs.insight.event..listener)
 
-<a name="new_CityDashboard.GoogleMap"></a>
-###new CityDashboard.GoogleMap(options)
-Constructor of GoogleMap
-
-**Params**
-
-- options `Object` - configuration options for the map  
-  - \[zoom=12\] `integer` - starting zoom level of the map  
-  - \[lat=0\] `float` - latitude for the map center  
-  - \[lng=0\] `float` - lng for the map center  
-
-**Extends**: `CityDashboard.Map`  
-<a name="CityDashboard.GoogleMap.map.zoom"></a>
-###GoogleMap.map.zoom([zoom])
-Set/get the zoom level for the map
-
-Overrides the functionality of CityDashboard.Map.zoom() by modifying
-the underlying google map zoom level as well
+<a name="niclabs.insight.event.on"></a>
+####event.on(event, listener)
+Listen for an event. A listener callback can only be assigned once for an event
 
 **Params**
 
-- \[zoom\] `int` - zoom  
+- event `string` - event type  
+- listener <code>[listener](#niclabs.insight.event..listener)</code> - callback to process the event  
 
-**Returns**: `int` - zoom level of the map  
-<a name="CityDashboard.GoogleMap.map.center"></a>
-###GoogleMap.map.center([lat], [lng])
-Set/get the map center.
-
-Overrides the functionality of [center](#CityDashboard.Map.center) by modifying
-the underlying google map center as well
+**Returns**: `number` - id of the listener  
+<a name="niclabs.insight.event.off"></a>
+####event.off(event, listener)
+Stop listening for an event.
 
 **Params**
 
-- \[lat\] `float` - latitude for the map center  
-- \[lng\] `float` - longitude for the map center  
+- event `string` - event type  
+- listener <code>[listener](#niclabs.insight.event..listener)</code> | `number` - callback to remove or id of the listener provided by `niclabs.insight.event.on()`  
 
-**Returns**: [Coordinates](#CityDashboard.Map.Coordinates) - coordinates for the map center  
-<a name="CityDashboard.Dashboard"></a>
-##class: CityDashboard.Dashboard
+**Returns**: `boolean` - true if the listener was found and was succesfully removed  
+<a name="niclabs.insight.event.trigger"></a>
+####event.trigger(event, [data])
+Trigger an event
+
+**Params**
+
+- event `string` - event type  
+- \[data\] `Object` - data to pass to the callback  
+
+<a name="niclabs.insight.event..listener"></a>
+####callback: event~listener
+Insight event listener
+
+**Params**
+
+- data `Object` - data for the callback function, dependant on the event  
+
+**Scope**: inner typedef of [event](#niclabs.insight.event)  
+**Type**: `function`  
+<a name="niclabs.insight.info"></a>
+###insight.info
+Contains the definitions for the information blocks supported by insight
+
 **Members**
 
-* [class: CityDashboard.Dashboard](#CityDashboard.Dashboard)
-  * [new CityDashboard.Dashboard(parameters)](#new_CityDashboard.Dashboard)
+* [insight.info](#niclabs.insight.info)
+  * [class: info.Block](#niclabs.insight.info.Block)
+    * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+    * [Block.id](#niclabs.insight.info.Block.id)
+    * [Block.element](#niclabs.insight.info.Block.element)
+    * [Block.$](#niclabs.insight.info.Block.$)
+    * [Block.remove()](#niclabs.insight.info.Block.remove)
+    * [Block.data([data])](#niclabs.insight.info.Block.data)
+    * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
+  * [class: info.Summary](#niclabs.insight.info.Summary)
+    * [new info.Summary(dashboard, options)](#new_niclabs.insight.info.Summary)
 
-<a name="new_CityDashboard.Dashboard"></a>
-###new CityDashboard.Dashboard(parameters)
-Constructor for the dashboard
-TODO: documentation missing
+<a name="niclabs.insight.info.Block"></a>
+####class: info.Block
+**Members**
+
+* [class: info.Block](#niclabs.insight.info.Block)
+  * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+  * [Block.id](#niclabs.insight.info.Block.id)
+  * [Block.element](#niclabs.insight.info.Block.element)
+  * [Block.$](#niclabs.insight.info.Block.$)
+  * [Block.remove()](#niclabs.insight.info.Block.remove)
+  * [Block.data([data])](#niclabs.insight.info.Block.data)
+  * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
+
+<a name="new_niclabs.insight.info.Block"></a>
+#####new info.Block(dashboard, options)
+Construct a information block
 
 **Params**
 
-- parameters `Object` - configuration options for the dashboard  
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard to which the block belongs to  
+- options `Object` - configuration options for the block  
+  - id `string` - html identifier for the block  
+  - \[title\] `string` - title for the block  
+  - \[properties\] `Object` - block properties (closable, movable)  
+
+<a name="niclabs.insight.info.Block.id"></a>
+#####Block.id
+DOM id of the block
+
+**Type**: `string`  
+<a name="niclabs.insight.info.Block.element"></a>
+#####Block.element
+HTML DOM element for the block container
+
+**Type**: `Element`  
+<a name="niclabs.insight.info.Block.$"></a>
+#####Block.$
+jQuery object for info block container
+
+**Type**: `jQuery`  
+<a name="niclabs.insight.info.Block.remove"></a>
+#####Block.remove()
+Remove the block from the dashboard.
+This method triggers an event to alert all elements of the
+dashboard of the block removal
+
+<a name="niclabs.insight.info.Block.data"></a>
+#####Block.data([data])
+Set/get the data for the block
+
+**Params**
+
+- \[data\] `Object` - data for the block  
+
+**Returns**: `Object` - the current data in the blokc  
+<a name="niclabs.insight.info.Block.createDefList"></a>
+#####Block.createDefList([data])
+Create a definition list from the provided data
+
+TODO: should this really go here? Change the name?
+
+**Params**
+
+- \[data\] `Object` - the updated data for the block  
+
+<a name="niclabs.insight.info.Summary"></a>
+####class: info.Summary
+**Extends**: `niclabs.insight.info.Block`  
+**Members**
+
+* [class: info.Summary](#niclabs.insight.info.Summary)
+  * [new info.Summary(dashboard, options)](#new_niclabs.insight.info.Summary)
+
+<a name="new_niclabs.insight.info.Summary"></a>
+#####new info.Summary(dashboard, options)
+Construct a new summary information block
+TODO: describe what is a summary information block
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - parent dashboard for the block  
+- options `Object` - see [Block](#niclabs.insight.info.Block) constructor  
+
+**Extends**: `niclabs.insight.info.Block`  
+<a name="niclabs.insight..handler"></a>
+###callback: insight~handler
+Constructs an insight element (visualization, layer, etc.)
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - to assign to the handler  
+- options `Object` - configuration options for the handler, depending on the kind  
+
+**Scope**: inner typedef of [insight](#niclabs.insight)  
+**Type**: `function`  
+<a name="niclabs.insight.Dashboard"></a>
+###class: insight.Dashboard
+**Members**
+
+* [class: insight.Dashboard](#niclabs.insight.Dashboard)
+  * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
+  * [Dashboard.element](#niclabs.insight.Dashboard.element)
+  * [Dashboard.$](#niclabs.insight.Dashboard.$)
+  * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
+  * [Dashboard.infoView([obj])](#niclabs.insight.Dashboard.infoView)
+
+<a name="new_niclabs.insight.Dashboard"></a>
+####new insight.Dashboard(options)
+Constructs the dashboard
+
+The dashboard is composed of multiple, replaceable parts.
+- An information view, with conveys information to the user, throught visualizations or text.
+the information view can be composed contain multiple blocks of information
+- A map view, which provides the geospatial information to the user. The map and the information view can interact for
+ clearer information
+- A filter bar, which allows to interact with the data shown in the map, through filtering or modifying the location
+- A notification bar, usually invisible, which reports events back to the user
+
+**Params**
+
+- options `Object` - configuration options for the dashboard  
   - \[layout='none'\] `string` - Dashboard layout, one of ['left', 'right', 'none'], puts the info window to the left, to the right or it removes it  
   - anchor `string` - Required id for anchoring the dashboard  
 
-<a name="CityDashboard.FilterBar"></a>
-##class: CityDashboard.FilterBar
-**Members**
+<a name="niclabs.insight.Dashboard.element"></a>
+####Dashboard.element
+HTML DOM element for the dashboard container
 
-* [class: CityDashboard.FilterBar](#CityDashboard.FilterBar)
-  * [new CityDashboard.FilterBar()](#new_CityDashboard.FilterBar)
-  * [FilterBar.addFilter(filter)](#CityDashboard.FilterBar.addFilter)
+**Type**: `Element`  
+<a name="niclabs.insight.Dashboard.$"></a>
+####Dashboard.$
+jQuery object for the dashboard DOM container
 
-<a name="new_CityDashboard.FilterBar"></a>
-###new CityDashboard.FilterBar()
-Defines the behavior of the filter bar of the dashboard
-
-<a name="CityDashboard.FilterBar.addFilter"></a>
-###FilterBar.addFilter(filter)
-Add a new filter to the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
-of the filter for further customizations
-
-Example:
-```javascript
-myDashboard.addFilter({
- description: 'Geographic Location', // the empty string is used if not provided
- options: [
-     {name: 'More than 20s', filter: function (data) {return data.seconds > 20;}},
-     {name: 'Over Equator', filter: function (data) {return data.lat > 0;}},
-     {name: 'By Type: a,f,g,e,t,h', filter: function (data) {return "afgeth".indexOf(data['event type'])> 0;}}
- ]
-});
-```
+**Type**: `jQuery`  
+<a name="niclabs.insight.Dashboard.config"></a>
+####Dashboard.config(name)
+Return the value for the dashboard configuration option with the provided name
 
 **Params**
 
-- filter `Object` - configuration for the filter  
+- name `String` - name of the configuration option  
 
-**Returns**: `jQuery` - reference to the added element for further customization  
+**Returns**: `*` - configuration option value or undefined if it does not exist  
+<a name="niclabs.insight.Dashboard.infoView"></a>
+####Dashboard.infoView([obj])
+Assign/get the information view for the dashboard
+
+**Params**
+
+- \[obj\] `Object` | <code>[InfoView](#niclabs.insight.InfoView)</code> - configuration for the information view or information view object  
+  - handler `String` - name of the handler to construct the info view  
+
+**Returns**: [InfoView](#niclabs.insight.InfoView) - the dashboard information view  
+<a name="niclabs.insight.InfoView"></a>
+###class: insight.InfoView
+**Members**
+
+* [class: insight.InfoView](#niclabs.insight.InfoView)
+  * [new insight.InfoView(dashboard, options)](#new_niclabs.insight.InfoView)
+  * [InfoView.element](#niclabs.insight.InfoView.element)
+  * [InfoView.$](#niclabs.insight.InfoView.$)
+  * [InfoView.block(obj)](#niclabs.insight.InfoView.block)
+
+<a name="new_niclabs.insight.InfoView"></a>
+####new insight.InfoView(dashboard, options)
+Construct the dashboard information view
+
+The information view is composed of information blocks to show
+different aspects of the data shown in the map or
+about the visualization in general
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard to assign this info view to  
+- options `Object` - list of configuration options for the information view  
+
+<a name="niclabs.insight.InfoView.element"></a>
+####InfoView.element
+HTML DOM element for the information view container
+
+**Type**: `Element`  
+<a name="niclabs.insight.InfoView.$"></a>
+####InfoView.$
+jQuery object for info view container
+
+**Type**: `jQuery`  
+<a name="niclabs.insight.InfoView.block"></a>
+####InfoView.block(obj)
+Add/get a block from the info view
+
+- If a number or string is provided as value for obj, the block with that id is returned
+- If a generic object is provided with the handler defined in the 'handler' property, a new block
+is created using the handler and the block is added to the list of
+blocks of the info view
+- If an object is provided without handler, it is assumed to be a Block object and added to the
+block list as is.
+
+**Params**
+
+- obj `string` | `number` | `Object` | <code>[Block](#niclabs.insight.info.Block)</code> - block id to get or configuration options for the new block  
+
+**Returns**: [Block](#niclabs.insight.info.Block) - - newly created block  
