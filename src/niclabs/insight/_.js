@@ -182,8 +182,8 @@ niclabs.insight = (function($) {
           */
          handler: function(name, kind, handler) {
              if (name in handlers) {
-                 kind = kind === 'undefined' ? handlers[name].kind : kind;
-                 handler = handler === 'undefined' ? handlers[name].handler : handler;
+                 kind = typeof kind === 'undefined' ? handlers[name].kind : kind;
+                 handler = typeof handler === 'undefined' ? handlers[name].handler : handler;
 
                  if (kind !== handlers[name].kind) {
                      throw new Error('There already exists a handler with name '+name+' for kind '+handlers[name].kind);
@@ -218,7 +218,7 @@ niclabs.insight = (function($) {
           * @returns {niclabs.insight.InfoView} the dashboard information view
           */
          infoView: function(obj) {
-            if (dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
+            if (typeof dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
             return dashboard.infoView(obj);
          },
      };
