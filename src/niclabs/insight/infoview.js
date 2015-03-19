@@ -71,12 +71,13 @@ niclabs.insight.InfoView = (function($) {
             }
             else {
                 blk = obj;
-                id = blk.id();
+                id = blk.id;
             }
 
             blocks[id] = blk;
 
-            // TODO: append block element to visualization
+            // Append block to container
+            container.append(blk.element);
 
             return blk;
         }
@@ -87,12 +88,12 @@ niclabs.insight.InfoView = (function($) {
         // Create the blocks in the options list
         if (options.blocks) {
             for (i = 0; i < options.blocks.length; i++) {
-                block(options.block[i]);
+                block(options.blocks[i]);
             }
         }
 
         // Add a resize handler
-        infoWindow.on('resize', function(e) {
+        container.on('resize', function(e) {
             for (var key in blocks) {
                 blocks[key].refresh();
             }
@@ -100,7 +101,7 @@ niclabs.insight.InfoView = (function($) {
 
         // Perform cleanup on block removal
         niclabs.insight.event.on('remove-block', function(obj) {
-            delete visualizations[obj.id];
+            delete blocks[obj.id];
             //var index = $.inArray(dataSourceTable[obj['data-source']], obj.id);
             //dataSourceTable[obj['data-source']].splice(index, 1);
         });
