@@ -189,7 +189,7 @@ niclabs.insight = (function($) {
                      throw new Error('There already exists a handler with name '+name+' for kind '+handlers[name].kind);
                  }
              }
-             else if (kind === 'undefined' && handler === 'undefined') {
+             else if (typeof kind === 'undefined' && typeof handler === 'undefined') {
                  throw new Error('Handler ' + name + ' does not exist');
              }
 
