@@ -212,5 +212,18 @@ niclabs.insight = (function($) {
              dashboard = niclabs.insight.Dashboard(options);
              return dashboard;
          },
+
+         /**
+          * Helper method to assign/get the information view to/from the dashboard
+          *
+          * @memberof niclabs.insight
+          * @param {Object|niclabs.insight.InfoView} [obj] - configuration for the information view or information view object
+          * @param {String} obj.handler - name of the handler to construct the info view
+          * @returns {niclabs.insight.InfoView} the dashboard information view
+          */
+         infoView: function(obj) {
+            if (dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
+            return dashboard.infoView(obj);
+         },
      };
 })(jQuery);
