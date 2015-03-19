@@ -62,19 +62,29 @@ niclabs.insight.Dashboard = (function($) {
 
         var self = {
             /**
-             * Return the HTML DOM element for the dashboard
+             * Return the HTML DOM element for the dashboard container
              *
              * @memberof niclabs.insight.Dashboard
-             * @returns {Object} HTML DOM object for the dashboard
+             * @returns {Element} HTML DOM element for the dashboard container
              */
             element: function() {
                 return $(dashboardId)[0];
             },
 
             /**
+             * Return the jQuery object for the dashboard DOM container
+             *
+             * @memberof niclabs.insight.Dashboard
+             * @returns {jQuery} jQuery object for the dashboard container
+             */
+            jquery: function() {
+                return $(dashboardId);
+            },
+
+            /**
              * Return the value for the dashboard configuration option with the provided name
              *
-             * @memberof niclabs.insight.Dasboard
+             * @memberof niclabs.insight.Dashboard
              * @param {String} name - name of the configuration option
              * @returns {*} configuration option value or undefined if it does not exist
              */
@@ -98,6 +108,7 @@ niclabs.insight.Dashboard = (function($) {
                     else {
                         infoView = obj;
                     }
+                    $(dashboardId).append(infoView.element());
                 }
                 return infoView;
             },
