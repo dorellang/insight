@@ -1,23 +1,22 @@
-var CityDashboard = CityDashboard || {};
-
-
-CityDashboard.Map = (function(CityDashboard, $) {
+niclabs.insight.MapView = (function($) {
 	"use strict";
 
 	/**
 	 * Constructs a new map
 	 *
-	 * @class CityDashboard.Map 
+	 * @class niclabs.insight.MapView
 	 * @param {Object} options - configuration options for the map
 	 * @param {integer} [options.zoom=12] - starting zoom level of the map
 	 * @param {float} [options.lat=0] - latitude for the map center
 	 * @param {float} [options.lng=0] - lng for the map center
 	 */
 	return function(options) {
+		var mapId = '#insight-map-view';
+
 		/**
 		 * Object to represent geographic coordinates
 		 *
-		 * @typedef {Object} CityDashboard.Map.Coordinates
+		 * @typedef {Object} niclabs.insight.MapView.Coordinates
 		 * @property {float} lat - latitude for the map center
 		 * @property {float} lng - longitude for the map center
 		 */
@@ -29,18 +28,44 @@ CityDashboard.Map = (function(CityDashboard, $) {
 		var zoom = options.zoom || 12;
 
 		// jQuery container for the map
-		var container = CityDashboard.container('map');
+        var container = $('<div>')
+			.setID(mapId)
+			.addClass('mapWindow');
 
 		return {
+			/**
+             * HTML DOM element for the map view
+             *
+             * @memberof niclabs.insight.MapView
+             * @member {Element}
+             */
+            get element () {
+                var c = $(mapId);
+                container = c.length === 0 ? container : c;
+                return container[0];
+            },
+
+            /**
+             * jQuery object for map view
+             *
+             * @memberof niclabs.insight.MapView
+             * @member {jQuery}
+             */
+            $: function() {
+                var c = $(mapId);
+                container = c.length === 0 ? container : c;
+                return container;
+            },
+
 			/**
 			 * Set/get the map center.
 			 * Overriding implementations should modify this method so the
 			 * map reflects the new center.
 			 *
-			 * @memberof CityDashboard.Map
+			 * @memberof niclabs.insight.MapView
 			 * @param {float=} lat - latitude for the map center
 			 * @param {float=} lng - longitude for the map center
-			 * @return {CityDashboard.Map.Coordinates} coordinates for the map center
+			 * @return {niclabs.insight.MapView.Coordinates} coordinates for the map center
 			 */
 			center: function(lat, lng) {
 				center.lat = lat = typeof lat === 'undefined' ? center.lat : lat;
@@ -52,7 +77,7 @@ CityDashboard.Map = (function(CityDashboard, $) {
 			/**
 			 * Get the latitude for the map center
 			 *
-			 * @memberof CityDashboard.Map
+			 * @memberof niclabs.insight.MapView
 			 * @return {float} latitude for the map center
 			 */
 			lat: function() {
@@ -62,7 +87,7 @@ CityDashboard.Map = (function(CityDashboard, $) {
 			/**
 			 * Get the longitude for the map center
 			 *
-			 * @memberof CityDashboard.Map
+			 * @memberof niclabs.insight.MapView
 			 * @return {float} longitude for the map center
 			 */
 			lng: function() {
@@ -74,7 +99,7 @@ CityDashboard.Map = (function(CityDashboard, $) {
 			 * Overriding implementations should modify this method so the
 			 * map reflects the new zoom.
 			 *
-			 * @memberof CityDashboard.Map
+			 * @memberof niclabs.insight.MapView
 			 * @param {int=} zoom - zoom
 			 * @returns {int} zoom level of the map
 			 */
@@ -87,7 +112,7 @@ CityDashboard.Map = (function(CityDashboard, $) {
 			/**
 			 * Get the jquery object for the html element of the map
 			 *
-			 * @memberof CityDashboard.Map
+			 * @memberof niclabs.insight.MapView
 			 * @return {jQuery} container for the map
 			 */
 			container: function() {
@@ -95,4 +120,4 @@ CityDashboard.Map = (function(CityDashboard, $) {
 			}
 		};
 	};
-})(CityDashboard, jQuery);
+})(jQuery);

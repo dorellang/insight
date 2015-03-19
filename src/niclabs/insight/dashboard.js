@@ -36,16 +36,6 @@ niclabs.insight.Dashboard = (function($) {
         // Append the dashboard to the container
         $(anchor).append(container);
 
-        //
-        // // Create the map div
-        // var mapDiv = $('<div>')
-        //     .setID(CityDashboard.id('map'))
-        //     .addClass('mapWindow');
-        // container.append(mapDiv);
-        //
-        // // Append the container to the given anchor
-        // $(anchor).append(container);
-        //
         // // Create the filter bar
         // var filterBar = new CityDashboard.FilterBar();
         //
@@ -111,6 +101,27 @@ niclabs.insight.Dashboard = (function($) {
                     $(dashboardId).append(infoView.element);
                 }
                 return infoView;
+            },
+
+            /**
+             * Assign/get the map view for the dashboard
+             *
+             * @memberof niclabs.insight.Dashboard
+             * @param {Object|niclabs.insight.MapView} [obj] - configuration for the map view or map view object
+             * @param {String} obj.handler - name of the handler to construct the map view
+             * @returns {niclabs.insight.MapView} the dashboard information view
+             */
+            mapView: function(obj) {
+                if (typeof obj !== 'undefined') {
+                    if ('handler' in obj) {
+                        mapView = niclabs.insight.handler(obj.handler)(self, obj);
+                    }
+                    else {
+                        mapView = obj;
+                    }
+                    $(dashboardId).append(mapView.element);
+                }
+                return mapView;
             },
 
             /**

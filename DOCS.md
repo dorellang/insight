@@ -15,6 +15,7 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
     * [insight.handler(name, [kind], [handler])](#niclabs.insight.handler)
     * [insight.init(options)](#niclabs.insight.init)
     * [insight.infoView([obj])](#niclabs.insight.infoView)
+    * [insight.mapView([obj])](#niclabs.insight.mapView)
     * [insight.event](#niclabs.insight.event)
       * [event.on(event, listener)](#niclabs.insight.event.on)
       * [event.off(event, listener)](#niclabs.insight.event.off)
@@ -31,6 +32,11 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
       * [class: info.Summary](#niclabs.insight.info.Summary)
         * [new info.Summary(dashboard, options)](#new_niclabs.insight.info.Summary)
+    * [insight.map](#niclabs.insight.map)
+      * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
+        * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
+        * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
+        * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
     * [callback: insight~handler](#niclabs.insight..handler)
     * [class: insight.Dashboard](#niclabs.insight.Dashboard)
       * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
@@ -38,6 +44,17 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
       * [Dashboard.$](#niclabs.insight.Dashboard.$)
       * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
       * [Dashboard.infoView([obj])](#niclabs.insight.Dashboard.infoView)
+      * [Dashboard.mapView([obj])](#niclabs.insight.Dashboard.mapView)
+    * [class: insight.MapView](#niclabs.insight.MapView)
+      * [new insight.MapView(options)](#new_niclabs.insight.MapView)
+      * [MapView.element](#niclabs.insight.MapView.element)
+      * [MapView.$](#niclabs.insight.MapView.$)
+      * [MapView.center([lat], [lng])](#niclabs.insight.MapView.center)
+      * [MapView.lat()](#niclabs.insight.MapView.lat)
+      * [MapView.lng()](#niclabs.insight.MapView.lng)
+      * [MapView.zoom([zoom])](#niclabs.insight.MapView.zoom)
+      * [MapView.container()](#niclabs.insight.MapView.container)
+      * [type: MapView.Coordinates](#niclabs.insight.MapView.Coordinates)
     * [class: insight.InfoView](#niclabs.insight.InfoView)
       * [new insight.InfoView(dashboard, options)](#new_niclabs.insight.InfoView)
       * [InfoView.element](#niclabs.insight.InfoView.element)
@@ -57,6 +74,7 @@ understand what is going on in the city
   * [insight.handler(name, [kind], [handler])](#niclabs.insight.handler)
   * [insight.init(options)](#niclabs.insight.init)
   * [insight.infoView([obj])](#niclabs.insight.infoView)
+  * [insight.mapView([obj])](#niclabs.insight.mapView)
   * [insight.event](#niclabs.insight.event)
     * [event.on(event, listener)](#niclabs.insight.event.on)
     * [event.off(event, listener)](#niclabs.insight.event.off)
@@ -73,6 +91,11 @@ understand what is going on in the city
       * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
     * [class: info.Summary](#niclabs.insight.info.Summary)
       * [new info.Summary(dashboard, options)](#new_niclabs.insight.info.Summary)
+  * [insight.map](#niclabs.insight.map)
+    * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
+      * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
+      * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
+      * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
   * [callback: insight~handler](#niclabs.insight..handler)
   * [class: insight.Dashboard](#niclabs.insight.Dashboard)
     * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
@@ -80,6 +103,17 @@ understand what is going on in the city
     * [Dashboard.$](#niclabs.insight.Dashboard.$)
     * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
     * [Dashboard.infoView([obj])](#niclabs.insight.Dashboard.infoView)
+    * [Dashboard.mapView([obj])](#niclabs.insight.Dashboard.mapView)
+  * [class: insight.MapView](#niclabs.insight.MapView)
+    * [new insight.MapView(options)](#new_niclabs.insight.MapView)
+    * [MapView.element](#niclabs.insight.MapView.element)
+    * [MapView.$](#niclabs.insight.MapView.$)
+    * [MapView.center([lat], [lng])](#niclabs.insight.MapView.center)
+    * [MapView.lat()](#niclabs.insight.MapView.lat)
+    * [MapView.lng()](#niclabs.insight.MapView.lng)
+    * [MapView.zoom([zoom])](#niclabs.insight.MapView.zoom)
+    * [MapView.container()](#niclabs.insight.MapView.container)
+    * [type: MapView.Coordinates](#niclabs.insight.MapView.Coordinates)
   * [class: insight.InfoView](#niclabs.insight.InfoView)
     * [new insight.InfoView(dashboard, options)](#new_niclabs.insight.InfoView)
     * [InfoView.element](#niclabs.insight.InfoView.element)
@@ -121,6 +155,16 @@ Helper method to assign/get the information view to/from the dashboard
   - handler `String` - name of the handler to construct the info view  
 
 **Returns**: [InfoView](#niclabs.insight.InfoView) - the dashboard information view  
+<a name="niclabs.insight.mapView"></a>
+###insight.mapView([obj])
+Helper method to assign/get the map view to/from the dashboard
+
+**Params**
+
+- \[obj\] `Object` | <code>[MapView](#niclabs.insight.MapView)</code> - configuration for the map view or map view object  
+  - handler `String` - name of the handler to construct the map view  
+
+**Returns**: [MapView](#niclabs.insight.MapView) - the dashboard map view  
 <a name="niclabs.insight.event"></a>
 ###insight.event
 Very basic event manager for the dashboard
@@ -288,6 +332,65 @@ TODO: describe what is a summary information block
 - options `Object` - see [Block](#niclabs.insight.info.Block) constructor  
 
 **Extends**: `niclabs.insight.info.Block`  
+<a name="niclabs.insight.map"></a>
+###insight.map
+Map compatibility for the insight dashboard
+
+**Members**
+
+* [insight.map](#niclabs.insight.map)
+  * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
+    * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
+    * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
+    * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
+
+<a name="niclabs.insight.map.GoogleMap"></a>
+####class: map.GoogleMap
+**Extends**: `niclabs.insight.MapView`  
+**Members**
+
+* [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
+  * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
+  * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
+  * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
+
+<a name="new_niclabs.insight.map.GoogleMap"></a>
+#####new map.GoogleMap(options)
+Constructor of GoogleMap
+
+**Params**
+
+- options `Object` - configuration options for the map  
+  - \[zoom=12\] `integer` - starting zoom level of the map  
+  - \[lat=0\] `float` - latitude for the map center  
+  - \[lng=0\] `float` - lng for the map center  
+
+**Extends**: `niclabs.insight.MapView`  
+<a name="niclabs.insight.map.GoogleMap.map.zoom"></a>
+#####GoogleMap.map.zoom([zoom])
+Set/get the zoom level for the map
+
+Overrides the functionality of niclabs.insight.MapView.zoom() by modifying
+the underlying google map zoom level as well
+
+**Params**
+
+- \[zoom\] `int` - zoom  
+
+**Returns**: `int` - zoom level of the map  
+<a name="niclabs.insight.map.GoogleMap.map.center"></a>
+#####GoogleMap.map.center([lat], [lng])
+Set/get the map center.
+
+Overrides the functionality of [center](#niclabs.insight.MapView.center) by modifying
+the underlying google map center as well
+
+**Params**
+
+- \[lat\] `float` - latitude for the map center  
+- \[lng\] `float` - longitude for the map center  
+
+**Returns**: [Coordinates](#niclabs.insight.MapView.Coordinates) - coordinates for the map center  
 <a name="niclabs.insight..handler"></a>
 ###callback: insight~handler
 Constructs an insight element (visualization, layer, etc.)
@@ -309,6 +412,7 @@ Constructs an insight element (visualization, layer, etc.)
   * [Dashboard.$](#niclabs.insight.Dashboard.$)
   * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
   * [Dashboard.infoView([obj])](#niclabs.insight.Dashboard.infoView)
+  * [Dashboard.mapView([obj])](#niclabs.insight.Dashboard.mapView)
 
 <a name="new_niclabs.insight.Dashboard"></a>
 ####new insight.Dashboard(options)
@@ -357,6 +461,100 @@ Assign/get the information view for the dashboard
   - handler `String` - name of the handler to construct the info view  
 
 **Returns**: [InfoView](#niclabs.insight.InfoView) - the dashboard information view  
+<a name="niclabs.insight.Dashboard.mapView"></a>
+####Dashboard.mapView([obj])
+Assign/get the map view for the dashboard
+
+**Params**
+
+- \[obj\] `Object` | <code>[MapView](#niclabs.insight.MapView)</code> - configuration for the map view or map view object  
+  - handler `String` - name of the handler to construct the map view  
+
+**Returns**: [MapView](#niclabs.insight.MapView) - the dashboard information view  
+<a name="niclabs.insight.MapView"></a>
+###class: insight.MapView
+**Members**
+
+* [class: insight.MapView](#niclabs.insight.MapView)
+  * [new insight.MapView(options)](#new_niclabs.insight.MapView)
+  * [MapView.element](#niclabs.insight.MapView.element)
+  * [MapView.$](#niclabs.insight.MapView.$)
+  * [MapView.center([lat], [lng])](#niclabs.insight.MapView.center)
+  * [MapView.lat()](#niclabs.insight.MapView.lat)
+  * [MapView.lng()](#niclabs.insight.MapView.lng)
+  * [MapView.zoom([zoom])](#niclabs.insight.MapView.zoom)
+  * [MapView.container()](#niclabs.insight.MapView.container)
+  * [type: MapView.Coordinates](#niclabs.insight.MapView.Coordinates)
+
+<a name="new_niclabs.insight.MapView"></a>
+####new insight.MapView(options)
+Constructs a new map
+
+**Params**
+
+- options `Object` - configuration options for the map  
+  - \[zoom=12\] `integer` - starting zoom level of the map  
+  - \[lat=0\] `float` - latitude for the map center  
+  - \[lng=0\] `float` - lng for the map center  
+
+<a name="niclabs.insight.MapView.element"></a>
+####MapView.element
+HTML DOM element for the map view
+
+**Type**: `Element`  
+<a name="niclabs.insight.MapView.$"></a>
+####MapView.$
+jQuery object for map view
+
+**Type**: `jQuery`  
+<a name="niclabs.insight.MapView.center"></a>
+####MapView.center([lat], [lng])
+Set/get the map center.
+Overriding implementations should modify this method so the
+map reflects the new center.
+
+**Params**
+
+- \[lat\] `float` - latitude for the map center  
+- \[lng\] `float` - longitude for the map center  
+
+**Returns**: [Coordinates](#niclabs.insight.MapView.Coordinates) - coordinates for the map center  
+<a name="niclabs.insight.MapView.lat"></a>
+####MapView.lat()
+Get the latitude for the map center
+
+**Returns**: `float` - latitude for the map center  
+<a name="niclabs.insight.MapView.lng"></a>
+####MapView.lng()
+Get the longitude for the map center
+
+**Returns**: `float` - longitude for the map center  
+<a name="niclabs.insight.MapView.zoom"></a>
+####MapView.zoom([zoom])
+Set/get the map zoom level.
+Overriding implementations should modify this method so the
+map reflects the new zoom.
+
+**Params**
+
+- \[zoom\] `int` - zoom  
+
+**Returns**: `int` - zoom level of the map  
+<a name="niclabs.insight.MapView.container"></a>
+####MapView.container()
+Get the jquery object for the html element of the map
+
+**Returns**: `jQuery` - container for the map  
+<a name="niclabs.insight.MapView.Coordinates"></a>
+####type: MapView.Coordinates
+Object to represent geographic coordinates
+
+**Properties**
+
+- lat `float` - latitude for the map center  
+- lng `float` - longitude for the map center  
+
+**Type**: `Object`  
 <a name="niclabs.insight.InfoView"></a>
 ###class: insight.InfoView
 **Members**
