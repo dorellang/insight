@@ -13,68 +13,75 @@ niclabs.insight.Dashboard = (function($) {
      * - A notification bar, usually invisible, which reports events back to the user
      *
      * @class niclabs.insight.Dashboard
-     * @param {Object} parameters - configuration options for the dashboard
-     * @param {string} [parameters.layout='none'] - Dashboard layout, one of ['left', 'right', 'none'], puts the info window to the left, to the right or it removes it
-     * @param {string} parameters.anchor - Required id for anchoring the dashboard
+     * @param {Object} options - configuration options for the dashboard
+     * @param {string} [options.layout='none'] - Dashboard layout, one of ['left', 'right', 'none'], puts the info window to the left, to the right or it removes it
+     * @param {string} options.anchor - Required id for anchoring the dashboard
      */
-    return function(parameters) {
+    return function(options) {
         var layers = [];
         var layoutOptions = ['left', 'right', 'none'];
+        var dashboardId = "#insight-dashboard";
 
-        if (!('anchor' in parameters)) throw new Error('Anchor id is required for creating a dashboard');
-        var anchor = parameters.anchor;
+        if (!('anchor' in options)) throw new Error('Anchor id is required for creating a dashboard');
+        var anchor = options.anchor;
 
-        var layout = parameters.layout || 'none';
-        if (layoutOptions.indexOf(layout) < 0) throw new Error('Layout must be one of \'' + layoutOptions.join('\',\'') + '\'');
+        options.layout = options.layout || 'none';
+        if (layoutOptions.indexOf(options.layout) < 0) throw new Error('Layout must be one of \'' + layoutOptions.join('\',\'') + '\'');
 
         // Create the main container
         var container = $('<div>')
-            .setID(CityDashboard.id('main')).addClass('mainDashboard')
-            .addClass('layout-' + layout);
+            .setID(dashboardId).addClass('mainDashboard')
+            .addClass('layout-' + options.layout );
 
-        // Create the info side bar
-        var infoDiv;
-        if (layout !== 'none') {
-            infoDiv = $('<div>')
-                .setID(CityDashboard.id('info'))
-                .addClass('infoWindow');
-
-            var resizeOrientation;
-            if (layout === 'left') {
-                // TODO: move filter bar
-                resizeOrientation = 'e';
-            }
-            else if (layout === 'right') {
-                resizeOrientation = 'w';
-            }
-            infoDiv.resizable(resizeOrientation);
-
-            container.append(infoDiv);
-        }
-
-        // Create the map div
-        var mapDiv = $('<div>')
-            .setID(CityDashboard.id('map'))
-            .addClass('mapWindow');
-        container.append(mapDiv);
-
-        // Append the container to the given anchor
+        // Append the dashboard to the container
         $(anchor).append(container);
 
-        // Create the filter bar
-        var filterBar = new CityDashboard.FilterBar();
-
-        // Create an event to be notified of a filter change
-        container.on('filterChanged', function(e, fun) {
-            var f = fun();
-            for (var i = layers.length - 1; i >= 0; i--) {
-                layers[i].filter(f);
-            }
-        });
+        //
+        // // Create the map div
+        // var mapDiv = $('<div>')
+        //     .setID(CityDashboard.id('map'))
+        //     .addClass('mapWindow');
+        // container.append(mapDiv);
+        //
+        // // Append the container to the given anchor
+        // $(anchor).append(container);
+        //
+        // // Create the filter bar
+        // var filterBar = new CityDashboard.FilterBar();
+        //
+        // // Create an event to be notified of a filter change
+        // container.on('filterChanged', function(e, fun) {
+        //     var f = fun();
+        //     for (var i = layers.length - 1; i >= 0; i--) {
+        //         layers[i].filter(f);
+        //     }
+        // });
 
         var infoView = {};
+        var mapView = {};
 
         var self = {
+            /**
+             * Return the HTML DOM element for the dashboard
+             *
+             * @memberof niclabs.insight.Dashboard
+             * @returns {Object} HTML DOM object for the dashboard
+             */
+            element: function() {
+                return $(dashboardId)[0];
+            },
+
+            /**
+             * Return the value for the dashboard configuration option with the provided name
+             *
+             * @memberof niclabs.insight.Dasboard
+             * @param {String} name - name of the configuration option
+             * @returns {*} configuration option value or undefined if it does not exist
+             */
+            config: function(name) {
+                return options[name];
+            },
+
             /**
              * Assign/get the information view for the dashboard
              *
@@ -98,12 +105,12 @@ niclabs.insight.Dashboard = (function($) {
             /**
              * TODO: Documentation missing
              */
-            addLayer: function(parameters) {
+            addLayer: function(options) {
                 var callback = function(pr) {
                     layers[layers.length] = new LayerSelector(pr, CityDashboard.container('main')[0].data);
                 }; // gmap: $(CityDashboard['mainContainerID'])[0].data
 
-                CityDashboard.getData(parameters['data-source'], callback, parameters);
+                CityDashboard.getData(options['data-source'], callback, options);
 
                 return self;
             },
