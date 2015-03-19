@@ -1,3 +1,5 @@
+var niclabs = niclabs || { insight: {} };
+
 /**
  * Register/trigger events for the dashboard
  *
@@ -12,7 +14,7 @@ niclabs.insight.event = (function() {
      * Find the event in the event list, return -1 if not found
      */
     function indexOf(event, listener) {
-        if (event in events) {
+        if ('event' in events) {
             for (var i = 0; i < events[event].length; i++) {
                 if (events[event][i] === listener) {
                     return i;
@@ -42,7 +44,7 @@ niclabs.insight.event = (function() {
             var index = indexOf(event, listener);
 
             if (subscribe && index < 0) {
-                if (!(event in events)) {
+                if (!('event' in events)) {
                     events[event] = [];
                 }
 
