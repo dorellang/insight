@@ -13,6 +13,8 @@ html, body {
   height: 100%; }
   .layout-none .mapWindow {
     height: 100%; }
+  .layout-none .infoWindow {
+    display: none; }
 
 /* left layout */
 .layout-left {
