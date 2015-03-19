@@ -14,7 +14,7 @@ niclabs.insight.event = (function() {
      * Find the event in the event list, return -1 if not found
      */
     function indexOf(event, listener) {
-        if ('event' in events) {
+        if (event in events) {
             for (var i = 0; i < events[event].length; i++) {
                 if (events[event][i] === listener) {
                     return i;
@@ -38,10 +38,11 @@ niclabs.insight.event = (function() {
          * @memberof niclabs.insight.event
          * @param {string} event - event type
          * @param {niclabs.insight.event~listener} listener - callback to process the event
-         * @param {boolean} subscribe - true to subscribe to listen / false to stop listening
+         * @param {boolean} [subscribe=true] - true to subscribe to listen / false to stop listening
          */
         listen: function(event, listener, subscribe) {
             var index = indexOf(event, listener);
+            subscribe = typeof subscribe === 'undefined' ? true : subscribe;
 
             if (subscribe && index < 0) {
                 if (!('event' in events)) {
