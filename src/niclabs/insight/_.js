@@ -1,5 +1,3 @@
-var niclabs = niclabs || {};
-
 /**
  * Insight is a generic web dashboard for smart city projects.
  *

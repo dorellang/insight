@@ -1,5 +1,3 @@
-var niclabs = niclabs || { insight: {} };
-
 /**
  * Register/trigger events for the dashboard
  *
