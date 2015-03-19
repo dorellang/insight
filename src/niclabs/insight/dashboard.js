@@ -1,4 +1,4 @@
-niclabs.insight.Dashboard = (function(CityDashboard, $) {
+niclabs.insight.Dashboard = (function($) {
     "use strict";
 
     /**
@@ -129,4 +129,4 @@ niclabs.insight.Dashboard = (function(CityDashboard, $) {
 
         return self;
     };
-})(CityDashboard, jQuery);
+})(jQuery);
