@@ -35,6 +35,76 @@ niclabs.insight.InfoView = (function($) {
             container.resizable(resizeOrientation);
         }
 
+        var numberedBlocks = 0;
+        var blocks = {};
+
+        /**
+         * Get a new block id for an block without id
+         */
+        function blockId(index) {
+            index = typeof index === 'undefined' ? numberedBlocks++ : index;
+            return 'block' + index;
+        }
+
+        /**
+         * Add/get a block from the info view
+         *
+         * - If a number or string is provided as value for obj, the block with that id is returned
+         * - If a generic object is provided with the handler defined in the 'handler' property, a new block
+         * is created using the handler and the block is added to the list of
+         * blocks of the info view
+         * - If an object is provided without handler, it is assumed to be a Block object and added to the
+         * block list as is.
+         *
+         * @memberof niclabs.insight.InfoView
+         * @param {string|number|Object | niclabs.insight.info.Block} obj - block id to get or configuration options for the new block
+         * @returns {niclabs.insight.info.Block} - newly created block
+         */
+        function block(obj) {
+            if (typeof obj == 'string') return blocks[obj];
+            if (typeof obj == 'number') return blocks[blockId(obj)];
+
+            var blk, id;
+            if ('handler' in obj) {
+                id = obj.id = obj.id || blockId();
+                blk = niclabs.insight.handler(obj.handler)(self, obj);
+            }
+            else {
+                blk = obj;
+                id = blk.id();
+            }
+
+            blocks[id] = blk;
+
+            // TODO: append block element to visualization
+
+            return blk;
+        }
+
+        // For index
+        var i;
+
+        // Create the blocks in the options list
+        if (options.blocks) {
+            for (i = 0; i < options.blocks.length; i++) {
+                block(options.block[i]);
+            }
+        }
+
+        // Add a resize handler
+        infoWindow.on('resize', function(e) {
+            for (var key in blocks) {
+                blocks[key].refresh();
+            }
+        });
+
+        // Perform cleanup on block removal
+        niclabs.insight.event.on('remove-block', function(obj) {
+            delete visualizations[obj.id];
+            //var index = $.inArray(dataSourceTable[obj['data-source']], obj.id);
+            //dataSourceTable[obj['data-source']].splice(index, 1);
+        });
+
         // var visualizations = {};
         // var dataSourceTable = {};
 
@@ -80,11 +150,6 @@ niclabs.insight.InfoView = (function($) {
         //     return CityDashboard.getData(props['data-source'], callback, props);
         // }
 
-        // // Create the visualizations in the property list
-        // for (var i = 0; i < options.length; i++) {
-        //     createVisualization(options[i]);
-        // }
-
         // // Get the window element
         // var infoWindow = CityDashboard.container('info');
 
@@ -124,19 +189,6 @@ niclabs.insight.InfoView = (function($) {
         // // Add the handler
         // infoWindow.on('marker-pressed', handler);
         //
-        // // Add a resize handler
-        // infoWindow.on('resize', function(e) {
-        //     for (var key in visualizations) {
-        //         visualizations[key].refresh();
-        //     }
-        // });
-        //
-        // // Perform cleanup on visualization removal
-        // infoWindow.on('remove-viz', function(e, arg) {
-        //     delete visualizations[arg.id];
-        //     var index = $.inArray(dataSourceTable[arg['data-source']], arg.id);
-        //     dataSourceTable[arg['data-source']].splice(index, 1);
-        // });
 
         var self = {
             /**
@@ -162,6 +214,11 @@ niclabs.insight.InfoView = (function($) {
                 container = c.length === 0 ? container : c;
                 return container;
             },
+
+            /**
+             * Add/get a block from the info view
+             */
+            block: block,
 
         };
 
