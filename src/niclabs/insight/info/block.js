@@ -13,7 +13,7 @@ niclabs.insight.info.Block = (function($) {
      */
     var constructor = function(dashboard, options) {
         if (!('id' in options)) {
-            throw new Error("An information block must have an id");
+            throw new Error("All information blocks must have an id");
         }
 
         var id = options.id;
@@ -156,7 +156,8 @@ niclabs.insight.info.Block = (function($) {
             createDefList: function (data) {
                 $.each(data, function (key, value) {
                     if (key !== 'lat' && key !== 'lng' && key !== 'value') {
-                        self.$.find('.deflist').append($('<dt>').text(key).addClass('deflist-key'))
+                        self.$.find('.deflist')
+                            .append($('<dt>').text(key).addClass('deflist-key'))
                             .append($('<dd>').text(value).addClass('deflist-value'));
                     }
                 });

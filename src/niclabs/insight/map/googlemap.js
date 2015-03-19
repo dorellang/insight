@@ -1,32 +1,26 @@
-var CityDashboard = CityDashboard || {};
-
-CityDashboard.GoogleMap = (function(CityDashboard, $) {
+niclabs.insight.map.GoogleMap = (function($) {
     "use strict";
 
     /**
      * Constructor of GoogleMap
      *
-     * @class CityDashboard.GoogleMap
-     * @extends {CityDashboard.Map}
+     * @class niclabs.insight.map.GoogleMap
+     * @extends {niclabs.insight.MapView}
      * @param {Object} options - configuration options for the map
      * @param {integer} [options.zoom=12] - starting zoom level of the map
      * @param {float} [options.lat=0] - latitude for the map center
      * @param {float} [options.lng=0] - lng for the map center
      */
-    return function(options) {
+    var constructor = function(dashboard, options) {
 
         // Initialize parent
-        var map = CityDashboard.Map(options);
+        var map = niclabs.insight.MapView(options);
 
         var googlemap = new google.maps.Map(map.container()[0], {
             zoom: map.zoom(),
             center: new google.maps.LatLng(map.lat(), map.lng()),
             disableDefaultUI: true
         });
-
-        // Store the google map in the citydashboard
-        // TODO: this is very poor practice
-        CityDashboard.container('main')[0].data = googlemap;
 
         // Store the parent function
         var zoom = map.zoom;
@@ -41,11 +35,11 @@ CityDashboard.GoogleMap = (function(CityDashboard, $) {
         /**
          * Set/get the zoom level for the map
          *
-         * Overrides the functionality of CityDashboard.Map.zoom() by modifying
+         * Overrides the functionality of niclabs.insight.MapView.zoom() by modifying
          * the underlying google map zoom level as well
          *
          * @override
-         * @memberof CityDashboard.GoogleMap
+         * @memberof niclabs.insight.map.GoogleMap
          * @param {int=} zoom - zoom
          * @returns {int} zoom level of the map
          */
@@ -74,14 +68,14 @@ CityDashboard.GoogleMap = (function(CityDashboard, $) {
         /**
          * Set/get the map center.
          *
-         * Overrides the functionality of {@link CityDashboard.Map.center} by modifying
+         * Overrides the functionality of {@link niclabs.insight.MapView.center} by modifying
          * the underlying google map center as well
          *
          * @override
-         * @memberof CityDashboard.GoogleMap
+         * @memberof niclabs.insight.map.GoogleMap
          * @param {float=} lat - latitude for the map center
          * @param {float=} lng - longitude for the map center
-         * @return {CityDashboard.Map.Coordinates} coordinates for the map center
+         * @return {niclabs.insight.MapView.Coordinates} coordinates for the map center
          */
         map.center = function(lat, lng) {
             var c = center(lat, lng);
@@ -106,4 +100,9 @@ CityDashboard.GoogleMap = (function(CityDashboard, $) {
 
         return map;
     };
-})(CityDashboard, jQuery);
+
+    // Register the handler
+    niclabs.insight.handler('google-map', 'map-view', constructor);
+
+    return constructor;
+})(jQuery);
