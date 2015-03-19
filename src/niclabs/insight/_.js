@@ -165,7 +165,8 @@ niclabs.insight = (function($) {
       * Constructs an insight element (visualization, layer, etc.)
       *
       * @callback niclabs.insight~handler
-      * @param {Object} options - configuration options for the handler, dependent on the type
+      * @param {niclabs.insight.Dashboard} dashboard to assign to the handler
+      * @param {Object} options - configuration options for the handler, depending on the kind
       */
 
      return {
@@ -179,25 +180,25 @@ niclabs.insight = (function($) {
           *
           * @memberof niclabs.insight
           * @param {string} name - name for the handler to return, register
-          * @param {string=} type - type for the handler
-          * @param {insight~handler=} callback - function to create the element
-          * @returns {insight~handler} handler for the registered name
+          * @param {string=} kind - kind for the handler
+          * @param {niclabs.insight~handler=} handler - callback to create the element
+          * @returns {niclabs.insight~handler} handler for the registered name
           */
-         handler: function(name, type, callback) {
+         handler: function(name, kind, handler) {
              if (name in handlers) {
-                 type = type === 'undefined' ? handlers[name].type : type;
-                 callback = callback === 'undefined' ? handlers[name].callback : callback;
+                 kind = kind === 'undefined' ? handlers[name].kind : kind;
+                 handler = handler === 'undefined' ? handlers[name].handler : handler;
 
-                 if (type !== handlers[name].type) {
-                     throw new Error('There already exists a handler with name '+name+' for type '+type);
+                 if (kind !== handlers[name].kind) {
+                     throw new Error('There already exists a handler with name '+name+' for kind '+kind);
                  }
              }
-             else if (type === 'undefined' && callback === 'undefined') {
+             else if (kind === 'undefined' && handler === 'undefined') {
                  throw new Error('Handler ' + name + ' does not exist');
              }
 
-             handlers[name] = {'type': type, 'callback': callback};
-             return callback;
+             handlers[name] = {'kind': kind, 'handler': handler};
+             return handler;
          },
 
          /**
