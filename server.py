@@ -103,6 +103,21 @@ class GetHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self.wfile.write(f.read())
             f.close()
 
+        # handle the request for the development library
+        elif path.endswith("/js/CityDashboard.js"):
+            if not os.path.exists('tmp'):
+                return self.send_response(404)
+
+            if not os.path.isfile('tmp/CityDashboard.js'):
+                return self.send_response(404)
+
+            f = open('tmp/CityDashboard.js')
+            self.send_response(200)
+            self.send_header('Content-type', 'application/javascript')
+            self.end_headers()
+            self.wfile.write(f.read())
+            f.close()
+
         elif path.endswith('/css/CityDashboard.min.css') or path.endswith('/css/CityDashboard.css'):
             f = open('dist/CityDashboard.min.css')
             self.send_response(200)
