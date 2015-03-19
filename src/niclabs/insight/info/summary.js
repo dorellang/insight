@@ -1,22 +1,23 @@
-CityDashboard.SummaryVisualization = function ( props ) {
+niclabs.insight.info.Summary = (function($) {
+    var constructor = function(dashboard, options) {
+        var self = niclabs.insight.info.Block(dashboard, options);
 
-  CityDashboard.Visualization.call( this, props );
+        self.$.addClass('summary-viz');
 
-  this.viz.addClass('summary-viz');
-  this.refresh();
-  
-}
+        // Store the refresh method of the parent
+        var refresh = self.refresh;
 
-CityDashboard.SummaryVisualization.prototype = Object.create( CityDashboard.Visualization.prototype );
+        self.refresh = function() {
+            // Call the parent refresh
+            refresh();
 
+            self.$.append($('<dl>').addClass('deflist'));
+            self.createDeflist(self.data());
+        };
 
-CityDashboard.SummaryVisualization.prototype.refresh  = function () {
+        return self;
+    };
 
-  CityDashboard.Visualization.prototype.refresh.call( this );
-
-  this.viz.append( $('<dl>').addClass('deflist') );
-
-  this.createDefList(this.data);
-
-};
-
+    // Register the handler
+    niclabs.insight.handler('summary-block', 'info-block', constructor);
+})(jQuery);
