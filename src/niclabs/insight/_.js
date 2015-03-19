@@ -152,11 +152,9 @@ niclabs.insight = (function($) {
          return $.inArray(item, this, start);
      };
 
-
      var dashboard;
-     var map;
-     var info;
 
+     // Store dashboard handlers by name
      var handlers = {};
 
      /**
@@ -188,7 +186,7 @@ niclabs.insight = (function($) {
                  handler = handler === 'undefined' ? handlers[name].handler : handler;
 
                  if (kind !== handlers[name].kind) {
-                     throw new Error('There already exists a handler with name '+name+' for kind '+kind);
+                     throw new Error('There already exists a handler with name '+name+' for kind '+handlers[name].kind);
                  }
              }
              else if (kind === 'undefined' && handler === 'undefined') {
