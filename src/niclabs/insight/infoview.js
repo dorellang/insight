@@ -160,8 +160,8 @@ niclabs.insight.InfoView = (function($) {
             jquery: function() {
                 var c = $(infoViewId);
                 container = c.length === 0 ? container : c;
-                return container[0];
-            }
+                return container;
+            },
 
         };
 
