@@ -192,24 +192,24 @@ niclabs.insight.InfoView = (function($) {
 
         var self = {
             /**
-             * Return the HTML DOM element for the information view container
+             * HTML DOM element for the information view container
              *
              * @memberof niclabs.insight.InfoView
-             * @returns {Element} HTML DOM object for the info view
+             * @member {Element}
              */
-            element: function() {
+            get element () {
                 var c = $(infoViewId);
                 container = c.length === 0 ? container : c;
                 return container[0];
             },
 
             /**
-             * Return the jQuery object for info view container
+             * jQuery object for info view container
              *
              * @memberof niclabs.insight.InfoView
-             * @returns {jQuery} jQuery for the information view container
+             * @member {jQuery}
              */
-            jquery: function() {
+            $: function() {
                 var c = $(infoViewId);
                 container = c.length === 0 ? container : c;
                 return container;
