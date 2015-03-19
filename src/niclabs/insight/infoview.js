@@ -16,15 +16,14 @@ niclabs.insight.InfoView = (function($) {
         // Default visualization property list
         options = options || {};
 
-        var infoViewId = "#insight-infoView";
+        var infoViewId = "#insight-info-view";
 
         // Create the info view
-        var container;
-        if (dashboard.config('layout') !== 'none') {
-            container = $('<div>')
-                .setID(infoViewId)
-                .addClass('infoWindow');
+        var container = $('<div>')
+            .setID(infoViewId)
+            .addClass('infoWindow');
 
+        if (dashboard.config('layout') !== 'none') {
             var resizeOrientation;
             if (dashboard.config('layout') === 'left') {
                 // TODO: move filter bar
@@ -34,7 +33,6 @@ niclabs.insight.InfoView = (function($) {
                 resizeOrientation = 'w';
             }
             container.resizable(resizeOrientation);
-            $(dashboard.element()).append(container);
         }
 
         // var visualizations = {};
@@ -141,10 +139,33 @@ niclabs.insight.InfoView = (function($) {
         // });
 
         var self = {
+            /**
+             * Return the HTML DOM element for the information view container
+             *
+             * @memberof niclabs.insight.InfoView
+             * @returns {Element} HTML DOM object for the info view
+             */
             element: function() {
-                return $(infoViewId)[0];
+                var c = $(infoViewId);
+                container = c.length === 0 ? container : c;
+                return container[0];
+            },
+
+            /**
+             * Return the jQuery object for info view container
+             *
+             * @memberof niclabs.insight.InfoView
+             * @returns {jQuery} jQuery for the information view container
+             */
+            jquery: function() {
+                var c = $(infoViewId);
+                container = c.length === 0 ? container : c;
+                return container[0];
             }
+
         };
+
+        return self;
     };
 
     // Register the info view constructor
