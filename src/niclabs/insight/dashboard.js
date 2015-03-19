@@ -72,8 +72,29 @@ niclabs.insight.Dashboard = (function(CityDashboard, $) {
             }
         });
 
+        var infoView = {};
 
         var self = {
+            /**
+             * Assign/get the information view for the dashboard
+             *
+             * @memberof niclabs.insight.Dashboard
+             * @param {Object|niclabs.insight.InfoView} [obj] - configuration for the information view or information view object
+             * @param {String} obj.handler - name of the handler to construct the info view
+             * @returns {niclabs.insight.InfoView} the dashboard information view
+             */
+            infoView: function(obj) {
+                if (typeof obj !== 'undefined') {
+                    if ('handler' in obj) {
+                        infoView = niclabs.insight.handler(obj.handler)(self, obj);
+                    }
+                    else {
+                        infoView = obj;
+                    }
+                }
+                return infoView;
+            },
+
             /**
              * TODO: Documentation missing
              */
