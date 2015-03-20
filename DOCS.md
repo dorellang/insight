@@ -14,8 +14,8 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
   * [niclabs.insight](#niclabs.insight)
     * [insight.handler(name, [kind], [handler])](#niclabs.insight.handler)
     * [insight.init(options)](#niclabs.insight.init)
-    * [insight.infoView([obj])](#niclabs.insight.infoView)
-    * [insight.mapView([obj])](#niclabs.insight.mapView)
+    * [insight.infoview([obj])](#niclabs.insight.infoview)
+    * [insight.mapview([obj])](#niclabs.insight.mapview)
     * [insight.event](#niclabs.insight.event)
       * [event.on(event, listener)](#niclabs.insight.event.on)
       * [event.off(event, listener)](#niclabs.insight.event.off)
@@ -43,8 +43,8 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
       * [Dashboard.element](#niclabs.insight.Dashboard.element)
       * [Dashboard.$](#niclabs.insight.Dashboard.$)
       * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
-      * [Dashboard.infoView([obj])](#niclabs.insight.Dashboard.infoView)
-      * [Dashboard.mapView([obj])](#niclabs.insight.Dashboard.mapView)
+      * [Dashboard.infoview([obj])](#niclabs.insight.Dashboard.infoview)
+      * [Dashboard.mapview([obj])](#niclabs.insight.Dashboard.mapview)
     * [class: insight.MapView](#niclabs.insight.MapView)
       * [new insight.MapView(options)](#new_niclabs.insight.MapView)
       * [MapView.element](#niclabs.insight.MapView.element)
@@ -73,8 +73,8 @@ understand what is going on in the city
 * [niclabs.insight](#niclabs.insight)
   * [insight.handler(name, [kind], [handler])](#niclabs.insight.handler)
   * [insight.init(options)](#niclabs.insight.init)
-  * [insight.infoView([obj])](#niclabs.insight.infoView)
-  * [insight.mapView([obj])](#niclabs.insight.mapView)
+  * [insight.infoview([obj])](#niclabs.insight.infoview)
+  * [insight.mapview([obj])](#niclabs.insight.mapview)
   * [insight.event](#niclabs.insight.event)
     * [event.on(event, listener)](#niclabs.insight.event.on)
     * [event.off(event, listener)](#niclabs.insight.event.off)
@@ -102,8 +102,8 @@ understand what is going on in the city
     * [Dashboard.element](#niclabs.insight.Dashboard.element)
     * [Dashboard.$](#niclabs.insight.Dashboard.$)
     * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
-    * [Dashboard.infoView([obj])](#niclabs.insight.Dashboard.infoView)
-    * [Dashboard.mapView([obj])](#niclabs.insight.Dashboard.mapView)
+    * [Dashboard.infoview([obj])](#niclabs.insight.Dashboard.infoview)
+    * [Dashboard.mapview([obj])](#niclabs.insight.Dashboard.mapview)
   * [class: insight.MapView](#niclabs.insight.MapView)
     * [new insight.MapView(options)](#new_niclabs.insight.MapView)
     * [MapView.element](#niclabs.insight.MapView.element)
@@ -145,8 +145,8 @@ Construct and configure a [Dashboard](#niclabs.insight.Dashboard)
 - options `Object` - list of configuration options for the dashboard see [Dashboard](#niclabs.insight.Dashboard)  
 
 **Returns**: [Dashboard](#niclabs.insight.Dashboard) - dashboard object  
-<a name="niclabs.insight.infoView"></a>
-###insight.infoView([obj])
+<a name="niclabs.insight.infoview"></a>
+###insight.infoview([obj])
 Helper method to assign/get the information view to/from the dashboard
 
 **Params**
@@ -155,8 +155,8 @@ Helper method to assign/get the information view to/from the dashboard
   - handler `String` - name of the handler to construct the info view  
 
 **Returns**: [InfoView](#niclabs.insight.InfoView) - the dashboard information view  
-<a name="niclabs.insight.mapView"></a>
-###insight.mapView([obj])
+<a name="niclabs.insight.mapview"></a>
+###insight.mapview([obj])
 Helper method to assign/get the map view to/from the dashboard
 
 **Params**
@@ -411,8 +411,8 @@ Constructs an insight element (visualization, layer, etc.)
   * [Dashboard.element](#niclabs.insight.Dashboard.element)
   * [Dashboard.$](#niclabs.insight.Dashboard.$)
   * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
-  * [Dashboard.infoView([obj])](#niclabs.insight.Dashboard.infoView)
-  * [Dashboard.mapView([obj])](#niclabs.insight.Dashboard.mapView)
+  * [Dashboard.infoview([obj])](#niclabs.insight.Dashboard.infoview)
+  * [Dashboard.mapview([obj])](#niclabs.insight.Dashboard.mapview)
 
 <a name="new_niclabs.insight.Dashboard"></a>
 ####new insight.Dashboard(options)
@@ -451,8 +451,8 @@ Return the value for the dashboard configuration option with the provided name
 - name `String` - name of the configuration option  
 
 **Returns**: `*` - configuration option value or undefined if it does not exist  
-<a name="niclabs.insight.Dashboard.infoView"></a>
-####Dashboard.infoView([obj])
+<a name="niclabs.insight.Dashboard.infoview"></a>
+####Dashboard.infoview([obj])
 Assign/get the information view for the dashboard
 
 **Params**
@@ -461,8 +461,8 @@ Assign/get the information view for the dashboard
   - handler `String` - name of the handler to construct the info view  
 
 **Returns**: [InfoView](#niclabs.insight.InfoView) - the dashboard information view  
-<a name="niclabs.insight.Dashboard.mapView"></a>
-####Dashboard.mapView([obj])
+<a name="niclabs.insight.Dashboard.mapview"></a>
+####Dashboard.mapview([obj])
 Assign/get the map view for the dashboard
 
 **Params**
