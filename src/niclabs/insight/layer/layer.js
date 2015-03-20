@@ -1,37 +1,27 @@
-var CityDashboard = CityDashboard || {};
-
-CityDashboard.Layer = (function(CityDashboard) {
+niclabs.insight.layer.Layer = (function($) {
     "use strict";
 
-    var Layer = function(parameters, map) {
+    var Layer = function(dashboard, options) {
+        var wrappedLayer;
 
-        this.wrappedLayer = undefined;
-
-        if (parameters.id === undefined) {
-            throw Error("All layers must have an ID.")
+        if (!('id' in options)) {
+            throw Error("All layers must have an id.");
         }
 
-        this.id = parameters.id;
-        this.dataSource = parameters.dataSource;
-
-        this.elements = parameters.data.length ? parameters.data : [parameters.data];
-        this.elementsAttr = parameters.layer_attr || {
+        var id = options.id;
+        var datasource = options.datasource;
+        var data = options.data && options.data.length ? options.data: [options.data];
+        var attributes = options.attributes || {
             'type': 'simple',
-            'action': 'update'
+            'action': 'update',
         };
-        this.map = map;
+        var map = dashboard.mapview();
 
-    };
-
-    Layer.prototype = {
-
-        constructor: CityDashboard.Layer,
-
-        filter: function(filterFun) {},
-
-        clear: function() {},
-
+        return {
+            filter: function(fn) {},
+            clear: function() {}
+        };
     };
 
     return Layer;
-})(CityDashboard);
+})(jQuery);
