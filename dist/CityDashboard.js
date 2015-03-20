@@ -426,7 +426,7 @@ niclabs.insight.InfoView = (function($) {
      * @param {niclabs.insight.Dashboard} dashboard - dashboard to assign this info view to
      * @param {Object} options - list of configuration options for the information view
      */
-    var constructor = function(dashboard, options) {
+    var InFoView = function(dashboard, options) {
         // Default visualization property list
         options = options || {};
 
@@ -641,9 +641,9 @@ niclabs.insight.InfoView = (function($) {
     };
 
     // Register the info view constructor
-    niclabs.insight.handler('basic-info-view', 'info-view', constructor);
+    niclabs.insight.handler('basic-info-view', 'info-view', InFoView);
 
-    return constructor;
+    return InFoView;
 })(jQuery);
 
 niclabs.insight.MapView = (function($) {
@@ -1106,18 +1106,18 @@ niclabs.insight.info.Block = (function($) {
 //
 // };
 
-niclabs.insight.info.Summary = (function($) {
+niclabs.insight.info.SummaryBlock = (function($) {
     /**
      * Construct a new summary information block
      * TODO: describe what is a summary information block
      *
-     * @class niclabs.insight.info.Summary
+     * @class niclabs.insight.info.SummaryBlock
      * @augments niclabs.insight.info.Block
      * @inheritdoc
      * @param {niclabs.insight.Dashboard} dashboard - parent dashboard for the block
      * @param {Object} options - see {@link niclabs.insight.info.Block} constructor
      */
-    var constructor = function(dashboard, options) {
+    var SummaryBlock = function(dashboard, options) {
         var self = niclabs.insight.info.Block(dashboard, options);
 
         self.$.addClass('summary-viz');
@@ -1140,9 +1140,44 @@ niclabs.insight.info.Summary = (function($) {
     };
 
     // Register the handler
-    niclabs.insight.handler('summary-block', 'info-block', constructor);
+    niclabs.insight.handler('summary-block', 'info-block', SummaryBlock);
 
-    return constructor;
+    return SummaryBlock;
+})(jQuery);
+
+/**
+ * Dashboard visualization layers
+ *
+ * @namespace
+ */
+niclabs.insight.layer = {};
+
+niclabs.insight.layer.Layer = (function($) {
+    "use strict";
+
+    var Layer = function(dashboard, options) {
+        var wrappedLayer;
+
+        if (!('id' in options)) {
+            throw Error("All layers must have an id.");
+        }
+
+        var id = options.id;
+        var datasource = options.datasource;
+        var data = options.data && options.data.length ? options.data: [options.data];
+        var attributes = options.attributes || {
+            'type': 'simple',
+            'action': 'update',
+        };
+        var map = dashboard.mapview();
+
+        return {
+            filter: function(fn) {},
+            clear: function() {}
+        };
+    };
+
+    return Layer;
 })(jQuery);
 
 /**
@@ -1165,7 +1200,7 @@ niclabs.insight.map.GoogleMap = (function($) {
      * @param {float} [options.lat=0] - latitude for the map center
      * @param {float} [options.lng=0] - lng for the map center
      */
-    var constructor = function(dashboard, options) {
+    var GoogleMap = function(dashboard, options) {
 
         // Initialize parent
         var map = niclabs.insight.MapView(options);
@@ -1256,7 +1291,7 @@ niclabs.insight.map.GoogleMap = (function($) {
     };
 
     // Register the handler
-    niclabs.insight.handler('google-map', 'map-view', constructor);
+    niclabs.insight.handler('google-map', 'map-view', GoogleMap);
 
-    return constructor;
+    return GoogleMap;
 })(jQuery);
