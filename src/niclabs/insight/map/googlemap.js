@@ -11,7 +11,7 @@ niclabs.insight.map.GoogleMap = (function($) {
      * @param {float} [options.lat=0] - latitude for the map center
      * @param {float} [options.lng=0] - lng for the map center
      */
-    var constructor = function(dashboard, options) {
+    var GoogleMap = function(dashboard, options) {
 
         // Initialize parent
         var map = niclabs.insight.MapView(options);
@@ -102,7 +102,7 @@ niclabs.insight.map.GoogleMap = (function($) {
     };
 
     // Register the handler
-    niclabs.insight.handler('google-map', 'map-view', constructor);
+    niclabs.insight.handler('google-map', 'map-view', GoogleMap);
 
-    return constructor;
+    return GoogleMap;
 })(jQuery);
