@@ -30,8 +30,9 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [Block.remove()](#niclabs.insight.info.Block.remove)
         * [Block.data([data])](#niclabs.insight.info.Block.data)
         * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
-      * [class: info.Summary](#niclabs.insight.info.Summary)
-        * [new info.Summary(dashboard, options)](#new_niclabs.insight.info.Summary)
+      * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+        * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
+    * [insight.layer](#niclabs.insight.layer)
     * [insight.map](#niclabs.insight.map)
       * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
         * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
@@ -89,8 +90,9 @@ understand what is going on in the city
       * [Block.remove()](#niclabs.insight.info.Block.remove)
       * [Block.data([data])](#niclabs.insight.info.Block.data)
       * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
-    * [class: info.Summary](#niclabs.insight.info.Summary)
-      * [new info.Summary(dashboard, options)](#new_niclabs.insight.info.Summary)
+    * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+      * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
+  * [insight.layer](#niclabs.insight.layer)
   * [insight.map](#niclabs.insight.map)
     * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
       * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
@@ -245,8 +247,8 @@ Contains the definitions for the information blocks supported by insight
     * [Block.remove()](#niclabs.insight.info.Block.remove)
     * [Block.data([data])](#niclabs.insight.info.Block.data)
     * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
-  * [class: info.Summary](#niclabs.insight.info.Summary)
-    * [new info.Summary(dashboard, options)](#new_niclabs.insight.info.Summary)
+  * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+    * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
 
 <a name="niclabs.insight.info.Block"></a>
 ####class: info.Block
@@ -313,16 +315,16 @@ TODO: should this really go here? Change the name?
 
 - \[data\] `Object` - the updated data for the block  
 
-<a name="niclabs.insight.info.Summary"></a>
-####class: info.Summary
+<a name="niclabs.insight.info.SummaryBlock"></a>
+####class: info.SummaryBlock
 **Extends**: `niclabs.insight.info.Block`  
 **Members**
 
-* [class: info.Summary](#niclabs.insight.info.Summary)
-  * [new info.Summary(dashboard, options)](#new_niclabs.insight.info.Summary)
+* [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+  * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
 
-<a name="new_niclabs.insight.info.Summary"></a>
-#####new info.Summary(dashboard, options)
+<a name="new_niclabs.insight.info.SummaryBlock"></a>
+#####new info.SummaryBlock(dashboard, options)
 Construct a new summary information block
 TODO: describe what is a summary information block
 
@@ -332,6 +334,14 @@ TODO: describe what is a summary information block
 - options `Object` - see [Block](#niclabs.insight.info.Block) constructor  
 
 **Extends**: `niclabs.insight.info.Block`  
+<a name="niclabs.insight.layer"></a>
+###insight.layer
+Dashboard visualization layers
+
+**Members**
+
+* [insight.layer](#niclabs.insight.layer)
+
 <a name="niclabs.insight.map"></a>
 ###insight.map
 Map compatibility for the insight dashboard

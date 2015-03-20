@@ -1,15 +1,15 @@
-niclabs.insight.info.Summary = (function($) {
+niclabs.insight.info.SummaryBlock = (function($) {
     /**
      * Construct a new summary information block
      * TODO: describe what is a summary information block
      *
-     * @class niclabs.insight.info.Summary
+     * @class niclabs.insight.info.SummaryBlock
      * @augments niclabs.insight.info.Block
      * @inheritdoc
      * @param {niclabs.insight.Dashboard} dashboard - parent dashboard for the block
      * @param {Object} options - see {@link niclabs.insight.info.Block} constructor
      */
-    var Summary = function(dashboard, options) {
+    var SummaryBlock = function(dashboard, options) {
         var self = niclabs.insight.info.Block(dashboard, options);
 
         self.$.addClass('summary-viz');
@@ -32,7 +32,7 @@ niclabs.insight.info.Summary = (function($) {
     };
 
     // Register the handler
-    niclabs.insight.handler('summary-block', 'info-block', Summary);
+    niclabs.insight.handler('summary-block', 'info-block', SummaryBlock);
 
-    return Summary;
+    return SummaryBlock;
 })(jQuery);
