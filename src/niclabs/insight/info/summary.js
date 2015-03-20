@@ -9,7 +9,7 @@ niclabs.insight.info.Summary = (function($) {
      * @param {niclabs.insight.Dashboard} dashboard - parent dashboard for the block
      * @param {Object} options - see {@link niclabs.insight.info.Block} constructor
      */
-    var constructor = function(dashboard, options) {
+    var Summary = function(dashboard, options) {
         var self = niclabs.insight.info.Block(dashboard, options);
 
         self.$.addClass('summary-viz');
@@ -32,7 +32,7 @@ niclabs.insight.info.Summary = (function($) {
     };
 
     // Register the handler
-    niclabs.insight.handler('summary-block', 'info-block', constructor);
+    niclabs.insight.handler('summary-block', 'info-block', Summary);
 
-    return constructor;
+    return Summary;
 })(jQuery);

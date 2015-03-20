@@ -12,7 +12,7 @@ niclabs.insight.InfoView = (function($) {
      * @param {niclabs.insight.Dashboard} dashboard - dashboard to assign this info view to
      * @param {Object} options - list of configuration options for the information view
      */
-    var constructor = function(dashboard, options) {
+    var InFoView = function(dashboard, options) {
         // Default visualization property list
         options = options || {};
 
@@ -227,7 +227,7 @@ niclabs.insight.InfoView = (function($) {
     };
 
     // Register the info view constructor
-    niclabs.insight.handler('basic-info-view', 'info-view', constructor);
+    niclabs.insight.handler('basic-info-view', 'info-view', InFoView);
 
-    return constructor;
+    return InFoView;
 })(jQuery);
