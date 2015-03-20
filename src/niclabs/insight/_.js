@@ -217,9 +217,9 @@ niclabs.insight = (function($) {
           * @param {String} obj.handler - name of the handler to construct the info view
           * @returns {niclabs.insight.InfoView} the dashboard information view
           */
-         infoView: function(obj) {
+         infoview: function(obj) {
             if (typeof dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
-            return dashboard.infoView(obj);
+            return dashboard.infoview(obj);
          },
 
          /**
@@ -230,9 +230,9 @@ niclabs.insight = (function($) {
           * @param {String} obj.handler - name of the handler to construct the map view
           * @returns {niclabs.insight.MapView} the dashboard map view
           */
-         mapView: function(obj) {
+         mapview: function(obj) {
             if (typeof dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
-            return dashboard.mapView(obj);
+            return dashboard.mapview(obj);
          },
      };
 })(jQuery);
