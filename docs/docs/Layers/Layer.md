@@ -39,3 +39,12 @@ An abstract layer.
 
 #### `.filter` ( filterFun : `function` )
   Abstract filtering function called by [Dashboard](../Dashboard.md).
+
+---
+#### `updateLayer` ( selected : `String` )
+  Abstract layer update method.
+ 
+---
+#### `clear` ()
+  Abstract layer clear method.
+ 
