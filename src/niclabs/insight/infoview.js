@@ -57,7 +57,7 @@ niclabs.insight.InfoView = (function($) {
          * block list as is.
          *
          * @memberof niclabs.insight.InfoView
-         * @param {string|number|Object | niclabs.insight.info.Block} obj - block id to get or configuration options for the new block
+         * @param {string|number|Object| niclabs.insight.info.Block} obj - block id to get or configuration options for the new block
          * @returns {niclabs.insight.info.Block} - newly created block
          */
         function block(obj) {

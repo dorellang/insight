@@ -1,5 +1,5 @@
 /**
- * Dashboard visualization layers
+ * Visualization layers for the dashboard
  *
  * @namespace
  */
