@@ -1290,13 +1290,20 @@ niclabs.insight.layer.Layer = (function($) {
         // Will be set to true once the layer is loaded
         var loaded = false;
 
-        var attributes = options.attributes || {
-            'type': 'simple',
-            'action': 'update',
-        };
-        var map = dashboard.mapview();
+        /**
+         * Function to act as a filter for the data
+         *
+         * The function returns false if the data must be removed from the visualization
+         * or true if the data must be kept
+         *
+         * TODO: I think this is better defined in FilterBar
+         *
+         * @callback niclabs.insight.layer.Layer~filter
+         * @param {Object} data - data element to evaluate
+         * @returns {boolean} true if the data passes the filter
+         */
 
-        return {
+        var self = {
             /**
              * id of the layer
              * @memberof niclabs.insight.layer.Layer
@@ -1372,6 +1379,7 @@ niclabs.insight.layer.Layer = (function($) {
 
                 if (dataSource) {
                     $.getJSON(dataSource, redraw);
+                    // TODO: on error?
                 }
                 else {
                     redraw(data);
@@ -1389,6 +1397,15 @@ niclabs.insight.layer.Layer = (function($) {
              */
             draw: function(data) {},
 
+            /**
+             * Filter the layer according to the provided function.
+             *
+             * This method must be overriden by the implementing layers
+             *
+             * @memberof niclabs.insight.layer.Layer
+             * @abstract
+             * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
+             */
             filter: function(fn) {},
 
             /**
@@ -1400,9 +1417,104 @@ niclabs.insight.layer.Layer = (function($) {
              */
             clear: function() {}
         };
+
+        return self;
     };
 
     return Layer;
+})(jQuery);
+
+niclabs.insight.layer.MarkerLayer = (function($) {
+    /**
+     * Construct a new marker layer
+     *
+     * @class niclabs.insight.layer.MarkerLayer
+     * @extends niclabs.insight.layer.Layer
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this layer belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.id - identifier for the layer
+     * @param {string|Object[]} options.data - uri or data array for the layer
+     */
+    var MarkerLayer = function(dashboard, options) {
+        var layer = niclabs.insight.Layer(dashboard, options);
+
+        var attr = options.marker || {
+            'type': 'simple-marker'
+        };
+
+        var markers = [];
+
+        /**
+         * Create marker from the type attribute
+         *
+         * @param {Object[]} data - layer data
+         * @param {number} index - index of the marker in the data array
+         * @param {Object} obj - configuration for the new marker
+          */
+        function newMarker(data, index, obj) {
+            var marker;
+            if ('type' in obj) {
+                obj.layer = layer.id;
+                obj.lat = data[index].lat;
+                obj.lng = data[index].lng;
+
+                marker = niclabs.insight.handler(obj.type)(dashboard, obj);
+            }
+            else {
+                marker = obj;
+            }
+
+            return marker;
+        }
+
+        /**
+         * Draw the markers according to the internal data on the map
+         *
+         * @memberof niclabs.insight.layer.MarkerLayer
+         * @override
+         * @param {Object[]} data - data to draw
+         * @param {float} data[].lat - latitude for the marker
+         * @param {float} data[].lng - longitude for the marker
+         * @param {string=} data[].description - description for the marker
+         */
+        layer.draw = function(data) {
+            for (var i = 0; i < data.length; i++) {
+                markers.push(newMarker(data, i, attr));
+            }
+        };
+
+        /**
+         * Clear the markers from the map
+         *
+         * @memberof niclabs.insight.layer.MarkerLayer
+         * @override
+         */
+        layer.clear = function() {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].clear();
+            }
+        };
+
+        /**
+         * Filter the layer according to the provided function.
+         *
+         * @memberof niclabs.insight.layer.MarkerLayer
+         * @override
+         * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
+         */
+        layer.filter = function(fn) {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].visible(fn(data[i]));
+            }
+        };
+
+        return layer;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('marker-layer', 'layer', MarkerLayer);
+
+    return MarkerLayer;
 })(jQuery);
 
 /**
@@ -1519,4 +1631,136 @@ niclabs.insight.map.GoogleMap = (function($) {
     niclabs.insight.handler('google-map', 'map-view', GoogleMap);
 
     return GoogleMap;
+})(jQuery);
+
+/**
+ * Collection of markers available for drawing on the map
+ *
+ * @namespace
+ */
+niclabs.insight.map.marker = {};
+
+niclabs.insight.map.marker.Marker = (function($) {
+    /**
+     * Construct a new marker
+     *
+     * @class niclabs.insight.map.marker.Marker
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.layer - identifier for the layer that this marker belongs to
+     * @params {float} options.lat - latitude for the marker
+     * @params {float} options.lng - longitude for the marker
+     * @params {string} options.description - description for the marker
+     */
+    var Marker = function(dashboard, options) {
+        if (!('layer' in options))
+            throw new Error('The marker must be associated to a layer');
+
+        var layer;
+        if (!(layer = dashboard.layer(options.layer)))
+            throw new Error('The layer '+layer+' does not exist in the dashboard');
+
+        var map;
+        if (!(map = dashboard.map()))
+            throw new Error('No map has been initialized for the dashboard yet');
+
+        if (!('googlemap' in map))
+            throw new Error("Markers are only supported for Google Maps at the moment");
+
+        var listener;
+
+        var self = {
+            /**
+             * Map view where the map belongs to
+             * @memberof niclabs.insight.map.marker.Marker
+             * @member {niclabs.insight.MapView}
+             */
+            get map () {
+                return map;
+            },
+
+            /**
+             * Layer to which the marker belongs to
+             *
+             * @memberof niclabs.insight.map.marker.Marker
+             * @member {niclabs.insight.layer.Layer}
+             */
+            get layer () {
+                return layer;
+            },
+
+            /**
+             * Return the internal marker object associated with this Marker
+             *
+             * @memberof niclabs.insight.map.marker.Marker
+             * @abstract
+             * @returns {google.maps.Marker} internal marker
+             */
+            marker: function() {
+                return undefined;
+            },
+
+            /**
+             * Let the marker listen to click events
+             *
+             * When clicked the marker will trigger a generalized event with the particular data for the marker
+             *
+             * @memberof niclabs.insight.map.marker.Marker
+             * @param {boolean} [activate=true] - true to make clickable
+             */
+            clickable : function(activate) {
+                if (activate) {
+                    var marker = self.marker();
+
+                    listener = google.maps.event.addListener(marker, 'click', function() {
+                        /**
+                         * Event triggered to notify the dashboard that a marker has been pressed
+                         *
+                         * @event niclabs.insight.map.marker.Marker#marker_pressed
+                         * @type {object}
+                         * @property {string} layer - id for the layer to which the data belongs to
+                         * @property {float} lat - latitude for the marker
+                         * @property {float} lng - latitude for the marker
+                         * @property {description} - description for the marker
+                         */
+                        niclabs.insight.event('marker_pressed', options);
+
+                        // TODO: make configurable?
+                        marker.setAnimation(google.maps.Animation.BOUNCE);
+                    });
+                }
+                else if (typeof listener !== 'undefined') {
+                    google.maps.event.removeListener(listener);
+                }
+            },
+
+            /**
+             * Clear the marker from the map
+             *
+             * @memberof niclabs.insight.map.marker.Marker
+             */
+            clear: function() {
+                var marker = self.marker();
+                marker.setMap(null);
+            },
+
+            /**
+             * Set/get the visibility for the marker
+             *
+             * @memberof niclabs.insight.map.marker.Marker
+             * @param {boolean=} visible - new value for the visibility of the marker
+             * @returns {boolean} true if the marker is visible
+             */
+            visible: function(visible) {
+                if (typeof visible === 'undefined') return self.marker().getVisible();
+                else self.marker().setVisible(visible);
+
+                return visible;
+            }
+        };
+
+        return self;
+    };
+
+    return Marker;
 })(jQuery);

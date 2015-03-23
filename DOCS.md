@@ -39,9 +39,27 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [Layer.data([obj])](#niclabs.insight.layer.Layer.data)
         * [Layer.load()](#niclabs.insight.layer.Layer.load)
         * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
+        * [Layer.filter(fn)](#niclabs.insight.layer.Layer.filter)
         * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
+        * [callback: Layer~filter](#niclabs.insight.layer.Layer..filter)
         * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
+      * [class: layer.MarkerLayer](#niclabs.insight.layer.MarkerLayer)
+        * [new layer.MarkerLayer(dashboard, options)](#new_niclabs.insight.layer.MarkerLayer)
+        * [MarkerLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.MarkerLayer.layer.draw)
+        * [MarkerLayer.layer.clear()](#niclabs.insight.layer.MarkerLayer.layer.clear)
+        * [MarkerLayer.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
+        * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
     * [insight.map](#niclabs.insight.map)
+      * [map.marker](#niclabs.insight.map.marker)
+        * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
+          * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
+          * [Marker.map](#niclabs.insight.map.marker.Marker.map)
+          * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
+          * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
+          * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
+          * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
+          * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
+          * [event: "marker_pressed"](#niclabs.insight.map.marker.Marker#event_marker_pressed)
       * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
         * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
         * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
@@ -112,9 +130,27 @@ understand what is going on in the city
       * [Layer.data([obj])](#niclabs.insight.layer.Layer.data)
       * [Layer.load()](#niclabs.insight.layer.Layer.load)
       * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
+      * [Layer.filter(fn)](#niclabs.insight.layer.Layer.filter)
       * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
+      * [callback: Layer~filter](#niclabs.insight.layer.Layer..filter)
       * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
+    * [class: layer.MarkerLayer](#niclabs.insight.layer.MarkerLayer)
+      * [new layer.MarkerLayer(dashboard, options)](#new_niclabs.insight.layer.MarkerLayer)
+      * [MarkerLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.MarkerLayer.layer.draw)
+      * [MarkerLayer.layer.clear()](#niclabs.insight.layer.MarkerLayer.layer.clear)
+      * [MarkerLayer.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
+      * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
   * [insight.map](#niclabs.insight.map)
+    * [map.marker](#niclabs.insight.map.marker)
+      * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
+        * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
+        * [Marker.map](#niclabs.insight.map.marker.Marker.map)
+        * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
+        * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
+        * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
+        * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
+        * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
+        * [event: "marker_pressed"](#niclabs.insight.map.marker.Marker#event_marker_pressed)
     * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
       * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
       * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
@@ -373,8 +409,16 @@ Visualization layers for the dashboard
     * [Layer.data([obj])](#niclabs.insight.layer.Layer.data)
     * [Layer.load()](#niclabs.insight.layer.Layer.load)
     * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
+    * [Layer.filter(fn)](#niclabs.insight.layer.Layer.filter)
     * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
+    * [callback: Layer~filter](#niclabs.insight.layer.Layer..filter)
     * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
+  * [class: layer.MarkerLayer](#niclabs.insight.layer.MarkerLayer)
+    * [new layer.MarkerLayer(dashboard, options)](#new_niclabs.insight.layer.MarkerLayer)
+    * [MarkerLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.MarkerLayer.layer.draw)
+    * [MarkerLayer.layer.clear()](#niclabs.insight.layer.MarkerLayer.layer.clear)
+    * [MarkerLayer.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
+    * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
 
 <a name="niclabs.insight.layer.Layer"></a>
 ####class: layer.Layer
@@ -386,7 +430,9 @@ Visualization layers for the dashboard
   * [Layer.data([obj])](#niclabs.insight.layer.Layer.data)
   * [Layer.load()](#niclabs.insight.layer.Layer.load)
   * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
+  * [Layer.filter(fn)](#niclabs.insight.layer.Layer.filter)
   * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
+  * [callback: Layer~filter](#niclabs.insight.layer.Layer..filter)
   * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
 
 <a name="new_niclabs.insight.layer.Layer"></a>
@@ -438,12 +484,95 @@ This method must be overriden by the implementing layers
 
 - data `Array.<Object>` - data to use for drawing the layer  
 
+<a name="niclabs.insight.layer.Layer.filter"></a>
+#####Layer.filter(fn)
+Filter the layer according to the provided function.
+
+This method must be overriden by the implementing layers
+
+**Params**
+
+- fn `niclabs.insight.layer.Layer~Filter` - filtering function  
+
 <a name="niclabs.insight.layer.Layer.clear"></a>
 #####Layer.clear()
 Clear the layer changes on the map. This method must be
 overriden by implementing layers
 
+<a name="niclabs.insight.layer.Layer..filter"></a>
+#####callback: Layer~filter
+Function to act as a filter for the data
+
+The function returns false if the data must be removed from the visualization
+or true if the data must be kept
+
+TODO: I think this is better defined in FilterBar
+
+**Params**
+
+- data `Object` - data element to evaluate  
+
+**Scope**: inner typedef of [Layer](#niclabs.insight.layer.Layer)  
+**Type**: `function`  
+**Returns**: `boolean` - true if the data passes the filter  
 <a name="niclabs.insight.layer.Layer#event_layer_data"></a>
+#####event: "layer_data"
+Event triggered when an update to the layer data (filtering/update) has ocurred
+
+**Properties**
+
+- id `string` - id for the layer to which the data belongs to  
+- data `Array.<Object>` - new data array  
+
+**Type**: `object`  
+<a name="niclabs.insight.layer.MarkerLayer"></a>
+####class: layer.MarkerLayer
+**Extends**: `niclabs.insight.layer.Layer`  
+**Members**
+
+* [class: layer.MarkerLayer](#niclabs.insight.layer.MarkerLayer)
+  * [new layer.MarkerLayer(dashboard, options)](#new_niclabs.insight.layer.MarkerLayer)
+  * [MarkerLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.MarkerLayer.layer.draw)
+  * [MarkerLayer.layer.clear()](#niclabs.insight.layer.MarkerLayer.layer.clear)
+  * [MarkerLayer.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
+  * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
+
+<a name="new_niclabs.insight.layer.MarkerLayer"></a>
+#####new layer.MarkerLayer(dashboard, options)
+Construct a new marker layer
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this layer belongs to  
+- options `Object` - configuration options for the layer  
+  - id `string` - identifier for the layer  
+  - data `string` | `Array.<Object>` - uri or data array for the layer  
+
+**Extends**: `niclabs.insight.layer.Layer`  
+<a name="niclabs.insight.layer.MarkerLayer.layer.draw"></a>
+#####MarkerLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])
+Draw the markers according to the internal data on the map
+
+**Params**
+
+- data `Array.<Object>` - data to draw  
+- data[].lat `float` - latitude for the marker  
+- data[].lng `float` - longitude for the marker  
+- \[data[].description\] `string` - description for the marker  
+
+<a name="niclabs.insight.layer.MarkerLayer.layer.clear"></a>
+#####MarkerLayer.layer.clear()
+Clear the markers from the map
+
+<a name="niclabs.insight.layer.MarkerLayer.layer.filter"></a>
+#####MarkerLayer.layer.filter(fn)
+Filter the layer according to the provided function.
+
+**Params**
+
+- fn `niclabs.insight.layer.Layer~Filter` - filtering function  
+
+<a name="niclabs.insight.layer.MarkerLayer#event_layer_data"></a>
 #####event: "layer_data"
 Event triggered when an update to the layer data (filtering/update) has ocurred
 
@@ -460,11 +589,112 @@ Map compatibility for the insight dashboard
 **Members**
 
 * [insight.map](#niclabs.insight.map)
+  * [map.marker](#niclabs.insight.map.marker)
+    * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
+      * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
+      * [Marker.map](#niclabs.insight.map.marker.Marker.map)
+      * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
+      * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
+      * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
+      * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
+      * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
+      * [event: "marker_pressed"](#niclabs.insight.map.marker.Marker#event_marker_pressed)
   * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
     * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
     * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
     * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
 
+<a name="niclabs.insight.map.marker"></a>
+####map.marker
+Collection of markers available for drawing on the map
+
+**Members**
+
+* [map.marker](#niclabs.insight.map.marker)
+  * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
+    * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
+    * [Marker.map](#niclabs.insight.map.marker.Marker.map)
+    * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
+    * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
+    * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
+    * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
+    * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
+    * [event: "marker_pressed"](#niclabs.insight.map.marker.Marker#event_marker_pressed)
+
+<a name="niclabs.insight.map.marker.Marker"></a>
+#####class: marker.Marker
+**Members**
+
+* [class: marker.Marker](#niclabs.insight.map.marker.Marker)
+  * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
+  * [Marker.map](#niclabs.insight.map.marker.Marker.map)
+  * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
+  * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
+  * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
+  * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
+  * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
+  * [event: "marker_pressed"](#niclabs.insight.map.marker.Marker#event_marker_pressed)
+
+<a name="new_niclabs.insight.map.marker.Marker"></a>
+######new marker.Marker(dashboard, options)
+Construct a new marker
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this marker belongs to  
+- options `Object` - configuration options for the layer  
+  - layer `string` - identifier for the layer that this marker belongs to  
+
+<a name="niclabs.insight.map.marker.Marker.map"></a>
+######Marker.map
+Map view where the map belongs to
+
+**Type**: [MapView](#niclabs.insight.MapView)  
+<a name="niclabs.insight.map.marker.Marker.layer"></a>
+######Marker.layer
+Layer to which the marker belongs to
+
+**Type**: [Layer](#niclabs.insight.layer.Layer)  
+<a name="niclabs.insight.map.marker.Marker.marker"></a>
+######Marker.marker()
+Return the internal marker object associated with this Marker
+
+**Returns**: `google.maps.Marker` - internal marker  
+<a name="niclabs.insight.map.marker.Marker.clickable"></a>
+######Marker.clickable([activate])
+Let the marker listen to click events
+
+When clicked the marker will trigger a generalized event with the particular data for the marker
+
+**Params**
+
+- \[activate=true\] `boolean` - true to make clickable  
+
+<a name="niclabs.insight.map.marker.Marker.clear"></a>
+######Marker.clear()
+Clear the marker from the map
+
+<a name="niclabs.insight.map.marker.Marker.visible"></a>
+######Marker.visible([visible])
+Set/get the visibility for the marker
+
+**Params**
+
+- \[visible\] `boolean` - new value for the visibility of the marker  
+
+**Returns**: `boolean` - true if the marker is visible  
+<a name="niclabs.insight.map.marker.Marker#event_marker_pressed"></a>
+######event: "marker_pressed"
+Event triggered to notify the dashboard that a marker has been pressed
+
+**Properties**
+
+- layer `string` - id for the layer to which the data belongs to  
+- lat `float` - latitude for the marker  
+- lng `float` - latitude for the marker  
+-  `description` - description for the marker  
+
+**Type**: `object`  
 <a name="niclabs.insight.map.GoogleMap"></a>
 ####class: map.GoogleMap
 **Extends**: `niclabs.insight.MapView`  

@@ -36,13 +36,20 @@ niclabs.insight.layer.Layer = (function($) {
         // Will be set to true once the layer is loaded
         var loaded = false;
 
-        var attributes = options.attributes || {
-            'type': 'simple',
-            'action': 'update',
-        };
-        var map = dashboard.mapview();
+        /**
+         * Function to act as a filter for the data
+         *
+         * The function returns false if the data must be removed from the visualization
+         * or true if the data must be kept
+         *
+         * TODO: I think this is better defined in FilterBar
+         *
+         * @callback niclabs.insight.layer.Layer~filter
+         * @param {Object} data - data element to evaluate
+         * @returns {boolean} true if the data passes the filter
+         */
 
-        return {
+        var self = {
             /**
              * id of the layer
              * @memberof niclabs.insight.layer.Layer
@@ -118,6 +125,7 @@ niclabs.insight.layer.Layer = (function($) {
 
                 if (dataSource) {
                     $.getJSON(dataSource, redraw);
+                    // TODO: on error?
                 }
                 else {
                     redraw(data);
@@ -135,6 +143,15 @@ niclabs.insight.layer.Layer = (function($) {
              */
             draw: function(data) {},
 
+            /**
+             * Filter the layer according to the provided function.
+             *
+             * This method must be overriden by the implementing layers
+             *
+             * @memberof niclabs.insight.layer.Layer
+             * @abstract
+             * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
+             */
             filter: function(fn) {},
 
             /**
@@ -146,6 +163,8 @@ niclabs.insight.layer.Layer = (function($) {
              */
             clear: function() {}
         };
+
+        return self;
     };
 
     return Layer;
