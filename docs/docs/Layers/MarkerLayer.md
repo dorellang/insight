@@ -43,3 +43,11 @@ A marker based layer. Extends [Layer](Layer.md).
 
 #### `.filter` ( filterFun : `function` )
   Filters data based on `filterFun`
+ 
+---
+#### `updateLayer` ( selected : `String` )
+  Updates the layer.
+ 
+---
+#### `clear` ()
+  Clears the layer. 
