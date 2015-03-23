@@ -270,7 +270,6 @@ niclabs.insight.Dashboard = (function($) {
      * @param {string} options.anchor - Required id for anchoring the dashboard
      */
     return function(options) {
-        var layers = [];
         var layoutOptions = ['left', 'right', 'none'];
         var dashboardId = "#insight-dashboard";
 
@@ -299,8 +298,37 @@ niclabs.insight.Dashboard = (function($) {
         //     }
         // });
 
+        var layers = {};
+        var numberedLayers = 0;
+        var activeLayer;
+
+        /**
+         * Get a new layer id for a layer without id
+         */
+        function layerId(index) {
+            index = typeof index === 'undefined' ? numberedLayers++ : index;
+            return 'layer' + index;
+        }
+
         var infoView = {};
         var mapView = {};
+
+
+        // Listen for changes in the layer data
+        niclabs.insight.event.on('layer_data', function(obj) {
+            if (activeLayer && obj.id === activeLayer.id) {
+                /**
+                 * Event triggered when an update to the active layer data (filtering/update) has ocurred
+                 *
+                 * @event niclabs.insight.Dashboard#active_layer_data
+                 * @type {object}
+                 * @property {string} id - id for the layer to which the data belongs to
+                 * @property {Object[]} data - new data array
+                 */
+                 niclabs.insight.event.trigger('active_layer_data', obj);
+            }
+        });
+
 
         var self = {
             /**
@@ -377,16 +405,87 @@ niclabs.insight.Dashboard = (function($) {
             },
 
             /**
-             * TODO: Documentation missing
+             * Add/get a {@link niclabs.insight.layer.Layer} for the dashboard
+             *
+             * A layer acts as a link between a source of data and a visualization on the map
+             *
+             * - If a number or string is provided as value for obj, the layer with that id is returned
+             * - If a generic object is provided with the handler defined in the 'handler' property, a new layer
+             * is created using the handler and the layer is added to the list of
+             * layers of the dashboard
+             * - If an object is provided without handler, it is assumed to be a Layer object and added to the
+             * layer list as is.
+             *
+             * @memberof niclabs.insight.Dashboard
+             * @param {string|number|Object| niclabs.insight.layer.Layer} obj - layer id to get or configuration options for the new layer
+             * @param {boolean} [activate=false] - if true, set the layer as the active layer of the dashboard
+             * @returns {niclabs.insight.info.Layer} - layer for the provided id
              */
-            addLayer: function(options) {
-                var callback = function(pr) {
-                    layers[layers.length] = new LayerSelector(pr, CityDashboard.container('main')[0].data);
-                }; // gmap: $(CityDashboard['mainContainerID'])[0].data
+            layer: function(obj, activate) {
+                if (typeof obj == 'string') return layers[obj];
+                if (typeof obj == 'number') return layers[layerId(obj)];
 
-                CityDashboard.getData(options['data-source'], callback, options);
+                var lyr, id;
+                if ('handler' in obj) {
+                    id = obj.id = obj.id || layerId();
+                    lyr = niclabs.insight.handler(obj.handler)(self, obj);
+                }
+                else {
+                    lyr = obj;
+                    id = lyr.id;
+                }
 
-                return self;
+                layers[id] = lyr;
+
+                // Switch to the new layer if activate is true
+                if (activate) self.active(id);
+
+                return lyr;
+            },
+
+            /**
+             * Set/get the data for the active layer
+             *
+             * If a new source for the data is provided, this method updates the internal
+             * data for the layer and reloads the layer by calling {@link niclabs.insight.layer.Layer.load}
+             *
+             * @memberof niclabs.insight.Dashboard
+             * @param {string|Object[]} [obj] - optional new data source or data array for the layer
+             * @returns {string|Object[]} data source for the layer if the data has not been loaded yet or object array if the
+             *  data has been loaded
+             */
+            data: function(obj) {
+                if (activeLayer) return activeLayer.data(obj);
+                return [];
+            },
+
+            /**
+             * Set/get the active layer
+             *
+             * @memberof niclabs.insight.Dashboard
+             * @param {string|number} [id] - id for the layer to set as the active layer
+             * @returns {string} id for the active layer
+             */
+            active: function(id) {
+                if (typeof id === 'undefined') return typeof activeLayer !== 'undefined' ? activeLayer.id: undefined;
+
+                if (typeof activeLayer !== 'undefined') {
+                    activeLayer.clear();
+                }
+
+                if (typeof id == 'number') id = layerId(id);
+
+                if (!(id in layers)) {
+                    throw new Error("Layer with id "+id+" does not exist");
+                }
+
+                // Update the active layer
+                activeLayer = layers[id];
+
+                // Load the new active layer
+                activeLayer.load();
+
+                return activeLayer;
             },
 
             /**
@@ -398,13 +497,13 @@ niclabs.insight.Dashboard = (function($) {
             },
 
             /**
-             * TODO: documentation missing
+             * Clear the map by calling the {@link niclabs.insight.layer.Layer.clear} method
+             * on the active layer
+             *
+             * @memberof niclabs.insight.Dashboard
              */
             clear: function() {
-                for (var i = 0; i < layers.length; i++) {
-                    layers[i].clear();
-                }
-                layers = [];
+                if (activeLayer) activeLayer.clear();
             }
         };
 
@@ -471,7 +570,7 @@ niclabs.insight.InfoView = (function($) {
          * block list as is.
          *
          * @memberof niclabs.insight.InfoView
-         * @param {string|number|Object | niclabs.insight.info.Block} obj - block id to get or configuration options for the new block
+         * @param {string|number|Object| niclabs.insight.info.Block} obj - block id to get or configuration options for the new block
          * @returns {niclabs.insight.info.Block} - newly created block
          */
         function block(obj) {
@@ -902,6 +1001,7 @@ niclabs.insight.info.Block = (function($) {
         }
 
         var id = options.id;
+        var htmlId = id.charAt(0) === '#' ? id : '#' + id;
         var title = options.title || '';
         var properties = options.properties || {};
         var datasource = options.datasource || id; // TODO: unnecessary?
@@ -910,7 +1010,7 @@ niclabs.insight.info.Block = (function($) {
         // placing
         var titleElement = $('<h4>').append(title).addClass('viz-title');
 
-        var container = $('<div>').setID(id).addClass('visualization')
+        var container = $('<div>').setID(htmlId).addClass('visualization')
             .append(titleElement)
             .append($('<hr>').addClass('viz-bar'));
 
@@ -960,7 +1060,7 @@ niclabs.insight.info.Block = (function($) {
 
         var self = {
             /**
-             * DOM id of the block
+             * id of the block
              * @memberof niclabs.insight.info.Block
              * @member {string}
              */
@@ -975,7 +1075,7 @@ niclabs.insight.info.Block = (function($) {
              * @member {Element}
              */
             get element () {
-                var c = $(id);
+                var c = $(htmlId);
                 container = c.length === 0 ? container : c;
                 return container[0];
             },
@@ -987,7 +1087,7 @@ niclabs.insight.info.Block = (function($) {
              * @member {jQuery}
              */
             get $ () {
-                var c = $(id);
+                var c = $(htmlId);
                 container = c.length === 0 ? container : c;
                 return container;
             },
@@ -1146,7 +1246,7 @@ niclabs.insight.info.SummaryBlock = (function($) {
 })(jQuery);
 
 /**
- * Dashboard visualization layers
+ * Visualization layers for the dashboard
  *
  * @namespace
  */
@@ -1155,16 +1255,41 @@ niclabs.insight.layer = {};
 niclabs.insight.layer.Layer = (function($) {
     "use strict";
 
+    /**
+     * Construct a layer
+     *
+     * A layer provides a link between a data source and a visualization on the map.
+     *
+     * @class niclabs.insight.layer.Layer
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this layer belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.id - identifier for the layer
+     * @param {string|Object[]} options.data - uri or data array for the layer
+     */
     var Layer = function(dashboard, options) {
         var wrappedLayer;
 
         if (!('id' in options)) {
             throw Error("All layers must have an id.");
         }
-
         var id = options.id;
-        var datasource = options.datasource;
-        var data = options.data && options.data.length ? options.data: [options.data];
+
+        if (!('data' in options)) {
+            throw Error("All layers must provide a data source.");
+        }
+
+        var dataSource = false;
+        var data = [];
+        if (typeof options.data === 'string') {
+            dataSource = options.data;
+        }
+        else {
+            data = options.data && options.data.length ? options.data: [options.data];
+        }
+
+        // Will be set to true once the layer is loaded
+        var loaded = false;
+
         var attributes = options.attributes || {
             'type': 'simple',
             'action': 'update',
@@ -1172,7 +1297,107 @@ niclabs.insight.layer.Layer = (function($) {
         var map = dashboard.mapview();
 
         return {
+            /**
+             * id of the layer
+             * @memberof niclabs.insight.layer.Layer
+             * @member {string}
+             */
+            get id () {
+                return id;
+            },
+
+            /**
+             * Set/get the data for the layer
+             *
+             * If a new source for the data is provided, this method updates the internal
+             * data and reloads the layer by calling {@link niclabs.insight.layer.Layer.load}
+             *
+             * @memberof niclabs.insight.layer.Layer
+             * @param {string|Object[]} [obj] - optional new data source or data array for the layer
+             * @returns {string|Object[]} data source for the layer if the data has not been loaded yet or object array if the
+             *  data has been loaded
+             */
+            data: function(obj) {
+                if (typeof obj === 'undefined') {
+                    return loaded ? data : dataSource;
+                }
+
+                if (typeof obj === 'string') {
+                    dataSource = obj;
+
+                    // If the layer has already been loaded, reload the data
+                    if (loaded) self.load();
+
+                    return dataSource;
+                }
+                else {
+                    data = obj.length ? obj: [obj];
+                }
+
+                return data;
+            },
+
+            /**
+             * Load the data from the layer and redraw
+             *
+             * If data provided as configuration to the layer is a URL, this methods loads the data from the URL and
+             * redraws the layer (invoking {@link niclabs.insight.layer.Layer.clear} and {@link niclabs.insight.layer.Layer.draw})
+             * when the content is available
+             *
+             * @memberof niclabs.insight.layer.Layer
+             */
+            load: function() {
+                function redraw(d) {
+                    data = d;
+
+                    /**
+                     * Event triggered when an update to the layer data (filtering/update) has ocurred
+                     *
+                     * @event niclabs.insight.layer.Layer#layer_data
+                     * @type {object}
+                     * @property {string} id - id for the layer to which the data belongs to
+                     * @property {Object[]} data - new data array
+                     */
+                    niclabs.insight.event.trigger('layer_data', {
+                        'id': id,
+                        'data': data
+                    });
+
+                    // Clear the map
+                    self.clear();
+
+                    // Re-draw with new data loaded
+                    self.draw(data);
+                }
+
+                if (dataSource) {
+                    $.getJSON(dataSource, redraw);
+                }
+                else {
+                    redraw(data);
+                }
+            },
+
+            /**
+             * Draw the layer on the map.
+             *
+             * This method must be overriden by the implementing layers
+             *
+             * @memberof niclabs.insight.layer.Layer
+             * @param {Object[]} data - data to use for drawing the layer
+             * @abstract
+             */
+            draw: function(data) {},
+
             filter: function(fn) {},
+
+            /**
+             * Clear the layer changes on the map. This method must be
+             * overriden by implementing layers
+             *
+             * @memberof niclabs.insight.layer.Layer
+             * @abstract
+             */
             clear: function() {}
         };
     };
