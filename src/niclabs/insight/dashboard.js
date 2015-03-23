@@ -18,7 +18,6 @@ niclabs.insight.Dashboard = (function($) {
      * @param {string} options.anchor - Required id for anchoring the dashboard
      */
     return function(options) {
-        var layers = [];
         var layoutOptions = ['left', 'right', 'none'];
         var dashboardId = "#insight-dashboard";
 
@@ -47,8 +46,37 @@ niclabs.insight.Dashboard = (function($) {
         //     }
         // });
 
+        var layers = {};
+        var numberedLayers = 0;
+        var activeLayer;
+
+        /**
+         * Get a new layer id for a layer without id
+         */
+        function layerId(index) {
+            index = typeof index === 'undefined' ? numberedLayers++ : index;
+            return 'layer' + index;
+        }
+
         var infoView = {};
         var mapView = {};
+
+
+        // Listen for changes in the layer data
+        niclabs.insight.event.on('layer_data', function(obj) {
+            if (activeLayer && obj.id === activeLayer.id) {
+                /**
+                 * Event triggered when an update to the active layer data (filtering/update) has ocurred
+                 *
+                 * @event niclabs.insight.Dashboard#active_layer_data
+                 * @type {object}
+                 * @property {string} id - id for the layer to which the data belongs to
+                 * @property {Object[]} data - new data array
+                 */
+                 niclabs.insight.event.trigger('active_layer_data', obj);
+            }
+        });
+
 
         var self = {
             /**
@@ -125,16 +153,87 @@ niclabs.insight.Dashboard = (function($) {
             },
 
             /**
-             * TODO: Documentation missing
+             * Add/get a {@link niclabs.insight.layer.Layer} for the dashboard
+             *
+             * A layer acts as a link between a source of data and a visualization on the map
+             *
+             * - If a number or string is provided as value for obj, the layer with that id is returned
+             * - If a generic object is provided with the handler defined in the 'handler' property, a new layer
+             * is created using the handler and the layer is added to the list of
+             * layers of the dashboard
+             * - If an object is provided without handler, it is assumed to be a Layer object and added to the
+             * layer list as is.
+             *
+             * @memberof niclabs.insight.Dashboard
+             * @param {string|number|Object| niclabs.insight.layer.Layer} obj - layer id to get or configuration options for the new layer
+             * @param {boolean} [activate=false] - if true, set the layer as the active layer of the dashboard
+             * @returns {niclabs.insight.info.Layer} - layer for the provided id
              */
-            addLayer: function(options) {
-                var callback = function(pr) {
-                    layers[layers.length] = new LayerSelector(pr, CityDashboard.container('main')[0].data);
-                }; // gmap: $(CityDashboard['mainContainerID'])[0].data
+            layer: function(obj, activate) {
+                if (typeof obj == 'string') return layers[obj];
+                if (typeof obj == 'number') return layers[layerId(obj)];
 
-                CityDashboard.getData(options['data-source'], callback, options);
+                var lyr, id;
+                if ('handler' in obj) {
+                    id = obj.id = obj.id || layerId();
+                    lyr = niclabs.insight.handler(obj.handler)(self, obj);
+                }
+                else {
+                    lyr = obj;
+                    id = lyr.id;
+                }
 
-                return self;
+                layers[id] = lyr;
+
+                // Switch to the new layer if activate is true
+                if (activate) self.active(id);
+
+                return lyr;
+            },
+
+            /**
+             * Set/get the data for the active layer
+             *
+             * If a new source for the data is provided, this method updates the internal
+             * data for the layer and reloads the layer by calling {@link niclabs.insight.layer.Layer.load}
+             *
+             * @memberof niclabs.insight.Dashboard
+             * @param {string|Object[]} [obj] - optional new data source or data array for the layer
+             * @returns {string|Object[]} data source for the layer if the data has not been loaded yet or object array if the
+             *  data has been loaded
+             */
+            data: function(obj) {
+                if (activeLayer) return activeLayer.data(obj);
+                return [];
+            },
+
+            /**
+             * Set/get the active layer
+             *
+             * @memberof niclabs.insight.Dashboard
+             * @param {string|number} [id] - id for the layer to set as the active layer
+             * @returns {string} id for the active layer
+             */
+            active: function(id) {
+                if (typeof id === 'undefined') return typeof activeLayer !== 'undefined' ? activeLayer.id: undefined;
+
+                if (typeof activeLayer !== 'undefined') {
+                    activeLayer.clear();
+                }
+
+                if (typeof id == 'number') id = layerId(id);
+
+                if (!(id in layers)) {
+                    throw new Error("Layer with id "+id+" does not exist");
+                }
+
+                // Update the active layer
+                activeLayer = layers[id];
+
+                // Load the new active layer
+                activeLayer.load();
+
+                return activeLayer;
             },
 
             /**
@@ -146,13 +245,13 @@ niclabs.insight.Dashboard = (function($) {
             },
 
             /**
-             * TODO: documentation missing
+             * Clear the map by calling the {@link niclabs.insight.layer.Layer.clear} method
+             * on the active layer
+             *
+             * @memberof niclabs.insight.Dashboard
              */
             clear: function() {
-                for (var i = 0; i < layers.length; i++) {
-                    layers[i].clear();
-                }
-                layers = [];
+                if (activeLayer) activeLayer.clear();
             }
         };
 

@@ -33,6 +33,14 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
       * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
         * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
     * [insight.layer](#niclabs.insight.layer)
+      * [class: layer.Layer](#niclabs.insight.layer.Layer)
+        * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
+        * [Layer.id](#niclabs.insight.layer.Layer.id)
+        * [Layer.data([obj])](#niclabs.insight.layer.Layer.data)
+        * [Layer.load()](#niclabs.insight.layer.Layer.load)
+        * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
+        * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
+        * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
     * [insight.map](#niclabs.insight.map)
       * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
         * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
@@ -46,6 +54,11 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
       * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
       * [Dashboard.infoview([obj])](#niclabs.insight.Dashboard.infoview)
       * [Dashboard.mapview([obj])](#niclabs.insight.Dashboard.mapview)
+      * [Dashboard.layer(obj, [activate])](#niclabs.insight.Dashboard.layer)
+      * [Dashboard.data([obj])](#niclabs.insight.Dashboard.data)
+      * [Dashboard.active([id])](#niclabs.insight.Dashboard.active)
+      * [Dashboard.clear()](#niclabs.insight.Dashboard.clear)
+      * [event: "active_layer_data"](#niclabs.insight.Dashboard#event_active_layer_data)
     * [class: insight.MapView](#niclabs.insight.MapView)
       * [new insight.MapView(options)](#new_niclabs.insight.MapView)
       * [MapView.element](#niclabs.insight.MapView.element)
@@ -93,6 +106,14 @@ understand what is going on in the city
     * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
       * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
   * [insight.layer](#niclabs.insight.layer)
+    * [class: layer.Layer](#niclabs.insight.layer.Layer)
+      * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
+      * [Layer.id](#niclabs.insight.layer.Layer.id)
+      * [Layer.data([obj])](#niclabs.insight.layer.Layer.data)
+      * [Layer.load()](#niclabs.insight.layer.Layer.load)
+      * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
+      * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
+      * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
   * [insight.map](#niclabs.insight.map)
     * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
       * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
@@ -106,6 +127,11 @@ understand what is going on in the city
     * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
     * [Dashboard.infoview([obj])](#niclabs.insight.Dashboard.infoview)
     * [Dashboard.mapview([obj])](#niclabs.insight.Dashboard.mapview)
+    * [Dashboard.layer(obj, [activate])](#niclabs.insight.Dashboard.layer)
+    * [Dashboard.data([obj])](#niclabs.insight.Dashboard.data)
+    * [Dashboard.active([id])](#niclabs.insight.Dashboard.active)
+    * [Dashboard.clear()](#niclabs.insight.Dashboard.clear)
+    * [event: "active_layer_data"](#niclabs.insight.Dashboard#event_active_layer_data)
   * [class: insight.MapView](#niclabs.insight.MapView)
     * [new insight.MapView(options)](#new_niclabs.insight.MapView)
     * [MapView.element](#niclabs.insight.MapView.element)
@@ -277,7 +303,7 @@ Construct a information block
 
 <a name="niclabs.insight.info.Block.id"></a>
 #####Block.id
-DOM id of the block
+id of the block
 
 **Type**: `string`  
 <a name="niclabs.insight.info.Block.element"></a>
@@ -336,12 +362,97 @@ TODO: describe what is a summary information block
 **Extends**: `niclabs.insight.info.Block`  
 <a name="niclabs.insight.layer"></a>
 ###insight.layer
-Dashboard visualization layers
+Visualization layers for the dashboard
 
 **Members**
 
 * [insight.layer](#niclabs.insight.layer)
+  * [class: layer.Layer](#niclabs.insight.layer.Layer)
+    * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
+    * [Layer.id](#niclabs.insight.layer.Layer.id)
+    * [Layer.data([obj])](#niclabs.insight.layer.Layer.data)
+    * [Layer.load()](#niclabs.insight.layer.Layer.load)
+    * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
+    * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
+    * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
 
+<a name="niclabs.insight.layer.Layer"></a>
+####class: layer.Layer
+**Members**
+
+* [class: layer.Layer](#niclabs.insight.layer.Layer)
+  * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
+  * [Layer.id](#niclabs.insight.layer.Layer.id)
+  * [Layer.data([obj])](#niclabs.insight.layer.Layer.data)
+  * [Layer.load()](#niclabs.insight.layer.Layer.load)
+  * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
+  * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
+  * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
+
+<a name="new_niclabs.insight.layer.Layer"></a>
+#####new layer.Layer(dashboard, options)
+Construct a layer
+
+A layer provides a link between a data source and a visualization on the map.
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this layer belongs to  
+- options `Object` - configuration options for the layer  
+  - id `string` - identifier for the layer  
+  - data `string` | `Array.<Object>` - uri or data array for the layer  
+
+<a name="niclabs.insight.layer.Layer.id"></a>
+#####Layer.id
+id of the layer
+
+**Type**: `string`  
+<a name="niclabs.insight.layer.Layer.data"></a>
+#####Layer.data([obj])
+Set/get the data for the layer
+
+If a new source for the data is provided, this method updates the internal
+data and reloads the layer by calling [load](#niclabs.insight.layer.Layer.load)
+
+**Params**
+
+- \[obj\] `string` | `Array.<Object>` - optional new data source or data array for the layer  
+
+**Returns**: `string` | `Array.<Object>` - data source for the layer if the data has not been loaded yet or object array if the
+ data has been loaded  
+<a name="niclabs.insight.layer.Layer.load"></a>
+#####Layer.load()
+Load the data from the layer and redraw
+
+If data provided as configuration to the layer is a URL, this methods loads the data from the URL and
+redraws the layer (invoking [clear](#niclabs.insight.layer.Layer.clear) and [draw](#niclabs.insight.layer.Layer.draw))
+when the content is available
+
+<a name="niclabs.insight.layer.Layer.draw"></a>
+#####Layer.draw(data)
+Draw the layer on the map.
+
+This method must be overriden by the implementing layers
+
+**Params**
+
+- data `Array.<Object>` - data to use for drawing the layer  
+
+<a name="niclabs.insight.layer.Layer.clear"></a>
+#####Layer.clear()
+Clear the layer changes on the map. This method must be
+overriden by implementing layers
+
+<a name="niclabs.insight.layer.Layer#event_layer_data"></a>
+#####event: "layer_data"
+Event triggered when an update to the layer data (filtering/update) has ocurred
+
+**Properties**
+
+- id `string` - id for the layer to which the data belongs to  
+- data `Array.<Object>` - new data array  
+
+**Type**: `object`  
 <a name="niclabs.insight.map"></a>
 ###insight.map
 Map compatibility for the insight dashboard
@@ -423,6 +534,11 @@ Constructs an insight element (visualization, layer, etc.)
   * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
   * [Dashboard.infoview([obj])](#niclabs.insight.Dashboard.infoview)
   * [Dashboard.mapview([obj])](#niclabs.insight.Dashboard.mapview)
+  * [Dashboard.layer(obj, [activate])](#niclabs.insight.Dashboard.layer)
+  * [Dashboard.data([obj])](#niclabs.insight.Dashboard.data)
+  * [Dashboard.active([id])](#niclabs.insight.Dashboard.active)
+  * [Dashboard.clear()](#niclabs.insight.Dashboard.clear)
+  * [event: "active_layer_data"](#niclabs.insight.Dashboard#event_active_layer_data)
 
 <a name="new_niclabs.insight.Dashboard"></a>
 ####new insight.Dashboard(options)
@@ -481,6 +597,62 @@ Assign/get the map view for the dashboard
   - handler `String` - name of the handler to construct the map view  
 
 **Returns**: [MapView](#niclabs.insight.MapView) - the dashboard information view  
+<a name="niclabs.insight.Dashboard.layer"></a>
+####Dashboard.layer(obj, [activate])
+Add/get a [Layer](#niclabs.insight.layer.Layer) for the dashboard
+
+A layer acts as a link between a source of data and a visualization on the map
+
+- If a number or string is provided as value for obj, the layer with that id is returned
+- If a generic object is provided with the handler defined in the 'handler' property, a new layer
+is created using the handler and the layer is added to the list of
+layers of the dashboard
+- If an object is provided without handler, it is assumed to be a Layer object and added to the
+layer list as is.
+
+**Params**
+
+- obj `string` | `number` | `Object` | <code>[Layer](#niclabs.insight.layer.Layer)</code> - layer id to get or configuration options for the new layer  
+- \[activate=false\] `boolean` - if true, set the layer as the active layer of the dashboard  
+
+**Returns**: `niclabs.insight.info.Layer` - - layer for the provided id  
+<a name="niclabs.insight.Dashboard.data"></a>
+####Dashboard.data([obj])
+Set/get the data for the active layer
+
+If a new source for the data is provided, this method updates the internal
+data for the layer and reloads the layer by calling [load](#niclabs.insight.layer.Layer.load)
+
+**Params**
+
+- \[obj\] `string` | `Array.<Object>` - optional new data source or data array for the layer  
+
+**Returns**: `string` | `Array.<Object>` - data source for the layer if the data has not been loaded yet or object array if the
+ data has been loaded  
+<a name="niclabs.insight.Dashboard.active"></a>
+####Dashboard.active([id])
+Set/get the active layer
+
+**Params**
+
+- \[id\] `string` | `number` - id for the layer to set as the active layer  
+
+**Returns**: `string` - id for the active layer  
+<a name="niclabs.insight.Dashboard.clear"></a>
+####Dashboard.clear()
+Clear the map by calling the [clear](#niclabs.insight.layer.Layer.clear) method
+on the active layer
+
+<a name="niclabs.insight.Dashboard#event_active_layer_data"></a>
+####event: "active_layer_data"
+Event triggered when an update to the active layer data (filtering/update) has ocurred
+
+**Properties**
+
+- id `string` - id for the layer to which the data belongs to  
+- data `Array.<Object>` - new data array  
+
+**Type**: `object`  
 <a name="niclabs.insight.MapView"></a>
 ###class: insight.MapView
 **Members**
