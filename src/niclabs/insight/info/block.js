@@ -17,6 +17,7 @@ niclabs.insight.info.Block = (function($) {
         }
 
         var id = options.id;
+        var htmlId = id.charAt(0) === '#' ? id : '#' + id;
         var title = options.title || '';
         var properties = options.properties || {};
         var datasource = options.datasource || id; // TODO: unnecessary?
@@ -25,7 +26,7 @@ niclabs.insight.info.Block = (function($) {
         // placing
         var titleElement = $('<h4>').append(title).addClass('viz-title');
 
-        var container = $('<div>').setID(id).addClass('visualization')
+        var container = $('<div>').setID(htmlId).addClass('visualization')
             .append(titleElement)
             .append($('<hr>').addClass('viz-bar'));
 
@@ -75,7 +76,7 @@ niclabs.insight.info.Block = (function($) {
 
         var self = {
             /**
-             * DOM id of the block
+             * id of the block
              * @memberof niclabs.insight.info.Block
              * @member {string}
              */
@@ -90,7 +91,7 @@ niclabs.insight.info.Block = (function($) {
              * @member {Element}
              */
             get element () {
-                var c = $(id);
+                var c = $(htmlId);
                 container = c.length === 0 ? container : c;
                 return container[0];
             },
@@ -102,7 +103,7 @@ niclabs.insight.info.Block = (function($) {
              * @member {jQuery}
              */
             get $ () {
-                var c = $(id);
+                var c = $(htmlId);
                 container = c.length === 0 ? container : c;
                 return container;
             },
