@@ -11,7 +11,7 @@ niclabs.insight.map.marker.ImageMarker = (function($) {
      * @param {string} options.layer - identifier for the layer that this marker belongs to
      * @params {float} options.lat - latitude for the marker
      * @params {float} options.lng - longitude for the marker
-     * @params {string=} options.description - description for the marker
+     * @params {string} options.landmark - landmark that the marker indicates
      * @params {string} options.src - image source
      */
     var ImageMarker = function(dashboard, options) {
@@ -28,7 +28,7 @@ niclabs.insight.map.marker.ImageMarker = (function($) {
             position: latLng,
             map: self.map.googlemap(),
             icon: image,
-            title: options.description || ''
+            title: options.landmark || ''
         });
 
         // Re-write the marker function
