@@ -12,7 +12,7 @@ niclabs.insight.info.SummaryBlock = (function($) {
      * @param {string=} options.title - title for the block
      * @param {Object=} options.properties - block properties (closable, movable)
      * @param {Object=} data - default data for the summary
-     * @param {String[]} ignore - key list to ignore in the data
+     * @param {String[]} ignore - key list to ignore in the summary
      */
     var SummaryBlock = function(dashboard, options) {
         var self = niclabs.insight.info.Block(dashboard, options);
@@ -23,6 +23,10 @@ niclabs.insight.info.SummaryBlock = (function($) {
         ignore = ignore.concat(options.ignore || []);
 
         self.$.addClass('summary-viz');
+
+        // Append view elements
+        self.$.append($('<h6>').addClass('latlngView'));
+        self.$.append( $('<dl>').addClass('deflist') );
 
         // Store the refresh method of the parent
         var refresh = self.refresh;
@@ -58,6 +62,7 @@ niclabs.insight.info.SummaryBlock = (function($) {
         // Create the default summary if provided
         if (options.data) self.summary(options.data);
 
+        // Listen for map events
         niclabs.insight.event.on('map_element_selected', function(data) {
             self.data(data);
             self.refresh();

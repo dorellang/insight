@@ -21,7 +21,6 @@ niclabs.insight.info.Block = (function($) {
         var htmlId = id.charAt(0) === '#' ? id : '#' + id;
         var title = options.title || '';
         var properties = options.properties || {};
-        var datasource = options.datasource || id; // TODO: unnecessary?
         var preprocess = options.preprocess || function(x) {return x;};
 
         // placing
@@ -41,8 +40,7 @@ niclabs.insight.info.Block = (function($) {
         function remove() {
             // Trigger the block removal
             niclabs.insight.event.trigger('remove-block', {
-                'id': id,
-                'datasource': datasource
+                'id': id
             });
         }
 
@@ -58,10 +56,6 @@ niclabs.insight.info.Block = (function($) {
         if (properties.movable === undefined || properties.movable) {
             container.movable();
         }
-
-        // TODO: not sure what this does
-        container.append($('<h6>').addClass('latlngView'));
-        container.append( $('<dl>').addClass('deflist') );
 
         // Add the properties to the block style
         container.css(properties);
