@@ -81,10 +81,15 @@ niclabs.insight.map.marker.Marker = (function($) {
                          * @property {float} lng - latitude for the marker
                          * @property {description} - description for the marker
                          */
-                        niclabs.insight.event('marker_pressed', options);
+                        niclabs.insight.event.trigger('marker_pressed', options);
 
                         // TODO: make configurable?
                         marker.setAnimation(google.maps.Animation.BOUNCE);
+
+                        // Set timeout to stop the animation
+                        setTimeout(function() {
+                            marker.setAnimation(null);
+                        }, 3000);
                     });
                 }
                 else if (typeof listener !== 'undefined') {
