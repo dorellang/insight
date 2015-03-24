@@ -85,7 +85,9 @@ niclabs.insight.map.marker.Marker = (function($) {
                         niclabs.insight.event.trigger('marker_pressed', options);
 
                         // TODO: make configurable?
-                        marker.setAnimation(google.maps.Animation.BOUNCE);
+                        if ('setAnimation' in marker) {
+                            marker.setAnimation(google.maps.Animation.BOUNCE);
+                        }
 
                         // Set timeout to stop the animation
                         setTimeout(function() {
