@@ -10,7 +10,7 @@ niclabs.insight.layer.MarkerLayer = (function($) {
      * @param {string|Object[]} options.data - uri or data array for the layer
      */
     var MarkerLayer = function(dashboard, options) {
-        var layer = niclabs.insight.Layer(dashboard, options);
+        var layer = niclabs.insight.layer.Layer(dashboard, options);
 
         var attr = options.marker || {
             'type': 'simple-marker'
