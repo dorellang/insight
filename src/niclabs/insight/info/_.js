@@ -3,4 +3,21 @@
  *
  * @namespace
  */
-niclabs.insight.info = {};
+niclabs.insight.info = (function () {
+    /**
+     * Helper method to assign/get the information view to/from the dashboard
+     *
+     * @memberof niclabs.insight
+     * @variation 2
+     * @param {Object|niclabs.insight.InfoView} [obj] - configuration for the information view or information view object
+     * @param {String} obj.handler - name of the handler to construct the info view
+     * @returns {niclabs.insight.InfoView} the dashboard information view
+     */
+    var info = function(obj) {
+        var dashboard = niclabs.insight.dashboard();
+        if (typeof dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
+        return dashboard.info(obj);
+    };
+
+    return info;
+})();

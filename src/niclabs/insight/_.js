@@ -209,41 +209,19 @@ niclabs.insight = (function($) {
          },
 
          /**
-          * Construct and configure a {@link niclabs.insight.Dashboard}
+          * Get/construct a {@link niclabs.insight.Dashboard}
+          *
+          * Returns the dashboard for the namespace if options are not provided
           *
           * @memberof niclabs.insight
-          * @param {Object} options - list of configuration options for the dashboard see {@link niclabs.insight.Dashboard}
+          * @param {Object=} options - list of configuration options for the dashboard see {@link niclabs.insight.Dashboard}
           * @returns {niclabs.insight.Dashboard} dashboard object
           */
-         init: function(options) {
+         dashboard: function(options) {
+             if (typeof options === 'undefined') return dashboard;
+
              dashboard = niclabs.insight.Dashboard(options);
              return dashboard;
-         },
-
-         /**
-          * Helper method to assign/get the information view to/from the dashboard
-          *
-          * @memberof niclabs.insight
-          * @param {Object|niclabs.insight.InfoView} [obj] - configuration for the information view or information view object
-          * @param {String} obj.handler - name of the handler to construct the info view
-          * @returns {niclabs.insight.InfoView} the dashboard information view
-          */
-         infoview: function(obj) {
-            if (typeof dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
-            return dashboard.infoview(obj);
-         },
-
-         /**
-          * Helper method to assign/get the map view to/from the dashboard
-          *
-          * @memberof niclabs.insight
-          * @param {Object|niclabs.insight.MapView} [obj] - configuration for the map view or map view object
-          * @param {String} obj.handler - name of the handler to construct the map view
-          * @returns {niclabs.insight.MapView} the dashboard map view
-          */
-         mapview: function(obj) {
-            if (typeof dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
-            return dashboard.mapview(obj);
          },
      };
 })(jQuery);
