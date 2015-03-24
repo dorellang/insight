@@ -52,6 +52,12 @@ niclabs.insight.info.SummaryBlock = (function($) {
 
         // Create the default summary if provided
         if (options.data) self.summary(options.data);
+
+        niclabs.insight.event.on('map_element_selected', function(data) {
+            self.data(data);
+            self.refresh();
+        });
+
         return self;
     };
 
