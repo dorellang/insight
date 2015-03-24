@@ -13,9 +13,10 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
 * [niclabs](#niclabs)
   * [niclabs.insight](#niclabs.insight)
     * [insight.handler(name, [kind], [handler])](#niclabs.insight.handler)
-    * [insight.init(options)](#niclabs.insight.init)
-    * [insight.infoview([obj])](#niclabs.insight.infoview)
-    * [insight.mapview([obj])](#niclabs.insight.mapview)
+    * [insight.dashboard([options])](#niclabs.insight.dashboard)
+    * [insight.layer(obj, [activate])](#niclabs.insight.layer(2))
+    * [insight.map([obj])](#niclabs.insight.map(2))
+    * [insight.info([obj])](#niclabs.insight.info(2))
     * [insight.event](#niclabs.insight.event)
       * [event.on(event, listener)](#niclabs.insight.event.on)
       * [event.off(event, listener)](#niclabs.insight.event.off)
@@ -30,7 +31,6 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
         * [Layer.filter(fn)](#niclabs.insight.layer.Layer.filter)
         * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
-        * [callback: Layer~filter](#niclabs.insight.layer.Layer..filter)
         * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
       * [class: layer.MarkerLayer](#niclabs.insight.layer.MarkerLayer)
         * [new layer.MarkerLayer(dashboard, options)](#new_niclabs.insight.layer.MarkerLayer)
@@ -42,11 +42,8 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
       * [map.marker](#niclabs.insight.map.marker)
         * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
           * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
-          * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
-          * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
         * [class: marker.ImageMarker](#niclabs.insight.map.marker.ImageMarker)
           * [new marker.ImageMarker(dashboard, options)](#new_niclabs.insight.map.marker.ImageMarker)
-          * [event: "marker_pressed"](#niclabs.insight.map.marker.ImageMarker#event_marker_pressed)
         * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
           * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
           * [Marker.map](#niclabs.insight.map.marker.Marker.map)
@@ -55,15 +52,13 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
           * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
           * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
           * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
-          * [event: "marker_pressed"](#niclabs.insight.map.marker.Marker#event_marker_pressed)
         * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
           * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
-          * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
-          * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
       * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
         * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
         * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
         * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
+        * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
     * [insight.info](#niclabs.insight.info)
       * [class: info.Block](#niclabs.insight.info.Block)
         * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
@@ -72,22 +67,30 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [Block.$](#niclabs.insight.info.Block.$)
         * [Block.remove()](#niclabs.insight.info.Block.remove)
         * [Block.data([data])](#niclabs.insight.info.Block.data)
-        * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
       * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-        * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
+        * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
+        * [SummaryBlock.self.summary([data])](#niclabs.insight.info.SummaryBlock.self.summary)
     * [callback: insight~handler](#niclabs.insight..handler)
     * [class: insight.Dashboard](#niclabs.insight.Dashboard)
       * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
       * [Dashboard.element](#niclabs.insight.Dashboard.element)
       * [Dashboard.$](#niclabs.insight.Dashboard.$)
       * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
-      * [Dashboard.infoview([obj])](#niclabs.insight.Dashboard.infoview)
-      * [Dashboard.mapview([obj])](#niclabs.insight.Dashboard.mapview)
+      * [Dashboard.info([obj])](#niclabs.insight.Dashboard.info)
+      * [Dashboard.map([obj])](#niclabs.insight.Dashboard.map)
       * [Dashboard.layer(obj, [activate])](#niclabs.insight.Dashboard.layer)
       * [Dashboard.data([obj])](#niclabs.insight.Dashboard.data)
       * [Dashboard.active([id])](#niclabs.insight.Dashboard.active)
+      * [Dashboard.filter(filter)](#niclabs.insight.Dashboard.filter)
       * [Dashboard.clear()](#niclabs.insight.Dashboard.clear)
       * [event: "active_layer_data"](#niclabs.insight.Dashboard#event_active_layer_data)
+    * [class: insight.FilterBar](#niclabs.insight.FilterBar)
+      * [new insight.FilterBar()](#new_niclabs.insight.FilterBar)
+      * [FilterBar.element](#niclabs.insight.FilterBar.element)
+      * [FilterBar.$](#niclabs.insight.FilterBar.$)
+      * [FilterBar.filter(filter)](#niclabs.insight.FilterBar.filter)
+      * [callback: FilterBar~filter](#niclabs.insight.FilterBar..filter)
+      * [event: "filter_changed"](#niclabs.insight.FilterBar#event_filter_changed)
     * [class: insight.MapView](#niclabs.insight.MapView)
       * [new insight.MapView(options)](#new_niclabs.insight.MapView)
       * [MapView.element](#niclabs.insight.MapView.element)
@@ -98,6 +101,7 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
       * [MapView.zoom([zoom])](#niclabs.insight.MapView.zoom)
       * [MapView.container()](#niclabs.insight.MapView.container)
       * [type: MapView.Coordinates](#niclabs.insight.MapView.Coordinates)
+      * [event: "map_element_selected"](#niclabs.insight.MapView#event_map_element_selected)
     * [class: insight.InfoView](#niclabs.insight.InfoView)
       * [new insight.InfoView(dashboard, options)](#new_niclabs.insight.InfoView)
       * [InfoView.element](#niclabs.insight.InfoView.element)
@@ -115,9 +119,10 @@ understand what is going on in the city
 
 * [niclabs.insight](#niclabs.insight)
   * [insight.handler(name, [kind], [handler])](#niclabs.insight.handler)
-  * [insight.init(options)](#niclabs.insight.init)
-  * [insight.infoview([obj])](#niclabs.insight.infoview)
-  * [insight.mapview([obj])](#niclabs.insight.mapview)
+  * [insight.dashboard([options])](#niclabs.insight.dashboard)
+  * [insight.layer(obj, [activate])](#niclabs.insight.layer(2))
+  * [insight.map([obj])](#niclabs.insight.map(2))
+  * [insight.info([obj])](#niclabs.insight.info(2))
   * [insight.event](#niclabs.insight.event)
     * [event.on(event, listener)](#niclabs.insight.event.on)
     * [event.off(event, listener)](#niclabs.insight.event.off)
@@ -132,7 +137,6 @@ understand what is going on in the city
       * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
       * [Layer.filter(fn)](#niclabs.insight.layer.Layer.filter)
       * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
-      * [callback: Layer~filter](#niclabs.insight.layer.Layer..filter)
       * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
     * [class: layer.MarkerLayer](#niclabs.insight.layer.MarkerLayer)
       * [new layer.MarkerLayer(dashboard, options)](#new_niclabs.insight.layer.MarkerLayer)
@@ -144,11 +148,8 @@ understand what is going on in the city
     * [map.marker](#niclabs.insight.map.marker)
       * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
         * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
-        * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
-        * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
       * [class: marker.ImageMarker](#niclabs.insight.map.marker.ImageMarker)
         * [new marker.ImageMarker(dashboard, options)](#new_niclabs.insight.map.marker.ImageMarker)
-        * [event: "marker_pressed"](#niclabs.insight.map.marker.ImageMarker#event_marker_pressed)
       * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
         * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
         * [Marker.map](#niclabs.insight.map.marker.Marker.map)
@@ -157,15 +158,13 @@ understand what is going on in the city
         * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
         * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
         * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
-        * [event: "marker_pressed"](#niclabs.insight.map.marker.Marker#event_marker_pressed)
       * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
         * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
-        * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
-        * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
     * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
       * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
       * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
       * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
+      * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
   * [insight.info](#niclabs.insight.info)
     * [class: info.Block](#niclabs.insight.info.Block)
       * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
@@ -174,22 +173,30 @@ understand what is going on in the city
       * [Block.$](#niclabs.insight.info.Block.$)
       * [Block.remove()](#niclabs.insight.info.Block.remove)
       * [Block.data([data])](#niclabs.insight.info.Block.data)
-      * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
     * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-      * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
+      * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
+      * [SummaryBlock.self.summary([data])](#niclabs.insight.info.SummaryBlock.self.summary)
   * [callback: insight~handler](#niclabs.insight..handler)
   * [class: insight.Dashboard](#niclabs.insight.Dashboard)
     * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
     * [Dashboard.element](#niclabs.insight.Dashboard.element)
     * [Dashboard.$](#niclabs.insight.Dashboard.$)
     * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
-    * [Dashboard.infoview([obj])](#niclabs.insight.Dashboard.infoview)
-    * [Dashboard.mapview([obj])](#niclabs.insight.Dashboard.mapview)
+    * [Dashboard.info([obj])](#niclabs.insight.Dashboard.info)
+    * [Dashboard.map([obj])](#niclabs.insight.Dashboard.map)
     * [Dashboard.layer(obj, [activate])](#niclabs.insight.Dashboard.layer)
     * [Dashboard.data([obj])](#niclabs.insight.Dashboard.data)
     * [Dashboard.active([id])](#niclabs.insight.Dashboard.active)
+    * [Dashboard.filter(filter)](#niclabs.insight.Dashboard.filter)
     * [Dashboard.clear()](#niclabs.insight.Dashboard.clear)
     * [event: "active_layer_data"](#niclabs.insight.Dashboard#event_active_layer_data)
+  * [class: insight.FilterBar](#niclabs.insight.FilterBar)
+    * [new insight.FilterBar()](#new_niclabs.insight.FilterBar)
+    * [FilterBar.element](#niclabs.insight.FilterBar.element)
+    * [FilterBar.$](#niclabs.insight.FilterBar.$)
+    * [FilterBar.filter(filter)](#niclabs.insight.FilterBar.filter)
+    * [callback: FilterBar~filter](#niclabs.insight.FilterBar..filter)
+    * [event: "filter_changed"](#niclabs.insight.FilterBar#event_filter_changed)
   * [class: insight.MapView](#niclabs.insight.MapView)
     * [new insight.MapView(options)](#new_niclabs.insight.MapView)
     * [MapView.element](#niclabs.insight.MapView.element)
@@ -200,6 +207,7 @@ understand what is going on in the city
     * [MapView.zoom([zoom])](#niclabs.insight.MapView.zoom)
     * [MapView.container()](#niclabs.insight.MapView.container)
     * [type: MapView.Coordinates](#niclabs.insight.MapView.Coordinates)
+    * [event: "map_element_selected"](#niclabs.insight.MapView#event_map_element_selected)
   * [class: insight.InfoView](#niclabs.insight.InfoView)
     * [new insight.InfoView(dashboard, options)](#new_niclabs.insight.InfoView)
     * [InfoView.element](#niclabs.insight.InfoView.element)
@@ -222,27 +230,38 @@ TODO: improve this
 - \[handler\] <code>[handler](#niclabs.insight..handler)</code> - callback to create the element  
 
 **Returns**: [handler](#niclabs.insight..handler) - handler for the registered name  
-<a name="niclabs.insight.init"></a>
-###insight.init(options)
-Construct and configure a [Dashboard](#niclabs.insight.Dashboard)
+<a name="niclabs.insight.dashboard"></a>
+###insight.dashboard([options])
+Get/construct a [Dashboard](#niclabs.insight.Dashboard)
+
+Returns the dashboard for the namespace if options are not provided
 
 **Params**
 
-- options `Object` - list of configuration options for the dashboard see [Dashboard](#niclabs.insight.Dashboard)  
+- \[options\] `Object` - list of configuration options for the dashboard see [Dashboard](#niclabs.insight.Dashboard)  
 
 **Returns**: [Dashboard](#niclabs.insight.Dashboard) - dashboard object  
-<a name="niclabs.insight.infoview"></a>
-###insight.infoview([obj])
-Helper method to assign/get the information view to/from the dashboard
+<a name="niclabs.insight.layer(2)"></a>
+###insight.layer(obj, [activate])
+Helper method to add/get a [Layer](#niclabs.insight.layer.Layer) for the dashboard
+
+A layer acts as a link between a source of data and a visualization on the map
+
+- If a number or string is provided as value for obj, the layer with that id is returned
+- If a generic object is provided with the handler defined in the 'handler' property, a new layer
+is created using the handler and the layer is added to the list of
+layers of the dashboard
+- If an object is provided without handler, it is assumed to be a Layer object and added to the
+layer list as is.
 
 **Params**
 
-- \[obj\] `Object` | <code>[InfoView](#niclabs.insight.InfoView)</code> - configuration for the information view or information view object  
-  - handler `String` - name of the handler to construct the info view  
+- obj `string` | `number` | `Object` | <code>[Layer](#niclabs.insight.layer.Layer)</code> - layer id to get or configuration options for the new layer  
+- \[activate=false\] `boolean` - if true, set the layer as the active layer of the dashboard  
 
-**Returns**: [InfoView](#niclabs.insight.InfoView) - the dashboard information view  
-<a name="niclabs.insight.mapview"></a>
-###insight.mapview([obj])
+**Returns**: `niclabs.insight.info.Layer` - - layer for the provided id  
+<a name="niclabs.insight.map(2)"></a>
+###insight.map([obj])
 Helper method to assign/get the map view to/from the dashboard
 
 **Params**
@@ -251,6 +270,16 @@ Helper method to assign/get the map view to/from the dashboard
   - handler `String` - name of the handler to construct the map view  
 
 **Returns**: [MapView](#niclabs.insight.MapView) - the dashboard map view  
+<a name="niclabs.insight.info(2)"></a>
+###insight.info([obj])
+Helper method to assign/get the information view to/from the dashboard
+
+**Params**
+
+- \[obj\] `Object` | <code>[InfoView](#niclabs.insight.InfoView)</code> - configuration for the information view or information view object  
+  - handler `String` - name of the handler to construct the info view  
+
+**Returns**: [InfoView](#niclabs.insight.InfoView) - the dashboard information view  
 <a name="niclabs.insight.event"></a>
 ###insight.event
 Very basic event manager for the dashboard
@@ -331,7 +360,6 @@ Visualization layers for the dashboard
     * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
     * [Layer.filter(fn)](#niclabs.insight.layer.Layer.filter)
     * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
-    * [callback: Layer~filter](#niclabs.insight.layer.Layer..filter)
     * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
   * [class: layer.MarkerLayer](#niclabs.insight.layer.MarkerLayer)
     * [new layer.MarkerLayer(dashboard, options)](#new_niclabs.insight.layer.MarkerLayer)
@@ -352,7 +380,6 @@ Visualization layers for the dashboard
   * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
   * [Layer.filter(fn)](#niclabs.insight.layer.Layer.filter)
   * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
-  * [callback: Layer~filter](#niclabs.insight.layer.Layer..filter)
   * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
 
 <a name="new_niclabs.insight.layer.Layer"></a>
@@ -419,22 +446,6 @@ This method must be overriden by the implementing layers
 Clear the layer changes on the map. This method must be
 overriden by implementing layers
 
-<a name="niclabs.insight.layer.Layer..filter"></a>
-#####callback: Layer~filter
-Function to act as a filter for the data
-
-The function returns false if the data must be removed from the visualization
-or true if the data must be kept
-
-TODO: I think this is better defined in FilterBar
-
-**Params**
-
-- data `Object` - data element to evaluate  
-
-**Scope**: inner typedef of [Layer](#niclabs.insight.layer.Layer)  
-**Type**: `function`  
-**Returns**: `boolean` - true if the data passes the filter  
 <a name="niclabs.insight.layer.Layer#event_layer_data"></a>
 #####event: "layer_data"
 Event triggered when an update to the layer data (filtering/update) has ocurred
@@ -512,11 +523,8 @@ Map compatibility for the insight dashboard
   * [map.marker](#niclabs.insight.map.marker)
     * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
       * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
-      * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
-      * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
     * [class: marker.ImageMarker](#niclabs.insight.map.marker.ImageMarker)
       * [new marker.ImageMarker(dashboard, options)](#new_niclabs.insight.map.marker.ImageMarker)
-      * [event: "marker_pressed"](#niclabs.insight.map.marker.ImageMarker#event_marker_pressed)
     * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
       * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
       * [Marker.map](#niclabs.insight.map.marker.Marker.map)
@@ -525,15 +533,13 @@ Map compatibility for the insight dashboard
       * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
       * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
       * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
-      * [event: "marker_pressed"](#niclabs.insight.map.marker.Marker#event_marker_pressed)
     * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
       * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
-      * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
-      * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
   * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
     * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
     * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
     * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
+    * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
 
 <a name="niclabs.insight.map.marker"></a>
 ####map.marker
@@ -544,11 +550,8 @@ Collection of markers available for drawing on the map
 * [map.marker](#niclabs.insight.map.marker)
   * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
     * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
-    * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
-    * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
   * [class: marker.ImageMarker](#niclabs.insight.map.marker.ImageMarker)
     * [new marker.ImageMarker(dashboard, options)](#new_niclabs.insight.map.marker.ImageMarker)
-    * [event: "marker_pressed"](#niclabs.insight.map.marker.ImageMarker#event_marker_pressed)
   * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
     * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
     * [Marker.map](#niclabs.insight.map.marker.Marker.map)
@@ -557,11 +560,8 @@ Collection of markers available for drawing on the map
     * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
     * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
     * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
-    * [event: "marker_pressed"](#niclabs.insight.map.marker.Marker#event_marker_pressed)
   * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
     * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
-    * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
-    * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
 
 <a name="niclabs.insight.map.marker.SimpleMarker"></a>
 #####class: marker.SimpleMarker
@@ -570,8 +570,6 @@ Collection of markers available for drawing on the map
 
 * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
   * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
-  * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
-  * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
 
 <a name="new_niclabs.insight.map.marker.SimpleMarker"></a>
 ######new marker.SimpleMarker(dashboard, options)
@@ -586,30 +584,6 @@ Circle markers are drawn in the map as circular waypoints
   - layer `string` - identifier for the layer that this marker belongs to  
 
 **Extends**: `niclabs.insight.map.marker.Marker`  
-<a name="niclabs.insight.map.marker.SimpleMarker#event_marker_pressed"></a>
-######event: "marker_pressed"
-Event triggered to notify the dashboard that a marker has been pressed
-
-**Properties**
-
-- layer `string` - id for the layer to which the data belongs to  
-- lat `float` - latitude for the marker  
-- lng `float` - latitude for the marker  
--  `description` - description for the marker  
-
-**Type**: `object`  
-<a name="niclabs.insight.map.marker.SimpleMarker#event_marker_pressed"></a>
-######event: "marker_pressed"
-Event triggered to notify the dashboard that a marker has been pressed
-
-**Properties**
-
-- layer `string` - id for the layer to which the data belongs to  
-- lat `float` - latitude for the marker  
-- lng `float` - latitude for the marker  
--  `description` - description for the marker  
-
-**Type**: `object`  
 <a name="niclabs.insight.map.marker.ImageMarker"></a>
 #####class: marker.ImageMarker
 **Extends**: `niclabs.insight.map.marker.Marker`  
@@ -617,7 +591,6 @@ Event triggered to notify the dashboard that a marker has been pressed
 
 * [class: marker.ImageMarker](#niclabs.insight.map.marker.ImageMarker)
   * [new marker.ImageMarker(dashboard, options)](#new_niclabs.insight.map.marker.ImageMarker)
-  * [event: "marker_pressed"](#niclabs.insight.map.marker.ImageMarker#event_marker_pressed)
 
 <a name="new_niclabs.insight.map.marker.ImageMarker"></a>
 ######new marker.ImageMarker(dashboard, options)
@@ -632,18 +605,6 @@ An image marker includes an image for each waypoint
   - layer `string` - identifier for the layer that this marker belongs to  
 
 **Extends**: `niclabs.insight.map.marker.Marker`  
-<a name="niclabs.insight.map.marker.ImageMarker#event_marker_pressed"></a>
-######event: "marker_pressed"
-Event triggered to notify the dashboard that a marker has been pressed
-
-**Properties**
-
-- layer `string` - id for the layer to which the data belongs to  
-- lat `float` - latitude for the marker  
-- lng `float` - latitude for the marker  
--  `description` - description for the marker  
-
-**Type**: `object`  
 <a name="niclabs.insight.map.marker.Marker"></a>
 #####class: marker.Marker
 **Members**
@@ -656,7 +617,6 @@ Event triggered to notify the dashboard that a marker has been pressed
   * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
   * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
   * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
-  * [event: "marker_pressed"](#niclabs.insight.map.marker.Marker#event_marker_pressed)
 
 <a name="new_niclabs.insight.map.marker.Marker"></a>
 ######new marker.Marker(dashboard, options)
@@ -707,18 +667,6 @@ Set/get the visibility for the marker
 - \[visible\] `boolean` - new value for the visibility of the marker  
 
 **Returns**: `boolean` - true if the marker is visible  
-<a name="niclabs.insight.map.marker.Marker#event_marker_pressed"></a>
-######event: "marker_pressed"
-Event triggered to notify the dashboard that a marker has been pressed
-
-**Properties**
-
-- layer `string` - id for the layer to which the data belongs to  
-- lat `float` - latitude for the marker  
-- lng `float` - latitude for the marker  
--  `description` - description for the marker  
-
-**Type**: `object`  
 <a name="niclabs.insight.map.marker.SimpleMarker"></a>
 #####class: marker.SimpleMarker
 **Extends**: `niclabs.insight.map.marker.Marker`  
@@ -726,8 +674,6 @@ Event triggered to notify the dashboard that a marker has been pressed
 
 * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
   * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
-  * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
-  * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
 
 <a name="new_niclabs.insight.map.marker.SimpleMarker"></a>
 ######new marker.SimpleMarker(dashboard, options)
@@ -742,30 +688,6 @@ Simple markers are shown in the map as basic waypoints, with no style options
   - layer `string` - identifier for the layer that this marker belongs to  
 
 **Extends**: `niclabs.insight.map.marker.Marker`  
-<a name="niclabs.insight.map.marker.SimpleMarker#event_marker_pressed"></a>
-######event: "marker_pressed"
-Event triggered to notify the dashboard that a marker has been pressed
-
-**Properties**
-
-- layer `string` - id for the layer to which the data belongs to  
-- lat `float` - latitude for the marker  
-- lng `float` - latitude for the marker  
--  `description` - description for the marker  
-
-**Type**: `object`  
-<a name="niclabs.insight.map.marker.SimpleMarker#event_marker_pressed"></a>
-######event: "marker_pressed"
-Event triggered to notify the dashboard that a marker has been pressed
-
-**Properties**
-
-- layer `string` - id for the layer to which the data belongs to  
-- lat `float` - latitude for the marker  
-- lng `float` - latitude for the marker  
--  `description` - description for the marker  
-
-**Type**: `object`  
 <a name="niclabs.insight.map.GoogleMap"></a>
 ####class: map.GoogleMap
 **Extends**: `niclabs.insight.MapView`  
@@ -775,6 +697,7 @@ Event triggered to notify the dashboard that a marker has been pressed
   * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
   * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
   * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
+  * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
 
 <a name="new_niclabs.insight.map.GoogleMap"></a>
 #####new map.GoogleMap(options)
@@ -813,6 +736,17 @@ the underlying google map center as well
 - \[lng\] `float` - longitude for the map center  
 
 **Returns**: [Coordinates](#niclabs.insight.MapView.Coordinates) - coordinates for the map center  
+<a name="niclabs.insight.map.GoogleMap#event_map_element_selected"></a>
+#####event: "map_element_selected"
+Event triggered to notify the dashboard that an element of the map has been pressed
+
+**Properties**
+
+- layer `string` - id for the layer to which the data belongs to  
+- lat `float` - latitude for the marker  
+- lng `float` - latitude for the marker  
+
+**Type**: `object`  
 <a name="niclabs.insight.info"></a>
 ###insight.info
 Contains the definitions for the information blocks supported by insight
@@ -827,9 +761,9 @@ Contains the definitions for the information blocks supported by insight
     * [Block.$](#niclabs.insight.info.Block.$)
     * [Block.remove()](#niclabs.insight.info.Block.remove)
     * [Block.data([data])](#niclabs.insight.info.Block.data)
-    * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
   * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-    * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
+    * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
+    * [SummaryBlock.self.summary([data])](#niclabs.insight.info.SummaryBlock.self.summary)
 
 <a name="niclabs.insight.info.Block"></a>
 ####class: info.Block
@@ -842,7 +776,6 @@ Contains the definitions for the information blocks supported by insight
   * [Block.$](#niclabs.insight.info.Block.$)
   * [Block.remove()](#niclabs.insight.info.Block.remove)
   * [Block.data([data])](#niclabs.insight.info.Block.data)
-  * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
 
 <a name="new_niclabs.insight.info.Block"></a>
 #####new info.Block(dashboard, options)
@@ -855,6 +788,7 @@ Construct a information block
   - id `string` - html identifier for the block  
   - \[title\] `string` - title for the block  
   - \[properties\] `Object` - block properties (closable, movable)  
+  - \[data\] `Object` - default data for the block  
 
 <a name="niclabs.insight.info.Block.id"></a>
 #####Block.id
@@ -886,35 +820,39 @@ Set/get the data for the block
 - \[data\] `Object` - data for the block  
 
 **Returns**: `Object` - the current data in the blokc  
-<a name="niclabs.insight.info.Block.createDefList"></a>
-#####Block.createDefList([data])
-Create a definition list from the provided data
-
-TODO: should this really go here? Change the name?
-
-**Params**
-
-- \[data\] `Object` - the updated data for the block  
-
 <a name="niclabs.insight.info.SummaryBlock"></a>
 ####class: info.SummaryBlock
 **Extends**: `niclabs.insight.info.Block`  
 **Members**
 
 * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-  * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
+  * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
+  * [SummaryBlock.self.summary([data])](#niclabs.insight.info.SummaryBlock.self.summary)
 
 <a name="new_niclabs.insight.info.SummaryBlock"></a>
-#####new info.SummaryBlock(dashboard, options)
+#####new info.SummaryBlock(dashboard, options, [data], ignore)
 Construct a new summary information block
 TODO: describe what is a summary information block
 
 **Params**
 
 - dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - parent dashboard for the block  
-- options `Object` - see [Block](#niclabs.insight.info.Block) constructor  
+- options `Object` - configuration options for the block  
+  - id `string` - html identifier for the block  
+  - \[title\] `string` - title for the block  
+  - \[properties\] `Object` - block properties (closable, movable)  
+- \[data\] `Object` - default data for the summary  
+- ignore `Array.<String>` - key list to ignore in the summary  
 
 **Extends**: `niclabs.insight.info.Block`  
+<a name="niclabs.insight.info.SummaryBlock.self.summary"></a>
+#####SummaryBlock.self.summary([data])
+Create a definition list from the provided data
+
+**Params**
+
+- \[data\] `Object` - the updated data for the block  
+
 <a name="niclabs.insight..handler"></a>
 ###callback: insight~handler
 Constructs an insight element (visualization, layer, etc.)
@@ -935,11 +873,12 @@ Constructs an insight element (visualization, layer, etc.)
   * [Dashboard.element](#niclabs.insight.Dashboard.element)
   * [Dashboard.$](#niclabs.insight.Dashboard.$)
   * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
-  * [Dashboard.infoview([obj])](#niclabs.insight.Dashboard.infoview)
-  * [Dashboard.mapview([obj])](#niclabs.insight.Dashboard.mapview)
+  * [Dashboard.info([obj])](#niclabs.insight.Dashboard.info)
+  * [Dashboard.map([obj])](#niclabs.insight.Dashboard.map)
   * [Dashboard.layer(obj, [activate])](#niclabs.insight.Dashboard.layer)
   * [Dashboard.data([obj])](#niclabs.insight.Dashboard.data)
   * [Dashboard.active([id])](#niclabs.insight.Dashboard.active)
+  * [Dashboard.filter(filter)](#niclabs.insight.Dashboard.filter)
   * [Dashboard.clear()](#niclabs.insight.Dashboard.clear)
   * [event: "active_layer_data"](#niclabs.insight.Dashboard#event_active_layer_data)
 
@@ -980,8 +919,8 @@ Return the value for the dashboard configuration option with the provided name
 - name `String` - name of the configuration option  
 
 **Returns**: `*` - configuration option value or undefined if it does not exist  
-<a name="niclabs.insight.Dashboard.infoview"></a>
-####Dashboard.infoview([obj])
+<a name="niclabs.insight.Dashboard.info"></a>
+####Dashboard.info([obj])
 Assign/get the information view for the dashboard
 
 **Params**
@@ -990,8 +929,8 @@ Assign/get the information view for the dashboard
   - handler `String` - name of the handler to construct the info view  
 
 **Returns**: [InfoView](#niclabs.insight.InfoView) - the dashboard information view  
-<a name="niclabs.insight.Dashboard.mapview"></a>
-####Dashboard.mapview([obj])
+<a name="niclabs.insight.Dashboard.map"></a>
+####Dashboard.map([obj])
 Assign/get the map view for the dashboard
 
 **Params**
@@ -1041,6 +980,28 @@ Set/get the active layer
 - \[id\] `string` | `number` - id for the layer to set as the active layer  
 
 **Returns**: `string` - id for the active layer  
+<a name="niclabs.insight.Dashboard.filter"></a>
+####Dashboard.filter(filter)
+Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
+of the filter for further customizations
+
+Example:
+```javascript
+myDashboard.filter({
+ description: 'Geographic Location', // the empty string is used if not provided
+ options: [
+     {name: 'More than 20s', filter: function (data) {return data.seconds > 20;}},
+     {name: 'Over Equator', filter: function (data) {return data.lat > 0;}},
+     {name: 'By Type: a,f,g,e,t,h', filter: function (data) {return "afgeth".indexOf(data['event type'])> 0;}}
+ ]
+});
+```
+
+**Params**
+
+- filter `Object` | `number` - configuration for the filter or filter index  
+
+**Returns**: `jQuery` - reference to the added element for further customization  
 <a name="niclabs.insight.Dashboard.clear"></a>
 ####Dashboard.clear()
 Clear the map by calling the [clear](#niclabs.insight.layer.Layer.clear) method
@@ -1056,6 +1017,76 @@ Event triggered when an update to the active layer data (filtering/update) has o
 - data `Array.<Object>` - new data array  
 
 **Type**: `object`  
+<a name="niclabs.insight.FilterBar"></a>
+###class: insight.FilterBar
+**Members**
+
+* [class: insight.FilterBar](#niclabs.insight.FilterBar)
+  * [new insight.FilterBar()](#new_niclabs.insight.FilterBar)
+  * [FilterBar.element](#niclabs.insight.FilterBar.element)
+  * [FilterBar.$](#niclabs.insight.FilterBar.$)
+  * [FilterBar.filter(filter)](#niclabs.insight.FilterBar.filter)
+  * [callback: FilterBar~filter](#niclabs.insight.FilterBar..filter)
+  * [event: "filter_changed"](#niclabs.insight.FilterBar#event_filter_changed)
+
+<a name="new_niclabs.insight.FilterBar"></a>
+####new insight.FilterBar()
+Constructs a filter bar for the dashboard
+
+<a name="niclabs.insight.FilterBar.element"></a>
+####FilterBar.element
+HTML DOM element for the filter bar container
+
+**Type**: `Element`  
+<a name="niclabs.insight.FilterBar.$"></a>
+####FilterBar.$
+jQuery object for the filter bar container
+
+**Type**: `jQuery`  
+<a name="niclabs.insight.FilterBar.filter"></a>
+####FilterBar.filter(filter)
+Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
+of the filter for further customizations
+
+Example:
+```javascript
+myDashboard.filter({
+ description: 'Geographic Location', // the empty string is used if not provided
+ options: [
+     {name: 'More than 20s', filter: function (data) {return data.seconds > 20;}},
+     {name: 'Over Equator', filter: function (data) {return data.lat > 0;}},
+     {name: 'By Type: a,f,g,e,t,h', filter: function (data) {return "afgeth".indexOf(data['event type'])> 0;}}
+ ]
+});
+```
+
+**Params**
+
+- filter `Object` | `number` - configuration for the filter or filter index  
+
+**Returns**: `jQuery` - reference to the added element for further customization  
+<a name="niclabs.insight.FilterBar..filter"></a>
+####callback: FilterBar~filter
+Function to act as a filter for the data
+
+The function returns false if the data must be removed from the visualization
+or true if the data must be kept
+
+**Params**
+
+- data `Object` - data element to evaluate  
+
+**Scope**: inner typedef of [FilterBar](#niclabs.insight.FilterBar)  
+**Type**: `function`  
+**Returns**: `boolean` - true if the data passes the filter  
+<a name="niclabs.insight.FilterBar#event_filter_changed"></a>
+####event: "filter_changed"
+Event triggered when a filter has changed
+
+It will pass as parameter the filtering function to apply to
+the layers
+
+**Type**: [filter](#niclabs.insight.FilterBar..filter)  
 <a name="niclabs.insight.MapView"></a>
 ###class: insight.MapView
 **Members**
@@ -1070,6 +1101,7 @@ Event triggered when an update to the active layer data (filtering/update) has o
   * [MapView.zoom([zoom])](#niclabs.insight.MapView.zoom)
   * [MapView.container()](#niclabs.insight.MapView.container)
   * [type: MapView.Coordinates](#niclabs.insight.MapView.Coordinates)
+  * [event: "map_element_selected"](#niclabs.insight.MapView#event_map_element_selected)
 
 <a name="new_niclabs.insight.MapView"></a>
 ####new insight.MapView(options)
@@ -1140,6 +1172,17 @@ Object to represent geographic coordinates
 - lng `float` - longitude for the map center  
 
 **Type**: `Object`  
+<a name="niclabs.insight.MapView#event_map_element_selected"></a>
+####event: "map_element_selected"
+Event triggered to notify the dashboard that an element of the map has been pressed
+
+**Properties**
+
+- layer `string` - id for the layer to which the data belongs to  
+- lat `float` - latitude for the marker  
+- lng `float` - latitude for the marker  
+
+**Type**: `object`  
 <a name="niclabs.insight.InfoView"></a>
 ###class: insight.InfoView
 **Members**
