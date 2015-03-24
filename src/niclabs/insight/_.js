@@ -152,6 +152,17 @@ niclabs.insight = (function($) {
          return $.inArray(item, this, start);
      };
 
+     /**
+      * Calculate the size of the associative array
+      */
+     Object.size = function (obj) {
+         var size = 0, key;
+         for (key in obj) {
+             if (obj.hasOwnProperty(key)) size++;
+         }
+         return size;
+     };
+
      var dashboard;
 
      // Store dashboard handlers by name
