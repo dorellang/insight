@@ -7,7 +7,11 @@ niclabs.insight.info.SummaryBlock = (function($) {
      * @augments niclabs.insight.info.Block
      * @inheritdoc
      * @param {niclabs.insight.Dashboard} dashboard - parent dashboard for the block
-     * @param {Object} options - see {@link niclabs.insight.info.Block} constructor
+     * @param {Object} options - configuration options for the block
+     * @param {string} options.id - html identifier for the block
+     * @param {string=} options.title - title for the block
+     * @param {Object=} options.properties - block properties (closable, movable)
+     * @param {Object=} data - default data for the summary
      */
     var SummaryBlock = function(dashboard, options) {
         var self = niclabs.insight.info.Block(dashboard, options);
@@ -25,9 +29,29 @@ niclabs.insight.info.SummaryBlock = (function($) {
             refresh();
 
             self.$.append($('<dl>').addClass('deflist'));
-            self.createDeflist(self.data());
+            self.summary(self.data());
         };
 
+
+        /**
+         * Create a definition list from the provided data
+         *
+         * @memberof niclabs.insight.info.SummaryBlock
+         * @param {Object=} data - the updated data for the block
+         */
+        self.summary = function(data) {
+            $.each(data, function (key, value) {
+                console.log(key);
+                if (key !== 'lat' && key !== 'lng' && key !== 'value') {
+                    self.$.find('.deflist')
+                        .append($('<dt>').text(key).addClass('deflist-key'))
+                        .append($('<dd>').text(value).addClass('deflist-value'));
+                }
+            });
+        };
+
+        // Create the default summary if provided
+        if (options.data) self.summary(options.data);
         return self;
     };
 

@@ -61,6 +61,7 @@ niclabs.insight.info.Block = (function($) {
 
         // TODO: not sure what this does
         container.append($('<h6>').addClass('latlngView'));
+        container.append( $('<dl>').addClass('deflist') );
 
         // Add the properties to the block style
         container.css(properties);
@@ -145,24 +146,6 @@ niclabs.insight.info.Block = (function($) {
 
                 if (lat && lng)
                     latlngView.text('lat: ' + lat + ', lng: ' + lng).insertAfter(self.$.find('hr'));
-            },
-
-            /**
-             * Create a definition list from the provided data
-             *
-             * TODO: should this really go here? Change the name?
-             *
-             * @memberof niclabs.insight.info.Block
-             * @param {Object=} data - the updated data for the block
-             */
-            createDefList: function (data) {
-                $.each(data, function (key, value) {
-                    if (key !== 'lat' && key !== 'lng' && key !== 'value') {
-                        self.$.find('.deflist')
-                            .append($('<dt>').text(key).addClass('deflist-key'))
-                            .append($('<dd>').text(value).addClass('deflist-value'));
-                    }
-                });
             },
         };
 
