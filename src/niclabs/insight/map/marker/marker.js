@@ -72,17 +72,7 @@ niclabs.insight.map.marker.Marker = (function($) {
                     var marker = self.marker();
 
                     listener = google.maps.event.addListener(marker, 'click', function() {
-                        /**
-                         * Event triggered to notify the dashboard that a marker has been pressed
-                         *
-                         * @event niclabs.insight.map.marker.Marker#marker_pressed
-                         * @type {object}
-                         * @property {string} layer - id for the layer to which the data belongs to
-                         * @property {float} lat - latitude for the marker
-                         * @property {float} lng - latitude for the marker
-                         * @property {description} - description for the marker
-                         */
-                        niclabs.insight.event.trigger('marker_pressed', options);
+                        niclabs.insight.event.trigger('map_element_selected', options);
 
                         // TODO: make configurable?
                         if ('setAnimation' in marker) {
