@@ -16,6 +16,27 @@ niclabs.insight.layer = (function () {
      * - If an object is provided without handler, it is assumed to be a Layer object and added to the
      * layer list as is.
      *
+     * @example
+     * ```javascript
+     * niclabs.insight.layer({
+     *      handler: 'marker-layer',
+     *      data: [{
+     *          'lat': 48.8556,
+     *          'lng': 2.2986,
+     *          'landmark': 'Champ de Mars'
+     *      }, {
+     *          'lat': 48.8583,
+     *          'lng': 2.2944,
+     *          'landmark': 'Eiffel Tower',
+     *          'fun-fact': 'Was built in 1889.'
+     *      }],
+     *      marker: {
+     *          'type': 'image-marker',
+     *          'src': 'antenna.svg'
+     *      }
+     * });
+     * ```
+     *
      * @memberof niclabs.insight
      * @variation 2
      * @param {string|number|Object| niclabs.insight.layer.Layer} obj - layer id to get or configuration options for the new layer

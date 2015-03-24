@@ -226,6 +226,15 @@ niclabs.insight = (function($) {
           *
           * Returns the dashboard for the namespace if options are not provided
           *
+          * @example
+          * ```javascript
+          * // Create a map with the info view to the left
+          * var dashboard = niclabs.insight.dashboard({
+          *     'anchor': '#dashboard',
+          *     'layout': 'left'
+          * });
+          * ```
+          *
           * @memberof niclabs.insight
           * @param {Object=} options - list of configuration options for the dashboard see {@link niclabs.insight.Dashboard}
           * @returns {niclabs.insight.Dashboard} dashboard object
@@ -482,17 +491,17 @@ niclabs.insight.Dashboard = (function($) {
              * Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
              * of the filter for further customizations
              *
-             * Example:
+             * @example
              * ```javascript
-             * myDashboard.filter({
-             *  description: 'Geographic Location', // the empty string is used if not provided
+             * dashboard.filter({
+             *  description: 'Landmark', // the empty string is used if not provided
              *  options: [
-             *      {name: 'More than 20s', filter: function (data) {return data.seconds > 20;}},
-             *      {name: 'Over Equator', filter: function (data) {return data.lat > 0;}},
-             *      {name: 'By Type: a,f,g,e,t,h', filter: function (data) {return "afgeth".indexOf(data['event type'])> 0;}}
+             *      {name: 'Not Eiffel Tower', filter: function(data) { return data.landmark.indexOf("Eiffel") < 0; }},
+             *      {name: 'Not Champ de Mars', filter: function(data) { return data.landmark.indexOf("Mars") < 0; }},
              *  ]
              * });
              * ```
+             *
              * @memberof niclabs.insight.Dashboard
              * @param {Object|number} filter configuration for the filter or filter index
              * @return {jQuery} reference to the added element for further customization
@@ -624,17 +633,6 @@ niclabs.insight.FilterBar = (function($) {
              * Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
              * of the filter for further customizations
              *
-             * Example:
-             * ```javascript
-             * myDashboard.filter({
-             *  description: 'Geographic Location', // the empty string is used if not provided
-             *  options: [
-             *      {name: 'More than 20s', filter: function (data) {return data.seconds > 20;}},
-             *      {name: 'Over Equator', filter: function (data) {return data.lat > 0;}},
-             *      {name: 'By Type: a,f,g,e,t,h', filter: function (data) {return "afgeth".indexOf(data['event type'])> 0;}}
-             *  ]
-             * });
-             * ```
              * @memberof niclabs.insight.FilterBar
              * @param {Object|number} filter configuration for the filter or filter index
              * @return {jQuery} reference to the added element for further customization
@@ -1165,6 +1163,23 @@ niclabs.insight.info = (function () {
     /**
      * Helper method to assign/get the information view to/from the dashboard
      *
+     * @example
+     * ```javascript
+     * // Create the info view
+     * niclabs.insight.info({
+     *      handler: 'basic-info-view', // The view constructor
+     *      blocks: [{
+     *          'handler': 'summary-block', // The block constructor
+     *          'id': '#summary',
+     *          'title': 'My Marker Summary',
+     *          'data': { // Default data
+     *              'description': 'This block will show the details of the selected markers'
+     *        },
+     *        ignore: ['layer', 'type', 'src'] // Data elements we don't want on the block
+     *    }]
+     * });
+     * ```
+     *
      * @memberof niclabs.insight
      * @variation 2
      * @param {Object|niclabs.insight.InfoView} [obj] - configuration for the information view or information view object
@@ -1479,6 +1494,27 @@ niclabs.insight.layer = (function () {
      * - If an object is provided without handler, it is assumed to be a Layer object and added to the
      * layer list as is.
      *
+     * @example
+     * ```javascript
+     * niclabs.insight.layer({
+     *      handler: 'marker-layer',
+     *      data: [{
+     *          'lat': 48.8556,
+     *          'lng': 2.2986,
+     *          'landmark': 'Champ de Mars'
+     *      }, {
+     *          'lat': 48.8583,
+     *          'lng': 2.2944,
+     *          'landmark': 'Eiffel Tower',
+     *          'fun-fact': 'Was built in 1889.'
+     *      }],
+     *      marker: {
+     *          'type': 'image-marker',
+     *          'src': 'antenna.svg'
+     *      }
+     * });
+     * ```
+     *
      * @memberof niclabs.insight
      * @variation 2
      * @param {string|number|Object| niclabs.insight.layer.Layer} obj - layer id to get or configuration options for the new layer
@@ -1760,6 +1796,17 @@ niclabs.insight.layer.MarkerLayer = (function($) {
 niclabs.insight.map = (function () {
     /**
      * Helper method to assign/get the map view to/from the dashboard
+     *
+     * @example
+     * ```javascript
+     * // Create the map
+     * var map = niclabs.insight.map({
+     *      'handler': 'google-map', // Map constructor
+     *      'lat': 48.8583,
+     *      'lng': 2.2944,
+     *      'zoom': 15
+     * });
+     * ```
      *
      * @memberof niclabs.insight
      * @variation 2
