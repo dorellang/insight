@@ -36,19 +36,6 @@ niclabs.insight.layer.Layer = (function($) {
         // Will be set to true once the layer is loaded
         var loaded = false;
 
-        /**
-         * Function to act as a filter for the data
-         *
-         * The function returns false if the data must be removed from the visualization
-         * or true if the data must be kept
-         *
-         * TODO: I think this is better defined in FilterBar
-         *
-         * @callback niclabs.insight.layer.Layer~filter
-         * @param {Object} data - data element to evaluate
-         * @returns {boolean} true if the data passes the filter
-         */
-
         var self = {
             /**
              * id of the layer
@@ -72,7 +59,7 @@ niclabs.insight.layer.Layer = (function($) {
              */
             data: function(obj) {
                 if (typeof obj === 'undefined') {
-                    return loaded ? data : dataSource;
+                    return loaded || !dataSource? data : dataSource;
                 }
 
                 if (typeof obj === 'string') {

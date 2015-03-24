@@ -1,19 +1,16 @@
-var CityDashboard = CityDashboard || {};
-
-/**
- * Defines the behavior of the filter bar of the dashboard
- * @class CityDashboard.FilterBar
- */
-CityDashboard.FilterBar = (function(CityDashboard, google, $) {
+niclabs.insight.FilterBar = (function($) {
     "use strict";
 
     /**
-     * TODO: document constructor
-     * @constructs CityDashboard.FilterBar
+     * Constructs a filter bar for the dashboard
+     *
+     * @class niclabs.insight.FilterBar
      */
-    return function() {
-        // Bar element
-        var bar = $('<div>').setID(CityDashboard.id('filters')).addClass('filterBar');
+    return function(dashboard, options) {
+        var barId = '#insight-filter-bar';
+
+        // Bar container
+        var container = $('<div>').setID(barId).addClass('filterBar');
 
         // List of filters
         var filters = [];
@@ -37,15 +34,6 @@ CityDashboard.FilterBar = (function(CityDashboard, google, $) {
             };
         }
 
-        /**
-         * Callback to use on filter change
-         */
-        function onFilterChange() {
-            CityDashboard.container('main').trigger('filterChanged', function() {
-                return composeFilters();
-            });
-        }
-
         /* Google maps geocoder and search bar*/
         var geocoder = new google.maps.Geocoder();
 
@@ -56,7 +44,7 @@ CityDashboard.FilterBar = (function(CityDashboard, google, $) {
             .attr('placeholder', 'Enter location');
 
         // Append search box to bar
-        bar.append(search);
+        container.append(search);
 
         var geocode = function() {
             var map = CityDashboard.container('main')[0].data;
@@ -77,17 +65,50 @@ CityDashboard.FilterBar = (function(CityDashboard, google, $) {
 
         search.on('change', geocode);
 
-        // Append the filter bar to the dashboard
-        CityDashboard.container('main').append(bar);
+
+        /**
+         * Function to act as a filter for the data
+         *
+         * The function returns false if the data must be removed from the visualization
+         * or true if the data must be kept
+         *
+         * @callback niclabs.insight.FilterBar~filter
+         * @param {Object} data - data element to evaluate
+         * @returns {boolean} true if the data passes the filter
+         */
 
         return {
             /**
-             * Add a new filter to the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
+             * HTML DOM element for the filter bar container
+             *
+             * @memberof niclabs.insight.FilterBar
+             * @member {Element}
+             */
+            get element () {
+                var c = $(barId);
+                container = c.length === 0 ? container : c;
+                return container[0];
+            },
+
+            /**
+             * jQuery object for the filter bar container
+             *
+             * @memberof niclabs.insight.FilterBar
+             * @member {jQuery}
+             */
+            $: function() {
+                var c = $(barId);
+                container = c.length === 0 ? container : c;
+                return container;
+            },
+
+            /**
+             * Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
              * of the filter for further customizations
              *
              * Example:
              * ```javascript
-             * myDashboard.addFilter({
+             * myDashboard.filter({
              *  description: 'Geographic Location', // the empty string is used if not provided
              *  options: [
              *      {name: 'More than 20s', filter: function (data) {return data.seconds > 20;}},
@@ -96,11 +117,13 @@ CityDashboard.FilterBar = (function(CityDashboard, google, $) {
              *  ]
              * });
              * ```
-             * @memberof CityDashboard.FilterBar
-             * @param {Object} filter configuration for the filter
+             * @memberof niclabs.insight.FilterBar
+             * @param {Object|number} filter configuration for the filter or filter index
              * @return {jQuery} reference to the added element for further customization
              */
-            addFilter: function(filter) {
+            filter: function(filter) {
+                if (typeof filter === 'number') return filters[filter];
+
                 var select = $('<select>');
 
                 var description = filter.description || '';
@@ -113,10 +136,21 @@ CityDashboard.FilterBar = (function(CityDashboard, google, $) {
                     select.append(option);
                 }
 
-                select.on('change', onFilterChange);
+                select.on('change', function() {
+                    /**
+                     * Event triggered when a filter has changed
+                     *
+                     * It will pass as parameter the filtering function to apply to
+                     * the layers
+                     *
+                     * @event niclabs.insight.FilterBar#filter_changed
+                     * @type {niclabs.insight.FilterBar~filter}
+                     */
+                    niclabs.insight.event.trigger('filter_changed', composeFilters());
+                });
 
                 // Add the selector to the filter bar
-                bar.append(select);
+                container.append(select);
 
                 filter.element = select;
 
@@ -127,4 +161,4 @@ CityDashboard.FilterBar = (function(CityDashboard, google, $) {
             },
         };
     };
-})(CityDashboard, google, jQuery);
+})(jQuery);

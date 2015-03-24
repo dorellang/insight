@@ -35,16 +35,11 @@ niclabs.insight.Dashboard = (function($) {
         // Append the dashboard to the container
         $(anchor).append(container);
 
-        // // Create the filter bar
-        // var filterBar = new CityDashboard.FilterBar();
-        //
-        // // Create an event to be notified of a filter change
-        // container.on('filterChanged', function(e, fun) {
-        //     var f = fun();
-        //     for (var i = layers.length - 1; i >= 0; i--) {
-        //         layers[i].filter(f);
-        //     }
-        // });
+        // Create the filter bar
+        var filterBar = niclabs.insight.FilterBar();
+
+        // Append the filter bar
+        container.append(filterBar.element);
 
         var layers = {};
         var numberedLayers = 0;
@@ -61,6 +56,12 @@ niclabs.insight.Dashboard = (function($) {
         var infoView = {};
         var mapView = {};
 
+        // Create an event to be notified of a filter change
+        niclabs.insight.event.on('filter_changed', function(f) {
+            $.each(layers, function(name, layer) {
+                layer.filter(f);
+            });
+        });
 
         // Listen for changes in the layer data
         niclabs.insight.event.on('layer_data', function(obj) {
@@ -237,11 +238,26 @@ niclabs.insight.Dashboard = (function($) {
             },
 
             /**
-             * TODO: Documentation missing
+             * Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
+             * of the filter for further customizations
+             *
+             * Example:
+             * ```javascript
+             * myDashboard.filter({
+             *  description: 'Geographic Location', // the empty string is used if not provided
+             *  options: [
+             *      {name: 'More than 20s', filter: function (data) {return data.seconds > 20;}},
+             *      {name: 'Over Equator', filter: function (data) {return data.lat > 0;}},
+             *      {name: 'By Type: a,f,g,e,t,h', filter: function (data) {return "afgeth".indexOf(data['event type'])> 0;}}
+             *  ]
+             * });
+             * ```
+             * @memberof niclabs.insight.Dashboard
+             * @param {Object|number} filter configuration for the filter or filter index
+             * @return {jQuery} reference to the added element for further customization
              */
-            addFilter: function(filter) {
-                filterBar.addFilter(filter);
-                return self;
+            filter: function(filter) {
+                return filterBar.filter(filter);
             },
 
             /**
