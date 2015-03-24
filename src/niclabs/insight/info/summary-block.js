@@ -12,9 +12,15 @@ niclabs.insight.info.SummaryBlock = (function($) {
      * @param {string=} options.title - title for the block
      * @param {Object=} options.properties - block properties (closable, movable)
      * @param {Object=} data - default data for the summary
+     * @param {String[]} ignore - key list to ignore in the data
      */
     var SummaryBlock = function(dashboard, options) {
         var self = niclabs.insight.info.Block(dashboard, options);
+
+        var ignore = ['lat', 'lng', 'value'];
+
+        // Concat with the options if available
+        ignore = ignore.concat(options.ignore || []);
 
         self.$.addClass('summary-viz');
 
@@ -41,8 +47,7 @@ niclabs.insight.info.SummaryBlock = (function($) {
          */
         self.summary = function(data) {
             $.each(data, function (key, value) {
-                console.log(key);
-                if (key !== 'lat' && key !== 'lng' && key !== 'value') {
+                if (ignore.indexOf(key) < 0) {
                     self.$.find('.deflist')
                         .append($('<dt>').text(key).addClass('deflist-key'))
                         .append($('<dd>').text(value).addClass('deflist-value'));
