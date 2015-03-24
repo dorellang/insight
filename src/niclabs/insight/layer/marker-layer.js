@@ -28,11 +28,12 @@ niclabs.insight.layer.MarkerLayer = (function($) {
         function newMarker(data, index, obj) {
             var marker;
             if ('type' in obj) {
-                obj.layer = layer.id;
-                obj.lat = data[index].lat;
-                obj.lng = data[index].lng;
+                var attr = {'layer': layer.id};
 
-                marker = niclabs.insight.handler(obj.type)(dashboard, obj);
+                // Extend the attributes with the data and the options for the marker
+                $.extend(attr, obj, data[index]);
+
+                marker = niclabs.insight.handler(obj.type)(dashboard, attr);
             }
             else {
                 marker = obj;
