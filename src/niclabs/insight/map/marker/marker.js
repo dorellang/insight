@@ -59,9 +59,10 @@ niclabs.insight.map.marker.Marker = (function($) {
             },
 
             /**
-             * Let the marker listen to click events
+             * Get/activate clickable status for the marker
              *
-             * When clicked the marker will trigger a generalized event with the particular data for the marker
+             * When clicked the marker will trigger a {@link niclabs.insight.map.marker.Marker#marker_pressed} event
+             * with the particular data for the marker
              *
              * @memberof niclabs.insight.map.marker.Marker
              * @param {boolean} [activate=true] - true to make clickable
@@ -94,7 +95,9 @@ niclabs.insight.map.marker.Marker = (function($) {
                 }
                 else if (typeof listener !== 'undefined') {
                     google.maps.event.removeListener(listener);
+                    listener = undefined;
                 }
+                return (listener !== undefined);
             },
 
             /**

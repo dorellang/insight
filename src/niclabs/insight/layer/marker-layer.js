@@ -38,6 +38,7 @@ niclabs.insight.layer.MarkerLayer = (function($) {
                 marker = obj;
             }
 
+            // Make the marker clickable
             marker.clickable(true);
 
             return marker;

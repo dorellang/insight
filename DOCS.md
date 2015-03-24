@@ -662,9 +662,10 @@ Return the internal marker object associated with this Marker
 **Returns**: `google.maps.Marker` - internal marker  
 <a name="niclabs.insight.map.marker.Marker.clickable"></a>
 ######Marker.clickable([activate])
-Let the marker listen to click events
+Get/activate clickable status for the marker
 
-When clicked the marker will trigger a generalized event with the particular data for the marker
+When clicked the marker will trigger a `niclabs.insight.map.marker.Marker#marker_pressed` event
+with the particular data for the marker
 
 **Params**
 

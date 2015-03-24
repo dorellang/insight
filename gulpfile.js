@@ -10,7 +10,6 @@ var cssmin = require('gulp-cssmin');
 var sass   = require('gulp-sass');
 var jsdoc  = require("gulp-jsdoc-to-markdown");
 
-
 sources = 'src/niclabs/**/*.js';
 
 // Lint Task
