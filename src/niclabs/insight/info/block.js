@@ -10,6 +10,7 @@ niclabs.insight.info.Block = (function($) {
      * @param {string} options.id - html identifier for the block
      * @param {string=} options.title - title for the block
      * @param {Object=} options.properties - block properties (closable, movable)
+     * @param {Object=} options.data - default data for the block
      */
     var constructor = function(dashboard, options) {
         if (!('id' in options)) {
@@ -72,7 +73,7 @@ niclabs.insight.info.Block = (function($) {
         //     this.addCheckbox(options.checkbox);
 
         // Block data
-        var data = {};
+        var data = options.data || {};
 
         var self = {
             /**
@@ -137,7 +138,7 @@ niclabs.insight.info.Block = (function($) {
 
                 self.$.find('.deflist').remove();
 
-                var data = self.getData();
+                var data = self.data();
 
                 var lat = data.lat,
                     lng = data.lng;
