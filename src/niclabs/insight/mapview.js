@@ -32,6 +32,17 @@ niclabs.insight.MapView = (function($) {
 			.setID(mapId)
 			.addClass('mapWindow');
 
+
+		/**
+		* Event triggered to notify the dashboard that an element of the map has been pressed
+		*
+		* @event niclabs.insight.MapView#map_element_selected
+		* @type {object}
+		* @property {string} layer - id for the layer to which the data belongs to
+		* @property {float} lat - latitude for the marker
+		* @property {float} lng - latitude for the marker
+		*/
+
 		return {
 			/**
              * HTML DOM element for the map view
