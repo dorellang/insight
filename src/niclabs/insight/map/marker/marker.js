@@ -8,7 +8,7 @@ niclabs.insight.map.marker.Marker = (function($) {
      * @param {string} options.layer - identifier for the layer that this marker belongs to
      * @params {float} options.lat - latitude for the marker
      * @params {float} options.lng - longitude for the marker
-     * @params {string} options.description - description for the marker
+     * @params {string} options.landmark - landmark that the marker indicates
      */
     var Marker = function(dashboard, options) {
         if (!('layer' in options))

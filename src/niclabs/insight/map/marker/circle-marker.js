@@ -11,7 +11,7 @@ niclabs.insight.map.marker.CircleMarker = (function($) {
      * @param {string} options.layer - identifier for the layer that this marker belongs to
      * @params {float} options.lat - latitude for the marker
      * @params {float} options.lng - longitude for the marker
-     * @params {string} options.description - description for the marker
+     * @params {string} options.landmark - landmark that the marker indicates
      * @params {number} [options.radius=400] - radius for the circle
      * @params {string} [options.strokeColor='#ff0000'] - color for the circle perimenter line
      * @params {float} [options.strokeOpacity=0.8] - opacity for the circle perimeter line
@@ -32,7 +32,7 @@ niclabs.insight.map.marker.CircleMarker = (function($) {
             strokeWeight: options.strokeWeight || 2,
             fillColor: options.fillColor || '#FF0000',
             fillOpacity: options.fillOpacity || 0.35,
-            title: options.description || ''
+            title: options.landmark || ''
         });
 
         // Re-write the marker function

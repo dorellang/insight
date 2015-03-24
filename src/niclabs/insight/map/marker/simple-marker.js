@@ -11,7 +11,7 @@ niclabs.insight.map.marker.SimpleMarker = (function($) {
      * @param {string} options.layer - identifier for the layer that this marker belongs to
      * @params {float} options.lat - latitude for the marker
      * @params {float} options.lng - longitude for the marker
-     * @params {string} options.description - description for the marker
+     * @params {string} options.landmark - landmark that the marker indicates
      */
     var SimpleMarker = function(dashboard, options) {
         var self = niclabs.insight.map.marker.Marker(dashboard, options);
@@ -21,7 +21,7 @@ niclabs.insight.map.marker.SimpleMarker = (function($) {
         var marker = new google.maps.Marker({
             position: latLng,
             map: self.map.googlemap(),
-            title: options.description || ''
+            title: options.landmark || ''
         });
 
         // Re-write the marker function
