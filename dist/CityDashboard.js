@@ -165,6 +165,17 @@ niclabs.insight = (function($) {
          return $.inArray(item, this, start);
      };
 
+     /**
+      * Calculate the size of the associative array
+      */
+     Object.size = function (obj) {
+         var size = 0, key;
+         for (key in obj) {
+             if (obj.hasOwnProperty(key)) size++;
+         }
+         return size;
+     };
+
      var dashboard;
 
      // Store dashboard handlers by name
@@ -438,7 +449,7 @@ niclabs.insight.Dashboard = (function($) {
                 layers[id] = lyr;
 
                 // Switch to the new layer if activate is true
-                if (activate) self.active(id);
+                if (activate || Object.size(layers) === 1) self.active(id);
 
                 return lyr;
             },
@@ -1436,7 +1447,7 @@ niclabs.insight.layer.MarkerLayer = (function($) {
      * @param {string|Object[]} options.data - uri or data array for the layer
      */
     var MarkerLayer = function(dashboard, options) {
-        var layer = niclabs.insight.Layer(dashboard, options);
+        var layer = niclabs.insight.layer.Layer(dashboard, options);
 
         var attr = options.marker || {
             'type': 'simple-marker'
@@ -1463,6 +1474,8 @@ niclabs.insight.layer.MarkerLayer = (function($) {
             else {
                 marker = obj;
             }
+
+            marker.clickable(true);
 
             return marker;
         }
@@ -1661,7 +1674,7 @@ niclabs.insight.map.marker.Marker = (function($) {
             throw new Error('The layer '+layer+' does not exist in the dashboard');
 
         var map;
-        if (!(map = dashboard.map()))
+        if (!(map = dashboard.mapview()))
             throw new Error('No map has been initialized for the dashboard yet');
 
         if (!('googlemap' in map))
@@ -1723,10 +1736,15 @@ niclabs.insight.map.marker.Marker = (function($) {
                          * @property {float} lng - latitude for the marker
                          * @property {description} - description for the marker
                          */
-                        niclabs.insight.event('marker_pressed', options);
+                        niclabs.insight.event.trigger('marker_pressed', options);
 
                         // TODO: make configurable?
                         marker.setAnimation(google.maps.Animation.BOUNCE);
+
+                        // Set timeout to stop the animation
+                        setTimeout(function() {
+                            marker.setAnimation(null);
+                        }, 3000);
                     });
                 }
                 else if (typeof listener !== 'undefined') {
@@ -1763,4 +1781,30 @@ niclabs.insight.map.marker.Marker = (function($) {
     };
 
     return Marker;
+})(jQuery);
+
+niclabs.insight.map.marker.SimpleMarker = (function($) {
+    var SimpleMarker = function(dashboard, options) {
+        var self = niclabs.insight.map.marker.Marker(dashboard, options);
+
+        var latLng = new google.maps.LatLng(parseFloat(options.lat), parseFloat(options.lng));
+
+        var marker = new google.maps.Marker({
+            position: latLng,
+            map: self.map.googlemap(),
+            title: options.description || ''
+        });
+
+        // Re-write the marker function
+        self.marker = function() {
+            return marker;
+        };
+
+        return self;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('simple-marker', 'marker', SimpleMarker);
+
+    return SimpleMarker;
 })(jQuery);
