@@ -1465,11 +1465,12 @@ niclabs.insight.layer.MarkerLayer = (function($) {
         function newMarker(data, index, obj) {
             var marker;
             if ('type' in obj) {
-                obj.layer = layer.id;
-                obj.lat = data[index].lat;
-                obj.lng = data[index].lng;
+                var attr = {'layer': layer.id};
 
-                marker = niclabs.insight.handler(obj.type)(dashboard, obj);
+                // Extend the attributes with the data and the options for the marker
+                $.extend(attr, obj, data[index]);
+
+                marker = niclabs.insight.handler(obj.type)(dashboard, attr);
             }
             else {
                 marker = obj;
@@ -1654,6 +1655,104 @@ niclabs.insight.map.GoogleMap = (function($) {
  */
 niclabs.insight.map.marker = {};
 
+niclabs.insight.map.marker.CircleMarker = (function($) {
+    /**
+     * Constructor for circle markers
+     *
+     * Circle markers are drawn in the map as circular waypoints
+     *
+     * @class niclabs.insight.map.marker.SimpleMarker
+     * @extends niclabs.insight.map.marker.Marker
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.layer - identifier for the layer that this marker belongs to
+     * @params {float} options.lat - latitude for the marker
+     * @params {float} options.lng - longitude for the marker
+     * @params {string} options.description - description for the marker
+     * @params {number} [options.radius=400] - radius for the circle
+     * @params {string} [options.strokeColor='#ff0000'] - color for the circle perimenter line
+     * @params {float} [options.strokeOpacity=0.8] - opacity for the circle perimeter line
+     * @params {string} [options.fillColor='#ff0000'] - color for the circle filling
+     * @params {float} [options.fillOpacity=0.35] - opacity for the circle filling
+     */
+    var CircleMarker = function(dashboard, options) {
+        var self = niclabs.insight.map.marker.Marker(dashboard, options);
+
+        var latLng = new google.maps.LatLng(parseFloat(options.lat), parseFloat(options.lng));
+
+        var marker = new google.maps.Circle({
+            center: latLng,
+            map: self.map.googlemap(),
+            radius: options.radius || 400,
+            strokeColor: options.strokeColor || '#FF0000',
+            strokeOpacity: options.strokeOpacity || 0.8,
+            strokeWeight: options.strokeWeight || 2,
+            fillColor: options.fillColor || '#FF0000',
+            fillOpacity: options.fillOpacity || 0.35,
+            title: options.description || ''
+        });
+
+        // Re-write the marker function
+        self.marker = function() {
+            return marker;
+        };
+
+        return self;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('circle-marker', 'marker', CircleMarker);
+
+    return CircleMarker;
+})(jQuery);
+
+niclabs.insight.map.marker.ImageMarker = (function($) {
+    /**
+     * Constructor for an image marker
+     *
+     * An image marker includes an image for each waypoint
+     *
+     * @class niclabs.insight.map.marker.ImageMarker
+     * @extends niclabs.insight.map.marker.Marker
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.layer - identifier for the layer that this marker belongs to
+     * @params {float} options.lat - latitude for the marker
+     * @params {float} options.lng - longitude for the marker
+     * @params {string=} options.description - description for the marker
+     * @params {string} options.src - image source
+     */
+    var ImageMarker = function(dashboard, options) {
+        var self = niclabs.insight.map.marker.Marker(dashboard, options);
+
+        var latLng = new google.maps.LatLng(parseFloat(options.lat), parseFloat(options.lng));
+
+        var image = {
+            url: options.src || 'img/not-found.svg',
+            scaledSize: new google.maps.Size(30, 50)
+        };
+
+        var marker = new google.maps.Marker({
+            position: latLng,
+            map: self.map.googlemap(),
+            icon: image,
+            title: options.description || ''
+        });
+
+        // Re-write the marker function
+        self.marker = function() {
+            return marker;
+        };
+
+        return self;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('image-marker', 'marker', ImageMarker);
+
+    return ImageMarker;
+})(jQuery);
+
 niclabs.insight.map.marker.Marker = (function($) {
     /**
      * Construct a new marker
@@ -1741,7 +1840,9 @@ niclabs.insight.map.marker.Marker = (function($) {
                         niclabs.insight.event.trigger('marker_pressed', options);
 
                         // TODO: make configurable?
-                        marker.setAnimation(google.maps.Animation.BOUNCE);
+                        if ('setAnimation' in marker) {
+                            marker.setAnimation(google.maps.Animation.BOUNCE);
+                        }
 
                         // Set timeout to stop the animation
                         setTimeout(function() {
@@ -1788,6 +1889,20 @@ niclabs.insight.map.marker.Marker = (function($) {
 })(jQuery);
 
 niclabs.insight.map.marker.SimpleMarker = (function($) {
+    /**
+     * Constructor for simple markers
+     *
+     * Simple markers are shown in the map as basic waypoints, with no style options
+     *
+     * @class niclabs.insight.map.marker.SimpleMarker
+     * @extends niclabs.insight.map.marker.Marker
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.layer - identifier for the layer that this marker belongs to
+     * @params {float} options.lat - latitude for the marker
+     * @params {float} options.lng - longitude for the marker
+     * @params {string} options.description - description for the marker
+     */
     var SimpleMarker = function(dashboard, options) {
         var self = niclabs.insight.map.marker.Marker(dashboard, options);
 
