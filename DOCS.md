@@ -21,17 +21,6 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
       * [event.off(event, listener)](#niclabs.insight.event.off)
       * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
       * [callback: event~listener](#niclabs.insight.event..listener)
-    * [insight.info](#niclabs.insight.info)
-      * [class: info.Block](#niclabs.insight.info.Block)
-        * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
-        * [Block.id](#niclabs.insight.info.Block.id)
-        * [Block.element](#niclabs.insight.info.Block.element)
-        * [Block.$](#niclabs.insight.info.Block.$)
-        * [Block.remove()](#niclabs.insight.info.Block.remove)
-        * [Block.data([data])](#niclabs.insight.info.Block.data)
-        * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
-      * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-        * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
     * [insight.layer](#niclabs.insight.layer)
       * [class: layer.Layer](#niclabs.insight.layer.Layer)
         * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
@@ -51,6 +40,13 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
     * [insight.map](#niclabs.insight.map)
       * [map.marker](#niclabs.insight.map.marker)
+        * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
+          * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+          * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+          * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+        * [class: marker.ImageMarker](#niclabs.insight.map.marker.ImageMarker)
+          * [new marker.ImageMarker(dashboard, options)](#new_niclabs.insight.map.marker.ImageMarker)
+          * [event: "marker_pressed"](#niclabs.insight.map.marker.ImageMarker#event_marker_pressed)
         * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
           * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
           * [Marker.map](#niclabs.insight.map.marker.Marker.map)
@@ -60,10 +56,25 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
           * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
           * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
           * [event: "marker_pressed"](#niclabs.insight.map.marker.Marker#event_marker_pressed)
+        * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
+          * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+          * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+          * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
       * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
         * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
         * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
         * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
+    * [insight.info](#niclabs.insight.info)
+      * [class: info.Block](#niclabs.insight.info.Block)
+        * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+        * [Block.id](#niclabs.insight.info.Block.id)
+        * [Block.element](#niclabs.insight.info.Block.element)
+        * [Block.$](#niclabs.insight.info.Block.$)
+        * [Block.remove()](#niclabs.insight.info.Block.remove)
+        * [Block.data([data])](#niclabs.insight.info.Block.data)
+        * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
+      * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+        * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
     * [callback: insight~handler](#niclabs.insight..handler)
     * [class: insight.Dashboard](#niclabs.insight.Dashboard)
       * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
@@ -112,17 +123,6 @@ understand what is going on in the city
     * [event.off(event, listener)](#niclabs.insight.event.off)
     * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
     * [callback: event~listener](#niclabs.insight.event..listener)
-  * [insight.info](#niclabs.insight.info)
-    * [class: info.Block](#niclabs.insight.info.Block)
-      * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
-      * [Block.id](#niclabs.insight.info.Block.id)
-      * [Block.element](#niclabs.insight.info.Block.element)
-      * [Block.$](#niclabs.insight.info.Block.$)
-      * [Block.remove()](#niclabs.insight.info.Block.remove)
-      * [Block.data([data])](#niclabs.insight.info.Block.data)
-      * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
-    * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-      * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
   * [insight.layer](#niclabs.insight.layer)
     * [class: layer.Layer](#niclabs.insight.layer.Layer)
       * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
@@ -142,6 +142,13 @@ understand what is going on in the city
       * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
   * [insight.map](#niclabs.insight.map)
     * [map.marker](#niclabs.insight.map.marker)
+      * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
+        * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+        * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+        * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+      * [class: marker.ImageMarker](#niclabs.insight.map.marker.ImageMarker)
+        * [new marker.ImageMarker(dashboard, options)](#new_niclabs.insight.map.marker.ImageMarker)
+        * [event: "marker_pressed"](#niclabs.insight.map.marker.ImageMarker#event_marker_pressed)
       * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
         * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
         * [Marker.map](#niclabs.insight.map.marker.Marker.map)
@@ -151,10 +158,25 @@ understand what is going on in the city
         * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
         * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
         * [event: "marker_pressed"](#niclabs.insight.map.marker.Marker#event_marker_pressed)
+      * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
+        * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+        * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+        * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
     * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
       * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
       * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
       * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
+  * [insight.info](#niclabs.insight.info)
+    * [class: info.Block](#niclabs.insight.info.Block)
+      * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+      * [Block.id](#niclabs.insight.info.Block.id)
+      * [Block.element](#niclabs.insight.info.Block.element)
+      * [Block.$](#niclabs.insight.info.Block.$)
+      * [Block.remove()](#niclabs.insight.info.Block.remove)
+      * [Block.data([data])](#niclabs.insight.info.Block.data)
+      * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
+    * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+      * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
   * [callback: insight~handler](#niclabs.insight..handler)
   * [class: insight.Dashboard](#niclabs.insight.Dashboard)
     * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
@@ -294,108 +316,6 @@ Insight event listener
 
 **Scope**: inner typedef of [event](#niclabs.insight.event)  
 **Type**: `function`  
-<a name="niclabs.insight.info"></a>
-###insight.info
-Contains the definitions for the information blocks supported by insight
-
-**Members**
-
-* [insight.info](#niclabs.insight.info)
-  * [class: info.Block](#niclabs.insight.info.Block)
-    * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
-    * [Block.id](#niclabs.insight.info.Block.id)
-    * [Block.element](#niclabs.insight.info.Block.element)
-    * [Block.$](#niclabs.insight.info.Block.$)
-    * [Block.remove()](#niclabs.insight.info.Block.remove)
-    * [Block.data([data])](#niclabs.insight.info.Block.data)
-    * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
-  * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-    * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
-
-<a name="niclabs.insight.info.Block"></a>
-####class: info.Block
-**Members**
-
-* [class: info.Block](#niclabs.insight.info.Block)
-  * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
-  * [Block.id](#niclabs.insight.info.Block.id)
-  * [Block.element](#niclabs.insight.info.Block.element)
-  * [Block.$](#niclabs.insight.info.Block.$)
-  * [Block.remove()](#niclabs.insight.info.Block.remove)
-  * [Block.data([data])](#niclabs.insight.info.Block.data)
-  * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
-
-<a name="new_niclabs.insight.info.Block"></a>
-#####new info.Block(dashboard, options)
-Construct a information block
-
-**Params**
-
-- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard to which the block belongs to  
-- options `Object` - configuration options for the block  
-  - id `string` - html identifier for the block  
-  - \[title\] `string` - title for the block  
-  - \[properties\] `Object` - block properties (closable, movable)  
-
-<a name="niclabs.insight.info.Block.id"></a>
-#####Block.id
-id of the block
-
-**Type**: `string`  
-<a name="niclabs.insight.info.Block.element"></a>
-#####Block.element
-HTML DOM element for the block container
-
-**Type**: `Element`  
-<a name="niclabs.insight.info.Block.$"></a>
-#####Block.$
-jQuery object for info block container
-
-**Type**: `jQuery`  
-<a name="niclabs.insight.info.Block.remove"></a>
-#####Block.remove()
-Remove the block from the dashboard.
-This method triggers an event to alert all elements of the
-dashboard of the block removal
-
-<a name="niclabs.insight.info.Block.data"></a>
-#####Block.data([data])
-Set/get the data for the block
-
-**Params**
-
-- \[data\] `Object` - data for the block  
-
-**Returns**: `Object` - the current data in the blokc  
-<a name="niclabs.insight.info.Block.createDefList"></a>
-#####Block.createDefList([data])
-Create a definition list from the provided data
-
-TODO: should this really go here? Change the name?
-
-**Params**
-
-- \[data\] `Object` - the updated data for the block  
-
-<a name="niclabs.insight.info.SummaryBlock"></a>
-####class: info.SummaryBlock
-**Extends**: `niclabs.insight.info.Block`  
-**Members**
-
-* [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-  * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
-
-<a name="new_niclabs.insight.info.SummaryBlock"></a>
-#####new info.SummaryBlock(dashboard, options)
-Construct a new summary information block
-TODO: describe what is a summary information block
-
-**Params**
-
-- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - parent dashboard for the block  
-- options `Object` - see [Block](#niclabs.insight.info.Block) constructor  
-
-**Extends**: `niclabs.insight.info.Block`  
 <a name="niclabs.insight.layer"></a>
 ###insight.layer
 Visualization layers for the dashboard
@@ -590,6 +510,13 @@ Map compatibility for the insight dashboard
 
 * [insight.map](#niclabs.insight.map)
   * [map.marker](#niclabs.insight.map.marker)
+    * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
+      * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+      * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+      * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+    * [class: marker.ImageMarker](#niclabs.insight.map.marker.ImageMarker)
+      * [new marker.ImageMarker(dashboard, options)](#new_niclabs.insight.map.marker.ImageMarker)
+      * [event: "marker_pressed"](#niclabs.insight.map.marker.ImageMarker#event_marker_pressed)
     * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
       * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
       * [Marker.map](#niclabs.insight.map.marker.Marker.map)
@@ -599,6 +526,10 @@ Map compatibility for the insight dashboard
       * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
       * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
       * [event: "marker_pressed"](#niclabs.insight.map.marker.Marker#event_marker_pressed)
+    * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
+      * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+      * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+      * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
   * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
     * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
     * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
@@ -611,6 +542,13 @@ Collection of markers available for drawing on the map
 **Members**
 
 * [map.marker](#niclabs.insight.map.marker)
+  * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
+    * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+    * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+    * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+  * [class: marker.ImageMarker](#niclabs.insight.map.marker.ImageMarker)
+    * [new marker.ImageMarker(dashboard, options)](#new_niclabs.insight.map.marker.ImageMarker)
+    * [event: "marker_pressed"](#niclabs.insight.map.marker.ImageMarker#event_marker_pressed)
   * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
     * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
     * [Marker.map](#niclabs.insight.map.marker.Marker.map)
@@ -620,7 +558,92 @@ Collection of markers available for drawing on the map
     * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
     * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
     * [event: "marker_pressed"](#niclabs.insight.map.marker.Marker#event_marker_pressed)
+  * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
+    * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+    * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+    * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
 
+<a name="niclabs.insight.map.marker.SimpleMarker"></a>
+#####class: marker.SimpleMarker
+**Extends**: `niclabs.insight.map.marker.Marker`  
+**Members**
+
+* [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
+  * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+  * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+  * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+
+<a name="new_niclabs.insight.map.marker.SimpleMarker"></a>
+######new marker.SimpleMarker(dashboard, options)
+Constructor for circle markers
+
+Circle markers are drawn in the map as circular waypoints
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this marker belongs to  
+- options `Object` - configuration options for the layer  
+  - layer `string` - identifier for the layer that this marker belongs to  
+
+**Extends**: `niclabs.insight.map.marker.Marker`  
+<a name="niclabs.insight.map.marker.SimpleMarker#event_marker_pressed"></a>
+######event: "marker_pressed"
+Event triggered to notify the dashboard that a marker has been pressed
+
+**Properties**
+
+- layer `string` - id for the layer to which the data belongs to  
+- lat `float` - latitude for the marker  
+- lng `float` - latitude for the marker  
+-  `description` - description for the marker  
+
+**Type**: `object`  
+<a name="niclabs.insight.map.marker.SimpleMarker#event_marker_pressed"></a>
+######event: "marker_pressed"
+Event triggered to notify the dashboard that a marker has been pressed
+
+**Properties**
+
+- layer `string` - id for the layer to which the data belongs to  
+- lat `float` - latitude for the marker  
+- lng `float` - latitude for the marker  
+-  `description` - description for the marker  
+
+**Type**: `object`  
+<a name="niclabs.insight.map.marker.ImageMarker"></a>
+#####class: marker.ImageMarker
+**Extends**: `niclabs.insight.map.marker.Marker`  
+**Members**
+
+* [class: marker.ImageMarker](#niclabs.insight.map.marker.ImageMarker)
+  * [new marker.ImageMarker(dashboard, options)](#new_niclabs.insight.map.marker.ImageMarker)
+  * [event: "marker_pressed"](#niclabs.insight.map.marker.ImageMarker#event_marker_pressed)
+
+<a name="new_niclabs.insight.map.marker.ImageMarker"></a>
+######new marker.ImageMarker(dashboard, options)
+Constructor for an image marker
+
+An image marker includes an image for each waypoint
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this marker belongs to  
+- options `Object` - configuration options for the layer  
+  - layer `string` - identifier for the layer that this marker belongs to  
+
+**Extends**: `niclabs.insight.map.marker.Marker`  
+<a name="niclabs.insight.map.marker.ImageMarker#event_marker_pressed"></a>
+######event: "marker_pressed"
+Event triggered to notify the dashboard that a marker has been pressed
+
+**Properties**
+
+- layer `string` - id for the layer to which the data belongs to  
+- lat `float` - latitude for the marker  
+- lng `float` - latitude for the marker  
+-  `description` - description for the marker  
+
+**Type**: `object`  
 <a name="niclabs.insight.map.marker.Marker"></a>
 #####class: marker.Marker
 **Members**
@@ -696,6 +719,53 @@ Event triggered to notify the dashboard that a marker has been pressed
 -  `description` - description for the marker  
 
 **Type**: `object`  
+<a name="niclabs.insight.map.marker.SimpleMarker"></a>
+#####class: marker.SimpleMarker
+**Extends**: `niclabs.insight.map.marker.Marker`  
+**Members**
+
+* [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
+  * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+  * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+  * [event: "marker_pressed"](#niclabs.insight.map.marker.SimpleMarker#event_marker_pressed)
+
+<a name="new_niclabs.insight.map.marker.SimpleMarker"></a>
+######new marker.SimpleMarker(dashboard, options)
+Constructor for simple markers
+
+Simple markers are shown in the map as basic waypoints, with no style options
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this marker belongs to  
+- options `Object` - configuration options for the layer  
+  - layer `string` - identifier for the layer that this marker belongs to  
+
+**Extends**: `niclabs.insight.map.marker.Marker`  
+<a name="niclabs.insight.map.marker.SimpleMarker#event_marker_pressed"></a>
+######event: "marker_pressed"
+Event triggered to notify the dashboard that a marker has been pressed
+
+**Properties**
+
+- layer `string` - id for the layer to which the data belongs to  
+- lat `float` - latitude for the marker  
+- lng `float` - latitude for the marker  
+-  `description` - description for the marker  
+
+**Type**: `object`  
+<a name="niclabs.insight.map.marker.SimpleMarker#event_marker_pressed"></a>
+######event: "marker_pressed"
+Event triggered to notify the dashboard that a marker has been pressed
+
+**Properties**
+
+- layer `string` - id for the layer to which the data belongs to  
+- lat `float` - latitude for the marker  
+- lng `float` - latitude for the marker  
+-  `description` - description for the marker  
+
+**Type**: `object`  
 <a name="niclabs.insight.map.GoogleMap"></a>
 ####class: map.GoogleMap
 **Extends**: `niclabs.insight.MapView`  
@@ -743,6 +813,108 @@ the underlying google map center as well
 - \[lng\] `float` - longitude for the map center  
 
 **Returns**: [Coordinates](#niclabs.insight.MapView.Coordinates) - coordinates for the map center  
+<a name="niclabs.insight.info"></a>
+###insight.info
+Contains the definitions for the information blocks supported by insight
+
+**Members**
+
+* [insight.info](#niclabs.insight.info)
+  * [class: info.Block](#niclabs.insight.info.Block)
+    * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+    * [Block.id](#niclabs.insight.info.Block.id)
+    * [Block.element](#niclabs.insight.info.Block.element)
+    * [Block.$](#niclabs.insight.info.Block.$)
+    * [Block.remove()](#niclabs.insight.info.Block.remove)
+    * [Block.data([data])](#niclabs.insight.info.Block.data)
+    * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
+  * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+    * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
+
+<a name="niclabs.insight.info.Block"></a>
+####class: info.Block
+**Members**
+
+* [class: info.Block](#niclabs.insight.info.Block)
+  * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+  * [Block.id](#niclabs.insight.info.Block.id)
+  * [Block.element](#niclabs.insight.info.Block.element)
+  * [Block.$](#niclabs.insight.info.Block.$)
+  * [Block.remove()](#niclabs.insight.info.Block.remove)
+  * [Block.data([data])](#niclabs.insight.info.Block.data)
+  * [Block.createDefList([data])](#niclabs.insight.info.Block.createDefList)
+
+<a name="new_niclabs.insight.info.Block"></a>
+#####new info.Block(dashboard, options)
+Construct a information block
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard to which the block belongs to  
+- options `Object` - configuration options for the block  
+  - id `string` - html identifier for the block  
+  - \[title\] `string` - title for the block  
+  - \[properties\] `Object` - block properties (closable, movable)  
+
+<a name="niclabs.insight.info.Block.id"></a>
+#####Block.id
+id of the block
+
+**Type**: `string`  
+<a name="niclabs.insight.info.Block.element"></a>
+#####Block.element
+HTML DOM element for the block container
+
+**Type**: `Element`  
+<a name="niclabs.insight.info.Block.$"></a>
+#####Block.$
+jQuery object for info block container
+
+**Type**: `jQuery`  
+<a name="niclabs.insight.info.Block.remove"></a>
+#####Block.remove()
+Remove the block from the dashboard.
+This method triggers an event to alert all elements of the
+dashboard of the block removal
+
+<a name="niclabs.insight.info.Block.data"></a>
+#####Block.data([data])
+Set/get the data for the block
+
+**Params**
+
+- \[data\] `Object` - data for the block  
+
+**Returns**: `Object` - the current data in the blokc  
+<a name="niclabs.insight.info.Block.createDefList"></a>
+#####Block.createDefList([data])
+Create a definition list from the provided data
+
+TODO: should this really go here? Change the name?
+
+**Params**
+
+- \[data\] `Object` - the updated data for the block  
+
+<a name="niclabs.insight.info.SummaryBlock"></a>
+####class: info.SummaryBlock
+**Extends**: `niclabs.insight.info.Block`  
+**Members**
+
+* [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+  * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
+
+<a name="new_niclabs.insight.info.SummaryBlock"></a>
+#####new info.SummaryBlock(dashboard, options)
+Construct a new summary information block
+TODO: describe what is a summary information block
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - parent dashboard for the block  
+- options `Object` - see [Block](#niclabs.insight.info.Block) constructor  
+
+**Extends**: `niclabs.insight.info.Block`  
 <a name="niclabs.insight..handler"></a>
 ###callback: insight~handler
 Constructs an insight element (visualization, layer, etc.)
