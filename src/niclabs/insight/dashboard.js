@@ -186,7 +186,7 @@ niclabs.insight.Dashboard = (function($) {
                 layers[id] = lyr;
 
                 // Switch to the new layer if activate is true
-                if (activate) self.active(id);
+                if (activate || Object.size(layers) === 1) self.active(id);
 
                 return lyr;
             },
