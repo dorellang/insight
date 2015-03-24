@@ -118,7 +118,7 @@ niclabs.insight.Dashboard = (function($) {
              * @param {String} obj.handler - name of the handler to construct the info view
              * @returns {niclabs.insight.InfoView} the dashboard information view
              */
-            infoview: function(obj) {
+            info: function(obj) {
                 if (typeof obj !== 'undefined') {
                     if ('handler' in obj) {
                         infoView = niclabs.insight.handler(obj.handler)(self, obj);
@@ -139,7 +139,7 @@ niclabs.insight.Dashboard = (function($) {
              * @param {String} obj.handler - name of the handler to construct the map view
              * @returns {niclabs.insight.MapView} the dashboard information view
              */
-            mapview: function(obj) {
+            map: function(obj) {
                 if (typeof obj !== 'undefined') {
                     if ('handler' in obj) {
                         mapView = niclabs.insight.handler(obj.handler)(self, obj);

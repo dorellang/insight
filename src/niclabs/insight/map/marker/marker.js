@@ -19,7 +19,7 @@ niclabs.insight.map.marker.Marker = (function($) {
             throw new Error('The layer '+layer+' does not exist in the dashboard');
 
         var map;
-        if (!(map = dashboard.mapview()))
+        if (!(map = dashboard.map()))
             throw new Error('No map has been initialized for the dashboard yet');
 
         if (!('googlemap' in map))
