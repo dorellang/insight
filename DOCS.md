@@ -14,14 +14,25 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
   * [niclabs.insight](#niclabs.insight)
     * [insight.handler(name, [kind], [handler])](#niclabs.insight.handler)
     * [insight.dashboard([options])](#niclabs.insight.dashboard)
+    * [insight.info([obj])](#niclabs.insight.info(2))
     * [insight.layer(obj, [activate])](#niclabs.insight.layer(2))
     * [insight.map([obj])](#niclabs.insight.map(2))
-    * [insight.info([obj])](#niclabs.insight.info(2))
     * [insight.event](#niclabs.insight.event)
       * [event.on(event, listener)](#niclabs.insight.event.on)
       * [event.off(event, listener)](#niclabs.insight.event.off)
       * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
       * [callback: event~listener](#niclabs.insight.event..listener)
+    * [insight.info](#niclabs.insight.info)
+      * [class: info.Block](#niclabs.insight.info.Block)
+        * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+        * [Block.id](#niclabs.insight.info.Block.id)
+        * [Block.element](#niclabs.insight.info.Block.element)
+        * [Block.$](#niclabs.insight.info.Block.$)
+        * [Block.remove()](#niclabs.insight.info.Block.remove)
+        * [Block.data([data])](#niclabs.insight.info.Block.data)
+      * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+        * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
+        * [SummaryBlock.self.summary([data])](#niclabs.insight.info.SummaryBlock.self.summary)
     * [insight.layer](#niclabs.insight.layer)
       * [class: layer.Layer](#niclabs.insight.layer.Layer)
         * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
@@ -59,17 +70,6 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
         * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
         * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
-    * [insight.info](#niclabs.insight.info)
-      * [class: info.Block](#niclabs.insight.info.Block)
-        * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
-        * [Block.id](#niclabs.insight.info.Block.id)
-        * [Block.element](#niclabs.insight.info.Block.element)
-        * [Block.$](#niclabs.insight.info.Block.$)
-        * [Block.remove()](#niclabs.insight.info.Block.remove)
-        * [Block.data([data])](#niclabs.insight.info.Block.data)
-      * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-        * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
-        * [SummaryBlock.self.summary([data])](#niclabs.insight.info.SummaryBlock.self.summary)
     * [callback: insight~handler](#niclabs.insight..handler)
     * [class: insight.Dashboard](#niclabs.insight.Dashboard)
       * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
@@ -120,14 +120,25 @@ understand what is going on in the city
 * [niclabs.insight](#niclabs.insight)
   * [insight.handler(name, [kind], [handler])](#niclabs.insight.handler)
   * [insight.dashboard([options])](#niclabs.insight.dashboard)
+  * [insight.info([obj])](#niclabs.insight.info(2))
   * [insight.layer(obj, [activate])](#niclabs.insight.layer(2))
   * [insight.map([obj])](#niclabs.insight.map(2))
-  * [insight.info([obj])](#niclabs.insight.info(2))
   * [insight.event](#niclabs.insight.event)
     * [event.on(event, listener)](#niclabs.insight.event.on)
     * [event.off(event, listener)](#niclabs.insight.event.off)
     * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
     * [callback: event~listener](#niclabs.insight.event..listener)
+  * [insight.info](#niclabs.insight.info)
+    * [class: info.Block](#niclabs.insight.info.Block)
+      * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+      * [Block.id](#niclabs.insight.info.Block.id)
+      * [Block.element](#niclabs.insight.info.Block.element)
+      * [Block.$](#niclabs.insight.info.Block.$)
+      * [Block.remove()](#niclabs.insight.info.Block.remove)
+      * [Block.data([data])](#niclabs.insight.info.Block.data)
+    * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+      * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
+      * [SummaryBlock.self.summary([data])](#niclabs.insight.info.SummaryBlock.self.summary)
   * [insight.layer](#niclabs.insight.layer)
     * [class: layer.Layer](#niclabs.insight.layer.Layer)
       * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
@@ -165,17 +176,6 @@ understand what is going on in the city
       * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
       * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
       * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
-  * [insight.info](#niclabs.insight.info)
-    * [class: info.Block](#niclabs.insight.info.Block)
-      * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
-      * [Block.id](#niclabs.insight.info.Block.id)
-      * [Block.element](#niclabs.insight.info.Block.element)
-      * [Block.$](#niclabs.insight.info.Block.$)
-      * [Block.remove()](#niclabs.insight.info.Block.remove)
-      * [Block.data([data])](#niclabs.insight.info.Block.data)
-    * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-      * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
-      * [SummaryBlock.self.summary([data])](#niclabs.insight.info.SummaryBlock.self.summary)
   * [callback: insight~handler](#niclabs.insight..handler)
   * [class: insight.Dashboard](#niclabs.insight.Dashboard)
     * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
@@ -241,6 +241,42 @@ Returns the dashboard for the namespace if options are not provided
 - \[options\] `Object` - list of configuration options for the dashboard see [Dashboard](#niclabs.insight.Dashboard)  
 
 **Returns**: [Dashboard](#niclabs.insight.Dashboard) - dashboard object  
+**Example**  
+```javascript
+// Create a map with the info view to the left
+var dashboard = niclabs.insight.dashboard({
+    'anchor': '#dashboard',
+    'layout': 'left'
+});
+```
+
+<a name="niclabs.insight.info(2)"></a>
+###insight.info([obj])
+Helper method to assign/get the information view to/from the dashboard
+
+**Params**
+
+- \[obj\] `Object` | <code>[InfoView](#niclabs.insight.InfoView)</code> - configuration for the information view or information view object  
+  - handler `String` - name of the handler to construct the info view  
+
+**Returns**: [InfoView](#niclabs.insight.InfoView) - the dashboard information view  
+**Example**  
+```javascript
+// Create the info view
+niclabs.insight.info({
+     handler: 'basic-info-view', // The view constructor
+     blocks: [{
+         'handler': 'summary-block', // The block constructor
+         'id': '#summary',
+         'title': 'My Marker Summary',
+         'data': { // Default data
+             'description': 'This block will show the details of the selected markers'
+       },
+       ignore: ['layer', 'type', 'src'] // Data elements we don't want on the block
+   }]
+});
+```
+
 <a name="niclabs.insight.layer(2)"></a>
 ###insight.layer(obj, [activate])
 Helper method to add/get a [Layer](#niclabs.insight.layer.Layer) for the dashboard
@@ -260,6 +296,27 @@ layer list as is.
 - \[activate=false\] `boolean` - if true, set the layer as the active layer of the dashboard  
 
 **Returns**: `niclabs.insight.info.Layer` - - layer for the provided id  
+**Example**  
+```javascript
+niclabs.insight.layer({
+     handler: 'marker-layer',
+     data: [{
+         'lat': 48.8556,
+         'lng': 2.2986,
+         'landmark': 'Champ de Mars'
+     }, {
+         'lat': 48.8583,
+         'lng': 2.2944,
+         'landmark': 'Eiffel Tower',
+         'fun-fact': 'Was built in 1889.'
+     }],
+     marker: {
+         'type': 'image-marker',
+         'src': 'antenna.svg'
+     }
+});
+```
+
 <a name="niclabs.insight.map(2)"></a>
 ###insight.map([obj])
 Helper method to assign/get the map view to/from the dashboard
@@ -270,16 +327,17 @@ Helper method to assign/get the map view to/from the dashboard
   - handler `String` - name of the handler to construct the map view  
 
 **Returns**: [MapView](#niclabs.insight.MapView) - the dashboard map view  
-<a name="niclabs.insight.info(2)"></a>
-###insight.info([obj])
-Helper method to assign/get the information view to/from the dashboard
+**Example**  
+```javascript
+// Create the map
+var map = niclabs.insight.map({
+     'handler': 'google-map', // Map constructor
+     'lat': 48.8583,
+     'lng': 2.2944,
+     'zoom': 15
+});
+```
 
-**Params**
-
-- \[obj\] `Object` | <code>[InfoView](#niclabs.insight.InfoView)</code> - configuration for the information view or information view object  
-  - handler `String` - name of the handler to construct the info view  
-
-**Returns**: [InfoView](#niclabs.insight.InfoView) - the dashboard information view  
 <a name="niclabs.insight.event"></a>
 ###insight.event
 Very basic event manager for the dashboard
@@ -345,6 +403,112 @@ Insight event listener
 
 **Scope**: inner typedef of [event](#niclabs.insight.event)  
 **Type**: `function`  
+<a name="niclabs.insight.info"></a>
+###insight.info
+Contains the definitions for the information blocks supported by insight
+
+**Members**
+
+* [insight.info](#niclabs.insight.info)
+  * [class: info.Block](#niclabs.insight.info.Block)
+    * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+    * [Block.id](#niclabs.insight.info.Block.id)
+    * [Block.element](#niclabs.insight.info.Block.element)
+    * [Block.$](#niclabs.insight.info.Block.$)
+    * [Block.remove()](#niclabs.insight.info.Block.remove)
+    * [Block.data([data])](#niclabs.insight.info.Block.data)
+  * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+    * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
+    * [SummaryBlock.self.summary([data])](#niclabs.insight.info.SummaryBlock.self.summary)
+
+<a name="niclabs.insight.info.Block"></a>
+####class: info.Block
+**Members**
+
+* [class: info.Block](#niclabs.insight.info.Block)
+  * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+  * [Block.id](#niclabs.insight.info.Block.id)
+  * [Block.element](#niclabs.insight.info.Block.element)
+  * [Block.$](#niclabs.insight.info.Block.$)
+  * [Block.remove()](#niclabs.insight.info.Block.remove)
+  * [Block.data([data])](#niclabs.insight.info.Block.data)
+
+<a name="new_niclabs.insight.info.Block"></a>
+#####new info.Block(dashboard, options)
+Construct a information block
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard to which the block belongs to  
+- options `Object` - configuration options for the block  
+  - id `string` - html identifier for the block  
+  - \[title\] `string` - title for the block  
+  - \[properties\] `Object` - block properties (closable, movable)  
+  - \[data\] `Object` - default data for the block  
+
+<a name="niclabs.insight.info.Block.id"></a>
+#####Block.id
+id of the block
+
+**Type**: `string`  
+<a name="niclabs.insight.info.Block.element"></a>
+#####Block.element
+HTML DOM element for the block container
+
+**Type**: `Element`  
+<a name="niclabs.insight.info.Block.$"></a>
+#####Block.$
+jQuery object for info block container
+
+**Type**: `jQuery`  
+<a name="niclabs.insight.info.Block.remove"></a>
+#####Block.remove()
+Remove the block from the dashboard.
+This method triggers an event to alert all elements of the
+dashboard of the block removal
+
+<a name="niclabs.insight.info.Block.data"></a>
+#####Block.data([data])
+Set/get the data for the block
+
+**Params**
+
+- \[data\] `Object` - data for the block  
+
+**Returns**: `Object` - the current data in the blokc  
+<a name="niclabs.insight.info.SummaryBlock"></a>
+####class: info.SummaryBlock
+**Extends**: `niclabs.insight.info.Block`  
+**Members**
+
+* [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+  * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
+  * [SummaryBlock.self.summary([data])](#niclabs.insight.info.SummaryBlock.self.summary)
+
+<a name="new_niclabs.insight.info.SummaryBlock"></a>
+#####new info.SummaryBlock(dashboard, options, [data], ignore)
+Construct a new summary information block
+TODO: describe what is a summary information block
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - parent dashboard for the block  
+- options `Object` - configuration options for the block  
+  - id `string` - html identifier for the block  
+  - \[title\] `string` - title for the block  
+  - \[properties\] `Object` - block properties (closable, movable)  
+- \[data\] `Object` - default data for the summary  
+- ignore `Array.<String>` - key list to ignore in the summary  
+
+**Extends**: `niclabs.insight.info.Block`  
+<a name="niclabs.insight.info.SummaryBlock.self.summary"></a>
+#####SummaryBlock.self.summary([data])
+Create a definition list from the provided data
+
+**Params**
+
+- \[data\] `Object` - the updated data for the block  
+
 <a name="niclabs.insight.layer"></a>
 ###insight.layer
 Visualization layers for the dashboard
@@ -747,112 +911,6 @@ Event triggered to notify the dashboard that an element of the map has been pres
 - lng `float` - latitude for the marker  
 
 **Type**: `object`  
-<a name="niclabs.insight.info"></a>
-###insight.info
-Contains the definitions for the information blocks supported by insight
-
-**Members**
-
-* [insight.info](#niclabs.insight.info)
-  * [class: info.Block](#niclabs.insight.info.Block)
-    * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
-    * [Block.id](#niclabs.insight.info.Block.id)
-    * [Block.element](#niclabs.insight.info.Block.element)
-    * [Block.$](#niclabs.insight.info.Block.$)
-    * [Block.remove()](#niclabs.insight.info.Block.remove)
-    * [Block.data([data])](#niclabs.insight.info.Block.data)
-  * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-    * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
-    * [SummaryBlock.self.summary([data])](#niclabs.insight.info.SummaryBlock.self.summary)
-
-<a name="niclabs.insight.info.Block"></a>
-####class: info.Block
-**Members**
-
-* [class: info.Block](#niclabs.insight.info.Block)
-  * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
-  * [Block.id](#niclabs.insight.info.Block.id)
-  * [Block.element](#niclabs.insight.info.Block.element)
-  * [Block.$](#niclabs.insight.info.Block.$)
-  * [Block.remove()](#niclabs.insight.info.Block.remove)
-  * [Block.data([data])](#niclabs.insight.info.Block.data)
-
-<a name="new_niclabs.insight.info.Block"></a>
-#####new info.Block(dashboard, options)
-Construct a information block
-
-**Params**
-
-- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard to which the block belongs to  
-- options `Object` - configuration options for the block  
-  - id `string` - html identifier for the block  
-  - \[title\] `string` - title for the block  
-  - \[properties\] `Object` - block properties (closable, movable)  
-  - \[data\] `Object` - default data for the block  
-
-<a name="niclabs.insight.info.Block.id"></a>
-#####Block.id
-id of the block
-
-**Type**: `string`  
-<a name="niclabs.insight.info.Block.element"></a>
-#####Block.element
-HTML DOM element for the block container
-
-**Type**: `Element`  
-<a name="niclabs.insight.info.Block.$"></a>
-#####Block.$
-jQuery object for info block container
-
-**Type**: `jQuery`  
-<a name="niclabs.insight.info.Block.remove"></a>
-#####Block.remove()
-Remove the block from the dashboard.
-This method triggers an event to alert all elements of the
-dashboard of the block removal
-
-<a name="niclabs.insight.info.Block.data"></a>
-#####Block.data([data])
-Set/get the data for the block
-
-**Params**
-
-- \[data\] `Object` - data for the block  
-
-**Returns**: `Object` - the current data in the blokc  
-<a name="niclabs.insight.info.SummaryBlock"></a>
-####class: info.SummaryBlock
-**Extends**: `niclabs.insight.info.Block`  
-**Members**
-
-* [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-  * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
-  * [SummaryBlock.self.summary([data])](#niclabs.insight.info.SummaryBlock.self.summary)
-
-<a name="new_niclabs.insight.info.SummaryBlock"></a>
-#####new info.SummaryBlock(dashboard, options, [data], ignore)
-Construct a new summary information block
-TODO: describe what is a summary information block
-
-**Params**
-
-- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - parent dashboard for the block  
-- options `Object` - configuration options for the block  
-  - id `string` - html identifier for the block  
-  - \[title\] `string` - title for the block  
-  - \[properties\] `Object` - block properties (closable, movable)  
-- \[data\] `Object` - default data for the summary  
-- ignore `Array.<String>` - key list to ignore in the summary  
-
-**Extends**: `niclabs.insight.info.Block`  
-<a name="niclabs.insight.info.SummaryBlock.self.summary"></a>
-#####SummaryBlock.self.summary([data])
-Create a definition list from the provided data
-
-**Params**
-
-- \[data\] `Object` - the updated data for the block  
-
 <a name="niclabs.insight..handler"></a>
 ###callback: insight~handler
 Constructs an insight element (visualization, layer, etc.)
@@ -985,23 +1043,22 @@ Set/get the active layer
 Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
 of the filter for further customizations
 
-Example:
-```javascript
-myDashboard.filter({
- description: 'Geographic Location', // the empty string is used if not provided
- options: [
-     {name: 'More than 20s', filter: function (data) {return data.seconds > 20;}},
-     {name: 'Over Equator', filter: function (data) {return data.lat > 0;}},
-     {name: 'By Type: a,f,g,e,t,h', filter: function (data) {return "afgeth".indexOf(data['event type'])> 0;}}
- ]
-});
-```
-
 **Params**
 
 - filter `Object` | `number` - configuration for the filter or filter index  
 
 **Returns**: `jQuery` - reference to the added element for further customization  
+**Example**  
+```javascript
+dashboard.filter({
+ description: 'Landmark', // the empty string is used if not provided
+ options: [
+     {name: 'Not Eiffel Tower', filter: function(data) { return data.landmark.indexOf("Eiffel") < 0; }},
+     {name: 'Not Champ de Mars', filter: function(data) { return data.landmark.indexOf("Mars") < 0; }},
+ ]
+});
+```
+
 <a name="niclabs.insight.Dashboard.clear"></a>
 ####Dashboard.clear()
 Clear the map by calling the [clear](#niclabs.insight.layer.Layer.clear) method
@@ -1047,18 +1104,6 @@ jQuery object for the filter bar container
 ####FilterBar.filter(filter)
 Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
 of the filter for further customizations
-
-Example:
-```javascript
-myDashboard.filter({
- description: 'Geographic Location', // the empty string is used if not provided
- options: [
-     {name: 'More than 20s', filter: function (data) {return data.seconds > 20;}},
-     {name: 'Over Equator', filter: function (data) {return data.lat > 0;}},
-     {name: 'By Type: a,f,g,e,t,h', filter: function (data) {return "afgeth".indexOf(data['event type'])> 0;}}
- ]
-});
-```
 
 **Params**
 

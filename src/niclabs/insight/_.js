@@ -213,6 +213,15 @@ niclabs.insight = (function($) {
           *
           * Returns the dashboard for the namespace if options are not provided
           *
+          * @example
+          * ```javascript
+          * // Create a map with the info view to the left
+          * var dashboard = niclabs.insight.dashboard({
+          *     'anchor': '#dashboard',
+          *     'layout': 'left'
+          * });
+          * ```
+          *
           * @memberof niclabs.insight
           * @param {Object=} options - list of configuration options for the dashboard see {@link niclabs.insight.Dashboard}
           * @returns {niclabs.insight.Dashboard} dashboard object

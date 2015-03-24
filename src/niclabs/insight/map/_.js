@@ -7,6 +7,17 @@ niclabs.insight.map = (function () {
     /**
      * Helper method to assign/get the map view to/from the dashboard
      *
+     * @example
+     * ```javascript
+     * // Create the map
+     * var map = niclabs.insight.map({
+     *      'handler': 'google-map', // Map constructor
+     *      'lat': 48.8583,
+     *      'lng': 2.2944,
+     *      'zoom': 15
+     * });
+     * ```
+     *
      * @memberof niclabs.insight
      * @variation 2
      * @param {Object|niclabs.insight.MapView} [obj] - configuration for the map view or map view object

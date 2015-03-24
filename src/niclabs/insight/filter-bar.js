@@ -106,17 +106,6 @@ niclabs.insight.FilterBar = (function($) {
              * Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
              * of the filter for further customizations
              *
-             * Example:
-             * ```javascript
-             * myDashboard.filter({
-             *  description: 'Geographic Location', // the empty string is used if not provided
-             *  options: [
-             *      {name: 'More than 20s', filter: function (data) {return data.seconds > 20;}},
-             *      {name: 'Over Equator', filter: function (data) {return data.lat > 0;}},
-             *      {name: 'By Type: a,f,g,e,t,h', filter: function (data) {return "afgeth".indexOf(data['event type'])> 0;}}
-             *  ]
-             * });
-             * ```
              * @memberof niclabs.insight.FilterBar
              * @param {Object|number} filter configuration for the filter or filter index
              * @return {jQuery} reference to the added element for further customization
