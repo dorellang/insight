@@ -276,16 +276,11 @@ niclabs.insight.Dashboard = (function($) {
         // Append the dashboard to the container
         $(anchor).append(container);
 
-        // // Create the filter bar
-        // var filterBar = new CityDashboard.FilterBar();
-        //
-        // // Create an event to be notified of a filter change
-        // container.on('filterChanged', function(e, fun) {
-        //     var f = fun();
-        //     for (var i = layers.length - 1; i >= 0; i--) {
-        //         layers[i].filter(f);
-        //     }
-        // });
+        // Create the filter bar
+        var filterBar = niclabs.insight.FilterBar();
+
+        // Append the filter bar
+        container.append(filterBar.element);
 
         var layers = {};
         var numberedLayers = 0;
@@ -302,6 +297,12 @@ niclabs.insight.Dashboard = (function($) {
         var infoView = {};
         var mapView = {};
 
+        // Create an event to be notified of a filter change
+        niclabs.insight.event.on('filter_changed', function(f) {
+            $.each(layers, function(name, layer) {
+                layer.filter(f);
+            });
+        });
 
         // Listen for changes in the layer data
         niclabs.insight.event.on('layer_data', function(obj) {
@@ -478,11 +479,26 @@ niclabs.insight.Dashboard = (function($) {
             },
 
             /**
-             * TODO: Documentation missing
+             * Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
+             * of the filter for further customizations
+             *
+             * Example:
+             * ```javascript
+             * myDashboard.filter({
+             *  description: 'Geographic Location', // the empty string is used if not provided
+             *  options: [
+             *      {name: 'More than 20s', filter: function (data) {return data.seconds > 20;}},
+             *      {name: 'Over Equator', filter: function (data) {return data.lat > 0;}},
+             *      {name: 'By Type: a,f,g,e,t,h', filter: function (data) {return "afgeth".indexOf(data['event type'])> 0;}}
+             *  ]
+             * });
+             * ```
+             * @memberof niclabs.insight.Dashboard
+             * @param {Object|number} filter configuration for the filter or filter index
+             * @return {jQuery} reference to the added element for further customization
              */
-            addFilter: function(filter) {
-                filterBar.addFilter(filter);
-                return self;
+            filter: function(filter) {
+                return filterBar.filter(filter);
             },
 
             /**
@@ -497,6 +513,171 @@ niclabs.insight.Dashboard = (function($) {
         };
 
         return self;
+    };
+})(jQuery);
+
+niclabs.insight.FilterBar = (function($) {
+    "use strict";
+
+    /**
+     * Constructs a filter bar for the dashboard
+     *
+     * @class niclabs.insight.FilterBar
+     */
+    return function(dashboard, options) {
+        var barId = '#insight-filter-bar';
+
+        // Bar container
+        var container = $('<div>').setID(barId).addClass('filterBar');
+
+        // List of filters
+        var filters = [];
+
+        /**
+         * Compose the filters selected by the user
+         */
+        function composeFilters() {
+            var callbacks = [];
+            for (var i = 0; i < filters.length; i++) {
+                if (filters[i].element.prop('selectedIndex') > 0) {
+                    callbacks.push(filters[i].options[filters[i].element.prop('selectedIndex') - 1].filter);
+                }
+            }
+
+            return function(data) {
+                for (var i = 0; i < callbacks.length; i++) {
+                    if (!callbacks[i](data)) return false;
+                }
+                return true;
+            };
+        }
+
+        /* Google maps geocoder and search bar*/
+        var geocoder = new google.maps.Geocoder();
+
+        // Create the search box
+        var search = $('<input>')
+            .addClass('search')
+            .attr('type', 'search')
+            .attr('placeholder', 'Enter location');
+
+        // Append search box to bar
+        container.append(search);
+
+        var geocode = function() {
+            var map = CityDashboard.container('main')[0].data;
+            var address = search.val();
+            geocoder.geocode({
+                'address': address
+            }, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    // map.setZoom(12);
+                    map.fitBounds(results[0].geometry.bounds);
+                } else {
+                    // TODO: this message should go in a status bar
+                    search.val('not found: ' + address);
+                }
+            });
+        };
+
+        search.on('change', geocode);
+
+
+        /**
+         * Function to act as a filter for the data
+         *
+         * The function returns false if the data must be removed from the visualization
+         * or true if the data must be kept
+         *
+         * @callback niclabs.insight.FilterBar~filter
+         * @param {Object} data - data element to evaluate
+         * @returns {boolean} true if the data passes the filter
+         */
+
+        return {
+            /**
+             * HTML DOM element for the filter bar container
+             *
+             * @memberof niclabs.insight.FilterBar
+             * @member {Element}
+             */
+            get element () {
+                var c = $(barId);
+                container = c.length === 0 ? container : c;
+                return container[0];
+            },
+
+            /**
+             * jQuery object for the filter bar container
+             *
+             * @memberof niclabs.insight.FilterBar
+             * @member {jQuery}
+             */
+            $: function() {
+                var c = $(barId);
+                container = c.length === 0 ? container : c;
+                return container;
+            },
+
+            /**
+             * Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
+             * of the filter for further customizations
+             *
+             * Example:
+             * ```javascript
+             * myDashboard.filter({
+             *  description: 'Geographic Location', // the empty string is used if not provided
+             *  options: [
+             *      {name: 'More than 20s', filter: function (data) {return data.seconds > 20;}},
+             *      {name: 'Over Equator', filter: function (data) {return data.lat > 0;}},
+             *      {name: 'By Type: a,f,g,e,t,h', filter: function (data) {return "afgeth".indexOf(data['event type'])> 0;}}
+             *  ]
+             * });
+             * ```
+             * @memberof niclabs.insight.FilterBar
+             * @param {Object|number} filter configuration for the filter or filter index
+             * @return {jQuery} reference to the added element for further customization
+             */
+            filter: function(filter) {
+                if (typeof filter === 'number') return filters[filter];
+
+                var select = $('<select>');
+
+                var description = filter.description || '';
+                var option = $('<option>').text(description);
+                select.append(option);
+
+                var i;
+                for (i = 0; i < filter.options.length; i++) {
+                    option = $('<option>').text(filter.options[i].name);
+                    select.append(option);
+                }
+
+                select.on('change', function() {
+                    /**
+                     * Event triggered when a filter has changed
+                     *
+                     * It will pass as parameter the filtering function to apply to
+                     * the layers
+                     *
+                     * @event niclabs.insight.FilterBar#filter_changed
+                     * @type {niclabs.insight.FilterBar~filter}
+                     */
+                    niclabs.insight.event.trigger('filter_changed', composeFilters());
+                });
+
+                // Add the selector to the filter bar
+                container.append(select);
+
+                filter.element = select;
+
+                // Add the filter to the filter list
+                filters.push(filter);
+
+                return select;
+            },
+        };
     };
 })(jQuery);
 
@@ -768,6 +949,17 @@ niclabs.insight.MapView = (function($) {
 			.setID(mapId)
 			.addClass('mapWindow');
 
+
+		/**
+		* Event triggered to notify the dashboard that an element of the map has been pressed
+		*
+		* @event niclabs.insight.MapView#map_element_selected
+		* @type {object}
+		* @property {string} layer - id for the layer to which the data belongs to
+		* @property {float} lat - latitude for the marker
+		* @property {float} lng - latitude for the marker
+		*/
+
 		return {
 			/**
              * HTML DOM element for the map view
@@ -965,6 +1157,311 @@ niclabs.insight.event = (function() {
 })();
 
 /**
+ * Contains the definitions for the information blocks supported by insight
+ *
+ * @namespace
+ */
+niclabs.insight.info = (function () {
+    /**
+     * Helper method to assign/get the information view to/from the dashboard
+     *
+     * @memberof niclabs.insight
+     * @variation 2
+     * @param {Object|niclabs.insight.InfoView} [obj] - configuration for the information view or information view object
+     * @param {String} obj.handler - name of the handler to construct the info view
+     * @returns {niclabs.insight.InfoView} the dashboard information view
+     */
+    var info = function(obj) {
+        var dashboard = niclabs.insight.dashboard();
+        if (typeof dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
+        return dashboard.info(obj);
+    };
+
+    return info;
+})();
+
+niclabs.insight.info.Block = (function($) {
+    "use strict";
+
+    /**
+     * Construct a information block
+     *
+     * @class niclabs.insight.info.Block
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard to which the block belongs to
+     * @param {Object} options - configuration options for the block
+     * @param {string} options.id - html identifier for the block
+     * @param {string=} options.title - title for the block
+     * @param {Object=} options.properties - block properties (closable, movable)
+     * @param {Object=} options.data - default data for the block
+     */
+    var constructor = function(dashboard, options) {
+        if (!('id' in options)) {
+            throw new Error("All information blocks must have an id");
+        }
+
+        var id = options.id;
+        var htmlId = id.charAt(0) === '#' ? id : '#' + id;
+        var title = options.title || '';
+        var properties = options.properties || {};
+        var preprocess = options.preprocess || function(x) {return x;};
+
+        // placing
+        var titleElement = $('<h4>').append(title).addClass('viz-title');
+
+        var container = $('<div>').setID(htmlId).addClass('visualization')
+            .append(titleElement)
+            .append($('<hr>').addClass('viz-bar'));
+
+        /**
+         * Remove the block from the dashboard.
+         * This method triggers an event to alert all elements of the
+         * dashboard of the block removal
+         *
+         * @memberof niclabs.insight.info.Block
+         */
+        function remove() {
+            // Trigger the block removal
+            niclabs.insight.event.trigger('remove-block', {
+                'id': id
+            });
+        }
+
+        // Make the block closable
+        if (properties.closable === undefined || properties.closable) {
+            container.closable(function() {
+                // Remove the block
+                remove();
+            });
+        }
+
+        // Make the block movable
+        if (properties.movable === undefined || properties.movable) {
+            container.movable();
+        }
+
+        // Add the properties to the block style
+        container.css(properties);
+
+        // checkbox handling
+        // TODO: this is not a generic functionality?
+        // var checkbox_handler = options['checkbox-handler'] || function (a, d) { return d; };
+        //
+        // if (options.checkbox)
+        //     this.addCheckbox(options.checkbox);
+
+        // Block data
+        var data = options.data || {};
+
+        var self = {
+            /**
+             * id of the block
+             * @memberof niclabs.insight.info.Block
+             * @member {string}
+             */
+            get id () {
+                return id;
+            },
+
+            /**
+             * HTML DOM element for the block container
+             *
+             * @memberof niclabs.insight.info.Block
+             * @member {Element}
+             */
+            get element () {
+                var c = $(htmlId);
+                container = c.length === 0 ? container : c;
+                return container[0];
+            },
+
+            /**
+             * jQuery object for info block container
+             *
+             * @memberof niclabs.insight.info.Block
+             * @member {jQuery}
+             */
+            get $ () {
+                var c = $(htmlId);
+                container = c.length === 0 ? container : c;
+                return container;
+            },
+
+            /**
+             * Trigger the removal of the block
+             */
+            remove: remove,
+
+            /**
+             * Set/get the data for the block
+             *
+             * @memberof niclabs.insight.info.Block
+             * @param {Object=} data - data for the block
+             * @returns {Object} the current data in the blokc
+             */
+            data: function (d) {
+                d = typeof d === 'undefined' ? data : d;
+
+                // If the object is empty we cleanup the internal data
+                if (Object.keys(d).length === 0)
+                    data = {};
+                else
+                    data = preprocess(d);
+
+                return data;
+            },
+
+            refresh: function () {
+                var latlngView = self.$.find('.latlngView').empty();
+
+                self.$.find('.deflist').remove();
+
+                var data = self.data();
+
+                var lat = data.lat,
+                    lng = data.lng;
+
+                if (lat && lng)
+                    latlngView.text('lat: ' + lat + ', lng: ' + lng).insertAfter(self.$.find('hr'));
+            },
+        };
+
+        return self;
+    };
+
+    return constructor;
+})(jQuery);
+
+// CityDashboard.Visualization.prototype = {
+//     addCheckbox: function (keys) {
+//         //keys: {name1:true,name2:false,name3:true,...}
+//         //each element of the object indicates the label of each checkbox. The number of keys indicates the number of checboxes.
+//         //handler :  function ([true, false, true, ...],data)
+//         //each element of the array corresponds to each checkbox state.
+//
+//         var checkpanel = $("<span>").addClass('checkbox-panel');
+//
+//         var arr = [];
+//
+//         for (var key in keys) {
+//             var checkbox = $('<input>').attr('type', 'checkbox');
+//
+//             arr[arr.length] = checkbox[0].checked = keys[key];
+//             checkpanel.append(checkbox);
+//
+//             var _this = this;
+//
+//             checkbox.on('change', function () {
+//
+//                 var array = $(this).parent().children('input:checkbox').map(function () {
+//                     return $(this).prop('checked');
+//                 }).get();
+//
+//                 _this.getData = function () {
+//                     var clone = _this.data;
+//                     if (!(_this.data instanceof Array))
+//                         clone = jQuery.extend({}, _this.data);
+//                     return _this.checkbox_handler(array, clone);
+//                 };
+//
+//                 _this.refresh();
+//
+//             })
+//
+//             checkbox.after($('<label>').text(key));
+//         }
+//
+//         this.viz.append(checkpanel);
+//
+//         _this.getData = function () {
+//             var clone = _this.data;
+//             if (!(_this.data instanceof Array))
+//                 clone = jQuery.extend({}, _this.data);
+//             return _this.checkbox_handler(arr, clone);
+//         };
+//     }
+//
+// };
+
+niclabs.insight.info.SummaryBlock = (function($) {
+    /**
+     * Construct a new summary information block
+     * TODO: describe what is a summary information block
+     *
+     * @class niclabs.insight.info.SummaryBlock
+     * @augments niclabs.insight.info.Block
+     * @inheritdoc
+     * @param {niclabs.insight.Dashboard} dashboard - parent dashboard for the block
+     * @param {Object} options - configuration options for the block
+     * @param {string} options.id - html identifier for the block
+     * @param {string=} options.title - title for the block
+     * @param {Object=} options.properties - block properties (closable, movable)
+     * @param {Object=} data - default data for the summary
+     * @param {String[]} ignore - key list to ignore in the summary
+     */
+    var SummaryBlock = function(dashboard, options) {
+        var self = niclabs.insight.info.Block(dashboard, options);
+
+        var ignore = ['lat', 'lng', 'value'];
+
+        // Concat with the options if available
+        ignore = ignore.concat(options.ignore || []);
+
+        self.$.addClass('summary-viz');
+
+        // Append view elements
+        self.$.append($('<h6>').addClass('latlngView'));
+        self.$.append( $('<dl>').addClass('deflist') );
+
+        // Store the refresh method of the parent
+        var refresh = self.refresh;
+
+        /**
+         * Override the parent refresh
+         */
+        self.refresh = function() {
+            // Call the parent refresh
+            refresh();
+
+            self.$.append($('<dl>').addClass('deflist'));
+            self.summary(self.data());
+        };
+
+
+        /**
+         * Create a definition list from the provided data
+         *
+         * @memberof niclabs.insight.info.SummaryBlock
+         * @param {Object=} data - the updated data for the block
+         */
+        self.summary = function(data) {
+            $.each(data, function (key, value) {
+                if (ignore.indexOf(key) < 0) {
+                    self.$.find('.deflist')
+                        .append($('<dt>').text(key).addClass('deflist-key'))
+                        .append($('<dd>').text(value).addClass('deflist-value'));
+                }
+            });
+        };
+
+        // Create the default summary if provided
+        if (options.data) self.summary(options.data);
+
+        // Listen for map events
+        niclabs.insight.event.on('map_element_selected', function(data) {
+            self.data(data);
+            self.refresh();
+        });
+
+        return self;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('summary-block', 'info-block', SummaryBlock);
+
+    return SummaryBlock;
+})(jQuery);
+
+/**
  * Visualization layers for the dashboard
  *
  * @namespace
@@ -1036,19 +1533,6 @@ niclabs.insight.layer.Layer = (function($) {
         // Will be set to true once the layer is loaded
         var loaded = false;
 
-        /**
-         * Function to act as a filter for the data
-         *
-         * The function returns false if the data must be removed from the visualization
-         * or true if the data must be kept
-         *
-         * TODO: I think this is better defined in FilterBar
-         *
-         * @callback niclabs.insight.layer.Layer~filter
-         * @param {Object} data - data element to evaluate
-         * @returns {boolean} true if the data passes the filter
-         */
-
         var self = {
             /**
              * id of the layer
@@ -1072,7 +1556,7 @@ niclabs.insight.layer.Layer = (function($) {
              */
             data: function(obj) {
                 if (typeof obj === 'undefined') {
-                    return loaded ? data : dataSource;
+                    return loaded || !dataSource? data : dataSource;
                 }
 
                 if (typeof obj === 'string') {
@@ -1253,6 +1737,7 @@ niclabs.insight.layer.MarkerLayer = (function($) {
          * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
          */
         layer.filter = function(fn) {
+            var data = layer.data();
             for (var i = 0; i < markers.length; i++) {
                 markers[i].visible(fn(data[i]));
             }
@@ -1401,293 +1886,6 @@ niclabs.insight.map.GoogleMap = (function($) {
 })(jQuery);
 
 /**
- * Contains the definitions for the information blocks supported by insight
- *
- * @namespace
- */
-niclabs.insight.info = (function () {
-    /**
-     * Helper method to assign/get the information view to/from the dashboard
-     *
-     * @memberof niclabs.insight
-     * @variation 2
-     * @param {Object|niclabs.insight.InfoView} [obj] - configuration for the information view or information view object
-     * @param {String} obj.handler - name of the handler to construct the info view
-     * @returns {niclabs.insight.InfoView} the dashboard information view
-     */
-    var info = function(obj) {
-        var dashboard = niclabs.insight.dashboard();
-        if (typeof dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
-        return dashboard.info(obj);
-    };
-
-    return info;
-})();
-
-niclabs.insight.info.Block = (function($) {
-    "use strict";
-
-    /**
-     * Construct a information block
-     *
-     * @class niclabs.insight.info.Block
-     * @param {niclabs.insight.Dashboard} dashboard - dashboard to which the block belongs to
-     * @param {Object} options - configuration options for the block
-     * @param {string} options.id - html identifier for the block
-     * @param {string=} options.title - title for the block
-     * @param {Object=} options.properties - block properties (closable, movable)
-     */
-    var constructor = function(dashboard, options) {
-        if (!('id' in options)) {
-            throw new Error("All information blocks must have an id");
-        }
-
-        var id = options.id;
-        var htmlId = id.charAt(0) === '#' ? id : '#' + id;
-        var title = options.title || '';
-        var properties = options.properties || {};
-        var datasource = options.datasource || id; // TODO: unnecessary?
-        var preprocess = options.preprocess || function(x) {return x;};
-
-        // placing
-        var titleElement = $('<h4>').append(title).addClass('viz-title');
-
-        var container = $('<div>').setID(htmlId).addClass('visualization')
-            .append(titleElement)
-            .append($('<hr>').addClass('viz-bar'));
-
-        /**
-         * Remove the block from the dashboard.
-         * This method triggers an event to alert all elements of the
-         * dashboard of the block removal
-         *
-         * @memberof niclabs.insight.info.Block
-         */
-        function remove() {
-            // Trigger the block removal
-            niclabs.insight.event.trigger('remove-block', {
-                'id': id,
-                'datasource': datasource
-            });
-        }
-
-        // Make the block closable
-        if (properties.closable === undefined || properties.closable) {
-            container.closable(function() {
-                // Remove the block
-                remove();
-            });
-        }
-
-        // Make the block movable
-        if (properties.movable === undefined || properties.movable) {
-            container.movable();
-        }
-
-        // TODO: not sure what this does
-        container.append($('<h6>').addClass('latlngView'));
-
-        // Add the properties to the block style
-        container.css(properties);
-
-        // checkbox handling
-        // TODO: this is not a generic functionality?
-        // var checkbox_handler = options['checkbox-handler'] || function (a, d) { return d; };
-        //
-        // if (options.checkbox)
-        //     this.addCheckbox(options.checkbox);
-
-        // Block data
-        var data = {};
-
-        var self = {
-            /**
-             * id of the block
-             * @memberof niclabs.insight.info.Block
-             * @member {string}
-             */
-            get id () {
-                return id;
-            },
-
-            /**
-             * HTML DOM element for the block container
-             *
-             * @memberof niclabs.insight.info.Block
-             * @member {Element}
-             */
-            get element () {
-                var c = $(htmlId);
-                container = c.length === 0 ? container : c;
-                return container[0];
-            },
-
-            /**
-             * jQuery object for info block container
-             *
-             * @memberof niclabs.insight.info.Block
-             * @member {jQuery}
-             */
-            get $ () {
-                var c = $(htmlId);
-                container = c.length === 0 ? container : c;
-                return container;
-            },
-
-            /**
-             * Trigger the removal of the block
-             */
-            remove: remove,
-
-            /**
-             * Set/get the data for the block
-             *
-             * @memberof niclabs.insight.info.Block
-             * @param {Object=} data - data for the block
-             * @returns {Object} the current data in the blokc
-             */
-            data: function (d) {
-                d = typeof d === 'undefined' ? data : d;
-
-                // If the object is empty we cleanup the internal data
-                if (Object.keys(d).length === 0)
-                    data = {};
-                else
-                    data = preprocess(d);
-
-                return data;
-            },
-
-            refresh: function () {
-                var latlngView = self.$.find('.latlngView').empty();
-
-                self.$.find('.deflist').remove();
-
-                var data = self.getData();
-
-                var lat = data.lat,
-                    lng = data.lng;
-
-                if (lat && lng)
-                    latlngView.text('lat: ' + lat + ', lng: ' + lng).insertAfter(self.$.find('hr'));
-            },
-
-            /**
-             * Create a definition list from the provided data
-             *
-             * TODO: should this really go here? Change the name?
-             *
-             * @memberof niclabs.insight.info.Block
-             * @param {Object=} data - the updated data for the block
-             */
-            createDefList: function (data) {
-                $.each(data, function (key, value) {
-                    if (key !== 'lat' && key !== 'lng' && key !== 'value') {
-                        self.$.find('.deflist')
-                            .append($('<dt>').text(key).addClass('deflist-key'))
-                            .append($('<dd>').text(value).addClass('deflist-value'));
-                    }
-                });
-            },
-        };
-
-        return self;
-    };
-
-    return constructor;
-})(jQuery);
-
-// CityDashboard.Visualization.prototype = {
-//     addCheckbox: function (keys) {
-//         //keys: {name1:true,name2:false,name3:true,...}
-//         //each element of the object indicates the label of each checkbox. The number of keys indicates the number of checboxes.
-//         //handler :  function ([true, false, true, ...],data)
-//         //each element of the array corresponds to each checkbox state.
-//
-//         var checkpanel = $("<span>").addClass('checkbox-panel');
-//
-//         var arr = [];
-//
-//         for (var key in keys) {
-//             var checkbox = $('<input>').attr('type', 'checkbox');
-//
-//             arr[arr.length] = checkbox[0].checked = keys[key];
-//             checkpanel.append(checkbox);
-//
-//             var _this = this;
-//
-//             checkbox.on('change', function () {
-//
-//                 var array = $(this).parent().children('input:checkbox').map(function () {
-//                     return $(this).prop('checked');
-//                 }).get();
-//
-//                 _this.getData = function () {
-//                     var clone = _this.data;
-//                     if (!(_this.data instanceof Array))
-//                         clone = jQuery.extend({}, _this.data);
-//                     return _this.checkbox_handler(array, clone);
-//                 };
-//
-//                 _this.refresh();
-//
-//             })
-//
-//             checkbox.after($('<label>').text(key));
-//         }
-//
-//         this.viz.append(checkpanel);
-//
-//         _this.getData = function () {
-//             var clone = _this.data;
-//             if (!(_this.data instanceof Array))
-//                 clone = jQuery.extend({}, _this.data);
-//             return _this.checkbox_handler(arr, clone);
-//         };
-//     }
-//
-// };
-
-niclabs.insight.info.SummaryBlock = (function($) {
-    /**
-     * Construct a new summary information block
-     * TODO: describe what is a summary information block
-     *
-     * @class niclabs.insight.info.SummaryBlock
-     * @augments niclabs.insight.info.Block
-     * @inheritdoc
-     * @param {niclabs.insight.Dashboard} dashboard - parent dashboard for the block
-     * @param {Object} options - see {@link niclabs.insight.info.Block} constructor
-     */
-    var SummaryBlock = function(dashboard, options) {
-        var self = niclabs.insight.info.Block(dashboard, options);
-
-        self.$.addClass('summary-viz');
-
-        // Store the refresh method of the parent
-        var refresh = self.refresh;
-
-        /**
-         * Override the parent refresh
-         */
-        self.refresh = function() {
-            // Call the parent refresh
-            refresh();
-
-            self.$.append($('<dl>').addClass('deflist'));
-            self.createDeflist(self.data());
-        };
-
-        return self;
-    };
-
-    // Register the handler
-    niclabs.insight.handler('summary-block', 'info-block', SummaryBlock);
-
-    return SummaryBlock;
-})(jQuery);
-
-/**
  * Collection of markers available for drawing on the map
  *
  * @namespace
@@ -1707,7 +1905,7 @@ niclabs.insight.map.marker.CircleMarker = (function($) {
      * @param {string} options.layer - identifier for the layer that this marker belongs to
      * @params {float} options.lat - latitude for the marker
      * @params {float} options.lng - longitude for the marker
-     * @params {string} options.description - description for the marker
+     * @params {string} options.landmark - landmark that the marker indicates
      * @params {number} [options.radius=400] - radius for the circle
      * @params {string} [options.strokeColor='#ff0000'] - color for the circle perimenter line
      * @params {float} [options.strokeOpacity=0.8] - opacity for the circle perimeter line
@@ -1728,7 +1926,7 @@ niclabs.insight.map.marker.CircleMarker = (function($) {
             strokeWeight: options.strokeWeight || 2,
             fillColor: options.fillColor || '#FF0000',
             fillOpacity: options.fillOpacity || 0.35,
-            title: options.description || ''
+            title: options.landmark || ''
         });
 
         // Re-write the marker function
@@ -1758,7 +1956,7 @@ niclabs.insight.map.marker.ImageMarker = (function($) {
      * @param {string} options.layer - identifier for the layer that this marker belongs to
      * @params {float} options.lat - latitude for the marker
      * @params {float} options.lng - longitude for the marker
-     * @params {string=} options.description - description for the marker
+     * @params {string} options.landmark - landmark that the marker indicates
      * @params {string} options.src - image source
      */
     var ImageMarker = function(dashboard, options) {
@@ -1775,7 +1973,7 @@ niclabs.insight.map.marker.ImageMarker = (function($) {
             position: latLng,
             map: self.map.googlemap(),
             icon: image,
-            title: options.description || ''
+            title: options.landmark || ''
         });
 
         // Re-write the marker function
@@ -1802,7 +2000,7 @@ niclabs.insight.map.marker.Marker = (function($) {
      * @param {string} options.layer - identifier for the layer that this marker belongs to
      * @params {float} options.lat - latitude for the marker
      * @params {float} options.lng - longitude for the marker
-     * @params {string} options.description - description for the marker
+     * @params {string} options.landmark - landmark that the marker indicates
      */
     var Marker = function(dashboard, options) {
         if (!('layer' in options))
@@ -1866,17 +2064,7 @@ niclabs.insight.map.marker.Marker = (function($) {
                     var marker = self.marker();
 
                     listener = google.maps.event.addListener(marker, 'click', function() {
-                        /**
-                         * Event triggered to notify the dashboard that a marker has been pressed
-                         *
-                         * @event niclabs.insight.map.marker.Marker#marker_pressed
-                         * @type {object}
-                         * @property {string} layer - id for the layer to which the data belongs to
-                         * @property {float} lat - latitude for the marker
-                         * @property {float} lng - latitude for the marker
-                         * @property {description} - description for the marker
-                         */
-                        niclabs.insight.event.trigger('marker_pressed', options);
+                        niclabs.insight.event.trigger('map_element_selected', options);
 
                         // TODO: make configurable?
                         if ('setAnimation' in marker) {
@@ -1940,7 +2128,7 @@ niclabs.insight.map.marker.SimpleMarker = (function($) {
      * @param {string} options.layer - identifier for the layer that this marker belongs to
      * @params {float} options.lat - latitude for the marker
      * @params {float} options.lng - longitude for the marker
-     * @params {string} options.description - description for the marker
+     * @params {string} options.landmark - landmark that the marker indicates
      */
     var SimpleMarker = function(dashboard, options) {
         var self = niclabs.insight.map.marker.Marker(dashboard, options);
@@ -1950,7 +2138,7 @@ niclabs.insight.map.marker.SimpleMarker = (function($) {
         var marker = new google.maps.Marker({
             position: latLng,
             map: self.map.googlemap(),
-            title: options.description || ''
+            title: options.landmark || ''
         });
 
         // Re-write the marker function
