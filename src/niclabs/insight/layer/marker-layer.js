@@ -81,6 +81,7 @@ niclabs.insight.layer.MarkerLayer = (function($) {
          * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
          */
         layer.filter = function(fn) {
+            var data = layer.data();
             for (var i = 0; i < markers.length; i++) {
                 markers[i].visible(fn(data[i]));
             }
