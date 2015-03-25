@@ -119,16 +119,6 @@ niclabs.insight.MapView = (function($) {
 
 				return zoom;
 			},
-
-			/**
-			 * Get the jquery object for the html element of the map
-			 *
-			 * @memberof niclabs.insight.MapView
-			 * @return {jQuery} container for the map
-			 */
-			container: function() {
-				return container;
-			}
 		};
 	};
 })(jQuery);
