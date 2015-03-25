@@ -26,7 +26,7 @@ niclabs.insight.info.SummaryBlock = (function($) {
 
         // Append view elements
         self.$.append($('<h6>').addClass('latlngView'));
-        self.$.append( $('<dl>').addClass('deflist') );
+        self.$.append($('<dl>').addClass('deflist'));
 
         // Store the refresh method of the parent
         var refresh = self.refresh;
