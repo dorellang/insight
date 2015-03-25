@@ -20,7 +20,7 @@ var niclabs = {};
  * @namespace
  * @requires jQuery 1.11.1+
  */
-niclabs.insight = (function($) {
+niclabs.insight = (function ($) {
     "use strict";
 
     /**
@@ -31,7 +31,7 @@ niclabs.insight = (function($) {
      * JQuery plugin to make an element resizable
      * TODO: missing documentation/source
      */
-    $.fn.resizable = function(orientation) {
+    $.fn.resizable = function (orientation) {
         var resizer = $('<div>').addClass('resizer').addClass(orientation + '-resize');
         this.append(resizer).addClass('resizable');
 
@@ -76,7 +76,7 @@ niclabs.insight = (function($) {
             resizable.trigger('resize');
         }
 
-        this.scroll(function(e) {
+        this.scroll(function (e) {
             resizer.css('top', resizable.scrollTop());
         });
 
@@ -86,7 +86,7 @@ niclabs.insight = (function($) {
     /**
      * Set the id for the jQuery selector
      */
-    $.fn.setID = function(selector) {
+    $.fn.setID = function (selector) {
         if (selector.charAt(0) === '#')
             selector = selector.slice(1);
         this.attr('id', selector);
@@ -97,7 +97,7 @@ niclabs.insight = (function($) {
      * JQuery plugin to make an element movable
      * TODO: missing documentation/source
      */
-    $.fn.movable = function() {
+    $.fn.movable = function () {
 
         var panel = this.children('.options-panel');
         if (!panel.length) {
@@ -112,13 +112,13 @@ niclabs.insight = (function($) {
 
         var _this = this;
 
-        up.on('click', function() {
+        up.on('click', function () {
 
             _this.insertBefore(_this.prev());
 
         });
 
-        down.on('click', function() {
+        down.on('click', function () {
 
             _this.insertAfter(_this.next());
 
@@ -131,9 +131,9 @@ niclabs.insight = (function($) {
      * JQuery plugin to make an element closeable
      * TODO: Missing documentation
      */
-    $.fn.closable = function(handler) {
+    $.fn.closable = function (handler) {
         if (!handler) {
-            handler = function() {
+            handler = function () {
                 return;
             };
         }
@@ -150,7 +150,7 @@ niclabs.insight = (function($) {
 
         var _this = this;
 
-        close.on('click', function() {
+        close.on('click', function () {
             _this.remove();
             handler();
         });
@@ -161,91 +161,208 @@ niclabs.insight = (function($) {
     /**
      * Check if indexOf exists in Array.prototype or use jQuery.inArray();
      */
-     Array.prototype.indexOf = 'indexOf' in Array.prototype ? Array.prototype.indexOf : function(item, start) {
-         return $.inArray(item, this, start);
-     };
+    Array.prototype.indexOf = 'indexOf' in Array.prototype ? Array.prototype.indexOf : function (item, start) {
+        return $.inArray(item, this, start);
+    };
 
-     /**
-      * Calculate the size of the associative array
-      */
-     Object.size = function (obj) {
-         var size = 0, key;
-         for (key in obj) {
-             if (obj.hasOwnProperty(key)) size++;
-         }
-         return size;
-     };
+    /**
+     * Calculate the size of the associative array
+     */
+    Object.size = function (obj) {
+        var size = 0,
+            key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) size++;
+        }
+        return size;
+    };
 
-     var dashboard;
+    /*
+     * object.watch polyfill
+     *
+     * 2012-04-03
+     *
+     * By Eli Grey, http://eligrey.com
+     * Public Domain.
+     *
+     * Modified by Nenad Damnjanović
+     * Nov 9, 2014
+     *
+     * Source: https://gist.github.com/flackjap/f318e6a2b316e4d9fa44
+     *
+     * NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
+     */
 
-     // Store dashboard handlers by name
-     var handlers = {};
+    // object.watch
+    if (!Object.prototype.watch) {
+        Object.defineProperty(Object.prototype, "watch", {
+            enumerable: false,
+            configurable: true,
+            writable: false,
+            value: function (prop, handler) {
+                var
+                    oldval = this[prop],
+                    getter = function () {
+                        return oldval;
+                    },
+                    setter = function (newval) {
+                        if (oldval !== newval) {
+                            handler.call(this, prop, oldval, newval);
+                            oldval = newval;
+                        } else {
+                            return false;
+                        }
+                    };
 
-     /**
-      * Constructs an insight element (visualization, layer, etc.)
-      *
-      * @callback niclabs.insight~handler
-      * @param {niclabs.insight.Dashboard} dashboard to assign to the handler
-      * @param {Object} options - configuration options for the handler, depending on the kind
-      */
+                if (delete this[prop]) { // can't watch constants
+                    Object.defineProperty(this, prop, {
+                        get: getter,
+                        set: setter,
+                        enumerable: true,
+                        configurable: true
+                    });
+                }
+            }
+        });
+    }
 
-     return {
-         /**
-          * Register a handler of a specific insight element ('layer', 'visualization', etc.)
-          * to manage the creation, rendering of a specific part of the UI.
-          *
-          * Third-party extensions to the insight need only to register their visualization
-          * elements with this function for the dashboard UI to correctly recognize them
-          * TODO: improve this
-          *
-          * @memberof niclabs.insight
-          * @param {string} name - name for the handler to return, register
-          * @param {string=} kind - kind for the handler
-          * @param {niclabs.insight~handler=} handler - callback to create the element
-          * @returns {niclabs.insight~handler} handler for the registered name
-          */
-         handler: function(name, kind, handler) {
-             if (name in handlers) {
-                 kind = typeof kind === 'undefined' ? handlers[name].kind : kind;
-                 handler = typeof handler === 'undefined' ? handlers[name].handler : handler;
+    if (!Object.prototype.unwatch) {
+        Object.defineProperty(Object.prototype, "unwatch", {
+            enumerable: false,
+            configurable: true,
+            writable: false,
+            value: function (prop) {
+                var val = this[prop];
+                delete this[prop]; // remove accessors
+                this[prop] = val;
+            }
+        });
+    }
 
-                 if (kind !== handlers[name].kind) {
-                     throw new Error('There already exists a handler with name '+name+' for kind '+handlers[name].kind);
-                 }
-             }
-             else if (typeof kind === 'undefined' && typeof handler === 'undefined') {
-                 throw new Error('Handler ' + name + ' does not exist');
-             }
 
-             handlers[name] = {'kind': kind, 'handler': handler};
-             return handler;
-         },
+    /**
+     * Spy an object using Object.watch
+     */
+    if (!Object.prototype.spy) {
+        Object.defineProperty(Object.prototype, "spy", {
+            enumerable: false,
+            configurable: true,
+            writable: false,
+            value: function (handler) {
+                for (var prop in this) {
+                    // Watch all the object properties
+                    if (this.hasOwnProperty(prop)) {
+                        this.watch(prop, handler);
+                    }
+                }
+            }
+        });
+    }
 
-         /**
-          * Get/construct a {@link niclabs.insight.Dashboard}
-          *
-          * Returns the dashboard for the namespace if options are not provided
-          *
-          * @example
-          * ```javascript
-          * // Create a map with the info view to the left
-          * var dashboard = niclabs.insight.dashboard({
-          *     'anchor': '#dashboard',
-          *     'layout': 'left'
-          * });
-          * ```
-          *
-          * @memberof niclabs.insight
-          * @param {Object=} options - list of configuration options for the dashboard see {@link niclabs.insight.Dashboard}
-          * @returns {niclabs.insight.Dashboard} dashboard object
-          */
-         dashboard: function(options) {
-             if (typeof options === 'undefined') return dashboard;
+    if (!Object.prototype.unspy) {
+        Object.defineProperty(Object.prototype, "unspy", {
+            enumerable: false,
+            configurable: true,
+            writable: false,
+            value: function () {
+                for (var prop in this) {
+                    // Watch all the object properties
+                    if (this.hasOwnProperty(prop)) {
+                        this.unwatch(prop);
+                    }
+                }
+            }
+        });
+    }
 
-             dashboard = niclabs.insight.Dashboard(options);
-             return dashboard;
-         },
-     };
+    /**
+     *
+     * Example usage:
+     *
+     *
+    	var o = {p: 1};
+
+    	o.spy(function (id, oldval, newval) {
+    	    console.log( "o." + id + " changed from " + oldval + " to " + newval );
+    	    return newval;
+    	});
+
+    	o.p = 2; // should log the change
+    	o.p = 2; // should do nothing
+     */
+
+    var dashboard;
+
+    // Store dashboard handlers by name
+    var handlers = {};
+
+    /**
+     * Constructs an insight element (visualization, layer, etc.)
+     *
+     * @callback niclabs.insight~handler
+     * @param {niclabs.insight.Dashboard} dashboard to assign to the handler
+     * @param {Object} options - configuration options for the handler, depending on the kind
+     */
+
+    return {
+        /**
+         * Register a handler of a specific insight element ('layer', 'visualization', etc.)
+         * to manage the creation, rendering of a specific part of the UI.
+         *
+         * Third-party extensions to the insight need only to register their visualization
+         * elements with this function for the dashboard UI to correctly recognize them
+         * TODO: improve this
+         *
+         * @memberof niclabs.insight
+         * @param {string} name - name for the handler to return, register
+         * @param {string=} kind - kind for the handler
+         * @param {niclabs.insight~handler=} handler - callback to create the element
+         * @returns {niclabs.insight~handler} handler for the registered name
+         */
+        handler: function (name, kind, handler) {
+            if (name in handlers) {
+                kind = typeof kind === 'undefined' ? handlers[name].kind : kind;
+                handler = typeof handler === 'undefined' ? handlers[name].handler : handler;
+
+                if (kind !== handlers[name].kind) {
+                    throw new Error('There already exists a handler with name ' + name + ' for kind ' + handlers[name].kind);
+                }
+            } else if (typeof kind === 'undefined' && typeof handler === 'undefined') {
+                throw new Error('Handler ' + name + ' does not exist');
+            }
+
+            handlers[name] = {
+                'kind': kind,
+                'handler': handler
+            };
+            return handler;
+        },
+
+        /**
+         * Get/construct a {@link niclabs.insight.Dashboard}
+         *
+         * Returns the dashboard for the namespace if options are not provided
+         *
+         * @example
+         * ```javascript
+         * // Create a map with the info view to the left
+         * var dashboard = niclabs.insight.dashboard({
+         *     'anchor': '#dashboard',
+         *     'layout': 'left'
+         * });
+         * ```
+         *
+         * @memberof niclabs.insight
+         * @param {Object=} options - list of configuration options for the dashboard see {@link niclabs.insight.Dashboard}
+         * @returns {niclabs.insight.Dashboard} dashboard object
+         */
+        dashboard: function (options) {
+            if (typeof options === 'undefined') return dashboard;
+
+            dashboard = niclabs.insight.Dashboard(options);
+            return dashboard;
+        },
+    };
 })(jQuery);
 
 niclabs.insight.Dashboard = (function($) {
@@ -1425,7 +1542,7 @@ niclabs.insight.info.SummaryBlock = (function($) {
 
         // Append view elements
         self.$.append($('<h6>').addClass('latlngView'));
-        self.$.append( $('<dl>').addClass('deflist') );
+        self.$.append($('<dl>').addClass('deflist'));
 
         // Store the refresh method of the parent
         var refresh = self.refresh;
