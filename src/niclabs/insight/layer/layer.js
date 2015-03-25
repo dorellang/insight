@@ -30,7 +30,7 @@ niclabs.insight.layer.Layer = (function($) {
             dataSource = options.data;
         }
         else {
-            data = options.data && options.data.length ? options.data: [options.data];
+            data = options.data && Array.isArray(options.data) ? options.data: [options.data];
         }
 
         // Will be set to true once the layer is loaded
