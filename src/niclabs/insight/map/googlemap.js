@@ -16,7 +16,7 @@ niclabs.insight.map.GoogleMap = (function($) {
         // Initialize parent
         var map = niclabs.insight.MapView(options);
 
-        var googlemap = new google.maps.Map(map.container()[0], {
+        var googlemap = new google.maps.Map(map.element, {
             zoom: map.zoom(),
             center: new google.maps.LatLng(map.lat(), map.lng()),
             disableDefaultUI: true
