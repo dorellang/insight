@@ -1,4 +1,8 @@
 json-test/
 test/map.xml
 node_modules/
+bower_components/
 tmp/
+temp/
+*.log
+.DS_Store
