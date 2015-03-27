@@ -7,7 +7,7 @@ niclabs.insight.FilterBar = (function($) {
      * @class niclabs.insight.FilterBar
      */
     return function(dashboard, options) {
-        var barId = '#insight-filter-bar';
+        var barId = '#insight-filters';
 
         // Bar container
         var container = $('<div>').setID(barId).addClass('filters');
@@ -44,7 +44,7 @@ niclabs.insight.FilterBar = (function($) {
             .attr('placeholder', 'Enter location');
 
         // Append search box to bar
-        container.append(search);
+        container.append($('<div>').addClass('filter').append(search));
 
         var geocode = function() {
             var map = CityDashboard.container('main')[0].data;
@@ -139,7 +139,7 @@ niclabs.insight.FilterBar = (function($) {
                 });
 
                 // Add the selector to the filter bar
-                container.append(select);
+                container.append($('<div>').addClass('filter').append(select));
 
                 filter.element = select;
 
