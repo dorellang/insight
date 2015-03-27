@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--
+      THIS IS A TEST
+
+      IT SHOULD SHOW ONLY A GOOGLE MAPS
+
+      The map is over Santiago (center at La Moneda (-33.442909,-70.65387)), with a zoom level of 12.
+
+    -->
+
+    <title>Test 0 - InfoView</title>
+
+    <style type="text/css">
+        html,
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #dashboard {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="css/CityDashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
+
+    <script type="text/javascript" src="js/chartist.min.js"></script>
+    <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?v="></script>
+
+    <script type="text/javascript" src="js/CityDashboard.js"></script>
+
+
+</head>
+
+<body>
+    <div id="dashboard"></div>
+
+    <script type="text/javascript">
+        // Binding the map and the information window.
+        var dashboard = niclabs.insight.dashboard({
+            'anchor': '#dashboard',
+            'layout': 'left'
+        });
+
+        dashboard.filter({
+            description: 'Landmark', // the empty string is used if not provided
+            options: [
+                {name: 'Not Eiffel Tower', filter: function(data) { return data.landmark.indexOf("Eiffel") < 0; }},
+                {name: 'Not Champ de Mars', filter: function(data) { return data.landmark.indexOf("Mars") < 0; }},
+            ]
+        });
+
+        // TODO: This depends on the order :S
+        niclabs.insight.info({
+            handler: 'basic-info-view',
+            blocks: [{
+                'handler': 'summary-block',
+                'id': '#summary',
+                'title': 'My Marker Summary',
+                'data': {
+                    'description': 'This block will show the details of the selected markers'
+                },
+                ignore: ['layer', 'type', 'src']
+            }]
+        });
+
+        var map = niclabs.insight.map({
+            'handler': 'google-map',
+            'lat': 48.8583,
+            'lng': 2.2944,
+            'zoom': 15
+        });
+
+        niclabs.insight.layer({
+            handler: 'marker-layer',
+            data: [{
+                'lat': 48.8556,
+                'lng': 2.2986,
+                'landmark': 'Champ de Mars'
+            }, {
+                'lat': 48.8583,
+                'lng': 2.2944,
+                'landmark': 'Eiffel Tower',
+                'fun-fact': 'Was built in 1889.'
+            }],
+            marker: {
+                'type': 'image-marker',
+                'src': 'antenna.svg'
+            }
+        });
+    </script>
+</body>
+
+</html>
