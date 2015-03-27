@@ -99,29 +99,25 @@ niclabs.insight = (function ($) {
      */
     $.fn.movable = function () {
 
-        var panel = this.children('.options-panel');
-        if (!panel.length) {
-            panel = $('<span>').addClass('options-panel');
+        var panel = this.children('.header');
+        if (panel.length === 0) {
+            panel = $('<div>').addClass('header');
             this.prepend(panel);
         }
 
-        var up = $('<span>').addClass('up-button').append('&#x25B2;');
-        var down = $('<span>').addClass('down-button').append('&#x25BC;');
-        panel.prepend(down);
-        panel.prepend(up);
+        var up = $('<span>').addClass('button').attr('data-icon', 'up-arrow');
+        var down = $('<span>').addClass('button').attr('data-icon', 'down-arrow');
+        panel.append(up);
+        panel.append(down);
 
         var _this = this;
 
         up.on('click', function () {
-
             _this.insertBefore(_this.prev());
-
         });
 
         down.on('click', function () {
-
             _this.insertAfter(_this.next());
-
         });
 
         return this;
@@ -138,15 +134,15 @@ niclabs.insight = (function ($) {
             };
         }
 
-        var panel = this.children('.options-panel');
+        var panel = this.children('.header');
         if (!panel.length) {
-            panel = $('<span>').addClass('options-panel');
+            panel = $('<span>').addClass('header');
             this.prepend(panel);
         }
 
-        var close = $('<span>').addClass('close-button').text('X');
+        var close = $('<span>').addClass('button').attr('data-icon', 'close');
 
-        panel.append(close);
+        panel.prepend(close);
 
         var _this = this;
 
@@ -396,8 +392,8 @@ niclabs.insight.Dashboard = (function($) {
 
         // Create the main container
         var container = $('<div>')
-            .setID(dashboardId).addClass('mainDashboard')
-            .addClass('layout-' + options.layout );
+            .setID(dashboardId).addClass('insight')
+            .addClass(options.layout );
 
         // Append the dashboard to the container
         $(anchor).append(container);
@@ -654,7 +650,7 @@ niclabs.insight.FilterBar = (function($) {
         var barId = '#insight-filter-bar';
 
         // Bar container
-        var container = $('<div>').setID(barId).addClass('filterBar');
+        var container = $('<div>').setID(barId).addClass('filters');
 
         // List of filters
         var filters = [];
@@ -819,7 +815,7 @@ niclabs.insight.InfoView = (function($) {
         // Create the info view
         var container = $('<div>')
             .setID(infoViewId)
-            .addClass('infoWindow');
+            .addClass('info');
 
         if (dashboard.config('layout') !== 'none') {
             var resizeOrientation;
@@ -1062,7 +1058,7 @@ niclabs.insight.MapView = (function($) {
 		// jQuery container for the map
         var container = $('<div>')
 			.setID(mapId)
-			.addClass('mapWindow');
+			.addClass('map');
 
 
 		/**
@@ -1151,125 +1147,9 @@ niclabs.insight.MapView = (function($) {
 
 				return zoom;
 			},
-
-			/**
-			 * Get the jquery object for the html element of the map
-			 *
-			 * @memberof niclabs.insight.MapView
-			 * @return {jQuery} container for the map
-			 */
-			container: function() {
-				return container;
-			}
 		};
 	};
 })(jQuery);
-
-/**
- * Very basic event manager for the dashboard
- *
- * @example
- * ```javascript
- * // Subscribe to the event
- * var eventId = niclabs.insight.event.on('hello', function(who) {
- *      alert("HELLO "+who+"!!!");
- * });
- *
- * // Trigger the event
- * niclabs.insight.event.trigger('hello', "John"); // Shows alert 'HELLO John!!!'
- *
- * // Unsubscribe
- * niclabs.insight.event.off('hello', eventId);
- * ```
- *
- * @namespace
- */
-niclabs.insight.event = (function() {
-    "use strict";
-
-    var events = {};
-
-    /**
-     * Find the event in the event list, return -1 if not found
-     */
-    function indexOf(event, listener) {
-        if (event in events) {
-            for (var i = 0; i < events[event].length; i++) {
-                if (events[event][i] === listener) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * Insight event listener
-     *
-     * @callback niclabs.insight.event~listener
-     * @param {Object} data - data for the callback function, dependant on the event
-     */
-
-    return {
-        /**
-         * Listen for an event. A listener callback can only be assigned once for an event
-         *
-         * @memberof niclabs.insight.event
-         * @param {string} event - event type
-         * @param {niclabs.insight.event~listener} listener - callback to process the event
-         * @returns {number} id of the listener
-         */
-        on: function(event, listener) {
-            var index = indexOf(event, listener);
-
-            if (index < 0) {
-                if (!('event' in events)) {
-                    events[event] = [];
-                }
-
-                // Add the new listener
-                return events[event].push(listener) - 1;
-            }
-            return index;
-        },
-
-        /**
-         * Stop listening for an event.
-         *
-         * @memberof niclabs.insight.event
-         * @param {string} event - event type
-         * @param {niclabs.insight.event~listener|number} listener - callback to remove or id of the listener provided by {@link niclabs.insight.event.on()}
-         * @returns {boolean} true if the listener was found and was succesfully removed
-         */
-        off: function(event, listener) {
-            var index = typeof listener === 'number' ? listener : indexOf(event, listener);
-
-            if (index >= 0) {
-                // Remove the event
-                events[event].splice(index, 1);
-
-                return true;
-            }
-            return false;
-        },
-
-        /**
-         * Trigger an event
-         *
-         * @memberof niclabs.insight.event
-         * @param {string} event - event type
-         * @param {Object=} data - data to pass to the callback
-         */
-        trigger: function(event, data) {
-            if (event in events) {
-                for (var i = 0; i < events[event].length; i++) {
-                    // Notify the listeners
-                    events[event][i](data);
-                }
-            }
-        }
-    };
-})();
 
 /**
  * Contains the definitions for the information blocks supported by insight
@@ -1338,11 +1218,10 @@ niclabs.insight.info.Block = (function($) {
         var preprocess = options.preprocess || function(x) {return x;};
 
         // placing
-        var titleElement = $('<h4>').append(title).addClass('viz-title');
+        var titleElement = $('<div>').addClass('header').append($('<span>').append(title));
 
-        var container = $('<div>').setID(htmlId).addClass('visualization')
-            .append(titleElement)
-            .append($('<hr>').addClass('viz-bar'));
+        var container = $('<div>').setID(htmlId).addClass('block')
+            .append(titleElement);
 
         /**
          * Remove the block from the dashboard.
@@ -1594,6 +1473,112 @@ niclabs.insight.info.SummaryBlock = (function($) {
 })(jQuery);
 
 /**
+ * Very basic event manager for the dashboard
+ *
+ * @example
+ * ```javascript
+ * // Subscribe to the event
+ * var eventId = niclabs.insight.event.on('hello', function(who) {
+ *      alert("HELLO "+who+"!!!");
+ * });
+ *
+ * // Trigger the event
+ * niclabs.insight.event.trigger('hello', "John"); // Shows alert 'HELLO John!!!'
+ *
+ * // Unsubscribe
+ * niclabs.insight.event.off('hello', eventId);
+ * ```
+ *
+ * @namespace
+ */
+niclabs.insight.event = (function() {
+    "use strict";
+
+    var events = {};
+
+    /**
+     * Find the event in the event list, return -1 if not found
+     */
+    function indexOf(event, listener) {
+        if (event in events) {
+            for (var i = 0; i < events[event].length; i++) {
+                if (events[event][i] === listener) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Insight event listener
+     *
+     * @callback niclabs.insight.event~listener
+     * @param {Object} data - data for the callback function, dependant on the event
+     */
+
+    return {
+        /**
+         * Listen for an event. A listener callback can only be assigned once for an event
+         *
+         * @memberof niclabs.insight.event
+         * @param {string} event - event type
+         * @param {niclabs.insight.event~listener} listener - callback to process the event
+         * @returns {number} id of the listener
+         */
+        on: function(event, listener) {
+            var index = indexOf(event, listener);
+
+            if (index < 0) {
+                if (!('event' in events)) {
+                    events[event] = [];
+                }
+
+                // Add the new listener
+                return events[event].push(listener) - 1;
+            }
+            return index;
+        },
+
+        /**
+         * Stop listening for an event.
+         *
+         * @memberof niclabs.insight.event
+         * @param {string} event - event type
+         * @param {niclabs.insight.event~listener|number} listener - callback to remove or id of the listener provided by {@link niclabs.insight.event.on()}
+         * @returns {boolean} true if the listener was found and was succesfully removed
+         */
+        off: function(event, listener) {
+            var index = typeof listener === 'number' ? listener : indexOf(event, listener);
+
+            if (index >= 0) {
+                // Remove the event
+                events[event].splice(index, 1);
+
+                return true;
+            }
+            return false;
+        },
+
+        /**
+         * Trigger an event
+         *
+         * @memberof niclabs.insight.event
+         * @param {string} event - event type
+         * @param {Object=} data - data to pass to the callback
+         */
+        trigger: function(event, data) {
+            if (event in events) {
+                for (var i = 0; i < events[event].length; i++) {
+                    // Notify the listeners
+                    events[event][i](data);
+                }
+            }
+        }
+    };
+})();
+
+/**
  * Visualization layers for the dashboard
  *
  * @namespace
@@ -1680,7 +1665,7 @@ niclabs.insight.layer.Layer = (function($) {
             dataSource = options.data;
         }
         else {
-            data = options.data && options.data.length ? options.data: [options.data];
+            data = options.data && Array.isArray(options.data) ? options.data: [options.data];
         }
 
         // Will be set to true once the layer is loaded
@@ -1958,7 +1943,7 @@ niclabs.insight.map.GoogleMap = (function($) {
         // Initialize parent
         var map = niclabs.insight.MapView(options);
 
-        var googlemap = new google.maps.Map(map.container()[0], {
+        var googlemap = new google.maps.Map(map.element, {
             zoom: map.zoom(),
             center: new google.maps.LatLng(map.lat(), map.lng()),
             disableDefaultUI: true

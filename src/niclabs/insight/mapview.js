@@ -30,7 +30,7 @@ niclabs.insight.MapView = (function($) {
 		// jQuery container for the map
         var container = $('<div>')
 			.setID(mapId)
-			.addClass('mapWindow');
+			.addClass('map');
 
 
 		/**

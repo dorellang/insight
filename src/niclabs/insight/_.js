@@ -86,29 +86,25 @@ niclabs.insight = (function ($) {
      */
     $.fn.movable = function () {
 
-        var panel = this.children('.options-panel');
-        if (!panel.length) {
-            panel = $('<span>').addClass('options-panel');
+        var panel = this.children('.header');
+        if (panel.length === 0) {
+            panel = $('<div>').addClass('header');
             this.prepend(panel);
         }
 
-        var up = $('<span>').addClass('up-button').append('&#x25B2;');
-        var down = $('<span>').addClass('down-button').append('&#x25BC;');
-        panel.prepend(down);
-        panel.prepend(up);
+        var up = $('<span>').addClass('button').attr('data-icon', 'up-arrow');
+        var down = $('<span>').addClass('button').attr('data-icon', 'down-arrow');
+        panel.append(up);
+        panel.append(down);
 
         var _this = this;
 
         up.on('click', function () {
-
             _this.insertBefore(_this.prev());
-
         });
 
         down.on('click', function () {
-
             _this.insertAfter(_this.next());
-
         });
 
         return this;
@@ -125,15 +121,15 @@ niclabs.insight = (function ($) {
             };
         }
 
-        var panel = this.children('.options-panel');
+        var panel = this.children('.header');
         if (!panel.length) {
-            panel = $('<span>').addClass('options-panel');
+            panel = $('<span>').addClass('header');
             this.prepend(panel);
         }
 
-        var close = $('<span>').addClass('close-button').text('X');
+        var close = $('<span>').addClass('button').attr('data-icon', 'close');
 
-        panel.append(close);
+        panel.prepend(close);
 
         var _this = this;
 

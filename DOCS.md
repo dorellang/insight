@@ -99,7 +99,6 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
       * [MapView.lat()](#niclabs.insight.MapView.lat)
       * [MapView.lng()](#niclabs.insight.MapView.lng)
       * [MapView.zoom([zoom])](#niclabs.insight.MapView.zoom)
-      * [MapView.container()](#niclabs.insight.MapView.container)
       * [type: MapView.Coordinates](#niclabs.insight.MapView.Coordinates)
       * [event: "map_element_selected"](#niclabs.insight.MapView#event_map_element_selected)
     * [class: insight.InfoView](#niclabs.insight.InfoView)
@@ -205,7 +204,6 @@ understand what is going on in the city
     * [MapView.lat()](#niclabs.insight.MapView.lat)
     * [MapView.lng()](#niclabs.insight.MapView.lng)
     * [MapView.zoom([zoom])](#niclabs.insight.MapView.zoom)
-    * [MapView.container()](#niclabs.insight.MapView.container)
     * [type: MapView.Coordinates](#niclabs.insight.MapView.Coordinates)
     * [event: "map_element_selected"](#niclabs.insight.MapView#event_map_element_selected)
   * [class: insight.InfoView](#niclabs.insight.InfoView)
@@ -1144,7 +1142,6 @@ the layers
   * [MapView.lat()](#niclabs.insight.MapView.lat)
   * [MapView.lng()](#niclabs.insight.MapView.lng)
   * [MapView.zoom([zoom])](#niclabs.insight.MapView.zoom)
-  * [MapView.container()](#niclabs.insight.MapView.container)
   * [type: MapView.Coordinates](#niclabs.insight.MapView.Coordinates)
   * [event: "map_element_selected"](#niclabs.insight.MapView#event_map_element_selected)
 
@@ -1202,11 +1199,6 @@ map reflects the new zoom.
 - \[zoom\] `int` - zoom  
 
 **Returns**: `int` - zoom level of the map  
-<a name="niclabs.insight.MapView.container"></a>
-####MapView.container()
-Get the jquery object for the html element of the map
-
-**Returns**: `jQuery` - container for the map  
 <a name="niclabs.insight.MapView.Coordinates"></a>
 ####type: MapView.Coordinates
 Object to represent geographic coordinates

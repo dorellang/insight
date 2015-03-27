@@ -1,0 +1,153 @@
+@import 'base';
+
+.insight,
+.insight.left {
+    @include container($height: 100%);
+    font-family: $font-family;
+    @include font-size($font-size);
+
+    .info {
+        height: 100%;
+        overflow-y: scroll;
+        width: $sidebar-width;
+        padding: $sidebar-padding;
+        background: #fff;
+
+        /* Draw the border to the right */
+        border-right: $border-style;
+        display: block;
+        float: left;
+    }
+
+    .map {
+        height: 100%;
+        max-width: 100%;
+        display: block;
+        z-index: 0;
+    }
+
+    /* search bar */
+    .filters {
+        z-index: 10;
+        position: fixed;
+        right: 0;
+        top: 0;
+        margin: 5px;
+        padding: 5px;
+    }
+
+    .filters * {
+        margin: 2px;
+    }
+
+    &.right {
+        .info {
+            border-left: $border-style;
+            border-right: none;
+            float: right;
+        }
+
+        .filters {
+            right: inherit;
+            left: 0;
+        }
+    }
+
+    &.none {
+        .info {
+            display: none;
+        }
+    }
+}
+
+.info .block {
+    padding: 5px;
+    border: $border-style;
+    background: #fff;
+
+    @include border-radius(3px);
+
+    .header {
+        padding: 5px 2px;
+        @include font-size($title-font-size);
+        border-bottom: $border-style;
+    }
+
+    .content {
+        padding: 10px;
+    }
+
+    h6 {
+        margin: 5px 0;
+        text-align: right;
+    }
+}
+
+.button {
+    cursor: pointer;
+    cursor: hand;
+    @include no-select;
+    float: right;
+}
+
+.button:hover {
+    color: #555;
+}
+
+.search {
+    padding: 2px;
+}
+
+.menu {
+    background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjQiIGhlaWdodD0iMTI0IiB2aWV3Qm94PSIwIDAgMTI0IDEyNCI+PHBhdGggZD0iTTExMiA2SDEyQzUuNCA2IDAgMTEuNCAwIDE4czUuNCAxMiAxMiAxMmgxMDBjNi42IDAgMTItNS40IDEyLTEycy01LjQtMTItMTItMTJ6TTExMiA1MEgxMkM1LjQgNTAgMCA1NS40IDAgNjJzNS40IDEyIDEyIDEyaDEwMGM2LjYgMCAxMi01LjQgMTItMTJzLTUuNC0xMi0xMi0xMnpNMTEyIDk0SDEyYy02LjYgMC0xMiA1LjQtMTIgMTJzNS40IDEyIDEyIDEyaDEwMGM2LjYgMCAxMi01LjQgMTItMTJzLTUuNC0xMi0xMi0xMnoiLz48L3N2Zz4=) no-repeat;
+    background-size: cover;
+    width: 1.5em;
+    height: 1.5em;
+    padding: 5px;
+    @include border-radius(3px);
+}
+
+.menu:hover {
+    background-color: #ccc;
+}
+
+
+/* Utils */
+/* Rezisable */
+.resizable {
+    position: relative;
+    margin: 0;
+}
+
+.resizer {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: transparent;
+}
+
+.e-resize {
+    height: inherit;
+    right: 0;
+    top: 0;
+    cursor: e-resize;
+}
+
+.n-resize {
+    width: inherit;
+    top: 0;
+    cursor: n-resize;
+}
+
+.s-resize {
+    width: inherit;
+    bottom: 0;
+    cursor: s-resize;
+}
+
+.w-resize {
+    height: inherit;
+    left: 0;
+    top: 0;
+    cursor: w-resize;
+}
