@@ -29,6 +29,8 @@ niclabs.insight.info.Block = (function($) {
         var container = $('<div>').setID(htmlId).addClass('block')
             .append(titleElement);
 
+        container.append($('<div>').addClass('content'));
+
         /**
          * Remove the block from the dashboard.
          * This method triggers an event to alert all elements of the
