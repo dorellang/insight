@@ -19,8 +19,11 @@ niclabs.insight.map.marker.ImageMarker = (function($) {
 
         var latLng = new google.maps.LatLng(parseFloat(options.lat), parseFloat(options.lng));
 
+        if (!('src' in options))
+            throw new Error('An image source must be provided for using image markers');
+
         var image = {
-            url: options.src || 'img/not-found.svg',
+            url: options.src,
             scaledSize: new google.maps.Size(30, 50)
         };
 
