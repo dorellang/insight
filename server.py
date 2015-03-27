@@ -79,6 +79,7 @@ def genJSON(arg):
 import SimpleHTTPServer
 import SocketServer
 import urlparse
+import mimetypes
 
 
 class GetHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
@@ -86,48 +87,20 @@ class GetHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_GET(self):
         path = urlparse.urlparse(self.path).path
 
-        # handle the request for the development library
-        if path.endswith("/js/CityDashboard.min.js"):
-            if not os.path.exists('dist'):
-                os.makedirs('dist')
+        filename = os.path.basename(path)
+        if os.path.isfile(os.path.join('dist/', filename)):
+            distpath = os.path.join('dist/', filename)
+            mimetype, encoding = mimetypes.guess_type(distpath)
+            f = open(distpath)
 
-            if not os.path.isfile('dist/CityDashboard.min.js'):
-                m = Minifier()
-                m.parseFolder('src')
-                m.minify('dist/CityDashboard.min.js')
-
-            f = open('dist/CityDashboard.min.js')
             self.send_response(200)
-            self.send_header('Content-type', 'application/javascript')
+            if mimetype:
+                self.send_header('Content-type', mimetype)
+            else:
+                self.send_header('Content-type', 'text/plain')
             self.end_headers()
             self.wfile.write(f.read())
             f.close()
-
-        # handle the request for the development library
-        elif path.endswith("/js/CityDashboard.js"):
-            f = open('dist/CityDashboard.js')
-            self.send_response(200)
-            self.send_header('Content-type', 'application/javascript')
-            self.end_headers()
-            self.wfile.write(f.read())
-            f.close()
-
-        elif path.endswith('/css/CityDashboard.min.css'):
-            f = open('dist/CityDashboard.min.css')
-            self.send_response(200)
-            self.send_header('Content-type', 'text/css')
-            self.end_headers()
-            self.wfile.write(f.read())
-            f.close()
-
-        elif path.endswith('/css/CityDashboard.css'):
-            f = open('dist/CityDashboard.css')
-            self.send_response(200)
-            self.send_header('Content-type', 'text/css')
-            self.end_headers()
-            self.wfile.write(f.read())
-            f.close()
-
         elif path.startswith("/test/position"):
             n = urlparse.urlparse(self.path).query
             if len(n) == 0:
@@ -145,8 +118,8 @@ class GetHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(f.read())
             f.close()
-
         else:
+            print "here"
             SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
 if __name__ == '__main__':
