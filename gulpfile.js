@@ -11,7 +11,7 @@ var sass   = require('gulp-sass');
 var jsdoc  = require("gulp-jsdoc-to-markdown");
 var notify = require('gulp-notify');
 
-sources = 'src/niclabs/**/*.js';
+var sources = 'src/niclabs/**/*.js';
 
 // Lint Task
 gulp.task('lint', function () {
@@ -29,14 +29,14 @@ gulp.task('sass', function () {
 
         }))
         .pipe(gulp.dest('tmp'))
-        .pipe(concat('CityDashboard.css'))
+        .pipe(concat('insight.css'))
         .pipe(gulp.dest('dist'));
 });
 
 gulp.task('css', ['sass'], function () {
     gulp.src('dist/*.css')
         .pipe(cssmin())
-        .pipe(rename('CityDashboard.min.css'))
+        .pipe(rename('insight.min.css'))
         .pipe(gulp.dest('dist'));
 });
 
@@ -54,9 +54,9 @@ gulp.task("docs", function () {
 // Concatenate & Minify JS
 gulp.task('scripts', ['lint'], function () {
     return gulp.src(sources)
-        .pipe(concat('CityDashboard.js'))
+        .pipe(concat('insight.js'))
         .pipe(gulp.dest('dist'))
-        .pipe(rename('CityDashboard.min.js'))
+        .pipe(rename('insight.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest('dist'));
 });
