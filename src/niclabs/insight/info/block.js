@@ -24,7 +24,7 @@ niclabs.insight.info.Block = (function($) {
         var preprocess = options.preprocess || function(x) {return x;};
 
         // placing
-        var titleElement = $('<div>').addClass('header').append($('<span>').append(title));
+        var titleElement = $('<div>').addClass('header').append($('<span>').addClass('title').append(title));
 
         var container = $('<div>').setID(htmlId).addClass('block')
             .append(titleElement);
