@@ -22,11 +22,9 @@ niclabs.insight.info.SummaryBlock = (function($) {
         // Concat with the options if available
         ignore = ignore.concat(options.ignore || []);
 
-        self.$.addClass('summary-viz');
-
         // Append view elements
-        self.$.append($('<h6>').addClass('latlngView'));
-        self.$.append($('<dl>').addClass('deflist'));
+        self.$.find('.content').append($('<h6>').addClass('latlngView'));
+        self.$.find('.content').append($('<dl>').addClass('deflist'));
 
         // Store the refresh method of the parent
         var refresh = self.refresh;
@@ -38,7 +36,7 @@ niclabs.insight.info.SummaryBlock = (function($) {
             // Call the parent refresh
             refresh();
 
-            self.$.append($('<dl>').addClass('deflist'));
+            self.$.find('.content').append($('<dl>').addClass('deflist'));
             self.summary(self.data());
         };
 
