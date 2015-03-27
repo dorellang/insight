@@ -1,0 +1,18 @@
+@import "mixins";
+@import "functions";
+@import "icons";
+
+/* Makes border-box properties */
+@include border-box-sizing;
+
+/* Default font */
+@import url(http://fonts.googleapis.com/css?family=Raleway:400,700,300);
+$font-family: settings(font-family, 'Raleway', sans-serif);
+
+// Define the border style
+$border-style: settings(border-style, 2px solid #ccc);
+$min-width: settings(min-width, 700px);
+$font-size: settings(font-size, 16px);
+$title-font-size: settings(block-title-font-size, $font-size * 1.1);
+$sidebar-width: settings(sidebar-width, 320px);
+$sidebar-padding: settings(sidebar-padding, 5px);

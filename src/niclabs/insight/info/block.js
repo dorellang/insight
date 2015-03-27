@@ -24,11 +24,10 @@ niclabs.insight.info.Block = (function($) {
         var preprocess = options.preprocess || function(x) {return x;};
 
         // placing
-        var titleElement = $('<h4>').append(title).addClass('viz-title');
+        var titleElement = $('<div>').addClass('header').append($('<span>').append(title));
 
-        var container = $('<div>').setID(htmlId).addClass('visualization')
-            .append(titleElement)
-            .append($('<hr>').addClass('viz-bar'));
+        var container = $('<div>').setID(htmlId).addClass('block')
+            .append(titleElement);
 
         /**
          * Remove the block from the dashboard.

@@ -29,8 +29,8 @@ niclabs.insight.Dashboard = (function($) {
 
         // Create the main container
         var container = $('<div>')
-            .setID(dashboardId).addClass('mainDashboard')
-            .addClass('layout-' + options.layout );
+            .setID(dashboardId).addClass('insight')
+            .addClass(options.layout );
 
         // Append the dashboard to the container
         $(anchor).append(container);

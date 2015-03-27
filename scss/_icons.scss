@@ -1,0 +1,26 @@
+/**
+ * Extract from "Font Awesome by Dave Gandy - http://fontawesome.io".
+ *
+ * With help from http://www.paulund.co.uk/css-buttons-with-icons-but-no-images
+ */
+[data-icon] {
+    display: inline-block;
+    font: normal normal normal #{settings(font-size-base)}/1.4;
+    font-size: inherit; // can't have font-size inherit on line above, so need to override
+    text-rendering: auto; // optimizelegibility throws things off #1094
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transform: translate(0, 0); // ensures no half-pixel rendering in firefox
+}
+
+[data-icon]:before
+{
+  float: left;
+  width: 1em;
+  text-align: center;
+  content: attr(data-icon);
+}
+
+[data-icon='close']:before          { content: "\2716"; }
+[data-icon='up-arrow']:before       { content: "\2191"; }
+[data-icon='down-arrow']:before     { content: "\2193"; }

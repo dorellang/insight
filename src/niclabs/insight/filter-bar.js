@@ -10,7 +10,7 @@ niclabs.insight.FilterBar = (function($) {
         var barId = '#insight-filter-bar';
 
         // Bar container
-        var container = $('<div>').setID(barId).addClass('filterBar');
+        var container = $('<div>').setID(barId).addClass('filters');
 
         // List of filters
         var filters = [];

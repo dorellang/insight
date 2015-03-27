@@ -21,7 +21,7 @@ niclabs.insight.InfoView = (function($) {
         // Create the info view
         var container = $('<div>')
             .setID(infoViewId)
-            .addClass('infoWindow');
+            .addClass('info');
 
         if (dashboard.config('layout') !== 'none') {
             var resizeOrientation;
