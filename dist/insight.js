@@ -24,6 +24,62 @@ niclabs.insight = (function ($) {
     "use strict";
 
     /**
+     * Render simple templates using the provided data
+     *
+     * You can use the attributes `data-bind` or `id` to
+     * indicate the binding to the data element
+     *
+     * @example
+     * ```html
+     * <script id='template' type='text/html'>
+     * <div class="content">
+     * Hello <span id="name">friend</span>,
+     * this is a template for <i data-bind="app">your app</i>
+     * </div>
+     * </script>
+     * <script type='text/html'>
+     * niclabs.insight.render('#template', {name: 'John', app: 'JohnsApp'})
+     * </script>
+     * ```
+     *
+     * @memberof niclabs.insight
+     * @param {string|jQuery} template - id for the template element, string with the template or jQuery selector to use as template
+     * @param {Object} data - associative array with the keys, values to change
+     * @returns updated dom element with the values replaced
+     */
+    function render(template, data) {
+        var selector = template;
+        if (typeof template === 'string') {
+            if (template.charAt(0) === '#') selector = $(template).first();
+            else {
+                try {selector = $(template);}
+                catch (e) {throw Error("The provided template is not a valid html node");}
+            }
+        }
+
+        $.each(data, function(key, value) {
+            if (selector.attr('id') === key || selector.attr('data-bind') === key) {
+                selector.text(value);
+            }
+
+            selector.find('#' + key).text(value);
+            selector.find('[data-bind='+key+']').text(value);
+        });
+
+        return selector[0];
+    }
+
+    /**
+     * JQuery render data into element
+     *
+     */
+    $.fn.render = function (data) {
+        render(this, data);
+
+        return this;
+    };
+
+    /**
      * Initial required configurations
      */
 
@@ -301,6 +357,11 @@ niclabs.insight = (function ($) {
      */
 
     return {
+        /**
+         * Render a template
+         */
+        render: render,
+
         /**
          * Register a handler of a specific insight element ('layer', 'visualization', etc.)
          * to manage the creation, rendering of a specific part of the UI.
@@ -1324,12 +1385,12 @@ niclabs.insight.info.Block = (function($) {
         var preprocess = options.preprocess || function(x) {return x;};
 
         // placing
-        var titleElement = $('<div>').addClass('header').append($('<span>').addClass('title').append(title));
+        var header = $('<div>').addClass('header').append($('<span>').attr('data-bind', 'title').addClass('title').append(title));
 
         var container = $('<div>').setID(htmlId).addClass('block')
-            .append(titleElement);
+            .append(header);
 
-        container.append($('<div>').addClass('content'));
+        var content = container.append($('<div>').addClass('content'));
 
         /**
          * Remove the block from the dashboard.
@@ -1403,6 +1464,35 @@ niclabs.insight.info.Block = (function($) {
                 var c = $(htmlId);
                 container = c.length === 0 ? container : c;
                 return container;
+            },
+
+            /**
+             * HTML DOM element for the content container
+             *
+             * The content of the block is the HTML container that
+             * comes after the block title
+             *
+             * @memberof niclabs.insight.info.Block
+             * @member {Element}
+             */
+            get content() {
+                var c = $(htmlId).find('.content');
+                content = c.length === 0 ? content: c;
+                return content;
+            },
+
+            /**
+             * Get set the title for the block
+             *
+             * @param {string=} newtitle - new title for the block
+             * @returns {string} the updated value for the block title
+             */
+            title: function(newtitle) {
+                if (typeof newtitle !== 'undefined') {
+                    title = newtitle;
+                    self.$.find('.title').text(newtitle);
+                }
+                return title;
             },
 
             /**
@@ -1531,6 +1621,8 @@ niclabs.insight.info.SummaryBlock = (function($) {
 
         // Store the refresh method of the parent
         var refresh = self.refresh;
+
+        // TODO: add template for loading data
 
         /**
          * Override the parent refresh

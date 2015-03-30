@@ -1,17 +1,10 @@
-<a name="niclabs"></a>
-#niclabs
-[NIC Chile Research Labs](http://niclabs.cl/) is the Internet Laboratory of the
-[Faculty of Physical and Mathematical Sciences of the University of Chile (FCFM)](http://www.fcfm.uchile.cl/),
-founded by [NIC Chile](http://www.nic.cl) and host of [INRIA Chile Internet Project](http://www.inria.cl/?page_id=23&lang=en).
+#Index
 
-Our main research areas are: Internet protocols (layer 3-4), DNS, Internet QoS, Internet QoE, and computer networks.
-
-We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
-
-**Members**
+**Namespaces**
 
 * [niclabs](#niclabs)
   * [niclabs.insight](#niclabs.insight)
+    * [insight.render(template, data)](#niclabs.insight.render)
     * [insight.handler(name, [kind], [handler])](#niclabs.insight.handler)
     * [insight.dashboard([options])](#niclabs.insight.dashboard)
     * [insight.info([obj])](#niclabs.insight.info(2))
@@ -28,6 +21,122 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [Block.id](#niclabs.insight.info.Block.id)
         * [Block.element](#niclabs.insight.info.Block.element)
         * [Block.$](#niclabs.insight.info.Block.$)
+        * [Block.content](#niclabs.insight.info.Block.content)
+        * [Block.remove()](#niclabs.insight.info.Block.remove)
+        * [Block.data([data])](#niclabs.insight.info.Block.data)
+      * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+        * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
+        * [SummaryBlock.self.summary([data])](#niclabs.insight.info.SummaryBlock.self.summary)
+    * [insight.layer](#niclabs.insight.layer)
+      * [class: layer.Layer](#niclabs.insight.layer.Layer)
+        * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
+        * [Layer.id](#niclabs.insight.layer.Layer.id)
+        * [Layer.data([obj])](#niclabs.insight.layer.Layer.data)
+        * [Layer.load()](#niclabs.insight.layer.Layer.load)
+        * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
+        * [Layer.filter(fn)](#niclabs.insight.layer.Layer.filter)
+        * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
+        * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
+      * [class: layer.MarkerLayer](#niclabs.insight.layer.MarkerLayer)
+        * [new layer.MarkerLayer(dashboard, options)](#new_niclabs.insight.layer.MarkerLayer)
+        * [MarkerLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.MarkerLayer.layer.draw)
+        * [MarkerLayer.layer.clear()](#niclabs.insight.layer.MarkerLayer.layer.clear)
+        * [MarkerLayer.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
+        * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
+    * [insight.map](#niclabs.insight.map)
+      * [map.marker](#niclabs.insight.map.marker)
+        * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
+          * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+        * [class: marker.ImageMarker](#niclabs.insight.map.marker.ImageMarker)
+          * [new marker.ImageMarker(dashboard, options)](#new_niclabs.insight.map.marker.ImageMarker)
+        * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
+          * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
+          * [Marker.map](#niclabs.insight.map.marker.Marker.map)
+          * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
+          * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
+          * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
+          * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
+          * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
+        * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
+          * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+      * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
+        * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
+        * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
+        * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
+        * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
+    * [callback: insight~handler](#niclabs.insight..handler)
+    * [class: insight.Dashboard](#niclabs.insight.Dashboard)
+      * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
+      * [Dashboard.element](#niclabs.insight.Dashboard.element)
+      * [Dashboard.$](#niclabs.insight.Dashboard.$)
+      * [Dashboard.config(name)](#niclabs.insight.Dashboard.config)
+      * [Dashboard.info([obj])](#niclabs.insight.Dashboard.info)
+      * [Dashboard.map([obj])](#niclabs.insight.Dashboard.map)
+      * [Dashboard.layer(obj, [activate])](#niclabs.insight.Dashboard.layer)
+      * [Dashboard.data([obj])](#niclabs.insight.Dashboard.data)
+      * [Dashboard.active([id])](#niclabs.insight.Dashboard.active)
+      * [Dashboard.filter(filter)](#niclabs.insight.Dashboard.filter)
+      * [Dashboard.clear()](#niclabs.insight.Dashboard.clear)
+      * [event: "active_layer_data"](#niclabs.insight.Dashboard#event_active_layer_data)
+    * [class: insight.FilterBar](#niclabs.insight.FilterBar)
+      * [new insight.FilterBar()](#new_niclabs.insight.FilterBar)
+      * [FilterBar.element](#niclabs.insight.FilterBar.element)
+      * [FilterBar.$](#niclabs.insight.FilterBar.$)
+      * [FilterBar.filter(filter)](#niclabs.insight.FilterBar.filter)
+      * [callback: FilterBar~filter](#niclabs.insight.FilterBar..filter)
+      * [event: "filter_changed"](#niclabs.insight.FilterBar#event_filter_changed)
+    * [class: insight.MapView](#niclabs.insight.MapView)
+      * [new insight.MapView(options)](#new_niclabs.insight.MapView)
+      * [MapView.element](#niclabs.insight.MapView.element)
+      * [MapView.$](#niclabs.insight.MapView.$)
+      * [MapView.center([lat], [lng])](#niclabs.insight.MapView.center)
+      * [MapView.lat()](#niclabs.insight.MapView.lat)
+      * [MapView.lng()](#niclabs.insight.MapView.lng)
+      * [MapView.zoom([zoom])](#niclabs.insight.MapView.zoom)
+      * [type: MapView.Coordinates](#niclabs.insight.MapView.Coordinates)
+      * [event: "map_element_selected"](#niclabs.insight.MapView#event_map_element_selected)
+    * [class: insight.InfoView](#niclabs.insight.InfoView)
+      * [new insight.InfoView(dashboard, options)](#new_niclabs.insight.InfoView)
+      * [InfoView.element](#niclabs.insight.InfoView.element)
+      * [InfoView.$](#niclabs.insight.InfoView.$)
+      * [InfoView.block(obj)](#niclabs.insight.InfoView.block)
+
+**Members**
+
+* [render](#render)
+ 
+<a name="niclabs"></a>
+#niclabs
+[NIC Chile Research Labs](http://niclabs.cl/) is the Internet Laboratory of the
+[Faculty of Physical and Mathematical Sciences of the University of Chile (FCFM)](http://www.fcfm.uchile.cl/),
+founded by [NIC Chile](http://www.nic.cl) and host of [INRIA Chile Internet Project](http://www.inria.cl/?page_id=23&lang=en).
+
+Our main research areas are: Internet protocols (layer 3-4), DNS, Internet QoS, Internet QoE, and computer networks.
+
+We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
+
+**Members**
+
+* [niclabs](#niclabs)
+  * [niclabs.insight](#niclabs.insight)
+    * [insight.render(template, data)](#niclabs.insight.render)
+    * [insight.handler(name, [kind], [handler])](#niclabs.insight.handler)
+    * [insight.dashboard([options])](#niclabs.insight.dashboard)
+    * [insight.info([obj])](#niclabs.insight.info(2))
+    * [insight.layer(obj, [activate])](#niclabs.insight.layer(2))
+    * [insight.map([obj])](#niclabs.insight.map(2))
+    * [insight.event](#niclabs.insight.event)
+      * [event.on(event, listener)](#niclabs.insight.event.on)
+      * [event.off(event, listener)](#niclabs.insight.event.off)
+      * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
+      * [callback: event~listener](#niclabs.insight.event..listener)
+    * [insight.info](#niclabs.insight.info)
+      * [class: info.Block](#niclabs.insight.info.Block)
+        * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+        * [Block.id](#niclabs.insight.info.Block.id)
+        * [Block.element](#niclabs.insight.info.Block.element)
+        * [Block.$](#niclabs.insight.info.Block.$)
+        * [Block.content](#niclabs.insight.info.Block.content)
         * [Block.remove()](#niclabs.insight.info.Block.remove)
         * [Block.data([data])](#niclabs.insight.info.Block.data)
       * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
@@ -117,6 +226,7 @@ understand what is going on in the city
 **Members**
 
 * [niclabs.insight](#niclabs.insight)
+  * [insight.render(template, data)](#niclabs.insight.render)
   * [insight.handler(name, [kind], [handler])](#niclabs.insight.handler)
   * [insight.dashboard([options])](#niclabs.insight.dashboard)
   * [insight.info([obj])](#niclabs.insight.info(2))
@@ -133,6 +243,7 @@ understand what is going on in the city
       * [Block.id](#niclabs.insight.info.Block.id)
       * [Block.element](#niclabs.insight.info.Block.element)
       * [Block.$](#niclabs.insight.info.Block.$)
+      * [Block.content](#niclabs.insight.info.Block.content)
       * [Block.remove()](#niclabs.insight.info.Block.remove)
       * [Block.data([data])](#niclabs.insight.info.Block.data)
     * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
@@ -211,6 +322,32 @@ understand what is going on in the city
     * [InfoView.element](#niclabs.insight.InfoView.element)
     * [InfoView.$](#niclabs.insight.InfoView.$)
     * [InfoView.block(obj)](#niclabs.insight.InfoView.block)
+
+<a name="niclabs.insight.render"></a>
+###insight.render(template, data)
+Render simple templates using the provided data
+
+You can use the attributes `data-bind` or `id` to
+indicate the binding to the data element
+
+**Params**
+
+- template `string` | `jQuery` - id for the template element, string with the template or jQuery selector to use as template  
+- data `Object` - associative array with the keys, values to change  
+
+**Returns**:  - updated dom element with the values replaced  
+**Example**  
+```html
+<script id='template' type='text/html'>
+<div class="content">
+Hello <span id="name">friend</span>,
+this is a template for <i data-bind="app">your app</i>
+</div>
+</script>
+<script type='text/html'>
+niclabs.insight.render('#template', {name: 'John', app: 'JohnsApp'})
+</script>
+```
 
 <a name="niclabs.insight.handler"></a>
 ###insight.handler(name, [kind], [handler])
@@ -413,6 +550,7 @@ Contains the definitions for the information blocks supported by insight
     * [Block.id](#niclabs.insight.info.Block.id)
     * [Block.element](#niclabs.insight.info.Block.element)
     * [Block.$](#niclabs.insight.info.Block.$)
+    * [Block.content](#niclabs.insight.info.Block.content)
     * [Block.remove()](#niclabs.insight.info.Block.remove)
     * [Block.data([data])](#niclabs.insight.info.Block.data)
   * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
@@ -428,6 +566,7 @@ Contains the definitions for the information blocks supported by insight
   * [Block.id](#niclabs.insight.info.Block.id)
   * [Block.element](#niclabs.insight.info.Block.element)
   * [Block.$](#niclabs.insight.info.Block.$)
+  * [Block.content](#niclabs.insight.info.Block.content)
   * [Block.remove()](#niclabs.insight.info.Block.remove)
   * [Block.data([data])](#niclabs.insight.info.Block.data)
 
@@ -459,6 +598,14 @@ HTML DOM element for the block container
 jQuery object for info block container
 
 **Type**: `jQuery`  
+<a name="niclabs.insight.info.Block.content"></a>
+#####Block.content
+HTML DOM element for the content container
+
+The content of the block is the HTML container that
+comes after the block title
+
+**Type**: `Element`  
 <a name="niclabs.insight.info.Block.remove"></a>
 #####Block.remove()
 Remove the block from the dashboard.
@@ -1269,3 +1416,7 @@ block list as is.
 - obj `string` | `number` | `Object` | <code>[Block](#niclabs.insight.info.Block)</code> - block id to get or configuration options for the new block  
 
 **Returns**: [Block](#niclabs.insight.info.Block) - - newly created block  
+<a name="render"></a>
+#render
+Render a template
+
