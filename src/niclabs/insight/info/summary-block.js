@@ -29,6 +29,8 @@ niclabs.insight.info.SummaryBlock = (function($) {
         // Store the refresh method of the parent
         var refresh = self.refresh;
 
+        // TODO: add template for loading data
+
         /**
          * Override the parent refresh
          */
