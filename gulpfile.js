@@ -7,8 +7,8 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var cssmin = require('gulp-cssmin');
-var sass   = require('gulp-sass');
-var jsdoc  = require("gulp-jsdoc-to-markdown");
+var sass = require('gulp-sass');
+var jsdoc = require("gulp-jsdoc-to-markdown");
 var notify = require('gulp-notify');
 
 var sources = 'src/niclabs/**/*.js';
@@ -17,7 +17,20 @@ var sources = 'src/niclabs/**/*.js';
 gulp.task('lint', function () {
     return gulp.src(sources)
         .pipe(jshint())
-        .pipe(jshint.reporter('default'));
+        // Use gulp-notify as jshint reporter
+        .pipe(notify(function (file) {
+            if (file.jshint.success) {
+                // Don't show something if success
+                return false;
+            }
+
+            var errors = file.jshint.results.map(function (data) {
+                if (data.error) {
+                    return "(" + data.error.line + ':' + data.error.character + ') ' + data.error.reason;
+                }
+            }).join("\n");
+            return file.relative + " (" + file.jshint.results.length + " errors)\n" + errors;
+        }));
 });
 
 
