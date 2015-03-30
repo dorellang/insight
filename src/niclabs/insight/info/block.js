@@ -24,12 +24,12 @@ niclabs.insight.info.Block = (function($) {
         var preprocess = options.preprocess || function(x) {return x;};
 
         // placing
-        var titleElement = $('<div>').addClass('header').append($('<span>').addClass('title').append(title));
+        var header = $('<div>').addClass('header').append($('<span>').attr('data-bind', 'title').addClass('title').append(title));
 
         var container = $('<div>').setID(htmlId).addClass('block')
-            .append(titleElement);
+            .append(header);
 
-        container.append($('<div>').addClass('content'));
+        var content = container.append($('<div>').addClass('content'));
 
         /**
          * Remove the block from the dashboard.
@@ -103,6 +103,35 @@ niclabs.insight.info.Block = (function($) {
                 var c = $(htmlId);
                 container = c.length === 0 ? container : c;
                 return container;
+            },
+
+            /**
+             * HTML DOM element for the content container
+             *
+             * The content of the block is the HTML container that
+             * comes after the block title
+             *
+             * @memberof niclabs.insight.info.Block
+             * @member {Element}
+             */
+            get content() {
+                var c = $(htmlId).find('.content');
+                content = c.length === 0 ? content: c;
+                return content;
+            },
+
+            /**
+             * Get set the title for the block
+             *
+             * @param {string=} newtitle - new title for the block
+             * @returns {string} the updated value for the block title
+             */
+            title: function(newtitle) {
+                if (typeof newtitle !== 'undefined') {
+                    title = newtitle;
+                    self.$.find('.title').text(newtitle);
+                }
+                return title;
             },
 
             /**
