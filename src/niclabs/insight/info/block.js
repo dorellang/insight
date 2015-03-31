@@ -29,7 +29,11 @@ niclabs.insight.info.Block = (function($) {
         var container = $('<div>').setID(htmlId).addClass('block')
             .append(header);
 
-        var content = container.append($('<div>').addClass('content'));
+        // Save the content element
+        var content = $('<div>').addClass('content');
+
+        // Append the content
+        container.append(content);
 
         /**
          * Remove the block from the dashboard.
@@ -106,13 +110,13 @@ niclabs.insight.info.Block = (function($) {
             },
 
             /**
-             * HTML DOM element for the content container
+             * jQuery element for the content container
              *
              * The content of the block is the HTML container that
              * comes after the block title
              *
              * @memberof niclabs.insight.info.Block
-             * @member {Element}
+             * @member {jQuery}
              */
             get content() {
                 var c = $(htmlId).find('.content');
@@ -158,18 +162,14 @@ niclabs.insight.info.Block = (function($) {
                 return data;
             },
 
-            refresh: function () {
-                var latlngView = self.$.find('.latlngView').empty();
-
-                self.$.find('.deflist').remove();
-
-                var data = self.data();
-
-                var lat = data.lat,
-                    lng = data.lng;
-
-                if (lat && lng)
-                    latlngView.text('lat: ' + lat + ', lng: ' + lng).insertAfter(self.$.find('hr'));
+            /**
+             * Refresh the block using the provided data
+             *
+             * @memberof niclabs.insight.info.Block
+             * @abstract
+             * @param {Object=} data - data to refresh
+             */
+            refresh: function (data) {
             },
         };
 

@@ -23,58 +23,55 @@ var niclabs = {};
 niclabs.insight = (function ($) {
     "use strict";
 
-    /**
-     * Render simple templates using the provided data
-     *
-     * You can use the attributes `data-bind` or `id` to
-     * indicate the binding to the data element
-     *
-     * @example
-     * ```html
-     * <script id='template' type='text/html'>
-     * <div class="content">
-     * Hello <span id="name">friend</span>,
-     * this is a template for <i data-bind="app">your app</i>
-     * </div>
-     * </script>
-     * <script type='text/html'>
-     * niclabs.insight.render('#template', {name: 'John', app: 'JohnsApp'})
-     * </script>
-     * ```
-     *
-     * @memberof niclabs.insight
-     * @param {string|jQuery} template - id for the template element, string with the template or jQuery selector to use as template
-     * @param {Object} data - associative array with the keys, values to change
-     * @returns updated dom element with the values replaced
-     */
-    function render(template, data) {
-        var selector = template;
-        if (typeof template === 'string') {
-            if (template.charAt(0) === '#') selector = $(template).first();
-            else {
-                try {selector = $(template);}
-                catch (e) {throw Error("The provided template is not a valid html node");}
-            }
+     /**
+      * Bind a jquery element to a template
+      *
+      * It binds the callback 'render' to a function that will render
+      * an associative array into the element by using the data-bind
+      * attributes
+      *
+      * You can use the attributes `data-bind` and `data-if`
+      * indicate binding or dependency from a data element
+      *
+      * @example
+      * ```html
+      * <script id='template' type='text/html'>
+      * Hello <span data-bind="name">friend</span><span data-if="name">!!!</span>,
+      * this is a template <span data-if="app">for </span><i data-bind="app">your app</i>
+      * </script>
+      * <script type='text/html'>
+      * $('#element').template('#template'); // Will show "Hello, this is a template"
+      * $('#content').trigger('render', {name: 'John', app: 'John\'s App'}); // Updates content to "Hello John!!!, this is a template for John's app"
+      * </script>
+      * ```
+      *
+      * @param {string|jQuery} template - id for the template element, string with the template or jQuery selector to use as template
+      * @returns {jQuery} this element
+      */
+    $.fn.template = function(template) {
+        if (typeof template === 'undefined') template = this.html();
+        else if (typeof template === 'string' && template.charAt(0) === '#') {
+            template = $(template).html();
         }
 
-        $.each(data, function(key, value) {
-            if (selector.attr('id') === key || selector.attr('data-bind') === key) {
-                selector.text(value);
-            }
+        var $element = this;
 
-            selector.find('#' + key).text(value);
-            selector.find('[data-bind='+key+']').text(value);
+        // Define the render() function
+        this.bind('render', function(event, data) {
+            $element.empty().append(template);
+
+            // Get elements with data bindings
+            $element.find('[data-bind],[data-if]').each(function() {
+                var key = $(this).attr('data-bind') || $(this).attr('data-if');
+
+                if (key in data) {
+                    if ($(this).attr('data-bind')) $(this).text(data[key]);
+                }
+                else {
+                    $(this).detach();
+                }
+            });
         });
-
-        return selector[0];
-    }
-
-    /**
-     * JQuery render data into element
-     *
-     */
-    $.fn.render = function (data) {
-        render(this, data);
 
         return this;
     };
@@ -357,11 +354,6 @@ niclabs.insight = (function ($) {
      */
 
     return {
-        /**
-         * Render a template
-         */
-        render: render,
-
         /**
          * Register a handler of a specific insight element ('layer', 'visualization', etc.)
          * to manage the creation, rendering of a specific part of the UI.
@@ -1390,7 +1382,11 @@ niclabs.insight.info.Block = (function($) {
         var container = $('<div>').setID(htmlId).addClass('block')
             .append(header);
 
-        var content = container.append($('<div>').addClass('content'));
+        // Save the content element
+        var content = $('<div>').addClass('content');
+
+        // Append the content
+        container.append(content);
 
         /**
          * Remove the block from the dashboard.
@@ -1467,13 +1463,13 @@ niclabs.insight.info.Block = (function($) {
             },
 
             /**
-             * HTML DOM element for the content container
+             * jQuery element for the content container
              *
              * The content of the block is the HTML container that
              * comes after the block title
              *
              * @memberof niclabs.insight.info.Block
-             * @member {Element}
+             * @member {jQuery}
              */
             get content() {
                 var c = $(htmlId).find('.content');
@@ -1519,18 +1515,14 @@ niclabs.insight.info.Block = (function($) {
                 return data;
             },
 
-            refresh: function () {
-                var latlngView = self.$.find('.latlngView').empty();
-
-                self.$.find('.deflist').remove();
-
-                var data = self.data();
-
-                var lat = data.lat,
-                    lng = data.lng;
-
-                if (lat && lng)
-                    latlngView.text('lat: ' + lat + ', lng: ' + lng).insertAfter(self.$.find('hr'));
+            /**
+             * Refresh the block using the provided data
+             *
+             * @memberof niclabs.insight.info.Block
+             * @abstract
+             * @param {Object=} data - data to refresh
+             */
+            refresh: function (data) {
             },
         };
 
@@ -1616,49 +1608,53 @@ niclabs.insight.info.SummaryBlock = (function($) {
         ignore = ignore.concat(options.ignore || []);
 
         // Append view elements
-        self.$.find('.content').append($('<h6>').addClass('latlngView'));
-        self.$.find('.content').append($('<dl>').addClass('deflist'));
+        // self.content.append($('<h6>').addClass('latlngView'));
+        // self.content.append($('<dl>').addClass('deflist'));
+
+        // Create the default template
+        /*jshint multistr: true */
+        var template = options.template || '\
+        <h6 class="latLngView" data-if="lat"> \
+            lat: <span data-bind="lat"> -- </span> \
+            lng: <span data-bind="lng"> -- </span> \
+        </h6>\
+        <dl class="deflist">\
+            <dt class="deflist-key" data-if="description">description</dt> \
+            <dd class="deflist-value" data-bind="description">none</dd> \
+            <dt class="deflist-key" data-if="landmark">landmark</dt> \
+            <dd class="deflist-value" data-bind="landmark">none</dd> \
+            <dt class="deflist-key" data-if="fun-fact">fun-fact</dt> \
+            <dd class="deflist-value" data-bind="fun-fact">none</dd> \
+        </dl>\
+        ';
+
+        // Append the template to the content
+        self.content.template(template);
 
         // Store the refresh method of the parent
         var refresh = self.refresh;
 
-        // TODO: add template for loading data
-
         /**
          * Override the parent refresh
          */
-        self.refresh = function() {
+        self.refresh = function(data) {
+            data = typeof data !== 'undefined' ? data : self.data();
+
             // Call the parent refresh
-            refresh();
+            refresh(data);
 
-            self.$.find('.content').append($('<dl>').addClass('deflist'));
-            self.summary(self.data());
-        };
-
-
-        /**
-         * Create a definition list from the provided data
-         *
-         * @memberof niclabs.insight.info.SummaryBlock
-         * @param {Object=} data - the updated data for the block
-         */
-        self.summary = function(data) {
-            $.each(data, function (key, value) {
-                if (ignore.indexOf(key) < 0) {
-                    self.$.find('.deflist')
-                        .append($('<dt>').text(key).addClass('deflist-key'))
-                        .append($('<dd>').text(value).addClass('deflist-value'));
-                }
-            });
+            // Render the data
+            self.content.trigger('render', data);
         };
 
         // Create the default summary if provided
-        if (options.data) self.summary(options.data);
+        //if (options.data) self.summary(options.data);
+        if (options.data) self.refresh(options.data);
 
         // Listen for map events
         niclabs.insight.event.on('map_element_selected', function(data) {
             self.data(data);
-            self.refresh();
+            self.refresh(data);
         });
 
         return self;

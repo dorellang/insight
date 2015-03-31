@@ -23,49 +23,53 @@ niclabs.insight.info.SummaryBlock = (function($) {
         ignore = ignore.concat(options.ignore || []);
 
         // Append view elements
-        self.$.find('.content').append($('<h6>').addClass('latlngView'));
-        self.$.find('.content').append($('<dl>').addClass('deflist'));
+        // self.content.append($('<h6>').addClass('latlngView'));
+        // self.content.append($('<dl>').addClass('deflist'));
+
+        // Create the default template
+        /*jshint multistr: true */
+        var template = options.template || '\
+        <h6 class="latLngView" data-if="lat"> \
+            lat: <span data-bind="lat"> -- </span> \
+            lng: <span data-bind="lng"> -- </span> \
+        </h6>\
+        <dl class="deflist">\
+            <dt class="deflist-key" data-if="description">description</dt> \
+            <dd class="deflist-value" data-bind="description">none</dd> \
+            <dt class="deflist-key" data-if="landmark">landmark</dt> \
+            <dd class="deflist-value" data-bind="landmark">none</dd> \
+            <dt class="deflist-key" data-if="fun-fact">fun-fact</dt> \
+            <dd class="deflist-value" data-bind="fun-fact">none</dd> \
+        </dl>\
+        ';
+
+        // Append the template to the content
+        self.content.template(template);
 
         // Store the refresh method of the parent
         var refresh = self.refresh;
 
-        // TODO: add template for loading data
-
         /**
          * Override the parent refresh
          */
-        self.refresh = function() {
+        self.refresh = function(data) {
+            data = typeof data !== 'undefined' ? data : self.data();
+
             // Call the parent refresh
-            refresh();
+            refresh(data);
 
-            self.$.find('.content').append($('<dl>').addClass('deflist'));
-            self.summary(self.data());
-        };
-
-
-        /**
-         * Create a definition list from the provided data
-         *
-         * @memberof niclabs.insight.info.SummaryBlock
-         * @param {Object=} data - the updated data for the block
-         */
-        self.summary = function(data) {
-            $.each(data, function (key, value) {
-                if (ignore.indexOf(key) < 0) {
-                    self.$.find('.deflist')
-                        .append($('<dt>').text(key).addClass('deflist-key'))
-                        .append($('<dd>').text(value).addClass('deflist-value'));
-                }
-            });
+            // Render the data
+            self.content.trigger('render', data);
         };
 
         // Create the default summary if provided
-        if (options.data) self.summary(options.data);
+        //if (options.data) self.summary(options.data);
+        if (options.data) self.refresh(options.data);
 
         // Listen for map events
         niclabs.insight.event.on('map_element_selected', function(data) {
             self.data(data);
-            self.refresh();
+            self.refresh(data);
         });
 
         return self;
