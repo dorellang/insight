@@ -10,58 +10,55 @@
 niclabs.insight = (function ($) {
     "use strict";
 
-    /**
-     * Render simple templates using the provided data
-     *
-     * You can use the attributes `data-bind` or `id` to
-     * indicate the binding to the data element
-     *
-     * @example
-     * ```html
-     * <script id='template' type='text/html'>
-     * <div class="content">
-     * Hello <span id="name">friend</span>,
-     * this is a template for <i data-bind="app">your app</i>
-     * </div>
-     * </script>
-     * <script type='text/html'>
-     * niclabs.insight.render('#template', {name: 'John', app: 'JohnsApp'})
-     * </script>
-     * ```
-     *
-     * @memberof niclabs.insight
-     * @param {string|jQuery} template - id for the template element, string with the template or jQuery selector to use as template
-     * @param {Object} data - associative array with the keys, values to change
-     * @returns updated dom element with the values replaced
-     */
-    function render(template, data) {
-        var selector = template;
-        if (typeof template === 'string') {
-            if (template.charAt(0) === '#') selector = $(template).first();
-            else {
-                try {selector = $(template);}
-                catch (e) {throw Error("The provided template is not a valid html node");}
-            }
+     /**
+      * Bind a jquery element to a template
+      *
+      * It binds the callback 'render' to a function that will render
+      * an associative array into the element by using the data-bind
+      * attributes
+      *
+      * You can use the attributes `data-bind` and `data-if`
+      * indicate binding or dependency from a data element
+      *
+      * @example
+      * ```html
+      * <script id='template' type='text/html'>
+      * Hello <span data-bind="name">friend</span><span data-if="name">!!!</span>,
+      * this is a template <span data-if="app">for </span><i data-bind="app">your app</i>
+      * </script>
+      * <script type='text/html'>
+      * $('#element').template('#template'); // Will show "Hello, this is a template"
+      * $('#content').trigger('render', {name: 'John', app: 'John\'s App'}); // Updates content to "Hello John!!!, this is a template for John's app"
+      * </script>
+      * ```
+      *
+      * @param {string|jQuery} template - id for the template element, string with the template or jQuery selector to use as template
+      * @returns {jQuery} this element
+      */
+    $.fn.template = function(template) {
+        if (typeof template === 'undefined') template = this.html();
+        else if (typeof template === 'string' && template.charAt(0) === '#') {
+            template = $(template).html();
         }
 
-        $.each(data, function(key, value) {
-            if (selector.attr('id') === key || selector.attr('data-bind') === key) {
-                selector.text(value);
-            }
+        var $element = this;
 
-            selector.find('#' + key).text(value);
-            selector.find('[data-bind='+key+']').text(value);
+        // Define the render() function
+        this.bind('render', function(event, data) {
+            $element.empty().append(template);
+
+            // Get elements with data bindings
+            $element.find('[data-bind],[data-if]').each(function() {
+                var key = $(this).attr('data-bind') || $(this).attr('data-if');
+
+                if (key in data) {
+                    if ($(this).attr('data-bind')) $(this).text(data[key]);
+                }
+                else {
+                    $(this).detach();
+                }
+            });
         });
-
-        return selector[0];
-    }
-
-    /**
-     * JQuery render data into element
-     *
-     */
-    $.fn.render = function (data) {
-        render(this, data);
 
         return this;
     };
@@ -344,11 +341,6 @@ niclabs.insight = (function ($) {
      */
 
     return {
-        /**
-         * Render a template
-         */
-        render: render,
-
         /**
          * Register a handler of a specific insight element ('layer', 'visualization', etc.)
          * to manage the creation, rendering of a specific part of the UI.

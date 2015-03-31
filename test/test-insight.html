@@ -41,6 +41,11 @@
 <body>
     <div id="dashboard"></div>
 
+    <script type="text/html" id="template">
+        The marker <span data-if="lat">in the location (<span data-bind="lat">0</span>, <span data-bind="lng">0</span>)</span>
+        shows the landmark <span data-bind="landmark">landmark</span>
+    </script>
+
     <script type="text/javascript">
         // Binding the map and the information window.
         var dashboard = niclabs.insight.dashboard({
@@ -56,13 +61,13 @@
             ]
         });
 
-        // TODO: This depends on the order :S
         niclabs.insight.info({
             handler: 'basic-info-view',
             blocks: [{
                 'handler': 'summary-block',
                 'id': '#summary',
                 'title': 'My Marker Summary',
+                'template': '#template',
                 'data': {
                     'description': 'This block will show the details of the selected markers'
                 },
