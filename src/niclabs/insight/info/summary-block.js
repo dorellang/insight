@@ -10,8 +10,9 @@ niclabs.insight.info.SummaryBlock = (function($) {
      * @param {Object} options - configuration options for the block
      * @param {string} options.id - html identifier for the block
      * @param {string=} options.title - title for the block
-     * @param {Object=} options.properties - block properties (closable, movable)
-     * @param {Object=} data - default data for the summary
+     * @param {boolean} [options.closable=true] - make the block closable
+     * @param {boolean} [options.movable=true] - make the block movable
+     * @param {Object=} options.data - default data for the summary
      */
     var SummaryBlock = function(dashboard, options) {
         var self = niclabs.insight.info.Block(dashboard, options);

@@ -9,7 +9,8 @@ niclabs.insight.info.Block = (function($) {
      * @param {Object} options - configuration options for the block
      * @param {string} options.id - html identifier for the block
      * @param {string=} options.title - title for the block
-     * @param {Object=} options.properties - block properties (closable, movable)
+     * @param {boolean} [options.closable=true] - make the block closable
+     * @param {boolean} [options.movable=true] - make the block movable
      * @param {Object=} options.data - default data for the block
      */
     var constructor = function(dashboard, options) {
@@ -20,7 +21,11 @@ niclabs.insight.info.Block = (function($) {
         var id = options.id;
         var htmlId = id.charAt(0) === '#' ? id : '#' + id;
         var title = options.title || '';
-        var properties = options.properties || {};
+
+        var properties = {
+            closable: options.closable || true,
+            movable: options.movable || true,
+        };
         var preprocess = options.preprocess || function(x) {return x;};
 
         // placing
@@ -50,7 +55,7 @@ niclabs.insight.info.Block = (function($) {
         }
 
         // Make the block closable
-        if (properties.closable === undefined || properties.closable) {
+        if (properties.closable) {
             container.closable(function() {
                 // Remove the block
                 remove();
@@ -58,7 +63,7 @@ niclabs.insight.info.Block = (function($) {
         }
 
         // Make the block movable
-        if (properties.movable === undefined || properties.movable) {
+        if (properties.movable) {
             container.movable();
         }
 
