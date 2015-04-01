@@ -17,11 +17,6 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
     * [insight.info([obj])](#niclabs.insight.info(2))
     * [insight.layer(obj, [activate])](#niclabs.insight.layer(2))
     * [insight.map([obj])](#niclabs.insight.map(2))
-    * [insight.event](#niclabs.insight.event)
-      * [event.on(event, listener)](#niclabs.insight.event.on)
-      * [event.off(event, listener)](#niclabs.insight.event.off)
-      * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
-      * [callback: event~listener](#niclabs.insight.event..listener)
     * [insight.info](#niclabs.insight.info)
       * [class: info.Block](#niclabs.insight.info.Block)
         * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
@@ -55,6 +50,11 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [MarkerLayer.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
         * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
         * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
+    * [insight.event](#niclabs.insight.event)
+      * [event.on(event, listener)](#niclabs.insight.event.on)
+      * [event.off(event, listener)](#niclabs.insight.event.off)
+      * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
+      * [callback: event~listener](#niclabs.insight.event..listener)
     * [insight.map](#niclabs.insight.map)
       * [map.marker](#niclabs.insight.map.marker)
         * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
@@ -128,11 +128,6 @@ understand what is going on in the city
   * [insight.info([obj])](#niclabs.insight.info(2))
   * [insight.layer(obj, [activate])](#niclabs.insight.layer(2))
   * [insight.map([obj])](#niclabs.insight.map(2))
-  * [insight.event](#niclabs.insight.event)
-    * [event.on(event, listener)](#niclabs.insight.event.on)
-    * [event.off(event, listener)](#niclabs.insight.event.off)
-    * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
-    * [callback: event~listener](#niclabs.insight.event..listener)
   * [insight.info](#niclabs.insight.info)
     * [class: info.Block](#niclabs.insight.info.Block)
       * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
@@ -166,6 +161,11 @@ understand what is going on in the city
       * [MarkerLayer.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
       * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
       * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
+  * [insight.event](#niclabs.insight.event)
+    * [event.on(event, listener)](#niclabs.insight.event.on)
+    * [event.off(event, listener)](#niclabs.insight.event.off)
+    * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
+    * [callback: event~listener](#niclabs.insight.event..listener)
   * [insight.map](#niclabs.insight.map)
     * [map.marker](#niclabs.insight.map.marker)
       * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
@@ -348,71 +348,6 @@ var map = niclabs.insight.map({
 });
 ```
 
-<a name="niclabs.insight.event"></a>
-###insight.event
-Very basic event manager for the dashboard
-
-**Example**  
-```javascript
-// Subscribe to the event
-var eventId = niclabs.insight.event.on('hello', function(who) {
-     alert("HELLO "+who+"!!!");
-});
-
-// Trigger the event
-niclabs.insight.event.trigger('hello', "John"); // Shows alert 'HELLO John!!!'
-
-// Unsubscribe
-niclabs.insight.event.off('hello', eventId);
-```
-
-**Members**
-
-* [insight.event](#niclabs.insight.event)
-  * [event.on(event, listener)](#niclabs.insight.event.on)
-  * [event.off(event, listener)](#niclabs.insight.event.off)
-  * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
-  * [callback: event~listener](#niclabs.insight.event..listener)
-
-<a name="niclabs.insight.event.on"></a>
-####event.on(event, listener)
-Listen for an event. A listener callback can only be assigned once for an event
-
-**Params**
-
-- event `string` - event type  
-- listener <code>[listener](#niclabs.insight.event..listener)</code> - callback to process the event  
-
-**Returns**: `number` - id of the listener  
-<a name="niclabs.insight.event.off"></a>
-####event.off(event, listener)
-Stop listening for an event.
-
-**Params**
-
-- event `string` - event type  
-- listener <code>[listener](#niclabs.insight.event..listener)</code> | `number` - callback to remove or id of the listener provided by `niclabs.insight.event.on()`  
-
-**Returns**: `boolean` - true if the listener was found and was succesfully removed  
-<a name="niclabs.insight.event.trigger"></a>
-####event.trigger(event, [data])
-Trigger an event
-
-**Params**
-
-- event `string` - event type  
-- \[data\] `Object` - data to pass to the callback  
-
-<a name="niclabs.insight.event..listener"></a>
-####callback: event~listener
-Insight event listener
-
-**Params**
-
-- data `Object` - data for the callback function, dependant on the event  
-
-**Scope**: inner typedef of [event](#niclabs.insight.event)  
-**Type**: `function`  
 <a name="niclabs.insight.info"></a>
 ###insight.info
 Contains the definitions for the information blocks supported by insight
@@ -770,6 +705,71 @@ The event provides summary data for blocks to show
 - data `Array.<Object>` - new data array  
 
 **Type**: `object`  
+<a name="niclabs.insight.event"></a>
+###insight.event
+Very basic event manager for the dashboard
+
+**Example**  
+```javascript
+// Subscribe to the event
+var eventId = niclabs.insight.event.on('hello', function(who) {
+     alert("HELLO "+who+"!!!");
+});
+
+// Trigger the event
+niclabs.insight.event.trigger('hello', "John"); // Shows alert 'HELLO John!!!'
+
+// Unsubscribe
+niclabs.insight.event.off('hello', eventId);
+```
+
+**Members**
+
+* [insight.event](#niclabs.insight.event)
+  * [event.on(event, listener)](#niclabs.insight.event.on)
+  * [event.off(event, listener)](#niclabs.insight.event.off)
+  * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
+  * [callback: event~listener](#niclabs.insight.event..listener)
+
+<a name="niclabs.insight.event.on"></a>
+####event.on(event, listener)
+Listen for an event. A listener callback can only be assigned once for an event
+
+**Params**
+
+- event `string` - event type  
+- listener <code>[listener](#niclabs.insight.event..listener)</code> - callback to process the event  
+
+**Returns**: `number` - id of the listener  
+<a name="niclabs.insight.event.off"></a>
+####event.off(event, listener)
+Stop listening for an event.
+
+**Params**
+
+- event `string` - event type  
+- listener <code>[listener](#niclabs.insight.event..listener)</code> | `number` - callback to remove or id of the listener provided by `niclabs.insight.event.on()`  
+
+**Returns**: `boolean` - true if the listener was found and was succesfully removed  
+<a name="niclabs.insight.event.trigger"></a>
+####event.trigger(event, [data])
+Trigger an event
+
+**Params**
+
+- event `string` - event type  
+- \[data\] `Object` - data to pass to the callback  
+
+<a name="niclabs.insight.event..listener"></a>
+####callback: event~listener
+Insight event listener
+
+**Params**
+
+- data `Object` - data for the callback function, dependant on the event  
+
+**Scope**: inner typedef of [event](#niclabs.insight.event)  
+**Type**: `function`  
 <a name="niclabs.insight.map"></a>
 ###insight.map
 Map compatibility for the insight dashboard

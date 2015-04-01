@@ -109,6 +109,7 @@
                 'handler': 'summary-block',
                 'id': '#summary',
                 'title': 'My Marker Summary',
+                'closable': false,
                 //'template': '#template',
                 'data': {
                     'description': 'This block will show the details of the selected markers'
@@ -139,7 +140,6 @@
                     },
                 },
                 'preprocess': function(data) {
-                    console.log(data);
                     data.value = data.value[0];
                     var d = [];
                     for (var i = 0; i < data.value.length; i++) {
@@ -205,7 +205,6 @@
                 'note': 'This is not the actual number of visitors.'
             }],
             summary: function(data) {
-                console.log(data);
                 var totals = {
                     description: 'Weeky visitors for '+data.length+' museums in Paris',
                     value: [
