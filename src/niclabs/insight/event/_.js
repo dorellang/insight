@@ -56,7 +56,7 @@ niclabs.insight.event = (function() {
             var index = indexOf(event, listener);
 
             if (index < 0) {
-                if (!('event' in events)) {
+                if (!(event in events)) {
                     events[event] = [];
                 }
 
