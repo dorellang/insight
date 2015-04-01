@@ -4,10 +4,10 @@ niclabs.insight.info.ChartistBlock = (function($) {
      *
      * @typedef niclabs.insight.info.ChartistBlock.Chartist
      * @type {Object}
-     * @param {Object} chartist.class - chartist css class
-     * @param {Object} chartist.labels - chart labels
-     * @param {Object=} chartist.options - chartist options
-     * @param {Object=} chartist.responsiveOptions - chartist responsive options
+     * @param {Object} class - chartist css class
+     * @param {Object} labels - chart labels
+     * @param {Object=} options - chartist options
+     * @param {Object=} responsiveOptions - chartist responsive options
      */
 
 
