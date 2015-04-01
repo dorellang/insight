@@ -1596,7 +1596,21 @@ niclabs.insight.info.Block = (function($) {
 
 niclabs.insight.info.ChartistBlock = (function($) {
     /**
-     * Construct a new chartis information block
+     * Configuration options for chartist charts
+     *
+     * @typedef niclabs.insight.info.ChartistBlock.Chartist
+     * @type {Object}
+     * @param {Object} chartist.class - chartist css class
+     * @param {Object} chartist.labels - chart labels
+     * @param {Object=} chartist.options - chartist options
+     * @param {Object=} chartist.responsiveOptions - chartist responsive options
+     */
+
+
+    /**
+     * Construct a new chartist information block
+     *
+     * For the configuration options see {@link http://gionkunz.github.io/chartist-js/}
      *
      * @class niclabs.insight.info.ChartistBlock
      * @augments niclabs.insight.info.Block
@@ -1606,9 +1620,9 @@ niclabs.insight.info.ChartistBlock = (function($) {
      * @param {Object} options - configuration options for the block
      * @param {string} options.id - html identifier for the block
      * @param {string=} options.title - title for the block
-     * @param {Object} options.chartist - chartist configuration
+     * @param {niclabs.insight.info.ChartistBlock.Chartist} options.chartist - chartist configuration
      * @param {Object=} options.properties - block properties (closable, movable)
-     * @param {Object=} data - default data for the summary
+     * @param {Object=} options.data - default data for the summary
      */
      var ChartistBlock = function (dashboard, constructor, options) {
          var self = niclabs.insight.info.Block(dashboard, options);
@@ -1644,7 +1658,7 @@ niclabs.insight.info.ChartistBlock = (function($) {
                  chart.update(chartData);
              }
              else {
-                 chart = new constructor( (self.content.find('div'))[0], chartData , chartistOptions, responsiveOptions);
+                 chart = new constructor((self.content.find('div'))[0], chartData , chartistOptions, responsiveOptions);
              }
          };
 
