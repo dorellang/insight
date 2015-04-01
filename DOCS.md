@@ -36,7 +36,7 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
         * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
       * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-        * [new info.SummaryBlock(dashboard, options, [data])](#new_niclabs.insight.info.SummaryBlock)
+        * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
     * [insight.layer](#niclabs.insight.layer)
       * [class: layer.Layer](#niclabs.insight.layer.Layer)
         * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
@@ -145,7 +145,7 @@ understand what is going on in the city
       * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
       * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
     * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-      * [new info.SummaryBlock(dashboard, options, [data])](#new_niclabs.insight.info.SummaryBlock)
+      * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
   * [insight.layer](#niclabs.insight.layer)
     * [class: layer.Layer](#niclabs.insight.layer.Layer)
       * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
@@ -429,7 +429,7 @@ Contains the definitions for the information blocks supported by insight
     * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
     * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
   * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-    * [new info.SummaryBlock(dashboard, options, [data])](#new_niclabs.insight.info.SummaryBlock)
+    * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
 
 <a name="niclabs.insight.info.Block"></a>
 ####class: info.Block
@@ -455,7 +455,8 @@ Construct a information block
 - options `Object` - configuration options for the block  
   - id `string` - html identifier for the block  
   - \[title\] `string` - title for the block  
-  - \[properties\] `Object` - block properties (closable, movable)  
+  - \[closable=true\] `boolean` - make the block closable  
+  - \[movable=true\] `boolean` - make the block movable  
   - \[data\] `Object` - default data for the block  
 
 <a name="niclabs.insight.info.Block.id"></a>
@@ -527,7 +528,8 @@ For the configuration options see [http://gionkunz.github.io/chartist-js/](http:
   - id `string` - html identifier for the block  
   - \[title\] `string` - title for the block  
   - chartist <code>[Chartist](#niclabs.insight.info.ChartistBlock.Chartist)</code> - chartist configuration  
-  - \[properties\] `Object` - block properties (closable, movable)  
+  - \[closable=true\] `boolean` - make the block closable  
+  - \[movable=true\] `boolean` - make the block movable  
   - \[data\] `Object` - default data for the summary  
 
 **Extends**: `niclabs.insight.info.Block`  
@@ -549,10 +551,10 @@ Configuration options for chartist charts
 **Members**
 
 * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-  * [new info.SummaryBlock(dashboard, options, [data])](#new_niclabs.insight.info.SummaryBlock)
+  * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
 
 <a name="new_niclabs.insight.info.SummaryBlock"></a>
-#####new info.SummaryBlock(dashboard, options, [data])
+#####new info.SummaryBlock(dashboard, options)
 Construct a new summary information block
 TODO: describe what is a summary information block
 
@@ -562,8 +564,9 @@ TODO: describe what is a summary information block
 - options `Object` - configuration options for the block  
   - id `string` - html identifier for the block  
   - \[title\] `string` - title for the block  
-  - \[properties\] `Object` - block properties (closable, movable)  
-- \[data\] `Object` - default data for the summary  
+  - \[closable=true\] `boolean` - make the block closable  
+  - \[movable=true\] `boolean` - make the block movable  
+  - \[data\] `Object` - default data for the summary  
 
 **Extends**: `niclabs.insight.info.Block`  
 <a name="niclabs.insight.layer"></a>

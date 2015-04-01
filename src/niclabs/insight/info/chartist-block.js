@@ -25,7 +25,8 @@ niclabs.insight.info.ChartistBlock = (function($) {
      * @param {string} options.id - html identifier for the block
      * @param {string=} options.title - title for the block
      * @param {niclabs.insight.info.ChartistBlock.Chartist} options.chartist - chartist configuration
-     * @param {Object=} options.properties - block properties (closable, movable)
+     * @param {boolean} [options.closable=true] - make the block closable
+     * @param {boolean} [options.movable=true] - make the block movable
      * @param {Object=} options.data - default data for the summary
      */
      var ChartistBlock = function (dashboard, constructor, options) {
