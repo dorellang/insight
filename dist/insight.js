@@ -1316,6 +1316,472 @@ niclabs.insight.event = (function() {
 })();
 
 /**
+ * Contains the definitions for the information blocks supported by insight
+ *
+ * @namespace
+ */
+niclabs.insight.info = (function () {
+    /**
+     * Helper method to assign/get the information view to/from the dashboard
+     *
+     * @example
+     * ```javascript
+     * // Create the info view
+     * niclabs.insight.info({
+     *      handler: 'basic-info-view', // The view constructor
+     *      blocks: [{
+     *          'handler': 'summary-block', // The block constructor
+     *          'id': '#summary',
+     *          'title': 'My Marker Summary',
+     *          'data': { // Default data
+     *              'description': 'This block will show the details of the selected markers'
+     *        },
+     *        ignore: ['layer', 'type', 'src'] // Data elements we don't want on the block
+     *    }]
+     * });
+     * ```
+     *
+     * @memberof niclabs.insight
+     * @variation 2
+     * @param {Object|niclabs.insight.InfoView} [obj] - configuration for the information view or information view object
+     * @param {String} obj.handler - name of the handler to construct the info view
+     * @returns {niclabs.insight.InfoView} the dashboard information view
+     */
+    var info = function(obj) {
+        var dashboard = niclabs.insight.dashboard();
+        if (typeof dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
+        return dashboard.info(obj);
+    };
+
+    return info;
+})();
+
+niclabs.insight.info.Block = (function($) {
+    "use strict";
+
+    /**
+     * Construct a information block
+     *
+     * @class niclabs.insight.info.Block
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard to which the block belongs to
+     * @param {Object} options - configuration options for the block
+     * @param {string} options.id - html identifier for the block
+     * @param {string=} options.title - title for the block
+     * @param {boolean} [options.closable=true] - make the block closable
+     * @param {boolean} [options.movable=true] - make the block movable
+     * @param {Object=} options.data - default data for the block
+     */
+    var constructor = function(dashboard, options) {
+        if (!('id' in options)) {
+            throw new Error("All information blocks must have an id");
+        }
+
+        var id = options.id;
+        var htmlId = id.charAt(0) === '#' ? id : '#' + id;
+        var title = options.title || '';
+
+        var properties = {
+            closable: typeof options.closable === 'undefined'? true : options.closable,
+            movable: typeof options.movable === 'undefined'? true : options.movable,
+        };
+        var preprocess = options.preprocess || function(x) {return x;};
+
+        // placing
+        var header = $('<div>').addClass('header').append($('<span>').attr('data-bind', 'title').addClass('title').append(title));
+
+        var container = $('<div>').setID(htmlId).addClass('block')
+            .append(header);
+
+        // Save the content element
+        var content = $('<div>').addClass('content');
+
+        // Append the content
+        container.append(content);
+
+        /**
+         * Remove the block from the dashboard.
+         * This method triggers an event to alert all elements of the
+         * dashboard of the block removal
+         *
+         * @memberof niclabs.insight.info.Block
+         */
+        function remove() {
+            // Trigger the block removal
+            niclabs.insight.event.trigger('remove-block', {
+                'id': id
+            });
+        }
+
+        // Make the block closable
+        if (properties.closable) {
+            container.closable(function() {
+                // Remove the block
+                remove();
+            });
+        }
+
+        // Make the block movable
+        if (properties.movable) {
+            container.movable();
+        }
+
+        // Add the properties to the block style
+        container.css(properties);
+
+        // checkbox handling
+        // TODO: this is not a generic functionality?
+        // var checkbox_handler = options['checkbox-handler'] || function (a, d) { return d; };
+        //
+        // if (options.checkbox)
+        //     this.addCheckbox(options.checkbox);
+
+        // Listen for map events
+        niclabs.insight.event.on('map_element_selected', function(data) {
+            self.data(data);
+            self.refresh(data);
+        });
+
+        // Listen for summary events
+        niclabs.insight.event.on('layer_summary', function(summary) {
+            self.data(summary.data);
+            self.refresh(summary.data);
+        });
+
+        // Block data
+        var data = options.data || {};
+
+        var self = {
+            /**
+             * id of the block
+             * @memberof niclabs.insight.info.Block
+             * @member {string}
+             */
+            get id () {
+                return id;
+            },
+
+            /**
+             * HTML DOM element for the block container
+             *
+             * @memberof niclabs.insight.info.Block
+             * @member {Element}
+             */
+            get element () {
+                var c = $(htmlId);
+                container = c.length === 0 ? container : c;
+                return container[0];
+            },
+
+            /**
+             * jQuery object for info block container
+             *
+             * @memberof niclabs.insight.info.Block
+             * @member {jQuery}
+             */
+            get $ () {
+                var c = $(htmlId);
+                container = c.length === 0 ? container : c;
+                return container;
+            },
+
+            /**
+             * jQuery element for the content container
+             *
+             * The content of the block is the HTML container that
+             * comes after the block title
+             *
+             * @memberof niclabs.insight.info.Block
+             * @member {jQuery}
+             */
+            get content() {
+                var c = $(htmlId).find('.content');
+                content = c.length === 0 ? content: c;
+                return content;
+            },
+
+            /**
+             * Get set the title for the block
+             *
+             * @param {string=} newtitle - new title for the block
+             * @returns {string} the updated value for the block title
+             */
+            title: function(newtitle) {
+                if (typeof newtitle !== 'undefined') {
+                    title = newtitle;
+                    self.$.find('.title').text(newtitle);
+                }
+                return title;
+            },
+
+            /**
+             * Trigger the removal of the block
+             */
+            remove: remove,
+
+            /**
+             * Set/get the data for the block
+             *
+             * @memberof niclabs.insight.info.Block
+             * @param {Object=} data - data for the block
+             * @returns {Object} the current data in the blokc
+             */
+            data: function (d) {
+                d = typeof d === 'undefined' ? data : d;
+
+                // If the object is empty we cleanup the internal data
+                if (Object.keys(d).length === 0)
+                    data = {};
+                else
+                    data = preprocess(d);
+
+                return data;
+            },
+
+            /**
+             * Refresh the block using the provided data
+             *
+             * @memberof niclabs.insight.info.Block
+             * @abstract
+             * @param {Object=} data - data to refresh
+             */
+            refresh: function (data) {
+            },
+        };
+
+        return self;
+    };
+
+    return constructor;
+})(jQuery);
+
+// CityDashboard.Visualization.prototype = {
+//     addCheckbox: function (keys) {
+//         //keys: {name1:true,name2:false,name3:true,...}
+//         //each element of the object indicates the label of each checkbox. The number of keys indicates the number of checboxes.
+//         //handler :  function ([true, false, true, ...],data)
+//         //each element of the array corresponds to each checkbox state.
+//
+//         var checkpanel = $("<span>").addClass('checkbox-panel');
+//
+//         var arr = [];
+//
+//         for (var key in keys) {
+//             var checkbox = $('<input>').attr('type', 'checkbox');
+//
+//             arr[arr.length] = checkbox[0].checked = keys[key];
+//             checkpanel.append(checkbox);
+//
+//             var _this = this;
+//
+//             checkbox.on('change', function () {
+//
+//                 var array = $(this).parent().children('input:checkbox').map(function () {
+//                     return $(this).prop('checked');
+//                 }).get();
+//
+//                 _this.getData = function () {
+//                     var clone = _this.data;
+//                     if (!(_this.data instanceof Array))
+//                         clone = jQuery.extend({}, _this.data);
+//                     return _this.checkbox_handler(array, clone);
+//                 };
+//
+//                 _this.refresh();
+//
+//             })
+//
+//             checkbox.after($('<label>').text(key));
+//         }
+//
+//         this.viz.append(checkpanel);
+//
+//         _this.getData = function () {
+//             var clone = _this.data;
+//             if (!(_this.data instanceof Array))
+//                 clone = jQuery.extend({}, _this.data);
+//             return _this.checkbox_handler(arr, clone);
+//         };
+//     }
+//
+// };
+
+niclabs.insight.info.ChartistBlock = (function($) {
+    /**
+     * Configuration options for chartist charts
+     *
+     * @typedef niclabs.insight.info.ChartistBlock.Chartist
+     * @type {Object}
+     * @param {Object} class - chartist css class
+     * @param {Object} labels - chart labels
+     * @param {Object=} options - chartist options
+     * @param {Object=} responsiveOptions - chartist responsive options
+     */
+
+
+    /**
+     * Construct a new chartist information block
+     *
+     * For the configuration options see {@link http://gionkunz.github.io/chartist-js/}
+     *
+     * @class niclabs.insight.info.ChartistBlock
+     * @augments niclabs.insight.info.Block
+     * @inheritdoc
+     * @param {niclabs.insight.Dashboard} dashboard - parent dashboard for the block
+     * @param {Object} constructor - chartist object to use as constructor
+     * @param {Object} options - configuration options for the block
+     * @param {string} options.id - html identifier for the block
+     * @param {string=} options.title - title for the block
+     * @param {niclabs.insight.info.ChartistBlock.Chartist} options.chartist - chartist configuration
+     * @param {boolean} [options.closable=true] - make the block closable
+     * @param {boolean} [options.movable=true] - make the block movable
+     * @param {Object=} options.data - default data for the summary
+     */
+     var ChartistBlock = function (dashboard, constructor, options) {
+         var self = niclabs.insight.info.Block(dashboard, options);
+
+         var chartist = options.chartist;
+
+         self.content.addClass('chartist-viz').append( $('<div>').addClass(chartist.class));
+
+         var chartistOptions = chartist.options || {};
+         var responsiveOptions = chartist.responsiveOptions || {};
+         var labels = chartist.labels;
+
+         // Store the chart object
+         var chart;
+
+         var refresh = self.refresh;
+
+         self.refresh = function(data) {
+             data = typeof data === 'undefined' ? self.data() : data;
+
+             // Call the parent
+             refresh(data);
+
+             // Look for 'value' key in data
+             data = data.value || data;
+
+             var chartData  = {
+               'series': data,
+               'labels': typeof labels === 'function' ? labels(data) : labels
+             };
+
+             if (chart && chart.optionsProvider) {
+                 chart.update(chartData);
+             }
+             else {
+                 chart = new constructor((self.content.find('div'))[0], chartData , chartistOptions, responsiveOptions);
+             }
+         };
+
+         if (options.data) self.refresh(options.data);
+
+
+         var remove = self.remove;
+
+         // Override remove method
+         self.remove = function() {
+             // Call the parent
+             remove();
+
+             chart.detach();
+         };
+
+         return self;
+     };
+
+     var ChartistLineChartBlock = function(dashboard, options) {
+        var self = ChartistBlock(dashboard, Chartist.Line, options);
+        return self;
+     };
+
+     var ChartistBarChartBlock = function(dashboard, options) {
+        var self = ChartistBlock(dashboard, Chartist.Bar, options);
+        return self;
+    };
+
+    var ChartistPieChartBlock = function(dashboard, options) {
+       var self = ChartistBlock(dashboard, Chartist.Pie, options);
+       return self;
+    };
+
+     // Register the handler
+     niclabs.insight.handler('chartist-linechart', 'info-block', ChartistLineChartBlock);
+     niclabs.insight.handler('chartist-barchart', 'info-block', ChartistBarChartBlock);
+     niclabs.insight.handler('chartist-piechart', 'info-block', ChartistPieChartBlock);
+
+     return ChartistBlock;
+ })(jQuery);
+
+niclabs.insight.info.SummaryBlock = (function($) {
+    /**
+     * Construct a new summary information block
+     * TODO: describe what is a summary information block
+     *
+     * @class niclabs.insight.info.SummaryBlock
+     * @augments niclabs.insight.info.Block
+     * @inheritdoc
+     * @param {niclabs.insight.Dashboard} dashboard - parent dashboard for the block
+     * @param {Object} options - configuration options for the block
+     * @param {string} options.id - html identifier for the block
+     * @param {string=} options.title - title for the block
+     * @param {boolean} [options.closable=true] - make the block closable
+     * @param {boolean} [options.movable=true] - make the block movable
+     * @param {Object=} options.data - default data for the summary
+     */
+    var SummaryBlock = function(dashboard, options) {
+        var self = niclabs.insight.info.Block(dashboard, options);
+
+        // Create the default template
+        /*jshint multistr: true */
+        var template = options.template || '\
+        <h6 class="latLngView" data-if="lat"> \
+            lat: <span data-bind="lat"> -- </span> \
+            lng: <span data-bind="lng"> -- </span> \
+        </h6>\
+        <dl class="deflist">\
+            <dt class="deflist-key" data-if="description">description</dt> \
+            <dd class="deflist-value" data-bind="description">none</dd> \
+            <dt class="deflist-key" data-if="landmark">landmark</dt> \
+            <dd class="deflist-value" data-bind="landmark">none</dd> \
+            <dt class="deflist-key" data-if="fun-fact">fun-fact</dt> \
+            <dd class="deflist-value" data-bind="fun-fact">none</dd> \
+        </dl>\
+        ';
+
+        // Append the template to the content
+        self.content.template(template);
+
+        // Store the refresh method of the parent
+        var refresh = self.refresh;
+
+        /**
+         * Override the parent refresh
+         */
+        self.refresh = function(data) {
+            data = typeof data !== 'undefined' ? data : self.data();
+
+            // Call the parent refresh
+            refresh(data);
+
+            // Render the data
+            self.content.trigger('render', data);
+        };
+
+        // Create the default summary if provided
+        //if (options.data) self.summary(options.data);
+        if (options.data) self.refresh(options.data);
+
+        return self;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('summary-block', 'info-block', SummaryBlock);
+
+    return SummaryBlock;
+})(jQuery);
+
+/**
  * Visualization layers for the dashboard
  *
  * @namespace
@@ -1369,6 +1835,90 @@ niclabs.insight.layer = (function () {
 
     return layer;
 })();
+
+niclabs.insight.layer.HeatmapLayer = (function($) {
+    /**
+     * Construct a new heatmap layer
+     *
+     * @class niclabs.insight.layer.HeatmapLayer
+     * @extends niclabs.insight.layer.Layer
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this layer belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.id - identifier for the layer
+     * @param {string|Object[]} options.data - uri or data array for the layer
+     * @param {Object=} options.heatmap - options for the heatmap
+     */
+    var HeatmapLayer = function(dashboard, options) {
+        var layer = niclabs.insight.layer.Layer(dashboard, options);
+
+        var heatmapOptions = options.heatmap || {
+            'type': 'point-heatmap'
+        };
+
+        function createHeatmap(data, obj) {
+            var heatmap;
+            if ('type' in obj) {
+                var attr = {'layer': layer.id, 'data': data};
+
+                // Extend the attributes with the data and the options for the marker
+                $.extend(attr, obj);
+
+                heatmap = niclabs.insight.handler(obj.type)(dashboard, attr);
+            }
+            else {
+                heatmap = obj;
+
+                // Should we add a way to pass data to the heatmap?
+            }
+
+            return heatmap;
+        }
+
+        var heatmap;
+
+        /**
+         * Draw the heatmap according to the internal data on the map
+         *
+         * @memberof niclabs.insight.layer.HeatmapLayer
+         * @override
+         * @param {Object[]} data - data to draw
+         * @param {float} data[].lat - latitude for the marker
+         * @param {float} data[].lng - longitude for the marker
+         * @param {string=} data[].description - description for the marker
+         */
+        layer.draw = function(data) {
+            heatmap = createHeatmap(data, heatmapOptions);
+        };
+
+        /**
+         * Clear the heatmap from the map
+         *
+         * @memberof niclabs.insight.layer.HeatmapLayer
+         * @override
+         */
+        layer.clear = function() {
+            if (heatmap) heatmap.clear();
+        };
+
+        /**
+         * Filter the layer according to the provided function.
+         *
+         * @memberof niclabs.insight.layer.HeatmapLayer
+         * @override
+         * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
+         */
+        layer.filter = function(fn) {
+            // TODO. not sure if possible
+        };
+
+        return layer;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('heatmap-layer', 'layer', HeatmapLayer);
+
+    return HeatmapLayer;
+})(jQuery);
 
 niclabs.insight.layer.Layer = (function($) {
     "use strict";
@@ -1795,469 +2345,161 @@ niclabs.insight.map.GoogleMap = (function($) {
 })(jQuery);
 
 /**
- * Contains the definitions for the information blocks supported by insight
+ * Tools for drawing heatmaps on the map
  *
  * @namespace
  */
-niclabs.insight.info = (function () {
+niclabs.insight.map.heatmap = {};
+
+niclabs.insight.map.heatmap.Heatmap = (function($) {
     /**
-     * Helper method to assign/get the information view to/from the dashboard
+     * Construct a heatmap over the map
      *
-     * @example
-     * ```javascript
-     * // Create the info view
-     * niclabs.insight.info({
-     *      handler: 'basic-info-view', // The view constructor
-     *      blocks: [{
-     *          'handler': 'summary-block', // The block constructor
-     *          'id': '#summary',
-     *          'title': 'My Marker Summary',
-     *          'data': { // Default data
-     *              'description': 'This block will show the details of the selected markers'
-     *        },
-     *        ignore: ['layer', 'type', 'src'] // Data elements we don't want on the block
-     *    }]
-     * });
-     * ```
-     *
-     * @memberof niclabs.insight
-     * @variation 2
-     * @param {Object|niclabs.insight.InfoView} [obj] - configuration for the information view or information view object
-     * @param {String} obj.handler - name of the handler to construct the info view
-     * @returns {niclabs.insight.InfoView} the dashboard information view
+     * @class niclabs.insight.map.heatmap.Heatmap
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
+     * @param {Object} options - configuration options for the heatmap
      */
-    var info = function(obj) {
-        var dashboard = niclabs.insight.dashboard();
-        if (typeof dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
-        return dashboard.info(obj);
-    };
+    var Heatmap = function(dashboard, options) {
+        if (!('layer' in options))
+            throw new Error('The heatmap must be associated to a layer');
 
-    return info;
-})();
+        var layer;
+        if (!(layer = dashboard.layer(options.layer)))
+            throw new Error('The layer '+layer+' does not exist in the dashboard');
 
-niclabs.insight.info.Block = (function($) {
-    "use strict";
+        var map;
+        if (!(map = dashboard.map()))
+            throw new Error('No map has been initialized for the dashboard yet');
 
-    /**
-     * Construct a information block
-     *
-     * @class niclabs.insight.info.Block
-     * @param {niclabs.insight.Dashboard} dashboard - dashboard to which the block belongs to
-     * @param {Object} options - configuration options for the block
-     * @param {string} options.id - html identifier for the block
-     * @param {string=} options.title - title for the block
-     * @param {boolean} [options.closable=true] - make the block closable
-     * @param {boolean} [options.movable=true] - make the block movable
-     * @param {Object=} options.data - default data for the block
-     */
-    var constructor = function(dashboard, options) {
-        if (!('id' in options)) {
-            throw new Error("All information blocks must have an id");
-        }
-
-        var id = options.id;
-        var htmlId = id.charAt(0) === '#' ? id : '#' + id;
-        var title = options.title || '';
-
-        var properties = {
-            closable: typeof options.closable === 'undefined'? true : options.closable,
-            movable: typeof options.movable === 'undefined'? true : options.movable,
-        };
-        var preprocess = options.preprocess || function(x) {return x;};
-
-        // placing
-        var header = $('<div>').addClass('header').append($('<span>').attr('data-bind', 'title').addClass('title').append(title));
-
-        var container = $('<div>').setID(htmlId).addClass('block')
-            .append(header);
-
-        // Save the content element
-        var content = $('<div>').addClass('content');
-
-        // Append the content
-        container.append(content);
-
-        /**
-         * Remove the block from the dashboard.
-         * This method triggers an event to alert all elements of the
-         * dashboard of the block removal
-         *
-         * @memberof niclabs.insight.info.Block
-         */
-        function remove() {
-            // Trigger the block removal
-            niclabs.insight.event.trigger('remove-block', {
-                'id': id
-            });
-        }
-
-        // Make the block closable
-        if (properties.closable) {
-            container.closable(function() {
-                // Remove the block
-                remove();
-            });
-        }
-
-        // Make the block movable
-        if (properties.movable) {
-            container.movable();
-        }
-
-        // Add the properties to the block style
-        container.css(properties);
-
-        // checkbox handling
-        // TODO: this is not a generic functionality?
-        // var checkbox_handler = options['checkbox-handler'] || function (a, d) { return d; };
-        //
-        // if (options.checkbox)
-        //     this.addCheckbox(options.checkbox);
-
-        // Listen for map events
-        niclabs.insight.event.on('map_element_selected', function(data) {
-            self.data(data);
-            self.refresh(data);
-        });
-
-        // Listen for summary events
-        niclabs.insight.event.on('layer_summary', function(summary) {
-            self.data(summary.data);
-            self.refresh(summary.data);
-        });
-
-        // Block data
-        var data = options.data || {};
+        if (!('googlemap' in map))
+            throw new Error("Heatmaps are only supported for Google Maps at the moment");
 
         var self = {
             /**
-             * id of the block
-             * @memberof niclabs.insight.info.Block
-             * @member {string}
+             * Map view where the heatmap belongs to
+             * @memberof niclabs.insight.map.heatmap.Heatmap
+             * @member {niclabs.insight.MapView}
              */
-            get id () {
-                return id;
+            get map () {
+                return map;
             },
 
             /**
-             * HTML DOM element for the block container
+             * Layer to which the heatmap belongs to
              *
-             * @memberof niclabs.insight.info.Block
-             * @member {Element}
+             * @memberof niclabs.insight.map.heatmap.Heatmap
+             * @member {niclabs.insight.layer.Layer}
              */
-            get element () {
-                var c = $(htmlId);
-                container = c.length === 0 ? container : c;
-                return container[0];
+            get layer () {
+                return layer;
             },
 
             /**
-             * jQuery object for info block container
+             * Clear the heatmap from the map
              *
-             * @memberof niclabs.insight.info.Block
-             * @member {jQuery}
+             * @memberof niclabs.insight.map.marker.Marker
              */
-            get $ () {
-                var c = $(htmlId);
-                container = c.length === 0 ? container : c;
-                return container;
-            },
-
-            /**
-             * jQuery element for the content container
-             *
-             * The content of the block is the HTML container that
-             * comes after the block title
-             *
-             * @memberof niclabs.insight.info.Block
-             * @member {jQuery}
-             */
-            get content() {
-                var c = $(htmlId).find('.content');
-                content = c.length === 0 ? content: c;
-                return content;
-            },
-
-            /**
-             * Get set the title for the block
-             *
-             * @param {string=} newtitle - new title for the block
-             * @returns {string} the updated value for the block title
-             */
-            title: function(newtitle) {
-                if (typeof newtitle !== 'undefined') {
-                    title = newtitle;
-                    self.$.find('.title').text(newtitle);
-                }
-                return title;
-            },
-
-            /**
-             * Trigger the removal of the block
-             */
-            remove: remove,
-
-            /**
-             * Set/get the data for the block
-             *
-             * @memberof niclabs.insight.info.Block
-             * @param {Object=} data - data for the block
-             * @returns {Object} the current data in the blokc
-             */
-            data: function (d) {
-                d = typeof d === 'undefined' ? data : d;
-
-                // If the object is empty we cleanup the internal data
-                if (Object.keys(d).length === 0)
-                    data = {};
-                else
-                    data = preprocess(d);
-
-                return data;
-            },
-
-            /**
-             * Refresh the block using the provided data
-             *
-             * @memberof niclabs.insight.info.Block
-             * @abstract
-             * @param {Object=} data - data to refresh
-             */
-            refresh: function (data) {
+            clear: function() {
             },
         };
 
         return self;
     };
 
-    return constructor;
+    return Heatmap;
 })(jQuery);
 
-// CityDashboard.Visualization.prototype = {
-//     addCheckbox: function (keys) {
-//         //keys: {name1:true,name2:false,name3:true,...}
-//         //each element of the object indicates the label of each checkbox. The number of keys indicates the number of checboxes.
-//         //handler :  function ([true, false, true, ...],data)
-//         //each element of the array corresponds to each checkbox state.
-//
-//         var checkpanel = $("<span>").addClass('checkbox-panel');
-//
-//         var arr = [];
-//
-//         for (var key in keys) {
-//             var checkbox = $('<input>').attr('type', 'checkbox');
-//
-//             arr[arr.length] = checkbox[0].checked = keys[key];
-//             checkpanel.append(checkbox);
-//
-//             var _this = this;
-//
-//             checkbox.on('change', function () {
-//
-//                 var array = $(this).parent().children('input:checkbox').map(function () {
-//                     return $(this).prop('checked');
-//                 }).get();
-//
-//                 _this.getData = function () {
-//                     var clone = _this.data;
-//                     if (!(_this.data instanceof Array))
-//                         clone = jQuery.extend({}, _this.data);
-//                     return _this.checkbox_handler(array, clone);
-//                 };
-//
-//                 _this.refresh();
-//
-//             })
-//
-//             checkbox.after($('<label>').text(key));
-//         }
-//
-//         this.viz.append(checkpanel);
-//
-//         _this.getData = function () {
-//             var clone = _this.data;
-//             if (!(_this.data instanceof Array))
-//                 clone = jQuery.extend({}, _this.data);
-//             return _this.checkbox_handler(arr, clone);
-//         };
-//     }
-//
-// };
-
-niclabs.insight.info.ChartistBlock = (function($) {
+niclabs.insight.map.heatmap.PointHeatmap = (function($) {
     /**
-     * Configuration options for chartist charts
+     * Data point for PointHeatmap
      *
-     * @typedef niclabs.insight.info.ChartistBlock.Chartist
+     * @typedef niclabs.insight.map.heatmap.PointHeatmap.Data
      * @type {Object}
-     * @param {Object} chartist.class - chartist css class
-     * @param {Object} chartist.labels - chart labels
-     * @param {Object=} chartist.options - chartist options
-     * @param {Object=} chartist.responsiveOptions - chartist responsive options
+     * @param {float} lat - latitude for the heatmap point
+     * @param {float} lng - longitude for the heatmap point
+     * @param {float=} weight - weight for the heatmap point
      */
-
 
     /**
-     * Construct a new chartist information block
+     * Draw a point base heatmap over the map
      *
-     * For the configuration options see {@link http://gionkunz.github.io/chartist-js/}
+     * In a point based heatmap, each data point is a location with an optional
+     * weight. A heatmap point is drawn for each location with the provided configuration
      *
-     * @class niclabs.insight.info.ChartistBlock
-     * @augments niclabs.insight.info.Block
-     * @inheritdoc
-     * @param {niclabs.insight.Dashboard} dashboard - parent dashboard for the block
-     * @param {Object} constructor - chartist object to use as constructor
-     * @param {Object} options - configuration options for the block
-     * @param {string} options.id - html identifier for the block
-     * @param {string=} options.title - title for the block
-     * @param {niclabs.insight.info.ChartistBlock.Chartist} options.chartist - chartist configuration
-     * @param {boolean} [options.closable=true] - make the block closable
-     * @param {boolean} [options.movable=true] - make the block movable
-     * @param {Object=} options.data - default data for the summary
+     * @class niclabs.insight.map.heatmap.PointHeatmap
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
+     * @param {Object} options - configuration options for the heatmap
+     * @param {niclabs.insight.map.heatmap.PointHeatmap.Data[]} options.data - array of points to draw the heatmap
+     * @param {boolean} options.dissipating - Specifies whether heatmaps dissipate on zoom. When dissipating is false the radius of influence increases with zoom level to ensure that the color intensity is preserved at any given geographic location. Defaults to false.
+     * @param {string[]} options.gradient - The color gradient of the heatmap, specified as an array of CSS color strings. All CSS3 colors — including RGBA — are supported except for extended named colors and HSL(A) values.
+     * @param {integer} options.radius - The radius of influence for each data point, in pixels.
+     * @param {float} options.opacity: The opacity of the heatmap, expressed as a number between 0 and 1.
      */
-     var ChartistBlock = function (dashboard, constructor, options) {
-         var self = niclabs.insight.info.Block(dashboard, options);
+    var PointHeatmap = function(dashboard, options) {
+        if (!('data' in options)) {
+            throw Error('No data provided for the heatmap');
+        }
 
-         var chartist = options.chartist;
-
-         self.content.addClass('chartist-viz').append( $('<div>').addClass(chartist.class));
-
-         var chartistOptions = chartist.options || {};
-         var responsiveOptions = chartist.responsiveOptions || {};
-         var labels = chartist.labels;
-
-         // Store the chart object
-         var chart;
-
-         var refresh = self.refresh;
-
-         self.refresh = function(data) {
-             data = typeof data === 'undefined' ? self.data() : data;
-
-             // Call the parent
-             refresh(data);
-
-             // Look for 'value' key in data
-             data = data.value || data;
-
-             var chartData  = {
-               'series': data,
-               'labels': typeof labels === 'function' ? labels(data) : labels
-             };
-
-             if (chart && chart.optionsProvider) {
-                 chart.update(chartData);
-             }
-             else {
-                 chart = new constructor((self.content.find('div'))[0], chartData , chartistOptions, responsiveOptions);
-             }
-         };
-
-         if (options.data) self.refresh(options.data);
-
-
-         var remove = self.remove;
-
-         // Override remove method
-         self.remove = function() {
-             // Call the parent
-             remove();
-
-             chart.detach();
-         };
-
-         return self;
-     };
-
-     var ChartistLineChartBlock = function(dashboard, options) {
-        var self = ChartistBlock(dashboard, Chartist.Line, options);
-        return self;
-     };
-
-     var ChartistBarChartBlock = function(dashboard, options) {
-        var self = ChartistBlock(dashboard, Chartist.Bar, options);
-        return self;
-    };
-
-    var ChartistPieChartBlock = function(dashboard, options) {
-       var self = ChartistBlock(dashboard, Chartist.Pie, options);
-       return self;
-    };
-
-     // Register the handler
-     niclabs.insight.handler('chartist-linechart', 'info-block', ChartistLineChartBlock);
-     niclabs.insight.handler('chartist-barchart', 'info-block', ChartistBarChartBlock);
-     niclabs.insight.handler('chartist-piechart', 'info-block', ChartistPieChartBlock);
-
-     return ChartistBlock;
- })(jQuery);
-
-niclabs.insight.info.SummaryBlock = (function($) {
-    /**
-     * Construct a new summary information block
-     * TODO: describe what is a summary information block
-     *
-     * @class niclabs.insight.info.SummaryBlock
-     * @augments niclabs.insight.info.Block
-     * @inheritdoc
-     * @param {niclabs.insight.Dashboard} dashboard - parent dashboard for the block
-     * @param {Object} options - configuration options for the block
-     * @param {string} options.id - html identifier for the block
-     * @param {string=} options.title - title for the block
-     * @param {boolean} [options.closable=true] - make the block closable
-     * @param {boolean} [options.movable=true] - make the block movable
-     * @param {Object=} options.data - default data for the summary
-     */
-    var SummaryBlock = function(dashboard, options) {
-        var self = niclabs.insight.info.Block(dashboard, options);
-
-        // Create the default template
-        /*jshint multistr: true */
-        var template = options.template || '\
-        <h6 class="latLngView" data-if="lat"> \
-            lat: <span data-bind="lat"> -- </span> \
-            lng: <span data-bind="lng"> -- </span> \
-        </h6>\
-        <dl class="deflist">\
-            <dt class="deflist-key" data-if="description">description</dt> \
-            <dd class="deflist-value" data-bind="description">none</dd> \
-            <dt class="deflist-key" data-if="landmark">landmark</dt> \
-            <dd class="deflist-value" data-bind="landmark">none</dd> \
-            <dt class="deflist-key" data-if="fun-fact">fun-fact</dt> \
-            <dd class="deflist-value" data-bind="fun-fact">none</dd> \
-        </dl>\
-        ';
-
-        // Append the template to the content
-        self.content.template(template);
-
-        // Store the refresh method of the parent
-        var refresh = self.refresh;
+        var self = niclabs.insight.map.heatmap.Heatmap(dashboard, options);
 
         /**
-         * Override the parent refresh
+         * Create a google map heatmap
          */
-        self.refresh = function(data) {
-            data = typeof data !== 'undefined' ? data : self.data();
+        function googleMapsHeatmap(data) {
+            var heatmapData = new google.maps.MVCArray();
+            for (var i = 0; i < data.length; i++) {
+                if ('weight' in data[i]) {
+                    heatmapData.push({
+                        location: new google.maps.LatLng(data[i].lat, data[i].lng),
+                        weight: data[i].weight
+                    });
+                }
+                else {
+                    heatmapData.push(new google.maps.LatLng(data[i].lat, data[i].lng));
+                }
+            }
 
-            // Call the parent refresh
-            refresh(data);
+            return new google.maps.visualization.HeatmapLayer({
+                data: heatmapData,
+                radius: options.radius || 10
+            });
+        }
 
-            // Render the data
-            self.content.trigger('render', data);
+        // Create the heatmap
+        var heatmap = googleMapsHeatmap(options.data);
+
+        // Set the options
+        if (typeof options.dissipating !== 'undefined') heatmap.set('dissipating', options.dissipating);
+        if (typeof options.gradient !== 'undefined') heatmap.set('gradient', options.gradient);
+        if (typeof options.opacity !== 'undefined') heatmap.set('opacity', options.opacity);
+
+        // Set the heatmap
+        heatmap.setMap(self.map.googlemap());
+
+        // Store the parent
+        var clear = self.clear;
+
+        /**
+         * Clear the map
+         *
+         * @memberof niclabs.insight.map.heatmap.PointHeatmap
+         * @overrides
+         */
+        self.clear = function() {
+            // Call the parent
+            clear();
+
+            // Remove the map
+            heatmap.setMap(null);
         };
-
-        // Create the default summary if provided
-        //if (options.data) self.summary(options.data);
-        if (options.data) self.refresh(options.data);
 
         return self;
     };
 
     // Register the handler
-    niclabs.insight.handler('summary-block', 'info-block', SummaryBlock);
+    niclabs.insight.handler('point-heatmap', 'heatmap', PointHeatmap);
 
-    return SummaryBlock;
+    return PointHeatmap;
 })(jQuery);
 
 /**
