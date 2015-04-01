@@ -12,19 +12,9 @@ niclabs.insight.info.SummaryBlock = (function($) {
      * @param {string=} options.title - title for the block
      * @param {Object=} options.properties - block properties (closable, movable)
      * @param {Object=} data - default data for the summary
-     * @param {String[]} ignore - key list to ignore in the summary
      */
     var SummaryBlock = function(dashboard, options) {
         var self = niclabs.insight.info.Block(dashboard, options);
-
-        var ignore = ['lat', 'lng', 'value'];
-
-        // Concat with the options if available
-        ignore = ignore.concat(options.ignore || []);
-
-        // Append view elements
-        // self.content.append($('<h6>').addClass('latlngView'));
-        // self.content.append($('<dl>').addClass('deflist'));
 
         // Create the default template
         /*jshint multistr: true */
@@ -65,12 +55,6 @@ niclabs.insight.info.SummaryBlock = (function($) {
         // Create the default summary if provided
         //if (options.data) self.summary(options.data);
         if (options.data) self.refresh(options.data);
-
-        // Listen for map events
-        niclabs.insight.event.on('map_element_selected', function(data) {
-            self.data(data);
-            self.refresh(data);
-        });
 
         return self;
     };

@@ -72,6 +72,12 @@ niclabs.insight.info.Block = (function($) {
         // if (options.checkbox)
         //     this.addCheckbox(options.checkbox);
 
+        // Listen for map events
+        niclabs.insight.event.on('map_element_selected', function(data) {
+            self.data(data);
+            self.refresh(data);
+        });
+
         // Block data
         var data = options.data || {};
 
