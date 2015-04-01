@@ -11,6 +11,7 @@ niclabs.insight.layer.Layer = (function($) {
      * @param {Object} options - configuration options for the layer
      * @param {string} options.id - identifier for the layer
      * @param {string|Object[]} options.data - uri or data array for the layer
+     * @param {Object|Function} [options.summary] - summary data
      */
     var Layer = function(dashboard, options) {
         var wrappedLayer;
@@ -32,6 +33,8 @@ niclabs.insight.layer.Layer = (function($) {
         else {
             data = options.data && Array.isArray(options.data) ? options.data: [options.data];
         }
+
+        var summary = options.summary || false;
 
         // Will be set to true once the layer is loaded
         var loaded = false;
@@ -105,6 +108,26 @@ niclabs.insight.layer.Layer = (function($) {
 
                     // Clear the map
                     self.clear();
+
+                    if (summary) {
+                        var summaryData = summary;
+                        if (typeof summary === 'function') summaryData = summary(data);
+
+                        /**
+                         * Event triggered when an update to the (filtering/update) has ocurred
+                         *
+                         * The event provides summary data for blocks to show
+                         *
+                         * @event niclabs.insight.layer.Layer#layer_sumary
+                         * @type {object}
+                         * @property {string} id - id for the layer to which the data belongs to
+                         * @property {Object[]} data - new data array
+                         */
+                        niclabs.insight.event.trigger('layer_summary', {
+                            'id': id,
+                            'data': summaryData
+                        });
+                    }
 
                     // Re-draw with new data loaded
                     self.draw(data);

@@ -47,12 +47,14 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [Layer.filter(fn)](#niclabs.insight.layer.Layer.filter)
         * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
         * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
+        * [event: "layer_sumary"](#niclabs.insight.layer.Layer#event_layer_sumary)
       * [class: layer.MarkerLayer](#niclabs.insight.layer.MarkerLayer)
         * [new layer.MarkerLayer(dashboard, options)](#new_niclabs.insight.layer.MarkerLayer)
         * [MarkerLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.MarkerLayer.layer.draw)
         * [MarkerLayer.layer.clear()](#niclabs.insight.layer.MarkerLayer.layer.clear)
         * [MarkerLayer.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
         * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
+        * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
     * [insight.map](#niclabs.insight.map)
       * [map.marker](#niclabs.insight.map.marker)
         * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
@@ -156,12 +158,14 @@ understand what is going on in the city
       * [Layer.filter(fn)](#niclabs.insight.layer.Layer.filter)
       * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
       * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
+      * [event: "layer_sumary"](#niclabs.insight.layer.Layer#event_layer_sumary)
     * [class: layer.MarkerLayer](#niclabs.insight.layer.MarkerLayer)
       * [new layer.MarkerLayer(dashboard, options)](#new_niclabs.insight.layer.MarkerLayer)
       * [MarkerLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.MarkerLayer.layer.draw)
       * [MarkerLayer.layer.clear()](#niclabs.insight.layer.MarkerLayer.layer.clear)
       * [MarkerLayer.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
       * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
+      * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
   * [insight.map](#niclabs.insight.map)
     * [map.marker](#niclabs.insight.map.marker)
       * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
@@ -585,12 +589,14 @@ Visualization layers for the dashboard
     * [Layer.filter(fn)](#niclabs.insight.layer.Layer.filter)
     * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
     * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
+    * [event: "layer_sumary"](#niclabs.insight.layer.Layer#event_layer_sumary)
   * [class: layer.MarkerLayer](#niclabs.insight.layer.MarkerLayer)
     * [new layer.MarkerLayer(dashboard, options)](#new_niclabs.insight.layer.MarkerLayer)
     * [MarkerLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.MarkerLayer.layer.draw)
     * [MarkerLayer.layer.clear()](#niclabs.insight.layer.MarkerLayer.layer.clear)
     * [MarkerLayer.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
     * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
+    * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
 
 <a name="niclabs.insight.layer.Layer"></a>
 ####class: layer.Layer
@@ -605,6 +611,7 @@ Visualization layers for the dashboard
   * [Layer.filter(fn)](#niclabs.insight.layer.Layer.filter)
   * [Layer.clear()](#niclabs.insight.layer.Layer.clear)
   * [event: "layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
+  * [event: "layer_sumary"](#niclabs.insight.layer.Layer#event_layer_sumary)
 
 <a name="new_niclabs.insight.layer.Layer"></a>
 #####new layer.Layer(dashboard, options)
@@ -618,6 +625,7 @@ A layer provides a link between a data source and a visualization on the map.
 - options `Object` - configuration options for the layer  
   - id `string` - identifier for the layer  
   - data `string` | `Array.<Object>` - uri or data array for the layer  
+  - \[summary\] `Object` | `function` - summary data  
 
 <a name="niclabs.insight.layer.Layer.id"></a>
 #####Layer.id
@@ -680,6 +688,18 @@ Event triggered when an update to the layer data (filtering/update) has ocurred
 - data `Array.<Object>` - new data array  
 
 **Type**: `object`  
+<a name="niclabs.insight.layer.Layer#event_layer_sumary"></a>
+#####event: "layer_sumary"
+Event triggered when an update to the (filtering/update) has ocurred
+
+The event provides summary data for blocks to show
+
+**Properties**
+
+- id `string` - id for the layer to which the data belongs to  
+- data `Array.<Object>` - new data array  
+
+**Type**: `object`  
 <a name="niclabs.insight.layer.MarkerLayer"></a>
 ####class: layer.MarkerLayer
 **Extends**: `niclabs.insight.layer.Layer`  
@@ -691,6 +711,7 @@ Event triggered when an update to the layer data (filtering/update) has ocurred
   * [MarkerLayer.layer.clear()](#niclabs.insight.layer.MarkerLayer.layer.clear)
   * [MarkerLayer.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
   * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
+  * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
 
 <a name="new_niclabs.insight.layer.MarkerLayer"></a>
 #####new layer.MarkerLayer(dashboard, options)
@@ -730,6 +751,18 @@ Filter the layer according to the provided function.
 <a name="niclabs.insight.layer.MarkerLayer#event_layer_data"></a>
 #####event: "layer_data"
 Event triggered when an update to the layer data (filtering/update) has ocurred
+
+**Properties**
+
+- id `string` - id for the layer to which the data belongs to  
+- data `Array.<Object>` - new data array  
+
+**Type**: `object`  
+<a name="niclabs.insight.layer.MarkerLayer#event_layer_sumary"></a>
+#####event: "layer_sumary"
+Event triggered when an update to the (filtering/update) has ocurred
+
+The event provides summary data for blocks to show
 
 **Properties**
 

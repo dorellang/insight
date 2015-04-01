@@ -83,6 +83,12 @@ niclabs.insight.info.Block = (function($) {
             self.refresh(data);
         });
 
+        // Listen for summary events
+        niclabs.insight.event.on('layer_summary', function(summary) {
+            self.data(summary.data);
+            self.refresh(summary.data);
+        });
+
         // Block data
         var data = options.data || {};
 

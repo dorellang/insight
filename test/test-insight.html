@@ -139,6 +139,7 @@
                     },
                 },
                 'preprocess': function(data) {
+                    console.log(data);
                     data.value = data.value[0];
                     var d = [];
                     for (var i = 0; i < data.value.length; i++) {
@@ -169,7 +170,7 @@
                 'value': [
                     [2237, 4650, 5221, 8089, 2970, 2847, 9059]
                 ],
-                'note': 'This are not the actual number of visitors.'
+                'note': 'This is not the actual number of visitors.'
             }, {
                 'lat': 48.859961,
                 'lng': 2.326561,
@@ -177,7 +178,7 @@
                 'value': [
                     [8971, 10724, 5257, 2434, 10583, 9038, 5240]
                 ],
-                'note': 'This are not the actual number of visitors.'
+                'note': 'This is not the actual number of visitors.'
             }, {
                 'lat': 48.873792,
                 'lng': 2.295028,
@@ -185,7 +186,7 @@
                 'value': [
                     [9679, 10777, 9417, 1521, 6218, 1740, 2490]
                 ],
-                'note': 'This are not the actual number of visitors.'
+                'note': 'This is not the actual number of visitors.'
             }, {
                 'lat': 48.852968,
                 'lng': 2.349902,
@@ -193,7 +194,7 @@
                 'value': [
                     [9806, 10989, 8219, 1503, 3847, 2007, 10751]
                 ],
-                'note': 'This are not the actual number of visitors.'
+                'note': 'This is not the actual number of visitors.'
             }, {
                 'lat': 48.85837,
                 'lng': 2.294481,
@@ -201,8 +202,26 @@
                 'value': [
                     [3576, 10255, 2112, 5716, 9728, 10805, 6082]
                 ],
-                'note': 'This are not the actual number of visitors.'
+                'note': 'This is not the actual number of visitors.'
             }],
+            summary: function(data) {
+                console.log(data);
+                var totals = {
+                    description: 'Weeky visitors for '+data.length+' museums in Paris',
+                    value: [
+                        [0,0,0,0,0,0,0],
+                    ]
+                };
+
+                var i,j;
+                for (i = 0; i < data.length; i++) {
+                    for (j = 0; j < data[i].value[0].length; j++) {
+                        totals.value[0][j] += data[i].value[0][j];
+                    }
+                }
+
+                return totals;
+            },
             marker: {
                 'type': 'image-marker',
                 'src': 'antenna.svg'

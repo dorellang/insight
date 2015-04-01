@@ -1210,110 +1210,339 @@ niclabs.insight.MapView = (function($) {
 })(jQuery);
 
 /**
- * Very basic event manager for the dashboard
- *
- * @example
- * ```javascript
- * // Subscribe to the event
- * var eventId = niclabs.insight.event.on('hello', function(who) {
- *      alert("HELLO "+who+"!!!");
- * });
- *
- * // Trigger the event
- * niclabs.insight.event.trigger('hello', "John"); // Shows alert 'HELLO John!!!'
- *
- * // Unsubscribe
- * niclabs.insight.event.off('hello', eventId);
- * ```
+ * Visualization layers for the dashboard
  *
  * @namespace
  */
-niclabs.insight.event = (function() {
+niclabs.insight.layer = (function () {
+    /**
+     * Helper method to add/get a {@link niclabs.insight.layer.Layer} for the dashboard
+     *
+     * A layer acts as a link between a source of data and a visualization on the map
+     *
+     * - If a number or string is provided as value for obj, the layer with that id is returned
+     * - If a generic object is provided with the handler defined in the 'handler' property, a new layer
+     * is created using the handler and the layer is added to the list of
+     * layers of the dashboard
+     * - If an object is provided without handler, it is assumed to be a Layer object and added to the
+     * layer list as is.
+     *
+     * @example
+     * ```javascript
+     * niclabs.insight.layer({
+     *      handler: 'marker-layer',
+     *      data: [{
+     *          'lat': 48.8556,
+     *          'lng': 2.2986,
+     *          'landmark': 'Champ de Mars'
+     *      }, {
+     *          'lat': 48.8583,
+     *          'lng': 2.2944,
+     *          'landmark': 'Eiffel Tower',
+     *          'fun-fact': 'Was built in 1889.'
+     *      }],
+     *      marker: {
+     *          'type': 'image-marker',
+     *          'src': 'antenna.svg'
+     *      }
+     * });
+     * ```
+     *
+     * @memberof niclabs.insight
+     * @variation 2
+     * @param {string|number|Object| niclabs.insight.layer.Layer} obj - layer id to get or configuration options for the new layer
+     * @param {boolean} [activate=false] - if true, set the layer as the active layer of the dashboard
+     * @returns {niclabs.insight.info.Layer} - layer for the provided id
+     */
+    var layer = function (obj, activate) {
+        var dashboard = niclabs.insight.dashboard();
+        if (typeof dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
+
+        return dashboard.layer(obj, activate);
+    };
+
+    return layer;
+})();
+
+niclabs.insight.layer.Layer = (function($) {
     "use strict";
 
-    var events = {};
-
     /**
-     * Find the event in the event list, return -1 if not found
-     */
-    function indexOf(event, listener) {
-        if (event in events) {
-            for (var i = 0; i < events[event].length; i++) {
-                if (events[event][i] === listener) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * Insight event listener
+     * Construct a layer
      *
-     * @callback niclabs.insight.event~listener
-     * @param {Object} data - data for the callback function, dependant on the event
+     * A layer provides a link between a data source and a visualization on the map.
+     *
+     * @class niclabs.insight.layer.Layer
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this layer belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.id - identifier for the layer
+     * @param {string|Object[]} options.data - uri or data array for the layer
+     * @param {Object|Function} [options.summary] - summary data
      */
+    var Layer = function(dashboard, options) {
+        var wrappedLayer;
 
-    return {
-        /**
-         * Listen for an event. A listener callback can only be assigned once for an event
-         *
-         * @memberof niclabs.insight.event
-         * @param {string} event - event type
-         * @param {niclabs.insight.event~listener} listener - callback to process the event
-         * @returns {number} id of the listener
-         */
-        on: function(event, listener) {
-            var index = indexOf(event, listener);
-
-            if (index < 0) {
-                if (!(event in events)) {
-                    events[event] = [];
-                }
-
-                // Add the new listener
-                return events[event].push(listener) - 1;
-            }
-            return index;
-        },
-
-        /**
-         * Stop listening for an event.
-         *
-         * @memberof niclabs.insight.event
-         * @param {string} event - event type
-         * @param {niclabs.insight.event~listener|number} listener - callback to remove or id of the listener provided by {@link niclabs.insight.event.on()}
-         * @returns {boolean} true if the listener was found and was succesfully removed
-         */
-        off: function(event, listener) {
-            var index = typeof listener === 'number' ? listener : indexOf(event, listener);
-
-            if (index >= 0) {
-                // Remove the event
-                events[event].splice(index, 1);
-
-                return true;
-            }
-            return false;
-        },
-
-        /**
-         * Trigger an event
-         *
-         * @memberof niclabs.insight.event
-         * @param {string} event - event type
-         * @param {Object=} data - data to pass to the callback
-         */
-        trigger: function(event, data) {
-            if (event in events) {
-                for (var i = 0; i < events[event].length; i++) {
-                    // Notify the listeners
-                    events[event][i](data);
-                }
-            }
+        if (!('id' in options)) {
+            throw Error("All layers must have an id.");
         }
+        var id = options.id;
+
+        if (!('data' in options)) {
+            throw Error("All layers must provide a data source.");
+        }
+
+        var dataSource = false;
+        var data = [];
+        if (typeof options.data === 'string') {
+            dataSource = options.data;
+        }
+        else {
+            data = options.data && Array.isArray(options.data) ? options.data: [options.data];
+        }
+
+        var summary = options.summary || false;
+
+        // Will be set to true once the layer is loaded
+        var loaded = false;
+
+        var self = {
+            /**
+             * id of the layer
+             * @memberof niclabs.insight.layer.Layer
+             * @member {string}
+             */
+            get id () {
+                return id;
+            },
+
+            /**
+             * Set/get the data for the layer
+             *
+             * If a new source for the data is provided, this method updates the internal
+             * data and reloads the layer by calling {@link niclabs.insight.layer.Layer.load}
+             *
+             * @memberof niclabs.insight.layer.Layer
+             * @param {string|Object[]} [obj] - optional new data source or data array for the layer
+             * @returns {string|Object[]} data source for the layer if the data has not been loaded yet or object array if the
+             *  data has been loaded
+             */
+            data: function(obj) {
+                if (typeof obj === 'undefined') {
+                    return loaded || !dataSource? data : dataSource;
+                }
+
+                if (typeof obj === 'string') {
+                    dataSource = obj;
+
+                    // If the layer has already been loaded, reload the data
+                    if (loaded) self.load();
+
+                    return dataSource;
+                }
+                else {
+                    data = obj.length ? obj: [obj];
+                }
+
+                return data;
+            },
+
+            /**
+             * Load the data from the layer and redraw
+             *
+             * If data provided as configuration to the layer is a URL, this methods loads the data from the URL and
+             * redraws the layer (invoking {@link niclabs.insight.layer.Layer.clear} and {@link niclabs.insight.layer.Layer.draw})
+             * when the content is available
+             *
+             * @memberof niclabs.insight.layer.Layer
+             */
+            load: function() {
+                function redraw(d) {
+                    data = d;
+
+                    /**
+                     * Event triggered when an update to the layer data (filtering/update) has ocurred
+                     *
+                     * @event niclabs.insight.layer.Layer#layer_data
+                     * @type {object}
+                     * @property {string} id - id for the layer to which the data belongs to
+                     * @property {Object[]} data - new data array
+                     */
+                    niclabs.insight.event.trigger('layer_data', {
+                        'id': id,
+                        'data': data
+                    });
+
+                    // Clear the map
+                    self.clear();
+
+                    if (summary) {
+                        var summaryData = summary;
+                        if (typeof summary === 'function') summaryData = summary(data);
+
+                        /**
+                         * Event triggered when an update to the (filtering/update) has ocurred
+                         *
+                         * The event provides summary data for blocks to show
+                         *
+                         * @event niclabs.insight.layer.Layer#layer_sumary
+                         * @type {object}
+                         * @property {string} id - id for the layer to which the data belongs to
+                         * @property {Object[]} data - new data array
+                         */
+                        niclabs.insight.event.trigger('layer_summary', {
+                            'id': id,
+                            'data': summaryData
+                        });
+                    }
+
+                    // Re-draw with new data loaded
+                    self.draw(data);
+                }
+
+                if (dataSource) {
+                    $.getJSON(dataSource, redraw);
+                    // TODO: on error?
+                }
+                else {
+                    redraw(data);
+                }
+            },
+
+            /**
+             * Draw the layer on the map.
+             *
+             * This method must be overriden by the implementing layers
+             *
+             * @memberof niclabs.insight.layer.Layer
+             * @param {Object[]} data - data to use for drawing the layer
+             * @abstract
+             */
+            draw: function(data) {},
+
+            /**
+             * Filter the layer according to the provided function.
+             *
+             * This method must be overriden by the implementing layers
+             *
+             * @memberof niclabs.insight.layer.Layer
+             * @abstract
+             * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
+             */
+            filter: function(fn) {},
+
+            /**
+             * Clear the layer changes on the map. This method must be
+             * overriden by implementing layers
+             *
+             * @memberof niclabs.insight.layer.Layer
+             * @abstract
+             */
+            clear: function() {}
+        };
+
+        return self;
     };
-})();
+
+    return Layer;
+})(jQuery);
+
+niclabs.insight.layer.MarkerLayer = (function($) {
+    /**
+     * Construct a new marker layer
+     *
+     * @class niclabs.insight.layer.MarkerLayer
+     * @extends niclabs.insight.layer.Layer
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this layer belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.id - identifier for the layer
+     * @param {string|Object[]} options.data - uri or data array for the layer
+     */
+    var MarkerLayer = function(dashboard, options) {
+        var layer = niclabs.insight.layer.Layer(dashboard, options);
+
+        var attr = options.marker || {
+            'type': 'simple-marker'
+        };
+
+        var markers = [];
+
+        /**
+         * Create marker from the type attribute
+         *
+         * @param {Object[]} data - layer data
+         * @param {number} index - index of the marker in the data array
+         * @param {Object} obj - configuration for the new marker
+          */
+        function newMarker(data, index, obj) {
+            var marker;
+            if ('type' in obj) {
+                var attr = {'layer': layer.id};
+
+                // Extend the attributes with the data and the options for the marker
+                $.extend(attr, obj, data[index]);
+
+                marker = niclabs.insight.handler(obj.type)(dashboard, attr);
+            }
+            else {
+                marker = obj;
+            }
+
+            // Make the marker clickable
+            marker.clickable(true);
+
+            return marker;
+        }
+
+        /**
+         * Draw the markers according to the internal data on the map
+         *
+         * @memberof niclabs.insight.layer.MarkerLayer
+         * @override
+         * @param {Object[]} data - data to draw
+         * @param {float} data[].lat - latitude for the marker
+         * @param {float} data[].lng - longitude for the marker
+         * @param {string=} data[].description - description for the marker
+         */
+        layer.draw = function(data) {
+            for (var i = 0; i < data.length; i++) {
+                markers.push(newMarker(data, i, attr));
+            }
+        };
+
+        /**
+         * Clear the markers from the map
+         *
+         * @memberof niclabs.insight.layer.MarkerLayer
+         * @override
+         */
+        layer.clear = function() {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].clear();
+            }
+        };
+
+        /**
+         * Filter the layer according to the provided function.
+         *
+         * @memberof niclabs.insight.layer.MarkerLayer
+         * @override
+         * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
+         */
+        layer.filter = function(fn) {
+            var data = layer.data();
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].visible(fn(data[i]));
+            }
+        };
+
+        return layer;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('marker-layer', 'layer', MarkerLayer);
+
+    return MarkerLayer;
+})(jQuery);
 
 /**
  * Contains the definitions for the information blocks supported by insight
@@ -1439,6 +1668,12 @@ niclabs.insight.info.Block = (function($) {
         niclabs.insight.event.on('map_element_selected', function(data) {
             self.data(data);
             self.refresh(data);
+        });
+
+        // Listen for summary events
+        niclabs.insight.event.on('layer_summary', function(summary) {
+            self.data(summary.data);
+            self.refresh(summary.data);
         });
 
         // Block data
@@ -1776,318 +2011,6 @@ niclabs.insight.info.SummaryBlock = (function($) {
 })(jQuery);
 
 /**
- * Visualization layers for the dashboard
- *
- * @namespace
- */
-niclabs.insight.layer = (function () {
-    /**
-     * Helper method to add/get a {@link niclabs.insight.layer.Layer} for the dashboard
-     *
-     * A layer acts as a link between a source of data and a visualization on the map
-     *
-     * - If a number or string is provided as value for obj, the layer with that id is returned
-     * - If a generic object is provided with the handler defined in the 'handler' property, a new layer
-     * is created using the handler and the layer is added to the list of
-     * layers of the dashboard
-     * - If an object is provided without handler, it is assumed to be a Layer object and added to the
-     * layer list as is.
-     *
-     * @example
-     * ```javascript
-     * niclabs.insight.layer({
-     *      handler: 'marker-layer',
-     *      data: [{
-     *          'lat': 48.8556,
-     *          'lng': 2.2986,
-     *          'landmark': 'Champ de Mars'
-     *      }, {
-     *          'lat': 48.8583,
-     *          'lng': 2.2944,
-     *          'landmark': 'Eiffel Tower',
-     *          'fun-fact': 'Was built in 1889.'
-     *      }],
-     *      marker: {
-     *          'type': 'image-marker',
-     *          'src': 'antenna.svg'
-     *      }
-     * });
-     * ```
-     *
-     * @memberof niclabs.insight
-     * @variation 2
-     * @param {string|number|Object| niclabs.insight.layer.Layer} obj - layer id to get or configuration options for the new layer
-     * @param {boolean} [activate=false] - if true, set the layer as the active layer of the dashboard
-     * @returns {niclabs.insight.info.Layer} - layer for the provided id
-     */
-    var layer = function (obj, activate) {
-        var dashboard = niclabs.insight.dashboard();
-        if (typeof dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
-
-        return dashboard.layer(obj, activate);
-    };
-
-    return layer;
-})();
-
-niclabs.insight.layer.Layer = (function($) {
-    "use strict";
-
-    /**
-     * Construct a layer
-     *
-     * A layer provides a link between a data source and a visualization on the map.
-     *
-     * @class niclabs.insight.layer.Layer
-     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this layer belongs to
-     * @param {Object} options - configuration options for the layer
-     * @param {string} options.id - identifier for the layer
-     * @param {string|Object[]} options.data - uri or data array for the layer
-     */
-    var Layer = function(dashboard, options) {
-        var wrappedLayer;
-
-        if (!('id' in options)) {
-            throw Error("All layers must have an id.");
-        }
-        var id = options.id;
-
-        if (!('data' in options)) {
-            throw Error("All layers must provide a data source.");
-        }
-
-        var dataSource = false;
-        var data = [];
-        if (typeof options.data === 'string') {
-            dataSource = options.data;
-        }
-        else {
-            data = options.data && Array.isArray(options.data) ? options.data: [options.data];
-        }
-
-        // Will be set to true once the layer is loaded
-        var loaded = false;
-
-        var self = {
-            /**
-             * id of the layer
-             * @memberof niclabs.insight.layer.Layer
-             * @member {string}
-             */
-            get id () {
-                return id;
-            },
-
-            /**
-             * Set/get the data for the layer
-             *
-             * If a new source for the data is provided, this method updates the internal
-             * data and reloads the layer by calling {@link niclabs.insight.layer.Layer.load}
-             *
-             * @memberof niclabs.insight.layer.Layer
-             * @param {string|Object[]} [obj] - optional new data source or data array for the layer
-             * @returns {string|Object[]} data source for the layer if the data has not been loaded yet or object array if the
-             *  data has been loaded
-             */
-            data: function(obj) {
-                if (typeof obj === 'undefined') {
-                    return loaded || !dataSource? data : dataSource;
-                }
-
-                if (typeof obj === 'string') {
-                    dataSource = obj;
-
-                    // If the layer has already been loaded, reload the data
-                    if (loaded) self.load();
-
-                    return dataSource;
-                }
-                else {
-                    data = obj.length ? obj: [obj];
-                }
-
-                return data;
-            },
-
-            /**
-             * Load the data from the layer and redraw
-             *
-             * If data provided as configuration to the layer is a URL, this methods loads the data from the URL and
-             * redraws the layer (invoking {@link niclabs.insight.layer.Layer.clear} and {@link niclabs.insight.layer.Layer.draw})
-             * when the content is available
-             *
-             * @memberof niclabs.insight.layer.Layer
-             */
-            load: function() {
-                function redraw(d) {
-                    data = d;
-
-                    /**
-                     * Event triggered when an update to the layer data (filtering/update) has ocurred
-                     *
-                     * @event niclabs.insight.layer.Layer#layer_data
-                     * @type {object}
-                     * @property {string} id - id for the layer to which the data belongs to
-                     * @property {Object[]} data - new data array
-                     */
-                    niclabs.insight.event.trigger('layer_data', {
-                        'id': id,
-                        'data': data
-                    });
-
-                    // Clear the map
-                    self.clear();
-
-                    // Re-draw with new data loaded
-                    self.draw(data);
-                }
-
-                if (dataSource) {
-                    $.getJSON(dataSource, redraw);
-                    // TODO: on error?
-                }
-                else {
-                    redraw(data);
-                }
-            },
-
-            /**
-             * Draw the layer on the map.
-             *
-             * This method must be overriden by the implementing layers
-             *
-             * @memberof niclabs.insight.layer.Layer
-             * @param {Object[]} data - data to use for drawing the layer
-             * @abstract
-             */
-            draw: function(data) {},
-
-            /**
-             * Filter the layer according to the provided function.
-             *
-             * This method must be overriden by the implementing layers
-             *
-             * @memberof niclabs.insight.layer.Layer
-             * @abstract
-             * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
-             */
-            filter: function(fn) {},
-
-            /**
-             * Clear the layer changes on the map. This method must be
-             * overriden by implementing layers
-             *
-             * @memberof niclabs.insight.layer.Layer
-             * @abstract
-             */
-            clear: function() {}
-        };
-
-        return self;
-    };
-
-    return Layer;
-})(jQuery);
-
-niclabs.insight.layer.MarkerLayer = (function($) {
-    /**
-     * Construct a new marker layer
-     *
-     * @class niclabs.insight.layer.MarkerLayer
-     * @extends niclabs.insight.layer.Layer
-     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this layer belongs to
-     * @param {Object} options - configuration options for the layer
-     * @param {string} options.id - identifier for the layer
-     * @param {string|Object[]} options.data - uri or data array for the layer
-     */
-    var MarkerLayer = function(dashboard, options) {
-        var layer = niclabs.insight.layer.Layer(dashboard, options);
-
-        var attr = options.marker || {
-            'type': 'simple-marker'
-        };
-
-        var markers = [];
-
-        /**
-         * Create marker from the type attribute
-         *
-         * @param {Object[]} data - layer data
-         * @param {number} index - index of the marker in the data array
-         * @param {Object} obj - configuration for the new marker
-          */
-        function newMarker(data, index, obj) {
-            var marker;
-            if ('type' in obj) {
-                var attr = {'layer': layer.id};
-
-                // Extend the attributes with the data and the options for the marker
-                $.extend(attr, obj, data[index]);
-
-                marker = niclabs.insight.handler(obj.type)(dashboard, attr);
-            }
-            else {
-                marker = obj;
-            }
-
-            // Make the marker clickable
-            marker.clickable(true);
-
-            return marker;
-        }
-
-        /**
-         * Draw the markers according to the internal data on the map
-         *
-         * @memberof niclabs.insight.layer.MarkerLayer
-         * @override
-         * @param {Object[]} data - data to draw
-         * @param {float} data[].lat - latitude for the marker
-         * @param {float} data[].lng - longitude for the marker
-         * @param {string=} data[].description - description for the marker
-         */
-        layer.draw = function(data) {
-            for (var i = 0; i < data.length; i++) {
-                markers.push(newMarker(data, i, attr));
-            }
-        };
-
-        /**
-         * Clear the markers from the map
-         *
-         * @memberof niclabs.insight.layer.MarkerLayer
-         * @override
-         */
-        layer.clear = function() {
-            for (var i = 0; i < markers.length; i++) {
-                markers[i].clear();
-            }
-        };
-
-        /**
-         * Filter the layer according to the provided function.
-         *
-         * @memberof niclabs.insight.layer.MarkerLayer
-         * @override
-         * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
-         */
-        layer.filter = function(fn) {
-            var data = layer.data();
-            for (var i = 0; i < markers.length; i++) {
-                markers[i].visible(fn(data[i]));
-            }
-        };
-
-        return layer;
-    };
-
-    // Register the handler
-    niclabs.insight.handler('marker-layer', 'layer', MarkerLayer);
-
-    return MarkerLayer;
-})(jQuery);
-
-/**
  * Map compatibility for the insight dashboard
  *
  * @namespace
@@ -2230,6 +2153,112 @@ niclabs.insight.map.GoogleMap = (function($) {
 
     return GoogleMap;
 })(jQuery);
+
+/**
+ * Very basic event manager for the dashboard
+ *
+ * @example
+ * ```javascript
+ * // Subscribe to the event
+ * var eventId = niclabs.insight.event.on('hello', function(who) {
+ *      alert("HELLO "+who+"!!!");
+ * });
+ *
+ * // Trigger the event
+ * niclabs.insight.event.trigger('hello', "John"); // Shows alert 'HELLO John!!!'
+ *
+ * // Unsubscribe
+ * niclabs.insight.event.off('hello', eventId);
+ * ```
+ *
+ * @namespace
+ */
+niclabs.insight.event = (function() {
+    "use strict";
+
+    var events = {};
+
+    /**
+     * Find the event in the event list, return -1 if not found
+     */
+    function indexOf(event, listener) {
+        if (event in events) {
+            for (var i = 0; i < events[event].length; i++) {
+                if (events[event][i] === listener) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Insight event listener
+     *
+     * @callback niclabs.insight.event~listener
+     * @param {Object} data - data for the callback function, dependant on the event
+     */
+
+    return {
+        /**
+         * Listen for an event. A listener callback can only be assigned once for an event
+         *
+         * @memberof niclabs.insight.event
+         * @param {string} event - event type
+         * @param {niclabs.insight.event~listener} listener - callback to process the event
+         * @returns {number} id of the listener
+         */
+        on: function(event, listener) {
+            var index = indexOf(event, listener);
+
+            if (index < 0) {
+                if (!(event in events)) {
+                    events[event] = [];
+                }
+
+                // Add the new listener
+                return events[event].push(listener) - 1;
+            }
+            return index;
+        },
+
+        /**
+         * Stop listening for an event.
+         *
+         * @memberof niclabs.insight.event
+         * @param {string} event - event type
+         * @param {niclabs.insight.event~listener|number} listener - callback to remove or id of the listener provided by {@link niclabs.insight.event.on()}
+         * @returns {boolean} true if the listener was found and was succesfully removed
+         */
+        off: function(event, listener) {
+            var index = typeof listener === 'number' ? listener : indexOf(event, listener);
+
+            if (index >= 0) {
+                // Remove the event
+                events[event].splice(index, 1);
+
+                return true;
+            }
+            return false;
+        },
+
+        /**
+         * Trigger an event
+         *
+         * @memberof niclabs.insight.event
+         * @param {string} event - event type
+         * @param {Object=} data - data to pass to the callback
+         */
+        trigger: function(event, data) {
+            if (event in events) {
+                for (var i = 0; i < events[event].length; i++) {
+                    // Notify the listeners
+                    events[event][i](data);
+                }
+            }
+        }
+    };
+})();
 
 /**
  * Collection of markers available for drawing on the map
