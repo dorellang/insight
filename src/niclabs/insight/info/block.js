@@ -23,8 +23,8 @@ niclabs.insight.info.Block = (function($) {
         var title = options.title || '';
 
         var properties = {
-            closable: options.closable || true,
-            movable: options.movable || true,
+            closable: typeof options.closable === 'undefined'? true : options.closable,
+            movable: typeof options.movable === 'undefined'? true : options.movable,
         };
         var preprocess = options.preprocess || function(x) {return x;};
 

@@ -1210,6 +1210,112 @@ niclabs.insight.MapView = (function($) {
 })(jQuery);
 
 /**
+ * Very basic event manager for the dashboard
+ *
+ * @example
+ * ```javascript
+ * // Subscribe to the event
+ * var eventId = niclabs.insight.event.on('hello', function(who) {
+ *      alert("HELLO "+who+"!!!");
+ * });
+ *
+ * // Trigger the event
+ * niclabs.insight.event.trigger('hello', "John"); // Shows alert 'HELLO John!!!'
+ *
+ * // Unsubscribe
+ * niclabs.insight.event.off('hello', eventId);
+ * ```
+ *
+ * @namespace
+ */
+niclabs.insight.event = (function() {
+    "use strict";
+
+    var events = {};
+
+    /**
+     * Find the event in the event list, return -1 if not found
+     */
+    function indexOf(event, listener) {
+        if (event in events) {
+            for (var i = 0; i < events[event].length; i++) {
+                if (events[event][i] === listener) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Insight event listener
+     *
+     * @callback niclabs.insight.event~listener
+     * @param {Object} data - data for the callback function, dependant on the event
+     */
+
+    return {
+        /**
+         * Listen for an event. A listener callback can only be assigned once for an event
+         *
+         * @memberof niclabs.insight.event
+         * @param {string} event - event type
+         * @param {niclabs.insight.event~listener} listener - callback to process the event
+         * @returns {number} id of the listener
+         */
+        on: function(event, listener) {
+            var index = indexOf(event, listener);
+
+            if (index < 0) {
+                if (!(event in events)) {
+                    events[event] = [];
+                }
+
+                // Add the new listener
+                return events[event].push(listener) - 1;
+            }
+            return index;
+        },
+
+        /**
+         * Stop listening for an event.
+         *
+         * @memberof niclabs.insight.event
+         * @param {string} event - event type
+         * @param {niclabs.insight.event~listener|number} listener - callback to remove or id of the listener provided by {@link niclabs.insight.event.on()}
+         * @returns {boolean} true if the listener was found and was succesfully removed
+         */
+        off: function(event, listener) {
+            var index = typeof listener === 'number' ? listener : indexOf(event, listener);
+
+            if (index >= 0) {
+                // Remove the event
+                events[event].splice(index, 1);
+
+                return true;
+            }
+            return false;
+        },
+
+        /**
+         * Trigger an event
+         *
+         * @memberof niclabs.insight.event
+         * @param {string} event - event type
+         * @param {Object=} data - data to pass to the callback
+         */
+        trigger: function(event, data) {
+            if (event in events) {
+                for (var i = 0; i < events[event].length; i++) {
+                    // Notify the listeners
+                    events[event][i](data);
+                }
+            }
+        }
+    };
+})();
+
+/**
  * Visualization layers for the dashboard
  *
  * @namespace
@@ -1545,6 +1651,150 @@ niclabs.insight.layer.MarkerLayer = (function($) {
 })(jQuery);
 
 /**
+ * Map compatibility for the insight dashboard
+ *
+ * @namespace
+ */
+niclabs.insight.map = (function () {
+    /**
+     * Helper method to assign/get the map view to/from the dashboard
+     *
+     * @example
+     * ```javascript
+     * // Create the map
+     * var map = niclabs.insight.map({
+     *      'handler': 'google-map', // Map constructor
+     *      'lat': 48.8583,
+     *      'lng': 2.2944,
+     *      'zoom': 15
+     * });
+     * ```
+     *
+     * @memberof niclabs.insight
+     * @variation 2
+     * @param {Object|niclabs.insight.MapView} [obj] - configuration for the map view or map view object
+     * @param {String} obj.handler - name of the handler to construct the map view
+     * @returns {niclabs.insight.MapView} the dashboard map view
+     */
+    var map = function (obj) {
+        var dashboard = niclabs.insight.dashboard();
+        if (typeof dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
+        return dashboard.map(obj);
+    };
+
+    return map;
+})();
+
+niclabs.insight.map.GoogleMap = (function($) {
+    "use strict";
+
+    /**
+     * Constructor of GoogleMap
+     *
+     * @class niclabs.insight.map.GoogleMap
+     * @extends {niclabs.insight.MapView}
+     * @param {Object} options - configuration options for the map
+     * @param {integer} [options.zoom=12] - starting zoom level of the map
+     * @param {float} [options.lat=0] - latitude for the map center
+     * @param {float} [options.lng=0] - lng for the map center
+     */
+    var GoogleMap = function(dashboard, options) {
+
+        // Initialize parent
+        var map = niclabs.insight.MapView(options);
+
+        var googlemap = new google.maps.Map(map.element, {
+            zoom: map.zoom(),
+            center: new google.maps.LatLng(map.lat(), map.lng()),
+            disableDefaultUI: true
+        });
+
+        // Store the parent function
+        var zoom = map.zoom;
+
+        // Listen for zoom changes
+        google.maps.event.addListener(googlemap, 'zoom_changed',
+            function() {
+                // Update the map zoom
+                zoom(googlemap.getZoom());
+            });
+
+        /**
+         * Set/get the zoom level for the map
+         *
+         * Overrides the functionality of niclabs.insight.MapView.zoom() by modifying
+         * the underlying google map zoom level as well
+         *
+         * @override
+         * @memberof niclabs.insight.map.GoogleMap
+         * @param {int=} zoom - zoom
+         * @returns {int} zoom level of the map
+         */
+        map.zoom = function(level) {
+            // Call parent zoom
+            level = zoom(level);
+
+            // Update the google map
+            googlemap.setZoom(level);
+
+            return level;
+        };
+
+        // Store the parent function
+        var center = map.center;
+
+        // Listen for center changes
+        google.maps.event.addListener(googlemap, 'center_changed',
+            function() {
+                var c = googlemap.getCenter();
+
+                // Update the center for the local object
+                center(c.lat(), c.lng());
+            });
+
+        /**
+         * Set/get the map center.
+         *
+         * Overrides the functionality of {@link niclabs.insight.MapView.center} by modifying
+         * the underlying google map center as well
+         *
+         * @override
+         * @memberof niclabs.insight.map.GoogleMap
+         * @param {float=} lat - latitude for the map center
+         * @param {float=} lng - longitude for the map center
+         * @return {niclabs.insight.MapView.Coordinates} coordinates for the map center
+         */
+        map.center = function(lat, lng) {
+            var c = center(lat, lng);
+
+            // Update the map
+            googlemap.setCenter({
+                'lat': c.lat,
+                'lng': c.lng
+            });
+
+            return c;
+        };
+
+        /**
+         * Get the underlying google map object for further modification
+         *
+         * @returns (google.maps.Map) underlying map object
+         */
+        map.googlemap = function() {
+            return googlemap;
+        };
+
+        return map;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('google-map', 'map-view', GoogleMap);
+
+    return GoogleMap;
+})(jQuery);
+
+/**
  * Contains the definitions for the information blocks supported by insight
  *
  * @namespace
@@ -1610,8 +1860,8 @@ niclabs.insight.info.Block = (function($) {
         var title = options.title || '';
 
         var properties = {
-            closable: options.closable || true,
-            movable: options.movable || true,
+            closable: typeof options.closable === 'undefined'? true : options.closable,
+            movable: typeof options.movable === 'undefined'? true : options.movable,
         };
         var preprocess = options.preprocess || function(x) {return x;};
 
@@ -2009,256 +2259,6 @@ niclabs.insight.info.SummaryBlock = (function($) {
 
     return SummaryBlock;
 })(jQuery);
-
-/**
- * Map compatibility for the insight dashboard
- *
- * @namespace
- */
-niclabs.insight.map = (function () {
-    /**
-     * Helper method to assign/get the map view to/from the dashboard
-     *
-     * @example
-     * ```javascript
-     * // Create the map
-     * var map = niclabs.insight.map({
-     *      'handler': 'google-map', // Map constructor
-     *      'lat': 48.8583,
-     *      'lng': 2.2944,
-     *      'zoom': 15
-     * });
-     * ```
-     *
-     * @memberof niclabs.insight
-     * @variation 2
-     * @param {Object|niclabs.insight.MapView} [obj] - configuration for the map view or map view object
-     * @param {String} obj.handler - name of the handler to construct the map view
-     * @returns {niclabs.insight.MapView} the dashboard map view
-     */
-    var map = function (obj) {
-        var dashboard = niclabs.insight.dashboard();
-        if (typeof dashboard === 'undefined') throw new Error("Dashboard has not been initialized");
-        return dashboard.map(obj);
-    };
-
-    return map;
-})();
-
-niclabs.insight.map.GoogleMap = (function($) {
-    "use strict";
-
-    /**
-     * Constructor of GoogleMap
-     *
-     * @class niclabs.insight.map.GoogleMap
-     * @extends {niclabs.insight.MapView}
-     * @param {Object} options - configuration options for the map
-     * @param {integer} [options.zoom=12] - starting zoom level of the map
-     * @param {float} [options.lat=0] - latitude for the map center
-     * @param {float} [options.lng=0] - lng for the map center
-     */
-    var GoogleMap = function(dashboard, options) {
-
-        // Initialize parent
-        var map = niclabs.insight.MapView(options);
-
-        var googlemap = new google.maps.Map(map.element, {
-            zoom: map.zoom(),
-            center: new google.maps.LatLng(map.lat(), map.lng()),
-            disableDefaultUI: true
-        });
-
-        // Store the parent function
-        var zoom = map.zoom;
-
-        // Listen for zoom changes
-        google.maps.event.addListener(googlemap, 'zoom_changed',
-            function() {
-                // Update the map zoom
-                zoom(googlemap.getZoom());
-            });
-
-        /**
-         * Set/get the zoom level for the map
-         *
-         * Overrides the functionality of niclabs.insight.MapView.zoom() by modifying
-         * the underlying google map zoom level as well
-         *
-         * @override
-         * @memberof niclabs.insight.map.GoogleMap
-         * @param {int=} zoom - zoom
-         * @returns {int} zoom level of the map
-         */
-        map.zoom = function(level) {
-            // Call parent zoom
-            level = zoom(level);
-
-            // Update the google map
-            googlemap.setZoom(level);
-
-            return level;
-        };
-
-        // Store the parent function
-        var center = map.center;
-
-        // Listen for center changes
-        google.maps.event.addListener(googlemap, 'center_changed',
-            function() {
-                var c = googlemap.getCenter();
-
-                // Update the center for the local object
-                center(c.lat(), c.lng());
-            });
-
-        /**
-         * Set/get the map center.
-         *
-         * Overrides the functionality of {@link niclabs.insight.MapView.center} by modifying
-         * the underlying google map center as well
-         *
-         * @override
-         * @memberof niclabs.insight.map.GoogleMap
-         * @param {float=} lat - latitude for the map center
-         * @param {float=} lng - longitude for the map center
-         * @return {niclabs.insight.MapView.Coordinates} coordinates for the map center
-         */
-        map.center = function(lat, lng) {
-            var c = center(lat, lng);
-
-            // Update the map
-            googlemap.setCenter({
-                'lat': c.lat,
-                'lng': c.lng
-            });
-
-            return c;
-        };
-
-        /**
-         * Get the underlying google map object for further modification
-         *
-         * @returns (google.maps.Map) underlying map object
-         */
-        map.googlemap = function() {
-            return googlemap;
-        };
-
-        return map;
-    };
-
-    // Register the handler
-    niclabs.insight.handler('google-map', 'map-view', GoogleMap);
-
-    return GoogleMap;
-})(jQuery);
-
-/**
- * Very basic event manager for the dashboard
- *
- * @example
- * ```javascript
- * // Subscribe to the event
- * var eventId = niclabs.insight.event.on('hello', function(who) {
- *      alert("HELLO "+who+"!!!");
- * });
- *
- * // Trigger the event
- * niclabs.insight.event.trigger('hello', "John"); // Shows alert 'HELLO John!!!'
- *
- * // Unsubscribe
- * niclabs.insight.event.off('hello', eventId);
- * ```
- *
- * @namespace
- */
-niclabs.insight.event = (function() {
-    "use strict";
-
-    var events = {};
-
-    /**
-     * Find the event in the event list, return -1 if not found
-     */
-    function indexOf(event, listener) {
-        if (event in events) {
-            for (var i = 0; i < events[event].length; i++) {
-                if (events[event][i] === listener) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * Insight event listener
-     *
-     * @callback niclabs.insight.event~listener
-     * @param {Object} data - data for the callback function, dependant on the event
-     */
-
-    return {
-        /**
-         * Listen for an event. A listener callback can only be assigned once for an event
-         *
-         * @memberof niclabs.insight.event
-         * @param {string} event - event type
-         * @param {niclabs.insight.event~listener} listener - callback to process the event
-         * @returns {number} id of the listener
-         */
-        on: function(event, listener) {
-            var index = indexOf(event, listener);
-
-            if (index < 0) {
-                if (!(event in events)) {
-                    events[event] = [];
-                }
-
-                // Add the new listener
-                return events[event].push(listener) - 1;
-            }
-            return index;
-        },
-
-        /**
-         * Stop listening for an event.
-         *
-         * @memberof niclabs.insight.event
-         * @param {string} event - event type
-         * @param {niclabs.insight.event~listener|number} listener - callback to remove or id of the listener provided by {@link niclabs.insight.event.on()}
-         * @returns {boolean} true if the listener was found and was succesfully removed
-         */
-        off: function(event, listener) {
-            var index = typeof listener === 'number' ? listener : indexOf(event, listener);
-
-            if (index >= 0) {
-                // Remove the event
-                events[event].splice(index, 1);
-
-                return true;
-            }
-            return false;
-        },
-
-        /**
-         * Trigger an event
-         *
-         * @memberof niclabs.insight.event
-         * @param {string} event - event type
-         * @param {Object=} data - data to pass to the callback
-         */
-        trigger: function(event, data) {
-            if (event in events) {
-                for (var i = 0; i < events[event].length; i++) {
-                    // Notify the listeners
-                    events[event][i](data);
-                }
-            }
-        }
-    };
-})();
 
 /**
  * Collection of markers available for drawing on the map
