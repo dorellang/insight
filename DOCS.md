@@ -33,7 +33,8 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [Block.data([data])](#niclabs.insight.info.Block.data)
         * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
       * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
-        * [new info.ChartistBlock(dashboard, constructor, options, [data])](#new_niclabs.insight.info.ChartistBlock)
+        * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
+        * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
       * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
         * [new info.SummaryBlock(dashboard, options, [data])](#new_niclabs.insight.info.SummaryBlock)
     * [insight.layer](#niclabs.insight.layer)
@@ -141,7 +142,8 @@ understand what is going on in the city
       * [Block.data([data])](#niclabs.insight.info.Block.data)
       * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
     * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
-      * [new info.ChartistBlock(dashboard, constructor, options, [data])](#new_niclabs.insight.info.ChartistBlock)
+      * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
+      * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
     * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
       * [new info.SummaryBlock(dashboard, options, [data])](#new_niclabs.insight.info.SummaryBlock)
   * [insight.layer](#niclabs.insight.layer)
@@ -424,7 +426,8 @@ Contains the definitions for the information blocks supported by insight
     * [Block.data([data])](#niclabs.insight.info.Block.data)
     * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
   * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
-    * [new info.ChartistBlock(dashboard, constructor, options, [data])](#new_niclabs.insight.info.ChartistBlock)
+    * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
+    * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
   * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
     * [new info.SummaryBlock(dashboard, options, [data])](#new_niclabs.insight.info.SummaryBlock)
 
@@ -507,11 +510,14 @@ Refresh the block using the provided data
 **Members**
 
 * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
-  * [new info.ChartistBlock(dashboard, constructor, options, [data])](#new_niclabs.insight.info.ChartistBlock)
+  * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
+  * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
 
 <a name="new_niclabs.insight.info.ChartistBlock"></a>
-#####new info.ChartistBlock(dashboard, constructor, options, [data])
-Construct a new chartis information block
+#####new info.ChartistBlock(dashboard, constructor, options)
+Construct a new chartist information block
+
+For the configuration options see [http://gionkunz.github.io/chartist-js/](http://gionkunz.github.io/chartist-js/)
 
 **Params**
 
@@ -520,11 +526,23 @@ Construct a new chartis information block
 - options `Object` - configuration options for the block  
   - id `string` - html identifier for the block  
   - \[title\] `string` - title for the block  
-  - chartist `Object` - chartist configuration  
+  - chartist <code>[Chartist](#niclabs.insight.info.ChartistBlock.Chartist)</code> - chartist configuration  
   - \[properties\] `Object` - block properties (closable, movable)  
-- \[data\] `Object` - default data for the summary  
+  - \[data\] `Object` - default data for the summary  
 
 **Extends**: `niclabs.insight.info.Block`  
+<a name="niclabs.insight.info.ChartistBlock.Chartist"></a>
+#####type: ChartistBlock.Chartist
+Configuration options for chartist charts
+
+**Params**
+
+  - class `Object` - chartist css class  
+  - labels `Object` - chart labels  
+  - \[options\] `Object` - chartist options  
+  - \[responsiveOptions\] `Object` - chartist responsive options  
+
+**Type**: `Object`  
 <a name="niclabs.insight.info.SummaryBlock"></a>
 ####class: info.SummaryBlock
 **Extends**: `niclabs.insight.info.Block`  
