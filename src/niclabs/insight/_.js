@@ -51,8 +51,13 @@ niclabs.insight = (function ($) {
             $element.find('[data-bind],[data-if]').each(function() {
                 var key = $(this).attr('data-bind') || $(this).attr('data-if');
 
+                var tag = $(this).prop('tagName');
                 if (key in data) {
-                    if ($(this).attr('data-bind')) $(this).text(data[key]);
+                    if ($(this).attr('data-bind')) {
+                        if (tag === 'img') $(this).attr('src', data[key]);
+                        else if (tag === 'input') $(this).val(data[key]);
+                        else $(this).text(data[key]);
+                    }
                 }
                 else {
                     $(this).detach();
