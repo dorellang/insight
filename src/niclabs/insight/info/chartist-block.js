@@ -1,61 +1,92 @@
-CityDashboard.ChartistVisualization = function ( props, chartConstructor ) {
+niclabs.insight.info.ChartistBlock = (function($) {
+    /**
+     * Construct a new chartis information block
+     *
+     * @class niclabs.insight.info.ChartistBlock
+     * @augments niclabs.insight.info.Block
+     * @inheritdoc
+     * @param {niclabs.insight.Dashboard} dashboard - parent dashboard for the block
+     * @param {Object} constructor - chartist object to use as constructor
+     * @param {Object} options - configuration options for the block
+     * @param {string} options.id - html identifier for the block
+     * @param {string=} options.title - title for the block
+     * @param {Object} options.chartist - chartist configuration
+     * @param {Object=} options.properties - block properties (closable, movable)
+     * @param {Object=} data - default data for the summary
+     */
+     var ChartistBlock = function (dashboard, constructor, options) {
+         var self = niclabs.insight.info.Block(dashboard, options);
 
-  CityDashboard.Visualization.call( this, props );
-  
-  this.chartConstructor = chartConstructor;
+         var chartist = options.chartist;
 
-  this.viz.addClass('chartist-viz').append( $('<div>').addClass(this.properties['class']) );
+         self.content.addClass('chartist-viz').append( $('<div>').addClass(chartist.class));
 
-  this.options = props['options'] || {};
+         var chartistOptions = chartist.options || {};
+         var responsiveOptions = chartist.responsiveOptions || {};
+         var labels = chartist.labels;
 
-  this.responsiveOptions = props['responsiveOptions'] || {};
+         // Store the chart object
+         var chart;
 
-  this.labels = props['labels'];
+         var refresh = self.refresh;
 
-  //checkbox
+         self.refresh = function(data) {
+             data = typeof data === 'undefined' ? self.data() : data;
 
-  // this.checkbox_handler = props['checkbox-handler'] || function (array,data) {
-  //       var out = [];
-  //       for (var i = 0; i < array.length; i++) {
-  //         if (array[i]){
-  //           out[out.length] = data[i];
-  //         }
-  //       };
-  //       return out;
-  //     };
+             // Call the parent
+             refresh(data);
 
-  this.refresh();
-  
-};
+             // Look for 'value' key in data
+             data = data.value || data;
 
-CityDashboard.ChartistVisualization.prototype = Object.create( CityDashboard.Visualization.prototype );
+             var chartData  = {
+               'series': data,
+               'labels': typeof labels === 'function' ? labels(data) : labels
+             };
 
-CityDashboard.ChartistVisualization.prototype.refresh = function () {
+             if (chart && chart.optionsProvider) {
+                 chart.update(chartData);
+             }
+             else {
+                 chart = new constructor( (self.content.find('div'))[0], chartData , chartistOptions, responsiveOptions);
+             }
+         };
 
-  CityDashboard.Visualization.prototype.refresh.call( this );
+         if (options.data) self.refresh(options.data);
 
-  var d = this.getData();
-  d = d.value || d;
 
-  var data  = {
-    'series': d,
-    'labels': typeof this.labels === 'function' ? this.labels(d) : this.labels
-  };
+         var remove = self.remove;
 
-  if ( this.chart && this.chart.optionsProvider){
-    this.chart.update( data );}
-  else
-    this.chart = new this.chartConstructor( this.id+' > div' , data , this.options, this.responsiveOptions);
+         // Override remove method
+         self.remove = function() {
+             // Call the parent
+             remove();
 
-  this.viz.append( $('<dl>').addClass('deflist') );
+             chart.detach();
+         };
 
-  if (! (this.data instanceof Array))
+         return self;
+     };
 
-    this.createDefList(this.data);
-};
+     var ChartistLineChartBlock = function(dashboard, options) {
+        var self = ChartistBlock(dashboard, Chartist.Line, options);
+        return self;
+     };
 
-CityDashboard.ChartistVisualization.prototype.remove = function () {
-  CityDashboard.Visualization.prototype.remove.call( this );
+     var ChartistBarChartBlock = function(dashboard, options) {
+        var self = ChartistBlock(dashboard, Chartist.Bar, options);
+        return self;
+    };
 
-  this.chart.detach();
-};
+    var ChartistPieChartBlock = function(dashboard, options) {
+       var self = ChartistBlock(dashboard, Chartist.Pie, options);
+       return self;
+    };
+
+     // Register the handler
+     niclabs.insight.handler('chartist-linechart', 'info-block', ChartistLineChartBlock);
+     niclabs.insight.handler('chartist-barchart', 'info-block', ChartistBarChartBlock);
+     niclabs.insight.handler('chartist-piechart', 'info-block', ChartistPieChartBlock);
+
+     return ChartistBlock;
+ })(jQuery);
