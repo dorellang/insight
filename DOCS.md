@@ -32,8 +32,10 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [Block.remove()](#niclabs.insight.info.Block.remove)
         * [Block.data([data])](#niclabs.insight.info.Block.data)
         * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
+      * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
+        * [new info.ChartistBlock(dashboard, constructor, options, [data])](#new_niclabs.insight.info.ChartistBlock)
       * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-        * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
+        * [new info.SummaryBlock(dashboard, options, [data])](#new_niclabs.insight.info.SummaryBlock)
     * [insight.layer](#niclabs.insight.layer)
       * [class: layer.Layer](#niclabs.insight.layer.Layer)
         * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
@@ -138,8 +140,10 @@ understand what is going on in the city
       * [Block.remove()](#niclabs.insight.info.Block.remove)
       * [Block.data([data])](#niclabs.insight.info.Block.data)
       * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
+    * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
+      * [new info.ChartistBlock(dashboard, constructor, options, [data])](#new_niclabs.insight.info.ChartistBlock)
     * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-      * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
+      * [new info.SummaryBlock(dashboard, options, [data])](#new_niclabs.insight.info.SummaryBlock)
   * [insight.layer](#niclabs.insight.layer)
     * [class: layer.Layer](#niclabs.insight.layer.Layer)
       * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
@@ -419,8 +423,10 @@ Contains the definitions for the information blocks supported by insight
     * [Block.remove()](#niclabs.insight.info.Block.remove)
     * [Block.data([data])](#niclabs.insight.info.Block.data)
     * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
+  * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
+    * [new info.ChartistBlock(dashboard, constructor, options, [data])](#new_niclabs.insight.info.ChartistBlock)
   * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-    * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
+    * [new info.SummaryBlock(dashboard, options, [data])](#new_niclabs.insight.info.SummaryBlock)
 
 <a name="niclabs.insight.info.Block"></a>
 ####class: info.Block
@@ -495,16 +501,40 @@ Refresh the block using the provided data
 
 - \[data\] `Object` - data to refresh  
 
+<a name="niclabs.insight.info.ChartistBlock"></a>
+####class: info.ChartistBlock
+**Extends**: `niclabs.insight.info.Block`  
+**Members**
+
+* [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
+  * [new info.ChartistBlock(dashboard, constructor, options, [data])](#new_niclabs.insight.info.ChartistBlock)
+
+<a name="new_niclabs.insight.info.ChartistBlock"></a>
+#####new info.ChartistBlock(dashboard, constructor, options, [data])
+Construct a new chartis information block
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - parent dashboard for the block  
+- constructor `Object` - chartist object to use as constructor  
+- options `Object` - configuration options for the block  
+  - id `string` - html identifier for the block  
+  - \[title\] `string` - title for the block  
+  - chartist `Object` - chartist configuration  
+  - \[properties\] `Object` - block properties (closable, movable)  
+- \[data\] `Object` - default data for the summary  
+
+**Extends**: `niclabs.insight.info.Block`  
 <a name="niclabs.insight.info.SummaryBlock"></a>
 ####class: info.SummaryBlock
 **Extends**: `niclabs.insight.info.Block`  
 **Members**
 
 * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-  * [new info.SummaryBlock(dashboard, options, [data], ignore)](#new_niclabs.insight.info.SummaryBlock)
+  * [new info.SummaryBlock(dashboard, options, [data])](#new_niclabs.insight.info.SummaryBlock)
 
 <a name="new_niclabs.insight.info.SummaryBlock"></a>
-#####new info.SummaryBlock(dashboard, options, [data], ignore)
+#####new info.SummaryBlock(dashboard, options, [data])
 Construct a new summary information block
 TODO: describe what is a summary information block
 
@@ -516,7 +546,6 @@ TODO: describe what is a summary information block
   - \[title\] `string` - title for the block  
   - \[properties\] `Object` - block properties (closable, movable)  
 - \[data\] `Object` - default data for the summary  
-- ignore `Array.<String>` - key list to ignore in the summary  
 
 **Extends**: `niclabs.insight.info.Block`  
 <a name="niclabs.insight.layer"></a>

@@ -64,8 +64,13 @@ niclabs.insight = (function ($) {
             $element.find('[data-bind],[data-if]').each(function() {
                 var key = $(this).attr('data-bind') || $(this).attr('data-if');
 
+                var tag = $(this).prop('tagName');
                 if (key in data) {
-                    if ($(this).attr('data-bind')) $(this).text(data[key]);
+                    if ($(this).attr('data-bind')) {
+                        if (tag === 'img') $(this).attr('src', data[key]);
+                        else if (tag === 'input') $(this).val(data[key]);
+                        else $(this).text(data[key]);
+                    }
                 }
                 else {
                     $(this).detach();
@@ -1262,7 +1267,7 @@ niclabs.insight.event = (function() {
             var index = indexOf(event, listener);
 
             if (index < 0) {
-                if (!('event' in events)) {
+                if (!(event in events)) {
                     events[event] = [];
                 }
 
@@ -1425,6 +1430,12 @@ niclabs.insight.info.Block = (function($) {
         // if (options.checkbox)
         //     this.addCheckbox(options.checkbox);
 
+        // Listen for map events
+        niclabs.insight.event.on('map_element_selected', function(data) {
+            self.data(data);
+            self.refresh(data);
+        });
+
         // Block data
         var data = options.data || {};
 
@@ -1583,6 +1594,99 @@ niclabs.insight.info.Block = (function($) {
 //
 // };
 
+niclabs.insight.info.ChartistBlock = (function($) {
+    /**
+     * Construct a new chartis information block
+     *
+     * @class niclabs.insight.info.ChartistBlock
+     * @augments niclabs.insight.info.Block
+     * @inheritdoc
+     * @param {niclabs.insight.Dashboard} dashboard - parent dashboard for the block
+     * @param {Object} constructor - chartist object to use as constructor
+     * @param {Object} options - configuration options for the block
+     * @param {string} options.id - html identifier for the block
+     * @param {string=} options.title - title for the block
+     * @param {Object} options.chartist - chartist configuration
+     * @param {Object=} options.properties - block properties (closable, movable)
+     * @param {Object=} data - default data for the summary
+     */
+     var ChartistBlock = function (dashboard, constructor, options) {
+         var self = niclabs.insight.info.Block(dashboard, options);
+
+         var chartist = options.chartist;
+
+         self.content.addClass('chartist-viz').append( $('<div>').addClass(chartist.class));
+
+         var chartistOptions = chartist.options || {};
+         var responsiveOptions = chartist.responsiveOptions || {};
+         var labels = chartist.labels;
+
+         // Store the chart object
+         var chart;
+
+         var refresh = self.refresh;
+
+         self.refresh = function(data) {
+             data = typeof data === 'undefined' ? self.data() : data;
+
+             // Call the parent
+             refresh(data);
+
+             // Look for 'value' key in data
+             data = data.value || data;
+
+             var chartData  = {
+               'series': data,
+               'labels': typeof labels === 'function' ? labels(data) : labels
+             };
+
+             if (chart && chart.optionsProvider) {
+                 chart.update(chartData);
+             }
+             else {
+                 chart = new constructor( (self.content.find('div'))[0], chartData , chartistOptions, responsiveOptions);
+             }
+         };
+
+         if (options.data) self.refresh(options.data);
+
+
+         var remove = self.remove;
+
+         // Override remove method
+         self.remove = function() {
+             // Call the parent
+             remove();
+
+             chart.detach();
+         };
+
+         return self;
+     };
+
+     var ChartistLineChartBlock = function(dashboard, options) {
+        var self = ChartistBlock(dashboard, Chartist.Line, options);
+        return self;
+     };
+
+     var ChartistBarChartBlock = function(dashboard, options) {
+        var self = ChartistBlock(dashboard, Chartist.Bar, options);
+        return self;
+    };
+
+    var ChartistPieChartBlock = function(dashboard, options) {
+       var self = ChartistBlock(dashboard, Chartist.Pie, options);
+       return self;
+    };
+
+     // Register the handler
+     niclabs.insight.handler('chartist-linechart', 'info-block', ChartistLineChartBlock);
+     niclabs.insight.handler('chartist-barchart', 'info-block', ChartistBarChartBlock);
+     niclabs.insight.handler('chartist-piechart', 'info-block', ChartistPieChartBlock);
+
+     return ChartistBlock;
+ })(jQuery);
+
 niclabs.insight.info.SummaryBlock = (function($) {
     /**
      * Construct a new summary information block
@@ -1597,19 +1701,9 @@ niclabs.insight.info.SummaryBlock = (function($) {
      * @param {string=} options.title - title for the block
      * @param {Object=} options.properties - block properties (closable, movable)
      * @param {Object=} data - default data for the summary
-     * @param {String[]} ignore - key list to ignore in the summary
      */
     var SummaryBlock = function(dashboard, options) {
         var self = niclabs.insight.info.Block(dashboard, options);
-
-        var ignore = ['lat', 'lng', 'value'];
-
-        // Concat with the options if available
-        ignore = ignore.concat(options.ignore || []);
-
-        // Append view elements
-        // self.content.append($('<h6>').addClass('latlngView'));
-        // self.content.append($('<dl>').addClass('deflist'));
 
         // Create the default template
         /*jshint multistr: true */
@@ -1650,12 +1744,6 @@ niclabs.insight.info.SummaryBlock = (function($) {
         // Create the default summary if provided
         //if (options.data) self.summary(options.data);
         if (options.data) self.refresh(options.data);
-
-        // Listen for map events
-        niclabs.insight.event.on('map_element_selected', function(data) {
-            self.data(data);
-            self.refresh(data);
-        });
 
         return self;
     };
