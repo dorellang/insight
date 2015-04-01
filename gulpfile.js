@@ -47,7 +47,7 @@ gulp.task('sass', function () {
 });
 
 gulp.task('css', ['sass'], function () {
-    gulp.src('dist/*.css')
+    gulp.src('dist/insight.css')
         .pipe(cssmin())
         .pipe(rename('insight.min.css'))
         .pipe(gulp.dest('dist'));
