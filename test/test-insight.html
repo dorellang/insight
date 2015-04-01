@@ -26,12 +26,43 @@
             height: 100%;
         }
     </style>
+    <style type="text/css">
+        .Pie {
+            fill: red;
+        }
+
+        .Pie:nth-child(2) {
+            fill: yellow;
+        }
+
+        .Pie:nth-child(3) {
+            fill: orange;
+        }
+
+        .Pie:nth-child(4) {
+            fill: green;
+        }
+
+        .Pie:nth-child(5) {
+            fill: SteelBlue;
+        }
+
+        .Pie:nth-child(6) {
+            fill: gray;
+        }
+
+        .Pie:nth-child(7) {
+            fill: aqua;
+        }
+    </style>
     <link rel="stylesheet" type="text/css" href="css/insight.css">
     <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
 
     <script type="text/javascript" src="js/chartist.min.js"></script>
     <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?v="></script>
+    <script type="text/javascript" src="js/chartist.min.js"></script>
+
 
     <script type="text/javascript" src="js/insight.js"></script>
 
@@ -42,8 +73,12 @@
     <div id="dashboard"></div>
 
     <script type="text/html" id="template">
-        The marker <span data-if="lat">in the location (<span data-bind="lat">0</span>, <span data-bind="lng">0</span>)</span>
-        shows the landmark <span data-bind="landmark">landmark</span>
+        The marker
+        <span data-if="lat">in the location (
+            <span data-bind="lat">0</span>,
+            <span data-bind="lng">0</span>)</span>
+        shows the landmark
+        <span data-bind="landmark">landmark</span>
     </script>
 
     <script type="text/javascript">
@@ -55,10 +90,17 @@
 
         dashboard.filter({
             description: 'Landmark', // the empty string is used if not provided
-            options: [
-                {name: 'Not Eiffel Tower', filter: function(data) { return data.landmark.indexOf("Eiffel") < 0; }},
-                {name: 'Not Champ de Mars', filter: function(data) { return data.landmark.indexOf("Mars") < 0; }},
-            ]
+            options: [{
+                name: 'Not Eiffel Tower',
+                filter: function(data) {
+                    return data.landmark.indexOf("Eiffel") < 0;
+                }
+            }, {
+                name: 'Not Champ de Mars',
+                filter: function(data) {
+                    return data.landmark.indexOf("Mars") < 0;
+                }
+            }, ]
         });
 
         niclabs.insight.info({
@@ -67,11 +109,47 @@
                 'handler': 'summary-block',
                 'id': '#summary',
                 'title': 'My Marker Summary',
-                'template': '#template',
+                //'template': '#template',
                 'data': {
                     'description': 'This block will show the details of the selected markers'
+                }
+            }, {
+                'handler': 'chartist-barchart',
+                'id': '#MyBarChart',
+                'title': 'Visitors using a Bar Chart.',
+                'chartist': {
+                    'class': 'ct-chart',
+                    'labels': ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    'options': {
+                        'seriesBarDistance': 10
+                    }
+                }
+            }, {
+                'handler': 'chartist-piechart',
+                'id': '#MyPieChart',
+                'title': 'Visitors using a Pie chart.',
+                'chartist': {
+                    'class': 'ct-chart',
+                    'labels': function(data) {
+                        var label = [];
+                        for (var i = 0; i < data.length; i++) {
+                            label[label.length] = Math.floor(data[i].data / 1000) + "K";
+                        }
+                        return label;
+                    },
                 },
-                ignore: ['layer', 'type', 'src']
+                'preprocess': function(data) {
+                    data.value = data.value[0];
+                    var d = [];
+                    for (var i = 0; i < data.value.length; i++) {
+                        d[d.length] = {
+                            'data': data.value[i],
+                            'className': 'Pie'
+                        };
+                    }
+                    data.value = d;
+                    return data;
+                }
             }]
         });
 
@@ -85,14 +163,45 @@
         niclabs.insight.layer({
             handler: 'marker-layer',
             data: [{
-                'lat': 48.8556,
-                'lng': 2.2986,
-                'landmark': 'Champ de Mars'
+                'lat': 48.860611,
+                'lng': 2.337644,
+                'landmark': 'Musée du Louvre',
+                'value': [
+                    [2237, 4650, 5221, 8089, 2970, 2847, 9059]
+                ],
+                'note': 'This are not the actual number of visitors.'
             }, {
-                'lat': 48.8583,
-                'lng': 2.2944,
-                'landmark': 'Eiffel Tower',
-                'fun-fact': 'Was built in 1889.'
+                'lat': 48.859961,
+                'lng': 2.326561,
+                'landmark': 'Musée d’Orsay',
+                'value': [
+                    [8971, 10724, 5257, 2434, 10583, 9038, 5240]
+                ],
+                'note': 'This are not the actual number of visitors.'
+            }, {
+                'lat': 48.873792,
+                'lng': 2.295028,
+                'landmark': 'L’Arc de Triomphe',
+                'value': [
+                    [9679, 10777, 9417, 1521, 6218, 1740, 2490]
+                ],
+                'note': 'This are not the actual number of visitors.'
+            }, {
+                'lat': 48.852968,
+                'lng': 2.349902,
+                'landmark': 'Cathédrale Notre-Dame',
+                'value': [
+                    [9806, 10989, 8219, 1503, 3847, 2007, 10751]
+                ],
+                'note': 'This are not the actual number of visitors.'
+            }, {
+                'lat': 48.85837,
+                'lng': 2.294481,
+                'landmark': 'Tour Eiffel',
+                'value': [
+                    [3576, 10255, 2112, 5716, 9728, 10805, 6082]
+                ],
+                'note': 'This are not the actual number of visitors.'
             }],
             marker: {
                 'type': 'image-marker',
