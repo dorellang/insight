@@ -80,13 +80,13 @@ niclabs.insight.info.Block = (function($) {
         // Listen for map events
         niclabs.insight.event.on('map_element_selected', function(data) {
             self.data(data);
-            self.refresh(data);
+            self.refresh();
         });
 
         // Listen for summary events
         niclabs.insight.event.on('layer_summary', function(summary) {
             self.data(summary.data);
-            self.refresh(summary.data);
+            self.refresh();
         });
 
         // Block data
@@ -168,7 +168,7 @@ niclabs.insight.info.Block = (function($) {
              * @returns {Object} the current data in the blokc
              */
             data: function (d) {
-                d = typeof d === 'undefined' ? data : d;
+                if (typeof d === 'undefined') return data;
 
                 // If the object is empty we cleanup the internal data
                 if (Object.keys(d).length === 0)
