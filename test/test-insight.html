@@ -140,16 +140,20 @@
                     },
                 },
                 'preprocess': function(data) {
-                    data.value = data.value[0];
-                    var d = [];
-                    for (var i = 0; i < data.value.length; i++) {
-                        d[d.length] = {
-                            'data': data.value[i],
-                            'className': 'Pie'
-                        };
+                    var obj = $.extend(true, {}, data);
+
+                    obj.value = obj.value[0];
+                    var series = [];
+                    for (var i = 0; i < obj.value.length; i++) {
+                        series.push({
+                            data: obj.value[i],
+                            className: 'Pie'
+                        });
                     }
-                    data.value = d;
-                    return data;
+
+                    obj.value = series;
+
+                    return obj;
                 }
             }]
         });
