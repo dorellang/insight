@@ -17,6 +17,11 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
     * [insight.info([obj])](#niclabs.insight.info(2))
     * [insight.layer(obj, [activate])](#niclabs.insight.layer(2))
     * [insight.map([obj])](#niclabs.insight.map(2))
+    * [insight.event](#niclabs.insight.event)
+      * [event.on(event, listener)](#niclabs.insight.event.on)
+      * [event.off(event, listener)](#niclabs.insight.event.off)
+      * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
+      * [callback: event~listener](#niclabs.insight.event..listener)
     * [insight.info](#niclabs.insight.info)
       * [class: info.Block](#niclabs.insight.info.Block)
         * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
@@ -32,12 +37,14 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
       * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
         * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
-    * [insight.event](#niclabs.insight.event)
-      * [event.on(event, listener)](#niclabs.insight.event.on)
-      * [event.off(event, listener)](#niclabs.insight.event.off)
-      * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
-      * [callback: event~listener](#niclabs.insight.event..listener)
     * [insight.layer](#niclabs.insight.layer)
+      * [class: layer.HeatmapLayer](#niclabs.insight.layer.HeatmapLayer)
+        * [new layer.HeatmapLayer(dashboard, options)](#new_niclabs.insight.layer.HeatmapLayer)
+        * [HeatmapLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.HeatmapLayer.layer.draw)
+        * [HeatmapLayer.layer.clear()](#niclabs.insight.layer.HeatmapLayer.layer.clear)
+        * [HeatmapLayer.layer.filter(fn)](#niclabs.insight.layer.HeatmapLayer.layer.filter)
+        * [event: "layer_data"](#niclabs.insight.layer.HeatmapLayer#event_layer_data)
+        * [event: "layer_sumary"](#niclabs.insight.layer.HeatmapLayer#event_layer_sumary)
       * [class: layer.Layer](#niclabs.insight.layer.Layer)
         * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
         * [Layer.id](#niclabs.insight.layer.Layer.id)
@@ -56,6 +63,15 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
         * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
     * [insight.map](#niclabs.insight.map)
+      * [map.heatmap](#niclabs.insight.map.heatmap)
+        * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
+          * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
+          * [Heatmap.map](#niclabs.insight.map.heatmap.Heatmap.map)
+          * [Heatmap.layer](#niclabs.insight.map.heatmap.Heatmap.layer)
+        * [class: heatmap.PointHeatmap](#niclabs.insight.map.heatmap.PointHeatmap)
+          * [new heatmap.PointHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.PointHeatmap)
+          * [PointHeatmap.self.clear()](#niclabs.insight.map.heatmap.PointHeatmap.self.clear)
+          * [type: PointHeatmap.Data](#niclabs.insight.map.heatmap.PointHeatmap.Data)
       * [map.marker](#niclabs.insight.map.marker)
         * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
           * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
@@ -65,6 +81,7 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
           * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
           * [Marker.map](#niclabs.insight.map.marker.Marker.map)
           * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
+          * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
           * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
           * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
           * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
@@ -128,6 +145,11 @@ understand what is going on in the city
   * [insight.info([obj])](#niclabs.insight.info(2))
   * [insight.layer(obj, [activate])](#niclabs.insight.layer(2))
   * [insight.map([obj])](#niclabs.insight.map(2))
+  * [insight.event](#niclabs.insight.event)
+    * [event.on(event, listener)](#niclabs.insight.event.on)
+    * [event.off(event, listener)](#niclabs.insight.event.off)
+    * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
+    * [callback: event~listener](#niclabs.insight.event..listener)
   * [insight.info](#niclabs.insight.info)
     * [class: info.Block](#niclabs.insight.info.Block)
       * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
@@ -143,12 +165,14 @@ understand what is going on in the city
       * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
     * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
       * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
-  * [insight.event](#niclabs.insight.event)
-    * [event.on(event, listener)](#niclabs.insight.event.on)
-    * [event.off(event, listener)](#niclabs.insight.event.off)
-    * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
-    * [callback: event~listener](#niclabs.insight.event..listener)
   * [insight.layer](#niclabs.insight.layer)
+    * [class: layer.HeatmapLayer](#niclabs.insight.layer.HeatmapLayer)
+      * [new layer.HeatmapLayer(dashboard, options)](#new_niclabs.insight.layer.HeatmapLayer)
+      * [HeatmapLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.HeatmapLayer.layer.draw)
+      * [HeatmapLayer.layer.clear()](#niclabs.insight.layer.HeatmapLayer.layer.clear)
+      * [HeatmapLayer.layer.filter(fn)](#niclabs.insight.layer.HeatmapLayer.layer.filter)
+      * [event: "layer_data"](#niclabs.insight.layer.HeatmapLayer#event_layer_data)
+      * [event: "layer_sumary"](#niclabs.insight.layer.HeatmapLayer#event_layer_sumary)
     * [class: layer.Layer](#niclabs.insight.layer.Layer)
       * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
       * [Layer.id](#niclabs.insight.layer.Layer.id)
@@ -167,6 +191,15 @@ understand what is going on in the city
       * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
       * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
   * [insight.map](#niclabs.insight.map)
+    * [map.heatmap](#niclabs.insight.map.heatmap)
+      * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
+        * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
+        * [Heatmap.map](#niclabs.insight.map.heatmap.Heatmap.map)
+        * [Heatmap.layer](#niclabs.insight.map.heatmap.Heatmap.layer)
+      * [class: heatmap.PointHeatmap](#niclabs.insight.map.heatmap.PointHeatmap)
+        * [new heatmap.PointHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.PointHeatmap)
+        * [PointHeatmap.self.clear()](#niclabs.insight.map.heatmap.PointHeatmap.self.clear)
+        * [type: PointHeatmap.Data](#niclabs.insight.map.heatmap.PointHeatmap.Data)
     * [map.marker](#niclabs.insight.map.marker)
       * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
         * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
@@ -176,6 +209,7 @@ understand what is going on in the city
         * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
         * [Marker.map](#niclabs.insight.map.marker.Marker.map)
         * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
+        * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
         * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
         * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
         * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
@@ -348,6 +382,71 @@ var map = niclabs.insight.map({
 });
 ```
 
+<a name="niclabs.insight.event"></a>
+###insight.event
+Very basic event manager for the dashboard
+
+**Example**  
+```javascript
+// Subscribe to the event
+var eventId = niclabs.insight.event.on('hello', function(who) {
+     alert("HELLO "+who+"!!!");
+});
+
+// Trigger the event
+niclabs.insight.event.trigger('hello', "John"); // Shows alert 'HELLO John!!!'
+
+// Unsubscribe
+niclabs.insight.event.off('hello', eventId);
+```
+
+**Members**
+
+* [insight.event](#niclabs.insight.event)
+  * [event.on(event, listener)](#niclabs.insight.event.on)
+  * [event.off(event, listener)](#niclabs.insight.event.off)
+  * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
+  * [callback: event~listener](#niclabs.insight.event..listener)
+
+<a name="niclabs.insight.event.on"></a>
+####event.on(event, listener)
+Listen for an event. A listener callback can only be assigned once for an event
+
+**Params**
+
+- event `string` - event type  
+- listener <code>[listener](#niclabs.insight.event..listener)</code> - callback to process the event  
+
+**Returns**: `number` - id of the listener  
+<a name="niclabs.insight.event.off"></a>
+####event.off(event, listener)
+Stop listening for an event.
+
+**Params**
+
+- event `string` - event type  
+- listener <code>[listener](#niclabs.insight.event..listener)</code> | `number` - callback to remove or id of the listener provided by `niclabs.insight.event.on()`  
+
+**Returns**: `boolean` - true if the listener was found and was succesfully removed  
+<a name="niclabs.insight.event.trigger"></a>
+####event.trigger(event, [data])
+Trigger an event
+
+**Params**
+
+- event `string` - event type  
+- \[data\] `Object` - data to pass to the callback  
+
+<a name="niclabs.insight.event..listener"></a>
+####callback: event~listener
+Insight event listener
+
+**Params**
+
+- data `Object` - data for the callback function, dependant on the event  
+
+**Scope**: inner typedef of [event](#niclabs.insight.event)  
+**Type**: `function`  
 <a name="niclabs.insight.info"></a>
 ###insight.info
 Contains the definitions for the information blocks supported by insight
@@ -478,10 +577,10 @@ Configuration options for chartist charts
 
 **Params**
 
-  - class `Object` - chartist css class  
-  - labels `Object` - chart labels  
-  - \[options\] `Object` - chartist options  
-  - \[responsiveOptions\] `Object` - chartist responsive options  
+- class `Object` - chartist css class  
+- labels `Object` - chart labels  
+- \[options\] `Object` - chartist options  
+- \[responsiveOptions\] `Object` - chartist responsive options  
 
 **Type**: `Object`  
 <a name="niclabs.insight.info.SummaryBlock"></a>
@@ -508,71 +607,6 @@ TODO: describe what is a summary information block
   - \[data\] `Object` - default data for the summary  
 
 **Extends**: `niclabs.insight.info.Block`  
-<a name="niclabs.insight.event"></a>
-###insight.event
-Very basic event manager for the dashboard
-
-**Example**  
-```javascript
-// Subscribe to the event
-var eventId = niclabs.insight.event.on('hello', function(who) {
-     alert("HELLO "+who+"!!!");
-});
-
-// Trigger the event
-niclabs.insight.event.trigger('hello', "John"); // Shows alert 'HELLO John!!!'
-
-// Unsubscribe
-niclabs.insight.event.off('hello', eventId);
-```
-
-**Members**
-
-* [insight.event](#niclabs.insight.event)
-  * [event.on(event, listener)](#niclabs.insight.event.on)
-  * [event.off(event, listener)](#niclabs.insight.event.off)
-  * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
-  * [callback: event~listener](#niclabs.insight.event..listener)
-
-<a name="niclabs.insight.event.on"></a>
-####event.on(event, listener)
-Listen for an event. A listener callback can only be assigned once for an event
-
-**Params**
-
-- event `string` - event type  
-- listener <code>[listener](#niclabs.insight.event..listener)</code> - callback to process the event  
-
-**Returns**: `number` - id of the listener  
-<a name="niclabs.insight.event.off"></a>
-####event.off(event, listener)
-Stop listening for an event.
-
-**Params**
-
-- event `string` - event type  
-- listener <code>[listener](#niclabs.insight.event..listener)</code> | `number` - callback to remove or id of the listener provided by `niclabs.insight.event.on()`  
-
-**Returns**: `boolean` - true if the listener was found and was succesfully removed  
-<a name="niclabs.insight.event.trigger"></a>
-####event.trigger(event, [data])
-Trigger an event
-
-**Params**
-
-- event `string` - event type  
-- \[data\] `Object` - data to pass to the callback  
-
-<a name="niclabs.insight.event..listener"></a>
-####callback: event~listener
-Insight event listener
-
-**Params**
-
-- data `Object` - data for the callback function, dependant on the event  
-
-**Scope**: inner typedef of [event](#niclabs.insight.event)  
-**Type**: `function`  
 <a name="niclabs.insight.layer"></a>
 ###insight.layer
 Visualization layers for the dashboard
@@ -580,6 +614,13 @@ Visualization layers for the dashboard
 **Members**
 
 * [insight.layer](#niclabs.insight.layer)
+  * [class: layer.HeatmapLayer](#niclabs.insight.layer.HeatmapLayer)
+    * [new layer.HeatmapLayer(dashboard, options)](#new_niclabs.insight.layer.HeatmapLayer)
+    * [HeatmapLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.HeatmapLayer.layer.draw)
+    * [HeatmapLayer.layer.clear()](#niclabs.insight.layer.HeatmapLayer.layer.clear)
+    * [HeatmapLayer.layer.filter(fn)](#niclabs.insight.layer.HeatmapLayer.layer.filter)
+    * [event: "layer_data"](#niclabs.insight.layer.HeatmapLayer#event_layer_data)
+    * [event: "layer_sumary"](#niclabs.insight.layer.HeatmapLayer#event_layer_sumary)
   * [class: layer.Layer](#niclabs.insight.layer.Layer)
     * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
     * [Layer.id](#niclabs.insight.layer.Layer.id)
@@ -598,6 +639,77 @@ Visualization layers for the dashboard
     * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
     * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
 
+<a name="niclabs.insight.layer.HeatmapLayer"></a>
+####class: layer.HeatmapLayer
+**Extends**: `niclabs.insight.layer.Layer`  
+**Members**
+
+* [class: layer.HeatmapLayer](#niclabs.insight.layer.HeatmapLayer)
+  * [new layer.HeatmapLayer(dashboard, options)](#new_niclabs.insight.layer.HeatmapLayer)
+  * [HeatmapLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.HeatmapLayer.layer.draw)
+  * [HeatmapLayer.layer.clear()](#niclabs.insight.layer.HeatmapLayer.layer.clear)
+  * [HeatmapLayer.layer.filter(fn)](#niclabs.insight.layer.HeatmapLayer.layer.filter)
+  * [event: "layer_data"](#niclabs.insight.layer.HeatmapLayer#event_layer_data)
+  * [event: "layer_sumary"](#niclabs.insight.layer.HeatmapLayer#event_layer_sumary)
+
+<a name="new_niclabs.insight.layer.HeatmapLayer"></a>
+#####new layer.HeatmapLayer(dashboard, options)
+Construct a new heatmap layer
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this layer belongs to  
+- options `Object` - configuration options for the layer  
+  - id `string` - identifier for the layer  
+  - data `string` | `Array.<Object>` - uri or data array for the layer  
+  - \[heatmap\] `Object` - options for the heatmap  
+
+**Extends**: `niclabs.insight.layer.Layer`  
+<a name="niclabs.insight.layer.HeatmapLayer.layer.draw"></a>
+#####HeatmapLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])
+Draw the heatmap according to the internal data on the map
+
+**Params**
+
+- data `Array.<Object>` - data to draw  
+- data[].lat `float` - latitude for the marker  
+- data[].lng `float` - longitude for the marker  
+- \[data[].description\] `string` - description for the marker  
+
+<a name="niclabs.insight.layer.HeatmapLayer.layer.clear"></a>
+#####HeatmapLayer.layer.clear()
+Clear the heatmap from the map
+
+<a name="niclabs.insight.layer.HeatmapLayer.layer.filter"></a>
+#####HeatmapLayer.layer.filter(fn)
+Filter the layer according to the provided function.
+
+**Params**
+
+- fn `niclabs.insight.layer.Layer~Filter` - filtering function  
+
+<a name="niclabs.insight.layer.HeatmapLayer#event_layer_data"></a>
+#####event: "layer_data"
+Event triggered when an update to the layer data (filtering/update) has ocurred
+
+**Properties**
+
+- id `string` - id for the layer to which the data belongs to  
+- data `Array.<Object>` - new data array  
+
+**Type**: `object`  
+<a name="niclabs.insight.layer.HeatmapLayer#event_layer_sumary"></a>
+#####event: "layer_sumary"
+Event triggered when an update to the (filtering/update) has ocurred
+
+The event provides summary data for blocks to show
+
+**Properties**
+
+- id `string` - id for the layer to which the data belongs to  
+- data `Array.<Object>` - new data array  
+
+**Type**: `object`  
 <a name="niclabs.insight.layer.Layer"></a>
 ####class: layer.Layer
 **Members**
@@ -777,6 +889,15 @@ Map compatibility for the insight dashboard
 **Members**
 
 * [insight.map](#niclabs.insight.map)
+  * [map.heatmap](#niclabs.insight.map.heatmap)
+    * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
+      * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
+      * [Heatmap.map](#niclabs.insight.map.heatmap.Heatmap.map)
+      * [Heatmap.layer](#niclabs.insight.map.heatmap.Heatmap.layer)
+    * [class: heatmap.PointHeatmap](#niclabs.insight.map.heatmap.PointHeatmap)
+      * [new heatmap.PointHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.PointHeatmap)
+      * [PointHeatmap.self.clear()](#niclabs.insight.map.heatmap.PointHeatmap.self.clear)
+      * [type: PointHeatmap.Data](#niclabs.insight.map.heatmap.PointHeatmap.Data)
   * [map.marker](#niclabs.insight.map.marker)
     * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
       * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
@@ -786,6 +907,7 @@ Map compatibility for the insight dashboard
       * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
       * [Marker.map](#niclabs.insight.map.marker.Marker.map)
       * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
+      * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
       * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
       * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
       * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
@@ -798,6 +920,91 @@ Map compatibility for the insight dashboard
     * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
     * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
 
+<a name="niclabs.insight.map.heatmap"></a>
+####map.heatmap
+Tools for drawing heatmaps on the map
+
+**Members**
+
+* [map.heatmap](#niclabs.insight.map.heatmap)
+  * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
+    * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
+    * [Heatmap.map](#niclabs.insight.map.heatmap.Heatmap.map)
+    * [Heatmap.layer](#niclabs.insight.map.heatmap.Heatmap.layer)
+  * [class: heatmap.PointHeatmap](#niclabs.insight.map.heatmap.PointHeatmap)
+    * [new heatmap.PointHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.PointHeatmap)
+    * [PointHeatmap.self.clear()](#niclabs.insight.map.heatmap.PointHeatmap.self.clear)
+    * [type: PointHeatmap.Data](#niclabs.insight.map.heatmap.PointHeatmap.Data)
+
+<a name="niclabs.insight.map.heatmap.Heatmap"></a>
+#####class: heatmap.Heatmap
+**Members**
+
+* [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
+  * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
+  * [Heatmap.map](#niclabs.insight.map.heatmap.Heatmap.map)
+  * [Heatmap.layer](#niclabs.insight.map.heatmap.Heatmap.layer)
+
+<a name="new_niclabs.insight.map.heatmap.Heatmap"></a>
+######new heatmap.Heatmap(dashboard, options)
+Construct a heatmap over the map
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this marker belongs to  
+- options `Object` - configuration options for the heatmap  
+
+<a name="niclabs.insight.map.heatmap.Heatmap.map"></a>
+######Heatmap.map
+Map view where the heatmap belongs to
+
+**Type**: [MapView](#niclabs.insight.MapView)  
+<a name="niclabs.insight.map.heatmap.Heatmap.layer"></a>
+######Heatmap.layer
+Layer to which the heatmap belongs to
+
+**Type**: [Layer](#niclabs.insight.layer.Layer)  
+<a name="niclabs.insight.map.heatmap.PointHeatmap"></a>
+#####class: heatmap.PointHeatmap
+**Members**
+
+* [class: heatmap.PointHeatmap](#niclabs.insight.map.heatmap.PointHeatmap)
+  * [new heatmap.PointHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.PointHeatmap)
+  * [PointHeatmap.self.clear()](#niclabs.insight.map.heatmap.PointHeatmap.self.clear)
+  * [type: PointHeatmap.Data](#niclabs.insight.map.heatmap.PointHeatmap.Data)
+
+<a name="new_niclabs.insight.map.heatmap.PointHeatmap"></a>
+######new heatmap.PointHeatmap(dashboard, options)
+Draw a point base heatmap over the map
+
+In a point based heatmap, each data point is a location with an optional
+weight. A heatmap point is drawn for each location with the provided configuration
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this marker belongs to  
+- options `Object` - configuration options for the heatmap  
+  - data <code>[Array.&lt;Data&gt;](#niclabs.insight.map.heatmap.PointHeatmap.Data)</code> - array of points to draw the heatmap  
+  - dissipating `boolean` - Specifies whether heatmaps dissipate on zoom. When dissipating is false the radius of influence increases with zoom level to ensure that the color intensity is preserved at any given geographic location. Defaults to false.  
+  - gradient `Array.<string>` - The color gradient of the heatmap, specified as an array of CSS color strings. All CSS3 colors — including RGBA — are supported except for extended named colors and HSL(A) values.  
+  - radius `integer` - The radius of influence for each data point, in pixels.  
+  - opacity: `float` - The opacity of the heatmap, expressed as a number between 0 and 1.  
+
+<a name="niclabs.insight.map.heatmap.PointHeatmap.self.clear"></a>
+######PointHeatmap.self.clear()
+Clear the map
+
+<a name="niclabs.insight.map.heatmap.PointHeatmap.Data"></a>
+######type: PointHeatmap.Data
+Data point for PointHeatmap
+
+**Params**
+
+- lat `float` - latitude for the heatmap point  
+- lng `float` - longitude for the heatmap point  
+- \[weight\] `float` - weight for the heatmap point  
+
+**Type**: `Object`  
 <a name="niclabs.insight.map.marker"></a>
 ####map.marker
 Collection of markers available for drawing on the map
@@ -813,6 +1020,7 @@ Collection of markers available for drawing on the map
     * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
     * [Marker.map](#niclabs.insight.map.marker.Marker.map)
     * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
+    * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
     * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
     * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
     * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
@@ -870,6 +1078,7 @@ An image marker includes an image for each waypoint
   * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
   * [Marker.map](#niclabs.insight.map.marker.Marker.map)
   * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
+  * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
   * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
   * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
   * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
@@ -895,6 +1104,10 @@ Map view where the map belongs to
 Layer to which the marker belongs to
 
 **Type**: [Layer](#niclabs.insight.layer.Layer)  
+<a name="niclabs.insight.map.marker.Marker.clear"></a>
+######Marker.clear()
+Clear the heatmap from the map
+
 <a name="niclabs.insight.map.marker.Marker.marker"></a>
 ######Marker.marker()
 Return the internal marker object associated with this Marker
