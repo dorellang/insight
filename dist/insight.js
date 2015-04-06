@@ -456,12 +456,6 @@ niclabs.insight.Dashboard = (function($) {
         // Append the dashboard to the container
         $(anchor).append(container);
 
-        // Create the filter bar
-        var filterBar = niclabs.insight.FilterBar();
-
-        // Append the filter bar
-        container.append(filterBar.element);
-
         var layers = {};
         var numberedLayers = 0;
         var activeLayer;
@@ -477,12 +471,6 @@ niclabs.insight.Dashboard = (function($) {
         var infoView = {};
         var mapView = {};
 
-        // Create an event to be notified of a filter change
-        niclabs.insight.event.on('filter_changed', function(f) {
-            $.each(layers, function(name, layer) {
-                layer.filter(f);
-            });
-        });
 
         // Listen for changes in the layer data
         niclabs.insight.event.on('layer_data', function(obj) {
@@ -692,6 +680,20 @@ niclabs.insight.Dashboard = (function($) {
             }
         };
 
+
+        // Create the filter bar
+        var filterBar = niclabs.insight.FilterBar(self);
+
+        // Append the filter bar
+        container.append(filterBar.element);
+
+        // Create an event to be notified of a filter change
+        niclabs.insight.event.on('filter_changed', function(f) {
+            $.each(layers, function(name, layer) {
+                layer.filter(f);
+            });
+        });
+
         return self;
     };
 })(jQuery);
@@ -745,7 +747,7 @@ niclabs.insight.FilterBar = (function($) {
         container.append($('<div>').addClass('filter').append(search));
 
         var geocode = function() {
-            var map = CityDashboard.container('main')[0].data;
+            var map = dashboard.map().googlemap();
             var address = search.val();
             geocoder.geocode({
                 'address': address
@@ -2043,7 +2045,7 @@ niclabs.insight.layer.Layer = (function($) {
                          * @event niclabs.insight.layer.Layer#layer_sumary
                          * @type {object}
                          * @property {string} id - id for the layer to which the data belongs to
-                         * @property {Object[]} data - new data array
+                         * @property {Object} data - summarized data
                          */
                         niclabs.insight.event.trigger('layer_summary', {
                             'id': id,

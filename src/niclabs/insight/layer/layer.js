@@ -121,7 +121,7 @@ niclabs.insight.layer.Layer = (function($) {
                          * @event niclabs.insight.layer.Layer#layer_sumary
                          * @type {object}
                          * @property {string} id - id for the layer to which the data belongs to
-                         * @property {Object[]} data - new data array
+                         * @property {Object} data - summarized data
                          */
                         niclabs.insight.event.trigger('layer_summary', {
                             'id': id,

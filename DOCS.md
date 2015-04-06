@@ -707,7 +707,7 @@ The event provides summary data for blocks to show
 **Properties**
 
 - id `string` - id for the layer to which the data belongs to  
-- data `Array.<Object>` - new data array  
+- data `Object` - summarized data  
 
 **Type**: `object`  
 <a name="niclabs.insight.layer.Layer"></a>
@@ -809,7 +809,7 @@ The event provides summary data for blocks to show
 **Properties**
 
 - id `string` - id for the layer to which the data belongs to  
-- data `Array.<Object>` - new data array  
+- data `Object` - summarized data  
 
 **Type**: `object`  
 <a name="niclabs.insight.layer.MarkerLayer"></a>
@@ -879,7 +879,7 @@ The event provides summary data for blocks to show
 **Properties**
 
 - id `string` - id for the layer to which the data belongs to  
-- data `Array.<Object>` - new data array  
+- data `Object` - summarized data  
 
 **Type**: `object`  
 <a name="niclabs.insight.map"></a>
