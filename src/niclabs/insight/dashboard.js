@@ -35,12 +35,6 @@ niclabs.insight.Dashboard = (function($) {
         // Append the dashboard to the container
         $(anchor).append(container);
 
-        // Create the filter bar
-        var filterBar = niclabs.insight.FilterBar();
-
-        // Append the filter bar
-        container.append(filterBar.element);
-
         var layers = {};
         var numberedLayers = 0;
         var activeLayer;
@@ -56,12 +50,6 @@ niclabs.insight.Dashboard = (function($) {
         var infoView = {};
         var mapView = {};
 
-        // Create an event to be notified of a filter change
-        niclabs.insight.event.on('filter_changed', function(f) {
-            $.each(layers, function(name, layer) {
-                layer.filter(f);
-            });
-        });
 
         // Listen for changes in the layer data
         niclabs.insight.event.on('layer_data', function(obj) {
@@ -270,6 +258,20 @@ niclabs.insight.Dashboard = (function($) {
                 if (activeLayer) activeLayer.clear();
             }
         };
+
+
+        // Create the filter bar
+        var filterBar = niclabs.insight.FilterBar(self);
+
+        // Append the filter bar
+        container.append(filterBar.element);
+
+        // Create an event to be notified of a filter change
+        niclabs.insight.event.on('filter_changed', function(f) {
+            $.each(layers, function(name, layer) {
+                layer.filter(f);
+            });
+        });
 
         return self;
     };

@@ -47,7 +47,7 @@ niclabs.insight.FilterBar = (function($) {
         container.append($('<div>').addClass('filter').append(search));
 
         var geocode = function() {
-            var map = CityDashboard.container('main')[0].data;
+            var map = dashboard.map().googlemap();
             var address = search.val();
             geocoder.geocode({
                 'address': address
