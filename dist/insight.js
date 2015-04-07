@@ -1371,7 +1371,15 @@ niclabs.insight.info.Block = (function($) {
      * @param {string=} options.title - title for the block
      * @param {boolean} [options.closable=true] - make the block closable
      * @param {boolean} [options.movable=true] - make the block movable
-     * @param {Object=} options.data - default data for the block
+     * @param {Object|Object[]|Function|String} [options.data] - data for the block,
+     *  it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
+     *  or a url where to get the data. If a layer is provided, events from the layer ({@link niclabs.insight.MapView#map_element_selected},
+     *  {@link niclabs.insight.layer.Layer#layer_sumary}) will update the data in the block. If no data is provided, it is assumed
+     *  that all layers affect the block and events from all layers will update the block data. If data depends on a layer
+     *  options.defaults can be used to set the default data
+     * @param {Function} options.preprocess - function to apply on the data (either from an url or a layer) before refreshing the block
+     * @param {Object|Object[]} [options.defaults] - when the data depends on a layer, defaults sets the initial data to show
+     *  in the block
      */
     var constructor = function(dashboard, options) {
         if (!('id' in options)) {
@@ -1430,6 +1438,30 @@ niclabs.insight.info.Block = (function($) {
         // Add the properties to the block style
         container.css(properties);
 
+        var mapListener;
+        var layerListener;
+
+        // Listen to events
+        function listen(self, layer) {
+            // Listen for map events
+            mapListener = niclabs.insight.event.on('map_element_selected', function(data) {
+                if (layer && data.layer !== layer) return;
+                self.refresh(self.__data__(data));
+            });
+
+            // Listen for summary events
+            layerListener = niclabs.insight.event.on('layer_summary', function(summary) {
+                if (layer && summary.id !== layer) return;
+                self.refresh(self.__data__(summary.data));
+            });
+        }
+
+        // Stop listening
+        function unlisten(self) {
+            niclabs.insight.event.off('map_element_selected', mapListener);
+            niclabs.insight.event.off('layer_summary', layerListener);
+        }
+
         // checkbox handling
         // TODO: this is not a generic functionality?
         // var checkbox_handler = options['checkbox-handler'] || function (a, d) { return d; };
@@ -1437,21 +1469,8 @@ niclabs.insight.info.Block = (function($) {
         // if (options.checkbox)
         //     this.addCheckbox(options.checkbox);
 
-        // Listen for map events
-        niclabs.insight.event.on('map_element_selected', function(data) {
-            self.data(data);
-            self.refresh();
-        });
-
-        // Listen for summary events
-        niclabs.insight.event.on('layer_summary', function(summary) {
-            self.data(summary.data);
-            self.refresh();
-        });
-
-        // Block data
-        var data = options.data || {};
-
+        var data = {};
+        var layer;
         var self = {
             /**
              * id of the block
@@ -1487,6 +1506,16 @@ niclabs.insight.info.Block = (function($) {
             },
 
             /**
+             * Layer id
+             *
+             * @memberof niclabs.insight.info.Block
+             * @member {jQuery}
+             */
+            get layer () {
+                return layer;
+            },
+
+            /**
              * jQuery element for the content container
              *
              * The content of the block is the HTML container that
@@ -1516,6 +1545,26 @@ niclabs.insight.info.Block = (function($) {
             },
 
             /**
+             * Set/get the internal data value.
+             *
+             * @access protected
+             * @memberof niclabs.insight.info.Block
+             * @param {Object|Object[]} [data] - data for the block
+             * @param {Object} value for the internal data
+             */
+            __data__: function(obj) {
+                if (typeof obj === 'undefined') return data;
+
+                // If the object is empty we cleanup the internal data
+                if (Object.keys(obj).length === 0)
+                    data = {};
+                else
+                    data = preprocess(obj);
+
+                return data;
+            },
+
+            /**
              * Trigger the removal of the block
              */
             remove: remove,
@@ -1524,19 +1573,44 @@ niclabs.insight.info.Block = (function($) {
              * Set/get the data for the block
              *
              * @memberof niclabs.insight.info.Block
-             * @param {Object=} data - data for the block
-             * @returns {Object} the current data in the blokc
+             * @name data
+             * @param {Object|Object[]|Function|String} [options.data] - data for the block,
+             *  it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
+             *  or a url where to get the data. If a layer is provided, events from the layer ({@link niclabs.insight.MapView#map_element_selected},
+             *  {@link niclabs.insight.layer.Layer#layer_sumary}) will update the data in the block. If no data is provided, it is assumed
+             *  that all layers affect the block and events from all layers will update the block data. If data depends on a layer
+             *  options.defaults can be used to set the default data.
+             * @returns {Object} the current data in the block or the url for the data if the data has not been loaded yet
              */
-            data: function (d) {
-                if (typeof d === 'undefined') return data;
+            data: function(obj) {
+                if (typeof obj === 'undefined') return data;
 
-                // If the object is empty we cleanup the internal data
-                if (Object.keys(d).length === 0)
-                    data = {};
-                else
-                    data = preprocess(d);
+                // Unset the layer
+                layer = undefined;
 
-                return data;
+                // Stop listening for events
+                unlisten(self);
+
+                if (typeof obj === 'string') {
+                    if (obj.charAt(0) === '#') {
+                        layer = obj.substring(1);
+                        data = options.defaults || {};
+
+                        // Listen for map events
+                        listen(self, layer);
+
+                        return data;
+                    }
+
+                    // Assume the string is a URL
+                    $.getJSON(obj, self.__data__);
+                    return obj; // TODO: what should we return?
+                }
+
+                if (typeof obj === 'function')
+                    return self.__data__(obj.call(self));
+
+                return self.__data__(obj);
             },
 
             /**
@@ -1549,6 +1623,17 @@ niclabs.insight.info.Block = (function($) {
             refresh: function (data) {
             },
         };
+
+        if ('data' in options) {
+            self.data(options.data);
+        }
+        else  {
+            // Listen for all events
+            listen(self);
+
+            // Set default value
+            data = options.defaults || {};
+        }
 
         return self;
     };
@@ -1636,7 +1721,15 @@ niclabs.insight.info.ChartistBlock = (function($) {
      * @param {niclabs.insight.info.ChartistBlock.Chartist} options.chartist - chartist configuration
      * @param {boolean} [options.closable=true] - make the block closable
      * @param {boolean} [options.movable=true] - make the block movable
-     * @param {Object=} options.data - default data for the summary
+     * @param {Object|Object[]|Function|String} [options.data] - data for the block,
+     *  it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
+     *  or a url where to get the data. If a layer is provided, events from the layer ({@link niclabs.insight.MapView#map_element_selected},
+     *  {@link niclabs.insight.layer.Layer#layer_sumary}) will update the data in the block. If no data is provided, it is assumed
+     *  that all layers affect the block and events from all layers will update the block data. If data depends on a layer
+     *  options.defaults can be used to set the default data
+     * @param {Function} options.preprocess - function to apply on the data (either from an url or a layer) before refreshing the block
+     * @param {Object|Object[]} [options.defaults] - when the data depends on a layer, defaults sets the initial data to show
+     *  in the block
      */
      var ChartistBlock = function (dashboard, constructor, options) {
          var self = niclabs.insight.info.Block(dashboard, options);
@@ -1676,9 +1769,6 @@ niclabs.insight.info.ChartistBlock = (function($) {
              }
          };
 
-         if (options.data) self.refresh(options.data);
-
-
          var remove = self.remove;
 
          // Override remove method
@@ -1688,6 +1778,10 @@ niclabs.insight.info.ChartistBlock = (function($) {
 
              chart.detach();
          };
+
+         // Refresh the block
+         // TODO: what if the data comes from a url that has not finished loading yet?
+         self.refresh();
 
          return self;
      };
@@ -1729,7 +1823,15 @@ niclabs.insight.info.SummaryBlock = (function($) {
      * @param {string=} options.title - title for the block
      * @param {boolean} [options.closable=true] - make the block closable
      * @param {boolean} [options.movable=true] - make the block movable
-     * @param {Object=} options.data - default data for the summary
+     * @param {Object|Object[]|Function|String} [options.data] - data for the block,
+     *  it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
+     *  or a url where to get the data. If a layer is provided, events from the layer ({@link niclabs.insight.MapView#map_element_selected},
+     *  {@link niclabs.insight.layer.Layer#layer_sumary}) will update the data in the block. If no data is provided, it is assumed
+     *  that all layers affect the block and events from all layers will update the block data. If data depends on a layer
+     *  options.defaults can be used to set the default data
+     * @param {Function} options.preprocess - function to apply on the data (either from an url or a layer) before refreshing the block
+     * @param {Object|Object[]} [options.defaults] - when the data depends on a layer, defaults sets the initial data to show
+     *  in the block
      */
     var SummaryBlock = function(dashboard, options) {
         var self = niclabs.insight.info.Block(dashboard, options);
@@ -1771,8 +1873,7 @@ niclabs.insight.info.SummaryBlock = (function($) {
         };
 
         // Create the default summary if provided
-        //if (options.data) self.summary(options.data);
-        if (options.data) self.refresh(options.data);
+        self.refresh();
 
         return self;
     };
@@ -2675,7 +2776,7 @@ niclabs.insight.map.marker.Marker = (function($) {
             /**
              * Get/activate clickable status for the marker
              *
-             * When clicked the marker will trigger a {@link niclabs.insight.map.marker.Marker#marker_pressed} event
+             * When clicked the marker will trigger a {@link niclabs.insight.MapView#map_element_selected} event
              * with the particular data for the marker
              *
              * @memberof niclabs.insight.map.marker.Marker

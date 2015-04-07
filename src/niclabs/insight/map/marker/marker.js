@@ -61,7 +61,7 @@ niclabs.insight.map.marker.Marker = (function($) {
             /**
              * Get/activate clickable status for the marker
              *
-             * When clicked the marker will trigger a {@link niclabs.insight.map.marker.Marker#marker_pressed} event
+             * When clicked the marker will trigger a {@link niclabs.insight.MapView#map_element_selected} event
              * with the particular data for the marker
              *
              * @memberof niclabs.insight.map.marker.Marker
