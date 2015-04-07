@@ -107,11 +107,21 @@
             handler: 'basic-info-view',
             blocks: [{
                 'handler': 'summary-block',
+                'id': '#description',
+                'title': 'Insight',
+                'closable': false,
+                //'template': '#template',
+                'data': {
+                    'description': 'This block is not affected by map events'
+                }
+            },
+            {
+                'handler': 'summary-block',
                 'id': '#summary',
                 'title': 'My Marker Summary',
                 'closable': false,
                 //'template': '#template',
-                'data': {
+                'defaults': {
                     'description': 'This block will show the details of the selected markers'
                 }
             }, {

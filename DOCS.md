@@ -28,9 +28,11 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [Block.id](#niclabs.insight.info.Block.id)
         * [Block.element](#niclabs.insight.info.Block.element)
         * [Block.$](#niclabs.insight.info.Block.$)
+        * [Block.layer](#niclabs.insight.info.Block.layer)
         * [Block.content](#niclabs.insight.info.Block.content)
+        * [Block.data](#niclabs.insight.info.Block.data)
         * [Block.remove()](#niclabs.insight.info.Block.remove)
-        * [Block.data([data])](#niclabs.insight.info.Block.data)
+        * [Block.__data__([data], value)](#niclabs.insight.info.Block.__data__)
         * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
       * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
         * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
@@ -156,9 +158,11 @@ understand what is going on in the city
       * [Block.id](#niclabs.insight.info.Block.id)
       * [Block.element](#niclabs.insight.info.Block.element)
       * [Block.$](#niclabs.insight.info.Block.$)
+      * [Block.layer](#niclabs.insight.info.Block.layer)
       * [Block.content](#niclabs.insight.info.Block.content)
+      * [Block.data](#niclabs.insight.info.Block.data)
       * [Block.remove()](#niclabs.insight.info.Block.remove)
-      * [Block.data([data])](#niclabs.insight.info.Block.data)
+      * [Block.__data__([data], value)](#niclabs.insight.info.Block.__data__)
       * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
     * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
       * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
@@ -459,9 +463,11 @@ Contains the definitions for the information blocks supported by insight
     * [Block.id](#niclabs.insight.info.Block.id)
     * [Block.element](#niclabs.insight.info.Block.element)
     * [Block.$](#niclabs.insight.info.Block.$)
+    * [Block.layer](#niclabs.insight.info.Block.layer)
     * [Block.content](#niclabs.insight.info.Block.content)
+    * [Block.data](#niclabs.insight.info.Block.data)
     * [Block.remove()](#niclabs.insight.info.Block.remove)
-    * [Block.data([data])](#niclabs.insight.info.Block.data)
+    * [Block.__data__([data], value)](#niclabs.insight.info.Block.__data__)
     * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
   * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
     * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
@@ -478,9 +484,11 @@ Contains the definitions for the information blocks supported by insight
   * [Block.id](#niclabs.insight.info.Block.id)
   * [Block.element](#niclabs.insight.info.Block.element)
   * [Block.$](#niclabs.insight.info.Block.$)
+  * [Block.layer](#niclabs.insight.info.Block.layer)
   * [Block.content](#niclabs.insight.info.Block.content)
+  * [Block.data](#niclabs.insight.info.Block.data)
   * [Block.remove()](#niclabs.insight.info.Block.remove)
-  * [Block.data([data])](#niclabs.insight.info.Block.data)
+  * [Block.__data__([data], value)](#niclabs.insight.info.Block.__data__)
   * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
 
 <a name="new_niclabs.insight.info.Block"></a>
@@ -495,7 +503,15 @@ Construct a information block
   - \[title\] `string` - title for the block  
   - \[closable=true\] `boolean` - make the block closable  
   - \[movable=true\] `boolean` - make the block movable  
-  - \[data\] `Object` - default data for the block  
+  - \[data\] `Object` | `Array.<Object>` | `function` | `String` - data for the block,
+ it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
+ or a url where to get the data. If a layer is provided, events from the layer (`niclabs.insight.MapView#map_element_selected`,
+ `niclabs.insight.layer.Layer#layer_sumary`) will update the data in the block. If no data is provided, it is assumed
+ that all layers affect the block and events from all layers will update the block data. If data depends on a layer
+ options.defaults can be used to set the default data  
+  - preprocess `function` - function to apply on the data (either from an url or a layer) before refreshing the block  
+  - \[defaults\] `Object` | `Array.<Object>` - when the data depends on a layer, defaults sets the initial data to show
+ in the block  
 
 <a name="niclabs.insight.info.Block.id"></a>
 #####Block.id
@@ -512,6 +528,11 @@ HTML DOM element for the block container
 jQuery object for info block container
 
 **Type**: `jQuery`  
+<a name="niclabs.insight.info.Block.layer"></a>
+#####Block.layer
+Layer id
+
+**Type**: `jQuery`  
 <a name="niclabs.insight.info.Block.content"></a>
 #####Block.content
 jQuery element for the content container
@@ -520,21 +541,36 @@ The content of the block is the HTML container that
 comes after the block title
 
 **Type**: `jQuery`  
+<a name="niclabs.insight.info.Block.data"></a>
+#####Block.data
+Set/get the data for the block
+
+**Params**
+
+  - \[data\] `Object` | `Array.<Object>` | `function` | `String` - data for the block,
+ it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
+ or a url where to get the data. If a layer is provided, events from the layer (`niclabs.insight.MapView#map_element_selected`,
+ `niclabs.insight.layer.Layer#layer_sumary`) will update the data in the block. If no data is provided, it is assumed
+ that all layers affect the block and events from all layers will update the block data. If data depends on a layer
+ options.defaults can be used to set the default data.  
+
+**Returns**: `Object` - the current data in the block or the url for the data if the data has not been loaded yet  
 <a name="niclabs.insight.info.Block.remove"></a>
 #####Block.remove()
 Remove the block from the dashboard.
 This method triggers an event to alert all elements of the
 dashboard of the block removal
 
-<a name="niclabs.insight.info.Block.data"></a>
-#####Block.data([data])
-Set/get the data for the block
+<a name="niclabs.insight.info.Block.__data__"></a>
+#####Block.__data__([data], value)
+Set/get the internal data value.
 
 **Params**
 
-- \[data\] `Object` - data for the block  
+- \[data\] `Object` | `Array.<Object>` - data for the block  
+- value `Object` - for the internal data  
 
-**Returns**: `Object` - the current data in the blokc  
+**Access**: protected  
 <a name="niclabs.insight.info.Block.refresh"></a>
 #####Block.refresh([data])
 Refresh the block using the provided data
@@ -568,7 +604,15 @@ For the configuration options see [http://gionkunz.github.io/chartist-js/](http:
   - chartist <code>[Chartist](#niclabs.insight.info.ChartistBlock.Chartist)</code> - chartist configuration  
   - \[closable=true\] `boolean` - make the block closable  
   - \[movable=true\] `boolean` - make the block movable  
-  - \[data\] `Object` - default data for the summary  
+  - \[data\] `Object` | `Array.<Object>` | `function` | `String` - data for the block,
+ it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
+ or a url where to get the data. If a layer is provided, events from the layer (`niclabs.insight.MapView#map_element_selected`,
+ `niclabs.insight.layer.Layer#layer_sumary`) will update the data in the block. If no data is provided, it is assumed
+ that all layers affect the block and events from all layers will update the block data. If data depends on a layer
+ options.defaults can be used to set the default data  
+  - preprocess `function` - function to apply on the data (either from an url or a layer) before refreshing the block  
+  - \[defaults\] `Object` | `Array.<Object>` - when the data depends on a layer, defaults sets the initial data to show
+ in the block  
 
 **Extends**: `niclabs.insight.info.Block`  
 <a name="niclabs.insight.info.ChartistBlock.Chartist"></a>
@@ -604,7 +648,15 @@ TODO: describe what is a summary information block
   - \[title\] `string` - title for the block  
   - \[closable=true\] `boolean` - make the block closable  
   - \[movable=true\] `boolean` - make the block movable  
-  - \[data\] `Object` - default data for the summary  
+  - \[data\] `Object` | `Array.<Object>` | `function` | `String` - data for the block,
+ it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
+ or a url where to get the data. If a layer is provided, events from the layer (`niclabs.insight.MapView#map_element_selected`,
+ `niclabs.insight.layer.Layer#layer_sumary`) will update the data in the block. If no data is provided, it is assumed
+ that all layers affect the block and events from all layers will update the block data. If data depends on a layer
+ options.defaults can be used to set the default data  
+  - preprocess `function` - function to apply on the data (either from an url or a layer) before refreshing the block  
+  - \[defaults\] `Object` | `Array.<Object>` - when the data depends on a layer, defaults sets the initial data to show
+ in the block  
 
 **Extends**: `niclabs.insight.info.Block`  
 <a name="niclabs.insight.layer"></a>
@@ -1117,7 +1169,7 @@ Return the internal marker object associated with this Marker
 ######Marker.clickable([activate])
 Get/activate clickable status for the marker
 
-When clicked the marker will trigger a `niclabs.insight.map.marker.Marker#marker_pressed` event
+When clicked the marker will trigger a `niclabs.insight.MapView#map_element_selected` event
 with the particular data for the marker
 
 **Params**
