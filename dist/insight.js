@@ -740,7 +740,7 @@ niclabs.insight.ElementList = (function() {
          * @param {string|number|Object|niclabs.insight.Element} obj - element id to get or configuration options for the new element
          * @returns {niclabs.insight.ElementList} - newly created element
          */
-        self.elem = function(obj) {
+        self.element = function(obj) {
             if (typeof obj == 'string') return elements[obj];
             if (typeof obj == 'number') return elements[elementId(obj)];
 
@@ -780,6 +780,24 @@ niclabs.insight.ElementList = (function() {
                 iterator(key, elements[key]);
             }
         };
+
+        /**
+         * Delete the element with specified id from the list
+         *
+         * @memberof niclabs.insight.ElementList
+         * @param {string|integer} id - identifier for the element
+         * @returns {niclabs.insight.Element} removed element
+         */
+        self.remove = function(id) {
+            if (typeof obj == 'number') id = elementId(id);
+            if (id in elements) {
+                var elem = elements[id];
+                delete elements[id];
+                return elem;
+            }
+        };
+
+        return self;
     };
 
     return ElementList;
@@ -984,6 +1002,7 @@ niclabs.insight.InfoView = (function($) {
      * about the visualization in general
      *
      * @class niclabs.insight.InfoView
+     * @extends {niclabs.insight.UiElement}
      * @param {niclabs.insight.Dashboard} dashboard - dashboard to assign this info view to
      * @param {Object} options - list of configuration options for the information view
      */
@@ -991,12 +1010,13 @@ niclabs.insight.InfoView = (function($) {
         // Default visualization property list
         options = options || {};
 
-        var infoViewId = "#insight-info-view";
+        var infoViewId = options.id || "insight-info-view";
+
+
+        var element = niclabs.insight.UiElement({id: infoViewId});
 
         // Create the info view
-        var container = $('<div>')
-            .setID(infoViewId)
-            .addClass('info');
+        element.$.addClass('info');
 
         if (dashboard.config('layout') !== 'none') {
             var resizeOrientation;
@@ -1007,19 +1027,10 @@ niclabs.insight.InfoView = (function($) {
             else if (dashboard.config('layout') === 'right') {
                 resizeOrientation = 'w';
             }
-            container.resizable(resizeOrientation);
+            element.$.resizable(resizeOrientation);
         }
 
-        var numberedBlocks = 0;
-        var blocks = {};
-
-        /**
-         * Get a new block id for an block without id
-         */
-        function blockId(index) {
-            index = typeof index === 'undefined' ? numberedBlocks++ : index;
-            return 'block' + index;
-        }
+        var blocks = niclabs.insight.ElementList(dashboard);
 
         /**
          * Add/get a block from the info view
@@ -1035,27 +1046,14 @@ niclabs.insight.InfoView = (function($) {
          * @param {string|number|Object| niclabs.insight.info.Block} obj - block id to get or configuration options for the new block
          * @returns {niclabs.insight.info.Block} - newly created block
          */
-        function block(obj) {
-            if (typeof obj == 'string') return blocks[obj];
-            if (typeof obj == 'number') return blocks[blockId(obj)];
-
-            var blk, id;
-            if ('handler' in obj) {
-                id = obj.id = obj.id || blockId();
-                blk = niclabs.insight.handler(obj.handler)(self, obj);
-            }
-            else {
-                blk = obj;
-                id = blk.id;
-            }
-
-            blocks[id] = blk;
+        element.block = function(obj) {
+            var blk = blocks.element(obj);
 
             // Append block to container
-            container.append(blk.element);
+            element.$.append(blk.element);
 
             return blk;
-        }
+        };
 
         // For index
         var i;
@@ -1063,142 +1061,22 @@ niclabs.insight.InfoView = (function($) {
         // Create the blocks in the options list
         if (options.blocks) {
             for (i = 0; i < options.blocks.length; i++) {
-                block(options.blocks[i]);
+                element.block(options.blocks[i]);
             }
         }
 
         // Add a resize handler
-        container.on('resize', function(e) {
-            for (var key in blocks) {
-                blocks[key].refresh();
-            }
+        element.$.on('resize', function(e) {
+            blocks.each(function(key, block) {
+                block.refresh();
+            });
         });
 
         // Perform cleanup on block removal
         niclabs.insight.event.on('remove-block', function(obj) {
-            delete blocks[obj.id];
-            //var index = $.inArray(dataSourceTable[obj['data-source']], obj.id);
-            //dataSourceTable[obj['data-source']].splice(index, 1);
+            blocks.remove(obj.id);
         });
-
-        // var visualizations = {};
-        // var dataSourceTable = {};
-
-        // /**
-        //  * Create a visualization according to the type provided in
-        //  * props.visualization
-        //  *
-        //  * TODO: there must be a better way to do this
-        //  *
-        //  * @param (Object) props properties for the visualization
-        //  * @return (Object) visualization after data is loaded
-        //  */
-        // function createVisualization(props) {
-        //     var type = props.visualization;
-        //
-        //     var callback = function(pr) {
-        //         var viz;
-        //
-        //         if (!type)
-        //             return;
-        //
-        //         else if (type === 'summary-viz')
-        //             viz = new CityDashboard.SummaryVisualization(pr);
-        //         else if (type === 'linechart-viz')
-        //             // TODO: check that the library is loaded first
-        //             viz = new CityDashboard.ChartistVisualization(pr, Chartist.Line);
-        //         else if (type === 'barchart-viz')
-        //             viz = new CityDashboard.ChartistVisualization(pr, Chartist.Bar);
-        //         else if (type === 'piechart-viz')
-        //             viz = new CityDashboard.ChartistVisualization(pr, Chartist.Pie);
-        //         else if (type === 'd3-viz')
-        //             viz = new CityDashboard.D3Visualization(pr);
-        //         else if (type === 'general-viz')
-        //             viz = new CityDashboard.GeneralVisualization(pr);
-        //
-        //         visualizations[viz.id] = viz;
-        //         dataSourceTable[viz.data_source] = dataSourceTable[viz.data_source] || [];
-        //         dataSourceTable[viz.data_source].push(viz);
-        //
-        //         return viz;
-        //     };
-        //
-        //     return CityDashboard.getData(props['data-source'], callback, props);
-        // }
-
-        // // Get the window element
-        // var infoWindow = CityDashboard.container('info');
-
-        // var handler = function(event, arg) {
-        //     infoWindow.off('marker-pressed');
-        //
-        //     if (arg.attr.id && !(arg.attr.id in visualizations)) {
-        //         var config = $.extend({}, arg.attr);
-        //         config.data = arg.value;
-        //         config['data-source'] = arg.id;
-        //         // {
-        //         //   'visualization': arg['attr']['visualization'],
-        //         //   'id': arg['attr']['id'],
-        //         //   'data-source': arg['id'],
-        //         //   'data': arg.value,
-        //         //   'preprocess': arg['attr']['preprocess'],
-        //         //   'title': arg['attr']['title'],
-        //         //   'properties': arg['attr']['properties'],
-        //         //   'labels': arg['attr']['labels'],
-        //         //   'checkbox': arg['attr']['checkbox'],
-        //         //   'checkbox-handler': arg['attr']['checkbox-handler'],
-        //         //   'viz': arg['attr']['viz']
-        //         // };
-        //
-        //         createVisualization(config);
-        //     }
-        //
-        //     var vizs = dataSourceTable[arg.id] || [];
-        //     for (var i = vizs.length - 1; i >= 0; i--) {
-        //         vizs[i].setData(arg.value);
-        //         vizs[i].refresh();
-        //     }
-        //
-        //     infoWindow.on('marker-pressed', handler);
-        // };
-
-        // // Add the handler
-        // infoWindow.on('marker-pressed', handler);
-        //
-
-        var self = {
-            /**
-             * HTML DOM element for the information view container
-             *
-             * @memberof niclabs.insight.InfoView
-             * @member {Element}
-             */
-            get element () {
-                var c = $(infoViewId);
-                container = c.length === 0 ? container : c;
-                return container[0];
-            },
-
-            /**
-             * jQuery object for info view container
-             *
-             * @memberof niclabs.insight.InfoView
-             * @member {jQuery}
-             */
-            $: function() {
-                var c = $(infoViewId);
-                container = c.length === 0 ? container : c;
-                return container;
-            },
-
-            /**
-             * Add/get a block from the info view
-             */
-            block: block,
-
-        };
-
-        return self;
+        return element;
     };
 
     // Register the info view constructor
