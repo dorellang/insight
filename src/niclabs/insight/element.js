@@ -1,6 +1,6 @@
 niclabs.insight.Element = (function($) {
     /**
-     * Construct a UI element
+     * Construct a generic insight element
      *
      * @class niclabs.insight.Element
      * @param {Object} options - configuration options for the element
@@ -16,52 +16,16 @@ niclabs.insight.Element = (function($) {
             throw Error("The UI element id must be at least 1 character long and cannot contain the following characters ['#','.',' ', '\'', '\"'])");
         }
 
-        var node = $('<div>').attr('id', id);
-
-        var self = {
+        return {
+            /**
+             * Identifier for the insight element
+             *
+             * @memberof niclabs.insight.Element
+             * @member {string}
+             */
             get id () {
                 return id;
             },
-
-            /**
-             * jQuery object for the DOM representation of this Element
-             *
-             * @memberof niclabs.insight.Element
-             * @member {jQuery}
-             */
-            get $() {
-                // Try to get the id from the document if it has been attached
-                var n = $('#' + id);
-
-                // Otherwise return the unattached node
-                node = n.length === 0 ? node : n;
-
-                return node;
-            },
-
-            /**
-             * HTML DOM node for this Element
-             *
-             * @memberof niclabs.insight.Element
-             * @member {Element}
-             */
-            get element () {
-                return self.$[0];
-            },
-
-            /**
-             * Append an element to the end of this element
-             *
-             * @memberof niclabs.insight.Element
-             * @param {niclabs.insight.Element} element - element to append
-             * @return {niclabs.insight.Element} reference to this element
-             */
-            append: function(element) {
-                self.$.append(element.$);
-
-                return self;
-            }
-
         };
     };
 
