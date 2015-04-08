@@ -65,12 +65,6 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
         * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
     * [insight.map](#niclabs.insight.map)
-      * [map.graph](#niclabs.insight.map.graph)
-        * [class: graph.Graph](#niclabs.insight.map.graph.Graph)
-          * [new graph.Graph(dashboard, options)](#new_niclabs.insight.map.graph.Graph)
-          * [Graph.map](#niclabs.insight.map.graph.Graph.map)
-          * [Graph.layer](#niclabs.insight.map.graph.Graph.layer)
-          * [Graph.clear()](#niclabs.insight.map.graph.Graph.clear)
       * [map.heatmap](#niclabs.insight.map.heatmap)
         * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
           * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
@@ -205,12 +199,6 @@ understand what is going on in the city
       * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
       * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
   * [insight.map](#niclabs.insight.map)
-    * [map.graph](#niclabs.insight.map.graph)
-      * [class: graph.Graph](#niclabs.insight.map.graph.Graph)
-        * [new graph.Graph(dashboard, options)](#new_niclabs.insight.map.graph.Graph)
-        * [Graph.map](#niclabs.insight.map.graph.Graph.map)
-        * [Graph.layer](#niclabs.insight.map.graph.Graph.layer)
-        * [Graph.clear()](#niclabs.insight.map.graph.Graph.clear)
     * [map.heatmap](#niclabs.insight.map.heatmap)
       * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
         * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
@@ -961,12 +949,6 @@ Map compatibility for the insight dashboard
 **Members**
 
 * [insight.map](#niclabs.insight.map)
-  * [map.graph](#niclabs.insight.map.graph)
-    * [class: graph.Graph](#niclabs.insight.map.graph.Graph)
-      * [new graph.Graph(dashboard, options)](#new_niclabs.insight.map.graph.Graph)
-      * [Graph.map](#niclabs.insight.map.graph.Graph.map)
-      * [Graph.layer](#niclabs.insight.map.graph.Graph.layer)
-      * [Graph.clear()](#niclabs.insight.map.graph.Graph.clear)
   * [map.heatmap](#niclabs.insight.map.heatmap)
     * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
       * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
@@ -1001,52 +983,6 @@ Map compatibility for the insight dashboard
     * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
     * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
     * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
-
-<a name="niclabs.insight.map.graph"></a>
-####map.graph
-Tools for drawing graphs on the map
-
-**Members**
-
-* [map.graph](#niclabs.insight.map.graph)
-  * [class: graph.Graph](#niclabs.insight.map.graph.Graph)
-    * [new graph.Graph(dashboard, options)](#new_niclabs.insight.map.graph.Graph)
-    * [Graph.map](#niclabs.insight.map.graph.Graph.map)
-    * [Graph.layer](#niclabs.insight.map.graph.Graph.layer)
-    * [Graph.clear()](#niclabs.insight.map.graph.Graph.clear)
-
-<a name="niclabs.insight.map.graph.Graph"></a>
-#####class: graph.Graph
-**Members**
-
-* [class: graph.Graph](#niclabs.insight.map.graph.Graph)
-  * [new graph.Graph(dashboard, options)](#new_niclabs.insight.map.graph.Graph)
-  * [Graph.map](#niclabs.insight.map.graph.Graph.map)
-  * [Graph.layer](#niclabs.insight.map.graph.Graph.layer)
-  * [Graph.clear()](#niclabs.insight.map.graph.Graph.clear)
-
-<a name="new_niclabs.insight.map.graph.Graph"></a>
-######new graph.Graph(dashboard, options)
-Construct a Graph over the map
-
-**Params**
-
-- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this marker belongs to  
-- options `Object` - configuration options for the graph  
-
-<a name="niclabs.insight.map.graph.Graph.map"></a>
-######Graph.map
-Map view where the graph belongs to
-
-**Type**: [MapView](#niclabs.insight.MapView)  
-<a name="niclabs.insight.map.graph.Graph.layer"></a>
-######Graph.layer
-Layer to which the graph belongs to
-
-**Type**: [Layer](#niclabs.insight.layer.Layer)  
-<a name="niclabs.insight.map.graph.Graph.clear"></a>
-######Graph.clear()
-Clear the graph from the map
 
 <a name="niclabs.insight.map.heatmap"></a>
 ####map.heatmap

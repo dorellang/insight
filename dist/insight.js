@@ -698,6 +698,76 @@ niclabs.insight.Dashboard = (function($) {
     };
 })(jQuery);
 
+niclabs.insight.Element = (function($) {
+    /**
+     * Construct a UI element
+     *
+     * @class niclabs.insight.Element
+     * @param {Object} options - configuration options for the element
+     * @param {String} options.id - identifier for the element
+     */
+    var Element = function(options) {
+        if (!('id' in options)) {
+            throw Error("All UI elements must define an identifier");
+        }
+
+        var id = options.id;
+        if (!/^[^#. '"]+$/.test(id)) {
+            throw Error("The UI element id must be at least 1 character long and cannot contain the following characters ['#','.',' ', '\'', '\"'])");
+        }
+
+        var node = $('<div>').attr('id', id);
+
+        var self = {
+            get id () {
+                return id;
+            },
+
+            /**
+             * jQuery object for the DOM representation of this Element
+             *
+             * @memberof niclabs.insight.Element
+             * @member {jQuery}
+             */
+            get $() {
+                // Try to get the id from the document if it has been attached
+                var n = $('#' + id);
+
+                // Otherwise return the unattached node
+                node = n.length === 0 ? node : n;
+
+                return node;
+            },
+
+            /**
+             * HTML DOM node for this Element
+             *
+             * @memberof niclabs.insight.Element
+             * @member {Element}
+             */
+            get element () {
+                return self.$[0];
+            },
+
+            /**
+             * Append an element to the end of this element
+             *
+             * @memberof niclabs.insight.Element
+             * @param {niclabs.insight.Element} element - element to append
+             * @return {niclabs.insight.Element} reference to this element
+             */
+            append: function(element) {
+                self.$.append(element.$);
+
+                return self;
+            }
+
+        };
+    };
+
+    return Element;
+})(jQuery);
+
 niclabs.insight.FilterBar = (function($) {
     "use strict";
 
@@ -1939,83 +2009,6 @@ niclabs.insight.layer = (function () {
     return layer;
 })();
 
-niclabs.insight.layer.GraphLayer = (function($) {
-    /**
-     * Construct a new graph layer
-     *
-     */
-    var GraphLayer = function(dashboard, options) {
-        var layer = niclabs.insight.layer.Layer(dashboard, options);
-
-        var graphOptions = options.heatmap || {
-            'type': 'voronoi-graph'
-        };
-
-        function createGraph(data, obj) {
-            var graph;
-            if ('type' in obj) {
-                var attr = {'layer': layer.id, 'data': data};
-
-                // Extend the attributes with the data and the options for the marker
-                $.extend(attr, obj);
-
-                graph = niclabs.insight.handler(obj.type)(dashboard, attr);
-            }
-            else {
-              graph = obj;
-
-                // Should we add a way to pass data to the heatmap?
-            }
-
-            return graph;
-        }
-
-        var graph;
-
-        /**
-         * Draw the heatmap according to the internal data on the map
-         *
-         * @memberof niclabs.insight.layer.GraphLayer
-         * @override
-         * @param {Object[]} data - data to draw
-         * @param {float} data[].lat - latitude for the marker
-         * @param {float} data[].lng - longitude for the marker
-         * @param {string=} data[].description - description for the marker
-         */
-        layer.draw = function(data) {
-            graph = createGraph(data, graphOptions);
-        };
-
-        /**
-         * Clear the graph from the map
-         *
-         * @memberof niclabs.insight.layer.GraphLayer
-         * @override
-         */
-        layer.clear = function() {
-            if (graph) graph.clear();
-        };
-
-        /**
-         * Filter the layer according to the provided function.
-         *
-         * @memberof niclabs.insight.layer.GraphLayer
-         * @override
-         * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
-         */
-        layer.filter = function(fn) {
-            // TODO. not sure if possible
-        };
-
-        return layer;
-    };
-
-    // Register the handler
-    niclabs.insight.handler('graph-layer', 'layer', GraphLayer);
-
-    return GraphLayer;
-})(jQuery);
-
 niclabs.insight.layer.HeatmapLayer = (function($) {
     /**
      * Construct a new heatmap layer
@@ -2522,123 +2515,6 @@ niclabs.insight.map.GoogleMap = (function($) {
     niclabs.insight.handler('google-map', 'map-view', GoogleMap);
 
     return GoogleMap;
-})(jQuery);
-
-/**
- * Tools for drawing graphs on the map
- *
- * @namespace
- */
-niclabs.insight.map.graph = {};
-
-niclabs.insight.map.graph.Graph = (function($) {
-    /**
-     * Construct a Graph over the map
-     *
-     * @class niclabs.insight.map.graph.Graph
-     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
-     * @param {Object} options - configuration options for the graph
-     */
-    var Graph = function(dashboard, options) {
-        if (!('layer' in options))
-            throw new Error('The Graph must be associated to a layer');
-
-        var layer;
-        if (!(layer = dashboard.layer(options.layer)))
-            throw new Error('The layer '+layer+' does not exist in the dashboard');
-
-        var map;
-        if (!(map = dashboard.map()))
-            throw new Error('No map has been initialized for the dashboard yet');
-
-        if (!('googlemap' in map))
-            throw new Error("Graphs are only supported for Google Maps at the moment");
-
-        var self = {
-            /**
-             * Map view where the graph belongs to
-             * @memberof niclabs.insight.map.graph.Graph
-             * @member {niclabs.insight.MapView}
-             */
-            get map () {
-                return map;
-            },
-
-            /**
-             * Layer to which the graph belongs to
-             *
-             * @memberof niclabs.insight.map.graph.Graph
-             * @member {niclabs.insight.layer.Layer}
-             */
-            get layer () {
-                return layer;
-            },
-
-            /**
-             * Clear the graph from the map
-             *
-             * @memberof niclabs.insight.map.graph.Graph
-             */
-            clear: function() {
-            },
-        };
-
-        return self;
-    };
-
-    return Graph;
-})(jQuery);
-
-niclabs.insight.map.graph.VoronoiGraph = (function($) {
-
-    var VoronoiGraph = function(dashboard, options) {
-        if (!('data' in options)) {
-            throw Error('No data provided for the graph');
-        }
-
-        var self = niclabs.insight.map.graph.Graph(dashboard, options);
-
-        /**
-         * Create a google map graph
-         */
-        function googleMapsVoronoiGraph(data) {
-
-            console.log(data);
-            return 1;
-        }
-
-        // Create the graph
-        var graph = googleMapsVoronoiGraph(options.data);
-
-        // Set the options
-
-        // Set the graph
-        graph.setMap(self.map.googlemap());
-
-        // Store the parent
-        var clear = self.clear;
-
-        /**
-         * Clear the map
-         *
-         * @memberof niclabs.insight.map.graph.VoronoiGraph
-         * @overrides
-         */
-        self.clear = function() {
-            // Call the parent
-            clear();
-
-            // Remove the map
-            graph.setMap(null);
-        };
-
-        return self;
-    };
-
-    // Register the handler
-    niclabs.insight.handler('voronoi-graph', 'graph', VoronoiGraph);
-
-    return VoronoiGraph;
 })(jQuery);
 
 /**
