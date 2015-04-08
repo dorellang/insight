@@ -698,9 +698,96 @@ niclabs.insight.Dashboard = (function($) {
     };
 })(jQuery);
 
+niclabs.insight.ElementList = (function() {
+    /**
+     * Construct a list of dashboard elements.
+     *
+     * In a list, children can be added either by passing the object directly
+     * to the {@link niclabs.insight.ElementList.element()} method or by passing the options
+     * for constructing the {@link niclabs.insight.Element}, including the name of the handler.
+     *
+     * The list will lookup the handler in the list of registered handlers and
+     * use it to construct the element
+     *
+     * @class niclabs.insight.ElementList
+     * @extends niclabs.insight.Element
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard where the list belongs to
+     */
+    var ElementList = function(dashboard) {
+        var self = {};
+
+        var elements = {};
+        var numberedElements = 0;
+
+        /**
+         * Get a new block id for an block without id
+         */
+        function elementId(index) {
+            index = typeof index === 'undefined' ? numberedElements++ : index;
+            return '__' + index;
+        }
+
+        /**
+         * Add/get an element from the list
+         *
+         * - If a number or string is provided as value for obj, the element with that id is returned
+         * - If a generic object is provided with the handler defined in the 'handler' property, a new element
+         * is created using the handler and the element is added to the list
+         * - If an object is provided without handler, it is assumed to be a valid insight Element and added to the
+         * list as is.
+         *
+         * @memberof niclabs.insight.ElementList
+         * @param {string|number|Object|niclabs.insight.Element} obj - element id to get or configuration options for the new element
+         * @returns {niclabs.insight.ElementList} - newly created element
+         */
+        self.elem = function(obj) {
+            if (typeof obj == 'string') return elements[obj];
+            if (typeof obj == 'number') return elements[elementId(obj)];
+
+            var elem, id;
+            if ('handler' in obj) {
+                id = obj.id = obj.id || elementId();
+                elem = niclabs.insight.handler(obj.handler)(dashboard, obj);
+            }
+            else {
+                elem = obj;
+                id = elem.id;
+            }
+
+            elements[id] = elem;
+
+            return elem;
+        };
+
+
+        /**
+         * Process a list element
+         *
+         * @callback niclabs.insight.ElementList~iterator
+         * @param {string} key - key for the element
+         * @param {niclabs.insight.Element} element - object associated to the provided key
+         */
+
+
+        /**
+         * Iterate over the elements of the list
+         *
+         * @memberof niclabs.insight.ElementList
+         * @param {niclabs.insight.ElementList~iterator} iterator
+         */
+        self.each = function(iterator) {
+            for (var key in elements) {
+                iterator(key, elements[key]);
+            }
+        };
+    };
+
+    return ElementList;
+})();
+
 niclabs.insight.Element = (function($) {
     /**
-     * Construct a UI element
+     * Construct a generic insight element
      *
      * @class niclabs.insight.Element
      * @param {Object} options - configuration options for the element
@@ -716,52 +803,16 @@ niclabs.insight.Element = (function($) {
             throw Error("The UI element id must be at least 1 character long and cannot contain the following characters ['#','.',' ', '\'', '\"'])");
         }
 
-        var node = $('<div>').attr('id', id);
-
-        var self = {
+        return {
+            /**
+             * Identifier for the insight element
+             *
+             * @memberof niclabs.insight.Element
+             * @member {string}
+             */
             get id () {
                 return id;
             },
-
-            /**
-             * jQuery object for the DOM representation of this Element
-             *
-             * @memberof niclabs.insight.Element
-             * @member {jQuery}
-             */
-            get $() {
-                // Try to get the id from the document if it has been attached
-                var n = $('#' + id);
-
-                // Otherwise return the unattached node
-                node = n.length === 0 ? node : n;
-
-                return node;
-            },
-
-            /**
-             * HTML DOM node for this Element
-             *
-             * @memberof niclabs.insight.Element
-             * @member {Element}
-             */
-            get element () {
-                return self.$[0];
-            },
-
-            /**
-             * Append an element to the end of this element
-             *
-             * @memberof niclabs.insight.Element
-             * @param {niclabs.insight.Element} element - element to append
-             * @return {niclabs.insight.Element} reference to this element
-             */
-            append: function(element) {
-                self.$.append(element.$);
-
-                return self;
-            }
-
         };
     };
 
@@ -1279,6 +1330,75 @@ niclabs.insight.MapView = (function($) {
 			},
 		};
 	};
+})(jQuery);
+
+niclabs.insight.UiElement = (function($) {
+    /**
+     * Construct a UI element
+     *
+     * UI elements have an internal DOM representation to
+     * display on the browser
+     *
+     * @class niclabs.insight.UiElement
+     * @extends niclabs.insight.Element
+     * @param {Object} options - configuration options for the element
+     * @param {String} options.id - identifier for the element
+     */
+    var UiElement = function(options) {
+        var self = niclabs.insight.Element(options);
+
+        var node = $('<div>').attr('id', self.id);
+
+        /**
+         * DOM Element specified by this UiElement
+         *
+         * @memberof niclabs.insight.UiElement
+         * @name $
+         * @member {jQuery}
+         */
+        Object.defineProperty(self, "$", {
+            get: function () {
+                // Try to get the id from the document if it has been attached
+                var n = $('#' + self.id);
+
+                // Otherwise return the unattached node
+                node = n.length === 0 ? node : n;
+
+                return node;
+            }
+        });
+
+        /**
+         * DOM Element specified by this UiElement
+         *
+         * @memberof niclabs.insight.UiElement
+         * @name element
+         * @member {jQuery}
+         */
+        Object.defineProperty(self, "element", {
+            get: function () {
+                return self.$[0];
+            }
+        });
+
+
+        /**
+         * Append an element to the DOM tree of this Ui elemtn
+         *
+         * @memberof niclabs.insight.UiElement
+         * @param {niclabs.insight.UiElement} element - element to append
+         * @return {niclabs.insight.UiElement} reference to this element
+         */
+        self.append = function(element) {
+            self.$.append(element.$);
+
+            return self;
+        };
+
+        return self;
+    };
+
+    return UiElement;
 })(jQuery);
 
 /**
