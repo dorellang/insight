@@ -40,7 +40,7 @@ niclabs.insight.ElementList = (function() {
          * @param {string|number|Object|niclabs.insight.Element} obj - element id to get or configuration options for the new element
          * @returns {niclabs.insight.ElementList} - newly created element
          */
-        self.elem = function(obj) {
+        self.element = function(obj) {
             if (typeof obj == 'string') return elements[obj];
             if (typeof obj == 'number') return elements[elementId(obj)];
 
@@ -80,6 +80,24 @@ niclabs.insight.ElementList = (function() {
                 iterator(key, elements[key]);
             }
         };
+
+        /**
+         * Delete the element with specified id from the list
+         *
+         * @memberof niclabs.insight.ElementList
+         * @param {string|integer} id - identifier for the element
+         * @returns {niclabs.insight.Element} removed element
+         */
+        self.remove = function(id) {
+            if (typeof obj == 'number') id = elementId(id);
+            if (id in elements) {
+                var elem = elements[id];
+                delete elements[id];
+                return elem;
+            }
+        };
+
+        return self;
     };
 
     return ElementList;
