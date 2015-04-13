@@ -79,8 +79,8 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
           * [SegmentHeatmap.self.clear()](#niclabs.insight.map.heatmap.SegmentHeatmap.self.clear)
           * [type: SegmentHeatmap.Data](#niclabs.insight.map.heatmap.SegmentHeatmap.Data)
       * [map.marker](#niclabs.insight.map.marker)
-        * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
-          * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+        * [class: marker.CircleMarker](#niclabs.insight.map.marker.CircleMarker)
+          * [new marker.CircleMarker(dashboard, options)](#new_niclabs.insight.map.marker.CircleMarker)
         * [class: marker.ImageMarker](#niclabs.insight.map.marker.ImageMarker)
           * [new marker.ImageMarker(dashboard, options)](#new_niclabs.insight.map.marker.ImageMarker)
         * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
@@ -213,8 +213,8 @@ understand what is going on in the city
         * [SegmentHeatmap.self.clear()](#niclabs.insight.map.heatmap.SegmentHeatmap.self.clear)
         * [type: SegmentHeatmap.Data](#niclabs.insight.map.heatmap.SegmentHeatmap.Data)
     * [map.marker](#niclabs.insight.map.marker)
-      * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
-        * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+      * [class: marker.CircleMarker](#niclabs.insight.map.marker.CircleMarker)
+        * [new marker.CircleMarker(dashboard, options)](#new_niclabs.insight.map.marker.CircleMarker)
       * [class: marker.ImageMarker](#niclabs.insight.map.marker.ImageMarker)
         * [new marker.ImageMarker(dashboard, options)](#new_niclabs.insight.map.marker.ImageMarker)
       * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
@@ -963,8 +963,8 @@ Map compatibility for the insight dashboard
       * [SegmentHeatmap.self.clear()](#niclabs.insight.map.heatmap.SegmentHeatmap.self.clear)
       * [type: SegmentHeatmap.Data](#niclabs.insight.map.heatmap.SegmentHeatmap.Data)
   * [map.marker](#niclabs.insight.map.marker)
-    * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
-      * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+    * [class: marker.CircleMarker](#niclabs.insight.map.marker.CircleMarker)
+      * [new marker.CircleMarker(dashboard, options)](#new_niclabs.insight.map.marker.CircleMarker)
     * [class: marker.ImageMarker](#niclabs.insight.map.marker.ImageMarker)
       * [new marker.ImageMarker(dashboard, options)](#new_niclabs.insight.map.marker.ImageMarker)
     * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
@@ -1122,8 +1122,8 @@ Collection of markers available for drawing on the map
 **Members**
 
 * [map.marker](#niclabs.insight.map.marker)
-  * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
-    * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+  * [class: marker.CircleMarker](#niclabs.insight.map.marker.CircleMarker)
+    * [new marker.CircleMarker(dashboard, options)](#new_niclabs.insight.map.marker.CircleMarker)
   * [class: marker.ImageMarker](#niclabs.insight.map.marker.ImageMarker)
     * [new marker.ImageMarker(dashboard, options)](#new_niclabs.insight.map.marker.ImageMarker)
   * [class: marker.Marker](#niclabs.insight.map.marker.Marker)
@@ -1138,16 +1138,16 @@ Collection of markers available for drawing on the map
   * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
     * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
 
-<a name="niclabs.insight.map.marker.SimpleMarker"></a>
-#####class: marker.SimpleMarker
+<a name="niclabs.insight.map.marker.CircleMarker"></a>
+#####class: marker.CircleMarker
 **Extends**: `niclabs.insight.map.marker.Marker`  
 **Members**
 
-* [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
-  * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+* [class: marker.CircleMarker](#niclabs.insight.map.marker.CircleMarker)
+  * [new marker.CircleMarker(dashboard, options)](#new_niclabs.insight.map.marker.CircleMarker)
 
-<a name="new_niclabs.insight.map.marker.SimpleMarker"></a>
-######new marker.SimpleMarker(dashboard, options)
+<a name="new_niclabs.insight.map.marker.CircleMarker"></a>
+######new marker.CircleMarker(dashboard, options)
 Constructor for circle markers
 
 Circle markers are drawn in the map as circular waypoints

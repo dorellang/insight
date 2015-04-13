@@ -2742,7 +2742,7 @@ niclabs.insight.map.marker.CircleMarker = (function($) {
      *
      * Circle markers are drawn in the map as circular waypoints
      *
-     * @class niclabs.insight.map.marker.SimpleMarker
+     * @class niclabs.insight.map.marker.CircleMarker
      * @extends niclabs.insight.map.marker.Marker
      * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
      * @param {Object} options - configuration options for the layer
