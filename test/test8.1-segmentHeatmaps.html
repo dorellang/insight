@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <!--
     THIS IS A TEST.
 
     IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW
 
-    SEGMENT HEATMAP
+    HEATMAP
 
     -->
 
-    <title>Test 8 - Segment Heatmap</title>
+    <title>Test 8 - Heatmap</title>
 
     <style>
       html,
@@ -26,102 +26,49 @@
       }
     </style>
 
-    <link rel="stylesheet" type="text/css" href="css/CityDashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/insight.css">
     <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
-    
+
     <script src="js/chartist.min.js"></script>
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization"></script>
 
-    <script src="js/CityDashboard.min.js"></script>
+    <script src="js/insight.js"></script>
 
   </head>
 
   <body><div id="dashboard"></div></body>
 
   <script>
-    // Binding the map and the information window.
-    var myDashboard = new CityDashboard.Dashboard({
-      'anchor': '#dashboard',
-      'layout': 'left'
+    /// Binding the map and the information window.
+    var dashboard = niclabs.insight.dashboard({
+        'anchor': '#dashboard',
+        'layout': 'none'
     });
 
-    // Setting up our map.
-    var map = new CityDashboard.GoogleMap({
-      'lat': -33.442909,
-      'lng': -70.65387,
-      'zoom': 14
+    var map = niclabs.insight.map({
+        'handler': 'google-map',
+        'lat': 48.8583,
+        'lng': 2.2944,
+        'zoom': 15
     });
 
-    // Setting up our information window.
-    var infoWindow = new CityDashboard.InfoWindow({});
-
-    /*var segments = [];
-    var weights = [];
-
-    var maxlat = -33.34;
-    var minlat = -33.54;
-
-    var maxlng = -70.55;
-    var minlng = -70.75;
-
-    for(var i = 0; i < 20; i++) {
-      segments[i] = [];
-      segments[i][0] = {lat: Math.random() * (maxlat - minlat) + minlat,
-                        lng: Math.random() * (maxlng - minlng) + minlng};
-      segments[i][1] = {lat: Math.random() * (maxlat - minlat) + minlat, 
-                        lng: Math.random() * (maxlng - minlng) + minlng};
-      segments[i][2] = {lat: Math.random() * (maxlat - minlat) + minlat,
-                        lng: Math.random() * (maxlng - minlng) + minlng};
-      weights[i] = Math.floor(Math.random() * (4 - 1) + 1);
-    }*/
-
-    var segments = [];
-    var weights = [];
-
-    xmlhttp=new XMLHttpRequest();
-    xmlhttp.open("GET","map.xml",false);
-    xmlhttp.send();
-    xmlDoc=xmlhttp.responseXML;
-
-    var ways = xmlDoc.getElementsByTagName("way");
-    var nways = ways.length;
-
-    for(var i = 0; i < nways; i++) {
-      var segment = [];
-      var tags = ways[i].getElementsByTagName("tag");
-      isStreet = false;
-      for(var b = 0; b < tags.length; b++) {
-        if (ways[i].getElementsByTagName("tag")[0].getAttribute('k') == 'highway') isStreet = true;
-      }
-      if (isStreet) {
-      var nodes = ways[i].getElementsByTagName("nd")
-      var nnodes = nodes.length;
-      var references = [];
-      for(var j = 0; j < nnodes; j++) {
-        var reference = nodes[j].getAttribute('ref');
-        var refnode = xmlDoc.getElementById(reference);
-        var lat = refnode.getAttribute('lat');
-        var lng = refnode.getAttribute('lon');
-        segment.push({lat: lat, lng: lng});
-      }
-      segments.push(segment);
-      weights.push(Math.floor(Math.random() * (4 - 1) + 1));
-      }
-    }
-
-    //console.log(segments.slice(0,1));
-
-    myDashboard
-    .addLayer({
-      'id': '#heatmap',
-      'layer': 'heatmap-layer',
-      'data-source': '#heatmap',
-      'data': [{'segments': segments,
-                'weights': weights
-              }],
-      'layer_attr': {
-        'type': 'segment-heatmap'
+    niclabs.insight.layer({
+        handler: 'heatmap-layer',
+        data: [{
+            'lat': [48.860611, 48.859961, 48.873792],
+            'lng': [2.337644, 2.326561, 2.295028],
+            'landmark': ['L’Arc de Triomphe','Musée D’Orsay','L’Arc de Triomphe'],
+            'weight': 0.1
+        }, {
+            'lat': [48.852968, 48.85837],
+            'lng': [2.349902, 2.294481],
+            'landmark': ['Cathédrale Notre-Dame','Tour Eiffel']
+        }],
+        heatmap: {
+            'type': 'segment-heatmap',
+            'radius': 15,
+            'dissipating': true,
         }
     });
 
