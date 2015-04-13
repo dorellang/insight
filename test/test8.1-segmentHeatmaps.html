@@ -56,14 +56,15 @@
     niclabs.insight.layer({
         handler: 'heatmap-layer',
         data: [{
-            'lat': [48.860611, 48.859961, 48.873792],
-            'lng': [2.337644, 2.326561, 2.295028],
-            'landmark': ['L’Arc de Triomphe','Musée D’Orsay','L’Arc de Triomphe'],
+            'coordinates': [[48.860611, 2.337644],
+                            [48.859961, 2.326561],
+                            [48.873792, 2.295028]],
+            'landmark': 'Street 1',
             'weight': 0.1
         }, {
-            'lat': [48.852968, 48.85837],
-            'lng': [2.349902, 2.294481],
-            'landmark': ['Cathédrale Notre-Dame','Tour Eiffel']
+            'coordinates': [[48.852968, 2.349902],
+                    [48.85837, 2.294481]],
+            'landmark': 'Street 2'
         }],
         heatmap: {
             'type': 'segment-heatmap',

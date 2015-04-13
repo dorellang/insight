@@ -65,11 +65,18 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
         * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
     * [insight.map](#niclabs.insight.map)
+      * [map.graph](#niclabs.insight.map.graph)
+        * [class: graph.Graph](#niclabs.insight.map.graph.Graph)
+          * [new graph.Graph(dashboard, options)](#new_niclabs.insight.map.graph.Graph)
+          * [Graph.map](#niclabs.insight.map.graph.Graph.map)
+          * [Graph.layer](#niclabs.insight.map.graph.Graph.layer)
+          * [Graph.clear()](#niclabs.insight.map.graph.Graph.clear)
       * [map.heatmap](#niclabs.insight.map.heatmap)
         * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
           * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
           * [Heatmap.map](#niclabs.insight.map.heatmap.Heatmap.map)
           * [Heatmap.layer](#niclabs.insight.map.heatmap.Heatmap.layer)
+          * [Heatmap.clear()](#niclabs.insight.map.heatmap.Heatmap.clear)
         * [class: heatmap.PointHeatmap](#niclabs.insight.map.heatmap.PointHeatmap)
           * [new heatmap.PointHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.PointHeatmap)
           * [PointHeatmap.self.clear()](#niclabs.insight.map.heatmap.PointHeatmap.self.clear)
@@ -87,7 +94,6 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
           * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
           * [Marker.map](#niclabs.insight.map.marker.Marker.map)
           * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
-          * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
           * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
           * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
           * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
@@ -199,11 +205,18 @@ understand what is going on in the city
       * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
       * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
   * [insight.map](#niclabs.insight.map)
+    * [map.graph](#niclabs.insight.map.graph)
+      * [class: graph.Graph](#niclabs.insight.map.graph.Graph)
+        * [new graph.Graph(dashboard, options)](#new_niclabs.insight.map.graph.Graph)
+        * [Graph.map](#niclabs.insight.map.graph.Graph.map)
+        * [Graph.layer](#niclabs.insight.map.graph.Graph.layer)
+        * [Graph.clear()](#niclabs.insight.map.graph.Graph.clear)
     * [map.heatmap](#niclabs.insight.map.heatmap)
       * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
         * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
         * [Heatmap.map](#niclabs.insight.map.heatmap.Heatmap.map)
         * [Heatmap.layer](#niclabs.insight.map.heatmap.Heatmap.layer)
+        * [Heatmap.clear()](#niclabs.insight.map.heatmap.Heatmap.clear)
       * [class: heatmap.PointHeatmap](#niclabs.insight.map.heatmap.PointHeatmap)
         * [new heatmap.PointHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.PointHeatmap)
         * [PointHeatmap.self.clear()](#niclabs.insight.map.heatmap.PointHeatmap.self.clear)
@@ -221,7 +234,6 @@ understand what is going on in the city
         * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
         * [Marker.map](#niclabs.insight.map.marker.Marker.map)
         * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
-        * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
         * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
         * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
         * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
@@ -949,11 +961,18 @@ Map compatibility for the insight dashboard
 **Members**
 
 * [insight.map](#niclabs.insight.map)
+  * [map.graph](#niclabs.insight.map.graph)
+    * [class: graph.Graph](#niclabs.insight.map.graph.Graph)
+      * [new graph.Graph(dashboard, options)](#new_niclabs.insight.map.graph.Graph)
+      * [Graph.map](#niclabs.insight.map.graph.Graph.map)
+      * [Graph.layer](#niclabs.insight.map.graph.Graph.layer)
+      * [Graph.clear()](#niclabs.insight.map.graph.Graph.clear)
   * [map.heatmap](#niclabs.insight.map.heatmap)
     * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
       * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
       * [Heatmap.map](#niclabs.insight.map.heatmap.Heatmap.map)
       * [Heatmap.layer](#niclabs.insight.map.heatmap.Heatmap.layer)
+      * [Heatmap.clear()](#niclabs.insight.map.heatmap.Heatmap.clear)
     * [class: heatmap.PointHeatmap](#niclabs.insight.map.heatmap.PointHeatmap)
       * [new heatmap.PointHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.PointHeatmap)
       * [PointHeatmap.self.clear()](#niclabs.insight.map.heatmap.PointHeatmap.self.clear)
@@ -971,7 +990,6 @@ Map compatibility for the insight dashboard
       * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
       * [Marker.map](#niclabs.insight.map.marker.Marker.map)
       * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
-      * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
       * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
       * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
       * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
@@ -984,6 +1002,52 @@ Map compatibility for the insight dashboard
     * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
     * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
 
+<a name="niclabs.insight.map.graph"></a>
+####map.graph
+Tools for drawing graphs on the map
+
+**Members**
+
+* [map.graph](#niclabs.insight.map.graph)
+  * [class: graph.Graph](#niclabs.insight.map.graph.Graph)
+    * [new graph.Graph(dashboard, options)](#new_niclabs.insight.map.graph.Graph)
+    * [Graph.map](#niclabs.insight.map.graph.Graph.map)
+    * [Graph.layer](#niclabs.insight.map.graph.Graph.layer)
+    * [Graph.clear()](#niclabs.insight.map.graph.Graph.clear)
+
+<a name="niclabs.insight.map.graph.Graph"></a>
+#####class: graph.Graph
+**Members**
+
+* [class: graph.Graph](#niclabs.insight.map.graph.Graph)
+  * [new graph.Graph(dashboard, options)](#new_niclabs.insight.map.graph.Graph)
+  * [Graph.map](#niclabs.insight.map.graph.Graph.map)
+  * [Graph.layer](#niclabs.insight.map.graph.Graph.layer)
+  * [Graph.clear()](#niclabs.insight.map.graph.Graph.clear)
+
+<a name="new_niclabs.insight.map.graph.Graph"></a>
+######new graph.Graph(dashboard, options)
+Construct a Graph over the map
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this marker belongs to  
+- options `Object` - configuration options for the graph  
+
+<a name="niclabs.insight.map.graph.Graph.map"></a>
+######Graph.map
+Map view where the graph belongs to
+
+**Type**: [MapView](#niclabs.insight.MapView)  
+<a name="niclabs.insight.map.graph.Graph.layer"></a>
+######Graph.layer
+Layer to which the graph belongs to
+
+**Type**: [Layer](#niclabs.insight.layer.Layer)  
+<a name="niclabs.insight.map.graph.Graph.clear"></a>
+######Graph.clear()
+Clear the graph from the map
+
 <a name="niclabs.insight.map.heatmap"></a>
 ####map.heatmap
 Tools for drawing heatmaps on the map
@@ -995,6 +1059,7 @@ Tools for drawing heatmaps on the map
     * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
     * [Heatmap.map](#niclabs.insight.map.heatmap.Heatmap.map)
     * [Heatmap.layer](#niclabs.insight.map.heatmap.Heatmap.layer)
+    * [Heatmap.clear()](#niclabs.insight.map.heatmap.Heatmap.clear)
   * [class: heatmap.PointHeatmap](#niclabs.insight.map.heatmap.PointHeatmap)
     * [new heatmap.PointHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.PointHeatmap)
     * [PointHeatmap.self.clear()](#niclabs.insight.map.heatmap.PointHeatmap.self.clear)
@@ -1012,6 +1077,7 @@ Tools for drawing heatmaps on the map
   * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
   * [Heatmap.map](#niclabs.insight.map.heatmap.Heatmap.map)
   * [Heatmap.layer](#niclabs.insight.map.heatmap.Heatmap.layer)
+  * [Heatmap.clear()](#niclabs.insight.map.heatmap.Heatmap.clear)
 
 <a name="new_niclabs.insight.map.heatmap.Heatmap"></a>
 ######new heatmap.Heatmap(dashboard, options)
@@ -1032,6 +1098,10 @@ Map view where the heatmap belongs to
 Layer to which the heatmap belongs to
 
 **Type**: [Layer](#niclabs.insight.layer.Layer)  
+<a name="niclabs.insight.map.heatmap.Heatmap.clear"></a>
+######Heatmap.clear()
+Clear the heatmap from the map
+
 <a name="niclabs.insight.map.heatmap.PointHeatmap"></a>
 #####class: heatmap.PointHeatmap
 **Members**
@@ -1110,8 +1180,7 @@ Data segment for SegmentHeatmap
 
 **Params**
 
-- lat `Array.<float>` - latitude array for the heatmap segment  
-- lng `Array.<float>` - longitude array for the heatmap segment  
+- coordinates `Array.<Object>` - array of [lat,lng] coordinates  
 - \[weight\] `float` - weight for the heatmap segment. Defaults to 1.  
 
 **Type**: `Object`  
@@ -1130,7 +1199,6 @@ Collection of markers available for drawing on the map
     * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
     * [Marker.map](#niclabs.insight.map.marker.Marker.map)
     * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
-    * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
     * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
     * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
     * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
@@ -1188,7 +1256,6 @@ An image marker includes an image for each waypoint
   * [new marker.Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker)
   * [Marker.map](#niclabs.insight.map.marker.Marker.map)
   * [Marker.layer](#niclabs.insight.map.marker.Marker.layer)
-  * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
   * [Marker.marker()](#niclabs.insight.map.marker.Marker.marker)
   * [Marker.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
   * [Marker.clear()](#niclabs.insight.map.marker.Marker.clear)
@@ -1214,10 +1281,6 @@ Map view where the map belongs to
 Layer to which the marker belongs to
 
 **Type**: [Layer](#niclabs.insight.layer.Layer)  
-<a name="niclabs.insight.map.marker.Marker.clear"></a>
-######Marker.clear()
-Clear the heatmap from the map
-
 <a name="niclabs.insight.map.marker.Marker.marker"></a>
 ######Marker.marker()
 Return the internal marker object associated with this Marker
