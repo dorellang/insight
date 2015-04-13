@@ -1086,7 +1086,7 @@ Data point for PointHeatmap
 ######new heatmap.SegmentHeatmap(dashboard, options)
 Draw a segment based heatmap over the map
 
-In a segment based heatmap, each data segment is a location with an optional
+In a segment based heatmap, each data segment is a set of points with an optional
 weight. A heatmap segment is drawn for each location array with
 the provided configuration.
 
