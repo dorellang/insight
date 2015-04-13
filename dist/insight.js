@@ -1939,6 +1939,83 @@ niclabs.insight.layer = (function () {
     return layer;
 })();
 
+niclabs.insight.layer.GraphLayer = (function($) {
+    /**
+     * Construct a new graph layer
+     *
+     */
+    var GraphLayer = function(dashboard, options) {
+        var layer = niclabs.insight.layer.Layer(dashboard, options);
+
+        var graphOptions = options.heatmap || {
+            'type': 'voronoi-graph'
+        };
+
+        function createGraph(data, obj) {
+            var graph;
+            if ('type' in obj) {
+                var attr = {'layer': layer.id, 'data': data};
+
+                // Extend the attributes with the data and the options for the marker
+                $.extend(attr, obj);
+
+                graph = niclabs.insight.handler(obj.type)(dashboard, attr);
+            }
+            else {
+              graph = obj;
+
+                // Should we add a way to pass data to the heatmap?
+            }
+
+            return graph;
+        }
+
+        var graph;
+
+        /**
+         * Draw the heatmap according to the internal data on the map
+         *
+         * @memberof niclabs.insight.layer.GraphLayer
+         * @override
+         * @param {Object[]} data - data to draw
+         * @param {float} data[].lat - latitude for the marker
+         * @param {float} data[].lng - longitude for the marker
+         * @param {string=} data[].description - description for the marker
+         */
+        layer.draw = function(data) {
+            graph = createGraph(data, graphOptions);
+        };
+
+        /**
+         * Clear the graph from the map
+         *
+         * @memberof niclabs.insight.layer.GraphLayer
+         * @override
+         */
+        layer.clear = function() {
+            if (graph) graph.clear();
+        };
+
+        /**
+         * Filter the layer according to the provided function.
+         *
+         * @memberof niclabs.insight.layer.GraphLayer
+         * @override
+         * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
+         */
+        layer.filter = function(fn) {
+            // TODO. not sure if possible
+        };
+
+        return layer;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('graph-layer', 'layer', GraphLayer);
+
+    return GraphLayer;
+})(jQuery);
+
 niclabs.insight.layer.HeatmapLayer = (function($) {
     /**
      * Construct a new heatmap layer
@@ -2448,6 +2525,123 @@ niclabs.insight.map.GoogleMap = (function($) {
 })(jQuery);
 
 /**
+ * Tools for drawing graphs on the map
+ *
+ * @namespace
+ */
+niclabs.insight.map.graph = {};
+
+niclabs.insight.map.graph.Graph = (function($) {
+    /**
+     * Construct a Graph over the map
+     *
+     * @class niclabs.insight.map.graph.Graph
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
+     * @param {Object} options - configuration options for the graph
+     */
+    var Graph = function(dashboard, options) {
+        if (!('layer' in options))
+            throw new Error('The Graph must be associated to a layer');
+
+        var layer;
+        if (!(layer = dashboard.layer(options.layer)))
+            throw new Error('The layer '+layer+' does not exist in the dashboard');
+
+        var map;
+        if (!(map = dashboard.map()))
+            throw new Error('No map has been initialized for the dashboard yet');
+
+        if (!('googlemap' in map))
+            throw new Error("Graphs are only supported for Google Maps at the moment");
+
+        var self = {
+            /**
+             * Map view where the graph belongs to
+             * @memberof niclabs.insight.map.graph.Graph
+             * @member {niclabs.insight.MapView}
+             */
+            get map () {
+                return map;
+            },
+
+            /**
+             * Layer to which the graph belongs to
+             *
+             * @memberof niclabs.insight.map.graph.Graph
+             * @member {niclabs.insight.layer.Layer}
+             */
+            get layer () {
+                return layer;
+            },
+
+            /**
+             * Clear the graph from the map
+             *
+             * @memberof niclabs.insight.map.graph.Graph
+             */
+            clear: function() {
+            },
+        };
+
+        return self;
+    };
+
+    return Graph;
+})(jQuery);
+
+niclabs.insight.map.graph.VoronoiGraph = (function($) {
+
+    var VoronoiGraph = function(dashboard, options) {
+        if (!('data' in options)) {
+            throw Error('No data provided for the graph');
+        }
+
+        var self = niclabs.insight.map.graph.Graph(dashboard, options);
+
+        /**
+         * Create a google map graph
+         */
+        function googleMapsVoronoiGraph(data) {
+
+            console.log(data);
+            return 1;
+        }
+
+        // Create the graph
+        var graph = googleMapsVoronoiGraph(options.data);
+
+        // Set the options
+
+        // Set the graph
+        graph.setMap(self.map.googlemap());
+
+        // Store the parent
+        var clear = self.clear;
+
+        /**
+         * Clear the map
+         *
+         * @memberof niclabs.insight.map.graph.VoronoiGraph
+         * @overrides
+         */
+        self.clear = function() {
+            // Call the parent
+            clear();
+
+            // Remove the map
+            graph.setMap(null);
+        };
+
+        return self;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('voronoi-graph', 'graph', VoronoiGraph);
+
+    return VoronoiGraph;
+})(jQuery);
+
+/**
  * Tools for drawing heatmaps on the map
  *
  * @namespace
@@ -2500,7 +2694,7 @@ niclabs.insight.map.heatmap.Heatmap = (function($) {
             /**
              * Clear the heatmap from the map
              *
-             * @memberof niclabs.insight.map.marker.Marker
+             * @memberof niclabs.insight.map.heatmap.Heatmap
              */
             clear: function() {
             },
@@ -2611,8 +2805,7 @@ niclabs.insight.map.heatmap.SegmentHeatmap = (function($) {
      *
      * @typedef niclabs.insight.map.heatmap.SegmentHeatmap.Data
      * @type {Object}
-     * @param {float[]} lat - latitude array for the heatmap segment
-     * @param {float[]} lng - longitude array for the heatmap segment
+     * @param {Object[]} coordinates - array of [lat,lng] coordinates
      * @param {float=} weight - weight for the heatmap segment. Defaults to 1.
      */
 
@@ -2648,38 +2841,34 @@ niclabs.insight.map.heatmap.SegmentHeatmap = (function($) {
 
             for (i = 0; i < data.length; i++) {
 
-                segment_size = data[i].lat.length;
-
-                //Check segment size
-                if (data[i].lng.length != segment_size)
-                    throw new Error('Data Error. Latitude and longitude arrays size mismatch');
+                segment_size = data[i].coordinates.length;
 
                 for (var j = 0; j < segment_size - 1; j++) {
 
                     //Distance of point a to b
-                    var d = Math.sqrt(Math.pow((data[i].lat[j + 1] - data[i].lat[j]), 2) + Math.pow((data[i].lng[j + 1] - data[i].lng[j]), 2));
+                    var d = Math.sqrt(Math.pow((data[i].coordinates[j + 1][0] - data[i].coordinates[j][0]), 2) + Math.pow((data[i].coordinates[j + 1][1] - data[i].coordinates[j][1]), 2));
 
                     //Number of points with distance 0.00001 in between, colinear with a to b line
                     var l = Math.floor(d / 0.00001);
 
                     //Distance to jump
                     var delta = {
-                        lat: (data[i].lat[j + 1] - data[i].lat[j]) / l,
-                        lng: (data[i].lng[j + 1] - data[i].lng[j]) / l
+                        lat: (data[i].coordinates[j + 1][0] - data[i].coordinates[j][0]) / l,
+                        lng: (data[i].coordinates[j + 1][1] - data[i].coordinates[j][1]) / l
                     };
 
                     //Storing the line
                     for (var k = 0; k < l; k++) {
                         if ('weight' in data[i]) {
                             heatmapData.push({
-                                location: new google.maps.LatLng(data[i].lat[j] + delta.lat * k,
-                                                                 data[i].lng[j] + delta.lng * k),
+                                location: new google.maps.LatLng(data[i].coordinates[j][0] + delta.lat * k,
+                                                                 data[i].coordinates[j][1] + delta.lng * k),
                                 weight: data[i].weight
                             });
                         }
                         else {
-                            heatmapData.push(new google.maps.LatLng(data[i].lat[j] + delta.lat * k,
-                                                                    data[i].lng[j] + delta.lng * k));
+                            heatmapData.push(new google.maps.LatLng(data[i].coordinates[j][0] + delta.lat * k,
+                                                                    data[i].coordinates[j][1] + delta.lng * k));
                         }
                     }
                 }

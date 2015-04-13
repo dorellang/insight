@@ -44,7 +44,7 @@ niclabs.insight.map.heatmap.Heatmap = (function($) {
             /**
              * Clear the heatmap from the map
              *
-             * @memberof niclabs.insight.map.marker.Marker
+             * @memberof niclabs.insight.map.heatmap.Heatmap
              */
             clear: function() {
             },
