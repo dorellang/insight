@@ -13,7 +13,7 @@ niclabs.insight.map.heatmap.SegmentHeatmap = (function($) {
      * Draw a segment based heatmap over the map
      *
      * In a segment based heatmap, each data segment is a location with an optional
-     * weight. A heatmap sement is drawn for each location pair with
+     * weight. A heatmap segment is drawn for each location array with
      * the provided configuration.
      *
      * @class niclabs.insight.map.heatmap.SegmentHeatmap
