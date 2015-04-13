@@ -74,6 +74,10 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
           * [new heatmap.PointHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.PointHeatmap)
           * [PointHeatmap.self.clear()](#niclabs.insight.map.heatmap.PointHeatmap.self.clear)
           * [type: PointHeatmap.Data](#niclabs.insight.map.heatmap.PointHeatmap.Data)
+        * [class: heatmap.SegmentHeatmap](#niclabs.insight.map.heatmap.SegmentHeatmap)
+          * [new heatmap.SegmentHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.SegmentHeatmap)
+          * [SegmentHeatmap.self.clear()](#niclabs.insight.map.heatmap.SegmentHeatmap.self.clear)
+          * [type: SegmentHeatmap.Data](#niclabs.insight.map.heatmap.SegmentHeatmap.Data)
       * [map.marker](#niclabs.insight.map.marker)
         * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
           * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
@@ -204,6 +208,10 @@ understand what is going on in the city
         * [new heatmap.PointHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.PointHeatmap)
         * [PointHeatmap.self.clear()](#niclabs.insight.map.heatmap.PointHeatmap.self.clear)
         * [type: PointHeatmap.Data](#niclabs.insight.map.heatmap.PointHeatmap.Data)
+      * [class: heatmap.SegmentHeatmap](#niclabs.insight.map.heatmap.SegmentHeatmap)
+        * [new heatmap.SegmentHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.SegmentHeatmap)
+        * [SegmentHeatmap.self.clear()](#niclabs.insight.map.heatmap.SegmentHeatmap.self.clear)
+        * [type: SegmentHeatmap.Data](#niclabs.insight.map.heatmap.SegmentHeatmap.Data)
     * [map.marker](#niclabs.insight.map.marker)
       * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
         * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
@@ -950,6 +958,10 @@ Map compatibility for the insight dashboard
       * [new heatmap.PointHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.PointHeatmap)
       * [PointHeatmap.self.clear()](#niclabs.insight.map.heatmap.PointHeatmap.self.clear)
       * [type: PointHeatmap.Data](#niclabs.insight.map.heatmap.PointHeatmap.Data)
+    * [class: heatmap.SegmentHeatmap](#niclabs.insight.map.heatmap.SegmentHeatmap)
+      * [new heatmap.SegmentHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.SegmentHeatmap)
+      * [SegmentHeatmap.self.clear()](#niclabs.insight.map.heatmap.SegmentHeatmap.self.clear)
+      * [type: SegmentHeatmap.Data](#niclabs.insight.map.heatmap.SegmentHeatmap.Data)
   * [map.marker](#niclabs.insight.map.marker)
     * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
       * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
@@ -987,6 +999,10 @@ Tools for drawing heatmaps on the map
     * [new heatmap.PointHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.PointHeatmap)
     * [PointHeatmap.self.clear()](#niclabs.insight.map.heatmap.PointHeatmap.self.clear)
     * [type: PointHeatmap.Data](#niclabs.insight.map.heatmap.PointHeatmap.Data)
+  * [class: heatmap.SegmentHeatmap](#niclabs.insight.map.heatmap.SegmentHeatmap)
+    * [new heatmap.SegmentHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.SegmentHeatmap)
+    * [SegmentHeatmap.self.clear()](#niclabs.insight.map.heatmap.SegmentHeatmap.self.clear)
+    * [type: SegmentHeatmap.Data](#niclabs.insight.map.heatmap.SegmentHeatmap.Data)
 
 <a name="niclabs.insight.map.heatmap.Heatmap"></a>
 #####class: heatmap.Heatmap
@@ -1055,6 +1071,48 @@ Data point for PointHeatmap
 - lat `float` - latitude for the heatmap point  
 - lng `float` - longitude for the heatmap point  
 - \[weight\] `float` - weight for the heatmap point  
+
+**Type**: `Object`  
+<a name="niclabs.insight.map.heatmap.SegmentHeatmap"></a>
+#####class: heatmap.SegmentHeatmap
+**Members**
+
+* [class: heatmap.SegmentHeatmap](#niclabs.insight.map.heatmap.SegmentHeatmap)
+  * [new heatmap.SegmentHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.SegmentHeatmap)
+  * [SegmentHeatmap.self.clear()](#niclabs.insight.map.heatmap.SegmentHeatmap.self.clear)
+  * [type: SegmentHeatmap.Data](#niclabs.insight.map.heatmap.SegmentHeatmap.Data)
+
+<a name="new_niclabs.insight.map.heatmap.SegmentHeatmap"></a>
+######new heatmap.SegmentHeatmap(dashboard, options)
+Draw a segment based heatmap over the map
+
+In a segment based heatmap, each data segment is a location with an optional
+weight. A heatmap sement is drawn for each location pair with
+the provided configuration.
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this marker belongs to  
+- options `Object` - configuration options for the heatmap  
+  - data <code>[Array.&lt;Data&gt;](#niclabs.insight.map.heatmap.SegmentHeatmap.Data)</code> - array of segments to draw the heatmap  
+  - dissipating `boolean` - Specifies whether heatmaps dissipate on zoom. When dissipating is false the radius of influence increases with zoom level to ensure that the color intensity is preserved at any given geographic location. Defaults to false.  
+  - gradient `Array.<string>` - The color gradient of the heatmap, specified as an array of CSS color strings. All CSS3 colors — including RGBA — are supported except for extended named colors and HSL(A) values.  
+  - radius `integer` - The radius of influence for each data point, in pixels.  
+  - opacity: `float` - The opacity of the heatmap, expressed as a number between 0 and 1.  
+
+<a name="niclabs.insight.map.heatmap.SegmentHeatmap.self.clear"></a>
+######SegmentHeatmap.self.clear()
+Clear the map
+
+<a name="niclabs.insight.map.heatmap.SegmentHeatmap.Data"></a>
+######type: SegmentHeatmap.Data
+Data segment for SegmentHeatmap
+
+**Params**
+
+- lat `Array.<float>` - latitude array for the heatmap segment  
+- lng `Array.<float>` - longitude array for the heatmap segment  
+- \[weight\] `float` - weight for the heatmap segment. Defaults to 1.  
 
 **Type**: `Object`  
 <a name="niclabs.insight.map.marker"></a>
