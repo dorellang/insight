@@ -36,7 +36,7 @@ niclabs.insight.MapView = (function($) {
 		* @property {float} lng - latitude for the marker
 		*/
 
-		return {
+		var self = {
 			/**
              * HTML DOM element for the map view
              *
@@ -55,7 +55,7 @@ niclabs.insight.MapView = (function($) {
              * @memberof niclabs.insight.MapView
              * @member {jQuery}
              */
-            $: function() {
+            get $ () {
                 var c = $(mapId);
                 container = c.length === 0 ? container : c;
                 return container;
@@ -79,23 +79,43 @@ niclabs.insight.MapView = (function($) {
 			},
 
 			/**
-			 * Get the latitude for the map center
+			 * Latitude for the map center
 			 *
 			 * @memberof niclabs.insight.MapView
-			 * @return {float} latitude for the map center
+			 * @member {float}
 			 */
-			lat: function() {
+			get lat () {
 				return center.lat;
 			},
 
 			/**
-			 * Get the longitude for the map center
+			 * Longitude for the map center
 			 *
 			 * @memberof niclabs.insight.MapView
-			 * @return {float} longitude for the map center
+			 * @member {float}
 			 */
-			lng: function() {
+			get lng () {
 				return center.lng;
+			},
+
+			/**
+			 * Width for the map container
+			 *
+			 * @memberof niclabs.insight.MapView
+			 * @member {float}
+			 */
+			get width () {
+				return self.$.width();
+			},
+
+			/**
+			 * Height for the map container
+			 *
+			 * @memberof niclabs.insight.MapView
+			 * @member {float}
+			 */
+			get height () {
+				return self.$.height();
 			},
 
 			/**
@@ -113,5 +133,7 @@ niclabs.insight.MapView = (function($) {
 				return zoom;
 			},
 		};
+
+		return self;
 	};
 })(jQuery);
