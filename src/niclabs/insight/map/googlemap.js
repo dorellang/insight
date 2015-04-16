@@ -18,7 +18,7 @@ niclabs.insight.map.GoogleMap = (function($) {
 
         var googlemap = new google.maps.Map(map.element, {
             zoom: map.zoom(),
-            center: new google.maps.LatLng(map.lat(), map.lng()),
+            center: new google.maps.LatLng(map.lat, map.lng),
             disableDefaultUI: true
         });
 
