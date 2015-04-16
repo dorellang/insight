@@ -4,6 +4,21 @@
  * @namespace
  */
 niclabs.insight.map = (function () {
+    var WORLD_WIDTH = 20037508.34;
+
+    /** Converts numeric degrees to radians */
+    if (typeof Number.prototype.toRad === "undefined") {
+        Number.prototype.toRad = function() {
+            return this * Math.PI / 180;
+        };
+    }
+
+    /** Converts numeric radians to degrees */
+    if (typeof Number.prototype.toDeg === "undefined") {
+        Number.prototype.toDeg = function() {
+            return this * 180 / Math.PI;
+        };
+    }
 
     /**
      * Object to represent geographic coordinates
