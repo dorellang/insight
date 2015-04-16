@@ -4,6 +4,24 @@
  * @namespace
  */
 niclabs.insight.map = (function () {
+
+    /**
+     * Object to represent geographic coordinates
+     *
+     * @typedef {Object} niclabs.insight.map.LatLng
+     * @property {float} lat - latitude
+     * @property {float} lng - longitude
+     */
+
+     /**
+      * Cartesian coordinates
+      *
+      * @typedef {Object} niclabs.insight.map.Point
+      * @property {float} x - horizontal coordinate
+      * @property {float} y - vertical coordinate
+      */
+
+
     /**
      * Helper method to assign/get the map view to/from the dashboard
      *
