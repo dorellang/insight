@@ -13,13 +13,6 @@ niclabs.insight.MapView = (function($) {
 	return function(options) {
 		var mapId = '#insight-map-view';
 
-		/**
-		 * Object to represent geographic coordinates
-		 *
-		 * @typedef {Object} niclabs.insight.MapView.Coordinates
-		 * @property {float} lat - latitude for the map center
-		 * @property {float} lng - longitude for the map center
-		 */
 		var center = {
 			lat: options.lat || 0,
 			lng: options.lng || 0
@@ -76,7 +69,7 @@ niclabs.insight.MapView = (function($) {
 			 * @memberof niclabs.insight.MapView
 			 * @param {float=} lat - latitude for the map center
 			 * @param {float=} lng - longitude for the map center
-			 * @return {niclabs.insight.MapView.Coordinates} coordinates for the map center
+			 * @return {niclabs.insight.map.LatLng} coordinates for the map center
 			 */
 			center: function(lat, lng) {
 				center.lat = lat = typeof lat === 'undefined' ? center.lat : lat;

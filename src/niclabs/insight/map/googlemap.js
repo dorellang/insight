@@ -75,7 +75,7 @@ niclabs.insight.map.GoogleMap = (function($) {
          * @memberof niclabs.insight.map.GoogleMap
          * @param {float=} lat - latitude for the map center
          * @param {float=} lng - longitude for the map center
-         * @return {niclabs.insight.MapView.Coordinates} coordinates for the map center
+         * @return {niclabs.insight.map.LatLng} coordinates for the map center
          */
         map.center = function(lat, lng) {
             var c = center(lat, lng);
