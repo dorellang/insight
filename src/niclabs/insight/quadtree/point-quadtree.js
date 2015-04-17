@@ -6,12 +6,12 @@ niclabs.insight.quadtree.PointQuadTree = (function () {
      *
      * @class niclabs.insight.quadtree.PointQuadTree
      * @param {niclabs.insight.quadtree.Bounds} bounds - bounding box for the quadtree
-     * @param {integer} [capacity=100] - number of points that each node in the quadtree accepts before dividing
-     * @param {integer} [depth=22] - max depth of the quadtree
+     * @param {integer} [capacity=50] - number of points that each node in the quadtree accepts before dividing
+     * @param {integer} [depth=40] - max depth of the quadtree
      */
     var PointQuadTree = function (bounds, capacity, depth) {
-        capacity = capacity || 100;
-        depth = depth || 22;
+        capacity = capacity || 50;
+        depth = depth || 40;
 
         var points = [];
 
