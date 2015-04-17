@@ -66,7 +66,7 @@ niclabs.insight.quadtree.PointQuadTree = (function () {
              */
             insert: function (point) {
                 // Ignore objects that do not belong in this quad tree
-                if (!bounds.contains(p)) {
+                if (!bounds.contains(point)) {
                     return false; // object cannot be added
                 }
 
