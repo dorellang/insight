@@ -6,10 +6,12 @@ niclabs.insight.quadtree.PointQuadTree = (function () {
      *
      * @class niclabs.insight.quadtree.PointQuadTree
      * @param {niclabs.insight.quadtree.Bounds} bounds - bounding box for the quadtree
-     * @param {integer} [capacity=10] - number of points that each node in the quadtree accepts before dividing
+     * @param {integer} [capacity=100] - number of points that each node in the quadtree accepts before dividing
+     * @param {integer} [depth=22] - max depth of the quadtree
      */
-    var PointQuadTree = function (bounds, capacity) {
-        capacity = capacity || 10;
+    var PointQuadTree = function (bounds, capacity, depth) {
+        capacity = capacity || 100;
+        depth = depth || 22;
 
         var points = [];
 
@@ -23,16 +25,16 @@ niclabs.insight.quadtree.PointQuadTree = (function () {
          * @access private
          */
         function subdivide() {
-            northWest = PointQuadTree(niclabs.insight.quadtree.Bounds(bounds.min, bounds.center), capacity);
+            northWest = PointQuadTree(niclabs.insight.quadtree.Bounds(bounds.min, bounds.center), capacity, depth - 1);
             northEast = PointQuadTree(niclabs.insight.quadtree.Bounds(
                 {x: bounds.center.x, y: bounds.min.y},
                 {x: bounds.max.x, y: bounds.center.y}),
-                capacity);
+                capacity, depth - 1);
             southWest = PointQuadTree(niclabs.insight.quadtree.Bounds(
                 {x: bounds.min.x, y: bounds.center.y},
                 {x: bounds.center.x, y: bounds.max.y}),
-                capacity);
-            southEast = PointQuadTree(niclabs.insight.quadtree.Bounds(bounds.center, bounds.max, capacity));
+                capacity, depth - 1);
+            southEast = PointQuadTree(niclabs.insight.quadtree.Bounds(bounds.center, bounds.max, capacity, depth - 1));
         }
 
         var self = {
@@ -69,7 +71,7 @@ niclabs.insight.quadtree.PointQuadTree = (function () {
                 }
 
                 // If there is space in this quad tree, add the object here
-                if (points.length < capacity) {
+                if (points.length < capacity || depth <= 0) {
                     points.push(point);
                     return true;
                 }
