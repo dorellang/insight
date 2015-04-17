@@ -3,9 +3,9 @@
  *
  * Source: {@link https://developers.google.com/maps/documentation/javascript/examples/map-coordinates}
  *
- * @mixin niclabs.insight.map.Mercator
+ * @mixin
  */
-niclabs.insight.map.Mercator = (function() {
+niclabs.insight.map.GoogleMercator = (function() {
     // Source
     var TILE_SIZE = 256;
 
@@ -47,6 +47,10 @@ niclabs.insight.map.Mercator = (function() {
          * @returns {niclabs.insight.map.Point} - cartesian coordinates of the point
          */
         cartesian: function(coord) {
+            // If it is a Google Maps LatLng
+            if (typeof coord.lat === 'function' && typeof coord.lng === 'function')
+                coord = {'lat': coord.lat(), 'lng': coord.lng()};
+
             var x = origin.x + coord.lng * pixelsPerLonDegree;
 
             // Truncating to 0.9999 effectively limits latitude to 89.189. This is
@@ -55,6 +59,20 @@ niclabs.insight.map.Mercator = (function() {
             var y = origin.y + 0.5 * Math.log((1 + siny) / (1 - siny)) * -pixelsPerLonRadian;
 
             return {'x': x, 'y': y};
+        },
+
+        /**
+         * Return equivalent distance in the coordinate space
+         * given the pixel distance and the zoom level of the map
+         *
+         * @memberof niclabs.insight.map.Mercator
+         * @param {float} pixels - distance in pixels
+         * @param {int} zoom - zoom level of the map
+         * @returns {float} distance in world coordinate space
+         */
+        distance: function(pixels, zoom) {
+            zoom = typeof zoom !== 'undefined' ? zoom : 12;
+            return pixels / (1 << zoom);
         }
     };
 })();
