@@ -4,8 +4,6 @@
  * @namespace
  */
 niclabs.insight.map = (function () {
-    var WORLD_WIDTH = 20037508.34;
-
     /** Converts numeric degrees to radians */
     if (typeof Number.prototype.toRad === "undefined") {
         Number.prototype.toRad = function() {
