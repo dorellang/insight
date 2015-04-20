@@ -3,7 +3,7 @@ niclabs.insight.map.graph.Graph = (function($) {
      * Construct a Graph over the map
      *
      * @class niclabs.insight.map.graph.Graph
-     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this graph belongs to
      * @param {Object} options - configuration options for the graph
      */
     var Graph = function(dashboard, options) {
@@ -48,6 +48,23 @@ niclabs.insight.map.graph.Graph = (function($) {
              */
             clear: function() {
             },
+
+            /**
+             * Set the map of the graph.
+             * TODO: can be done better?
+             *
+             * @memberof niclabs.insight.map.graph.Graph
+             */
+            setMap: function(aGraph, map) {
+                for (var polylineKey in aGraph.Polylines) {
+                    aGraph.Polylines[polylineKey].setMap(map);
+                }
+
+                for (var markerKey in aGraph.Markers) {
+                    aGraph.Markers[markerKey].setMap(map);
+                }
+            }
+
         };
 
         return self;

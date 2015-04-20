@@ -16,7 +16,7 @@ niclabs.insight.map.heatmap.PointHeatmap = (function($) {
      * weight. A heatmap point is drawn for each location with the provided configuration
      *
      * @class niclabs.insight.map.heatmap.PointHeatmap
-     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this heatmap belongs to
      * @param {Object} options - configuration options for the heatmap
      * @param {niclabs.insight.map.heatmap.PointHeatmap.Data[]} options.data - array of points to draw the heatmap
      * @param {boolean} options.dissipating - Specifies whether heatmaps dissipate on zoom. When dissipating is false the radius of influence increases with zoom level to ensure that the color intensity is preserved at any given geographic location. Defaults to false.
@@ -28,6 +28,8 @@ niclabs.insight.map.heatmap.PointHeatmap = (function($) {
         if (!('data' in options)) {
             throw Error('No data provided for the heatmap');
         }
+
+        console.log(options);
 
         var self = niclabs.insight.map.heatmap.Heatmap(dashboard, options);
 

@@ -7,7 +7,7 @@
 
     IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW
 
-    HEATMAP
+    VORONOI
 
     -->
 
@@ -33,7 +33,6 @@
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization"></script>
     <script src="js/delaunayTraingles.js"></script>
-    <script src="js/voronoiUtils.js"></script>
 
     <script src="js/insight.js"></script>
 
@@ -60,7 +59,7 @@
         data: [{
             'lat': 48.860611,
             'lng': 2.337644,
-            'landmark': 'L’Arc de Triomphe'
+            'landmark': 'Musée du Louvre'
         }, {
             'lat': 48.859961,
             'lng': 2.326561,
@@ -80,9 +79,9 @@
         }],
         graph: {
             'type': 'voronoi-graph',
-            'color': '#578b8b',
-            'thickness': 1,
-            'opacity': 2
+            'strokeColor': '#000000',
+            'strokeWeight': 3,
+            'strokeColor': 0.5
         }
     });
 
