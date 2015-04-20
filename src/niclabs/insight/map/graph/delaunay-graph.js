@@ -1,8 +1,8 @@
-niclabs.insight.map.graph.VoronoiGraph = (function($) {
+niclabs.insight.map.graph.DelaunayGraph = (function($) {
     /**
-     * Data point for VoronoiGraph
+     * Data point for DelaunayGraph
      *
-     * @typedef niclabs.insight.map.graph.VoronoiGraph.Data
+     * @typedef niclabs.insight.map.graph.DelaunayGraph.Data
      * @type {Object}
      * @param {float} lat - latitude for the graph point
      * @param {float} lng - longitude for the graph point
@@ -10,20 +10,20 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
      */
 
     /**
-     * Draw a voronoi diagram over the map
+     * Draw a delaunay triangulation over the map
      *
-     * In a voronoi diagram, each data point is a location where the voronoi diagram
-     * is based on. A voronoi graph is drawn with the provided configuration.
+     * In a delaunay triangulation, each data point is a location where the delaunay triangulation
+     * is based on. A delaunay graph is drawn with the provided configuration.
      *
-     * @class niclabs.insight.map.graph.VoronoiGraph
+     * @class niclabs.insight.map.graph.DelaunayGraph
      * @param {niclabs.insight.Dashboard} dashboard - dashboard that this graph belongs to
      * @param {Object} options - configuration options for the graph
-     * @param {niclabs.insight.map.graph.VoronoiGraph.Data[]} options.data - array of points to draw the graph
+     * @param {niclabs.insight.map.graph.DelaunayGraph.Data[]} options.data - array of points to draw the graph
      * @param {string=#FF0000} options.strokeColor - Color for the graph edges
      * @param {float=2} options.strokeWeight - Width for the graph edges
      * @param {float=1} options.strokeOpacity - Opacity for the graph edges.
      */
-    var VoronoiGraph = function(dashboard, options) {
+    var DelaunayGraph = function(dashboard, options) {
         if (!('data' in options)) {
             throw Error('No data provided for the graph');
         }
@@ -31,11 +31,11 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
         var self = niclabs.insight.map.graph.Graph(dashboard, options);
 
         /**
-         * Create a google map voronoi graph
+         * Create a google map delaunay graph
          */
-        function googleMapsVoronoiGraph(data) {
+        function googleMapsDelaunayGraph(data) {
 
-            var MapNgbrLines = [];
+            var MapTriLines = [];
 
             var n = data.length;
 
@@ -50,16 +50,14 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
             var DT = FindDelaunayTriangulation(MapPositions);
 
             var Polylines = [];
-            for (i=0; i<DT.vor_edges.length; i++) {
-                var edge = DT.vor_edges[i];
-                if (edge[0] < 0) continue;
-                if (edge[1] < 0) continue;
+            for (i=0; i<DT.edges.length; i++) {
+                var edge = DT.edges[i];
 
-                MapNgbrLines = niclabs.insight.map.graph.createLines(DT.vor_positions,edge);
+                MapTriLines = niclabs.insight.map.graph.createLines(DT.positions,edge.verts);
 
                 var GLLs = [];
-                for (var j = 0; j < MapNgbrLines.length; j++) {
-                    GLLs.push(new google.maps.LatLng(MapNgbrLines[j][0],MapNgbrLines[j][1]));
+                for (var j = 0; j < MapTriLines.length; j++) {
+                    GLLs.push(new google.maps.LatLng(MapTriLines[j][0],MapTriLines[j][1]));
                 }
 
                 var GPln = new google.maps.Polyline(
@@ -89,7 +87,7 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
         }
 
         // Create the graph
-        var graph = googleMapsVoronoiGraph(options.data);
+        var graph = googleMapsDelaunayGraph(options.data);
 
         // Set the options. Done in creation for better performance
         // Pseudocode below...
@@ -107,7 +105,7 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
         /**
          * Clear the map
          *
-         * @memberof niclabs.insight.map.graph.VoronoiGraph
+         * @memberof niclabs.insight.map.graph.DelaunayGraph
          * @overrides
          */
         self.clear = function() {
@@ -122,7 +120,7 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
     };
 
     // Register the handler
-    niclabs.insight.handler('voronoi-graph', 'graph', VoronoiGraph);
+    niclabs.insight.handler('delaunay-graph', 'graph', DelaunayGraph);
 
-    return VoronoiGraph;
+    return DelaunayGraph;
 })(jQuery);

@@ -16,7 +16,7 @@ niclabs.insight.map.heatmap.SegmentHeatmap = (function($) {
      * the provided configuration.
      *
      * @class niclabs.insight.map.heatmap.SegmentHeatmap
-     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this heatmap belongs to
      * @param {Object} options - configuration options for the heatmap
      * @param {niclabs.insight.map.heatmap.SegmentHeatmap.Data[]} options.data - array of segments to draw the heatmap
      * @param {boolean} options.dissipating - Specifies whether heatmaps dissipate on zoom. When dissipating is false the radius of influence increases with zoom level to ensure that the color intensity is preserved at any given geographic location. Defaults to false.

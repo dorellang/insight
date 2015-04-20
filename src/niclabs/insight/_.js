@@ -403,5 +403,6 @@ niclabs.insight = (function ($) {
             dashboard = niclabs.insight.Dashboard(options);
             return dashboard;
         },
+
     };
 })(jQuery);

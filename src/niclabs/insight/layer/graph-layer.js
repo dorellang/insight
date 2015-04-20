@@ -6,7 +6,7 @@ niclabs.insight.layer.GraphLayer = (function($) {
     var GraphLayer = function(dashboard, options) {
         var layer = niclabs.insight.layer.Layer(dashboard, options);
 
-        var graphOptions = options.heatmap || {
+        var graphOptions = options.graph || {
             'type': 'voronoi-graph'
         };
 
