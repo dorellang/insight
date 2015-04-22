@@ -40,6 +40,13 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
       * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
         * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
     * [insight.layer](#niclabs.insight.layer)
+      * [class: layer.GridLayer](#niclabs.insight.layer.GridLayer)
+        * [new layer.GridLayer(dashboard, options)](#new_niclabs.insight.layer.GridLayer)
+        * [GridLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.GridLayer.layer.draw)
+        * [GridLayer.layer.clear()](#niclabs.insight.layer.GridLayer.layer.clear)
+        * [GridLayer.layer.filter(fn)](#niclabs.insight.layer.GridLayer.layer.filter)
+        * [event: "layer_data"](#niclabs.insight.layer.GridLayer#event_layer_data)
+        * [event: "layer_sumary"](#niclabs.insight.layer.GridLayer#event_layer_sumary)
       * [class: layer.HeatmapLayer](#niclabs.insight.layer.HeatmapLayer)
         * [new layer.HeatmapLayer(dashboard, options)](#new_niclabs.insight.layer.HeatmapLayer)
         * [HeatmapLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.HeatmapLayer.layer.draw)
@@ -65,6 +72,16 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
         * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
     * [insight.map](#niclabs.insight.map)
+      * [map.grid](#niclabs.insight.map.grid)
+        * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
+          * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
+          * [Grid.map](#niclabs.insight.map.grid.Grid.map)
+          * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
+          * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
+        * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
+          * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
+          * [type: HexagonalGrid.Data](#niclabs.insight.map.grid.HexagonalGrid.Data)
+          * [callback: HexagonalGrid~fill](#niclabs.insight.map.grid.HexagonalGrid..fill)
       * [map.heatmap](#niclabs.insight.map.heatmap)
         * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
           * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
@@ -94,11 +111,29 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
           * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
         * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
           * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+      * [type: map.LatLng](#niclabs.insight.map.LatLng)
+      * [type: map.Point](#niclabs.insight.map.Point)
       * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
         * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
         * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
         * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
         * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
+      * [map.GoogleMercator](#niclabs.insight.map.GoogleMercator)
+    * [insight.quadtree](#niclabs.insight.quadtree)
+      * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
+      * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
+        * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
+        * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
+        * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
+        * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
+        * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
+        * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
+      * [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
+        * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
+        * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
+        * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
+        * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
+        * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
     * [callback: insight~handler](#niclabs.insight..handler)
     * [class: insight.Dashboard](#niclabs.insight.Dashboard)
       * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
@@ -124,17 +159,39 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
       * [new insight.MapView(options)](#new_niclabs.insight.MapView)
       * [MapView.element](#niclabs.insight.MapView.element)
       * [MapView.$](#niclabs.insight.MapView.$)
+      * [MapView.lat](#niclabs.insight.MapView.lat)
+      * [MapView.lng](#niclabs.insight.MapView.lng)
+      * [MapView.width](#niclabs.insight.MapView.width)
+      * [MapView.height](#niclabs.insight.MapView.height)
       * [MapView.center([lat], [lng])](#niclabs.insight.MapView.center)
-      * [MapView.lat()](#niclabs.insight.MapView.lat)
-      * [MapView.lng()](#niclabs.insight.MapView.lng)
       * [MapView.zoom([zoom])](#niclabs.insight.MapView.zoom)
-      * [type: MapView.Coordinates](#niclabs.insight.MapView.Coordinates)
       * [event: "map_element_selected"](#niclabs.insight.MapView#event_map_element_selected)
+    * [class: insight.ElementList](#niclabs.insight.ElementList)
+      * [new insight.ElementList(dashboard)](#new_niclabs.insight.ElementList)
+      * [ElementList.self.element(obj)](#niclabs.insight.ElementList.self.element)
+      * [ElementList.self.each(iterator)](#niclabs.insight.ElementList.self.each)
+      * [ElementList.self.remove(id)](#niclabs.insight.ElementList.self.remove)
+      * [callback: ElementList~iterator](#niclabs.insight.ElementList..iterator)
+    * [class: insight.Element](#niclabs.insight.Element)
+      * [new insight.Element(options)](#new_niclabs.insight.Element)
+      * [Element.id](#niclabs.insight.Element.id)
     * [class: insight.InfoView](#niclabs.insight.InfoView)
       * [new insight.InfoView(dashboard, options)](#new_niclabs.insight.InfoView)
-      * [InfoView.element](#niclabs.insight.InfoView.element)
-      * [InfoView.$](#niclabs.insight.InfoView.$)
-      * [InfoView.block(obj)](#niclabs.insight.InfoView.block)
+      * [InfoView.element.block(obj)](#niclabs.insight.InfoView.element.block)
+    * [class: insight.UiElement](#niclabs.insight.UiElement)
+      * [new insight.UiElement(options)](#new_niclabs.insight.UiElement)
+      * [UiElement.$](#niclabs.insight.UiElement.$)
+      * [UiElement.element](#niclabs.insight.UiElement.element)
+      * [UiElement.self.append(element)](#niclabs.insight.UiElement.self.append)
+    * [insight.Color](#niclabs.insight.Color)
+      * [Color.rgbToHsv(r, g, b)](#niclabs.insight.Color.rgbToHsv)
+      * [Color.hsvToRgb(h, s, v)](#niclabs.insight.Color.hsvToRgb)
+      * [Color.rgbToHex(rgb)](#niclabs.insight.Color.rgbToHex)
+      * [Color.hexToRgb(hex)](#niclabs.insight.Color.hexToRgb)
+    * [insight.Interpolation](#niclabs.insight.Interpolation)
+      * [Interpolation.interpolate(value, maximum, start_point, end_point)](#niclabs.insight.Interpolation.interpolate)
+      * [Interpolation.interpolate3d(value, maximum, s, e)](#niclabs.insight.Interpolation.interpolate3d)
+      * [Interpolation.interpolateRgb(value, maximum, start_rgb, e)](#niclabs.insight.Interpolation.interpolateRgb)
 
 <a name="niclabs.insight"></a>
 ##niclabs.insight
@@ -174,6 +231,13 @@ understand what is going on in the city
     * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
       * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
   * [insight.layer](#niclabs.insight.layer)
+    * [class: layer.GridLayer](#niclabs.insight.layer.GridLayer)
+      * [new layer.GridLayer(dashboard, options)](#new_niclabs.insight.layer.GridLayer)
+      * [GridLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.GridLayer.layer.draw)
+      * [GridLayer.layer.clear()](#niclabs.insight.layer.GridLayer.layer.clear)
+      * [GridLayer.layer.filter(fn)](#niclabs.insight.layer.GridLayer.layer.filter)
+      * [event: "layer_data"](#niclabs.insight.layer.GridLayer#event_layer_data)
+      * [event: "layer_sumary"](#niclabs.insight.layer.GridLayer#event_layer_sumary)
     * [class: layer.HeatmapLayer](#niclabs.insight.layer.HeatmapLayer)
       * [new layer.HeatmapLayer(dashboard, options)](#new_niclabs.insight.layer.HeatmapLayer)
       * [HeatmapLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.HeatmapLayer.layer.draw)
@@ -199,6 +263,16 @@ understand what is going on in the city
       * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
       * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
   * [insight.map](#niclabs.insight.map)
+    * [map.grid](#niclabs.insight.map.grid)
+      * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
+        * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
+        * [Grid.map](#niclabs.insight.map.grid.Grid.map)
+        * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
+        * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
+      * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
+        * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
+        * [type: HexagonalGrid.Data](#niclabs.insight.map.grid.HexagonalGrid.Data)
+        * [callback: HexagonalGrid~fill](#niclabs.insight.map.grid.HexagonalGrid..fill)
     * [map.heatmap](#niclabs.insight.map.heatmap)
       * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
         * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
@@ -228,11 +302,29 @@ understand what is going on in the city
         * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
       * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
         * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+    * [type: map.LatLng](#niclabs.insight.map.LatLng)
+    * [type: map.Point](#niclabs.insight.map.Point)
     * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
       * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
       * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
       * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
       * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
+    * [map.GoogleMercator](#niclabs.insight.map.GoogleMercator)
+  * [insight.quadtree](#niclabs.insight.quadtree)
+    * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
+    * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
+      * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
+      * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
+      * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
+      * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
+      * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
+      * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
+    * [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
+      * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
+      * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
+      * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
+      * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
+      * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
   * [callback: insight~handler](#niclabs.insight..handler)
   * [class: insight.Dashboard](#niclabs.insight.Dashboard)
     * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
@@ -258,17 +350,39 @@ understand what is going on in the city
     * [new insight.MapView(options)](#new_niclabs.insight.MapView)
     * [MapView.element](#niclabs.insight.MapView.element)
     * [MapView.$](#niclabs.insight.MapView.$)
+    * [MapView.lat](#niclabs.insight.MapView.lat)
+    * [MapView.lng](#niclabs.insight.MapView.lng)
+    * [MapView.width](#niclabs.insight.MapView.width)
+    * [MapView.height](#niclabs.insight.MapView.height)
     * [MapView.center([lat], [lng])](#niclabs.insight.MapView.center)
-    * [MapView.lat()](#niclabs.insight.MapView.lat)
-    * [MapView.lng()](#niclabs.insight.MapView.lng)
     * [MapView.zoom([zoom])](#niclabs.insight.MapView.zoom)
-    * [type: MapView.Coordinates](#niclabs.insight.MapView.Coordinates)
     * [event: "map_element_selected"](#niclabs.insight.MapView#event_map_element_selected)
+  * [class: insight.ElementList](#niclabs.insight.ElementList)
+    * [new insight.ElementList(dashboard)](#new_niclabs.insight.ElementList)
+    * [ElementList.self.element(obj)](#niclabs.insight.ElementList.self.element)
+    * [ElementList.self.each(iterator)](#niclabs.insight.ElementList.self.each)
+    * [ElementList.self.remove(id)](#niclabs.insight.ElementList.self.remove)
+    * [callback: ElementList~iterator](#niclabs.insight.ElementList..iterator)
+  * [class: insight.Element](#niclabs.insight.Element)
+    * [new insight.Element(options)](#new_niclabs.insight.Element)
+    * [Element.id](#niclabs.insight.Element.id)
   * [class: insight.InfoView](#niclabs.insight.InfoView)
     * [new insight.InfoView(dashboard, options)](#new_niclabs.insight.InfoView)
-    * [InfoView.element](#niclabs.insight.InfoView.element)
-    * [InfoView.$](#niclabs.insight.InfoView.$)
-    * [InfoView.block(obj)](#niclabs.insight.InfoView.block)
+    * [InfoView.element.block(obj)](#niclabs.insight.InfoView.element.block)
+  * [class: insight.UiElement](#niclabs.insight.UiElement)
+    * [new insight.UiElement(options)](#new_niclabs.insight.UiElement)
+    * [UiElement.$](#niclabs.insight.UiElement.$)
+    * [UiElement.element](#niclabs.insight.UiElement.element)
+    * [UiElement.self.append(element)](#niclabs.insight.UiElement.self.append)
+  * [insight.Color](#niclabs.insight.Color)
+    * [Color.rgbToHsv(r, g, b)](#niclabs.insight.Color.rgbToHsv)
+    * [Color.hsvToRgb(h, s, v)](#niclabs.insight.Color.hsvToRgb)
+    * [Color.rgbToHex(rgb)](#niclabs.insight.Color.rgbToHex)
+    * [Color.hexToRgb(hex)](#niclabs.insight.Color.hexToRgb)
+  * [insight.Interpolation](#niclabs.insight.Interpolation)
+    * [Interpolation.interpolate(value, maximum, start_point, end_point)](#niclabs.insight.Interpolation.interpolate)
+    * [Interpolation.interpolate3d(value, maximum, s, e)](#niclabs.insight.Interpolation.interpolate3d)
+    * [Interpolation.interpolateRgb(value, maximum, start_rgb, e)](#niclabs.insight.Interpolation.interpolateRgb)
 
 <a name="niclabs.insight.handler"></a>
 ###insight.handler(name, [kind], [handler])
@@ -674,6 +788,13 @@ Visualization layers for the dashboard
 **Members**
 
 * [insight.layer](#niclabs.insight.layer)
+  * [class: layer.GridLayer](#niclabs.insight.layer.GridLayer)
+    * [new layer.GridLayer(dashboard, options)](#new_niclabs.insight.layer.GridLayer)
+    * [GridLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.GridLayer.layer.draw)
+    * [GridLayer.layer.clear()](#niclabs.insight.layer.GridLayer.layer.clear)
+    * [GridLayer.layer.filter(fn)](#niclabs.insight.layer.GridLayer.layer.filter)
+    * [event: "layer_data"](#niclabs.insight.layer.GridLayer#event_layer_data)
+    * [event: "layer_sumary"](#niclabs.insight.layer.GridLayer#event_layer_sumary)
   * [class: layer.HeatmapLayer](#niclabs.insight.layer.HeatmapLayer)
     * [new layer.HeatmapLayer(dashboard, options)](#new_niclabs.insight.layer.HeatmapLayer)
     * [HeatmapLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.HeatmapLayer.layer.draw)
@@ -699,6 +820,77 @@ Visualization layers for the dashboard
     * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
     * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
 
+<a name="niclabs.insight.layer.GridLayer"></a>
+####class: layer.GridLayer
+**Extends**: `niclabs.insight.layer.Layer`  
+**Members**
+
+* [class: layer.GridLayer](#niclabs.insight.layer.GridLayer)
+  * [new layer.GridLayer(dashboard, options)](#new_niclabs.insight.layer.GridLayer)
+  * [GridLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.GridLayer.layer.draw)
+  * [GridLayer.layer.clear()](#niclabs.insight.layer.GridLayer.layer.clear)
+  * [GridLayer.layer.filter(fn)](#niclabs.insight.layer.GridLayer.layer.filter)
+  * [event: "layer_data"](#niclabs.insight.layer.GridLayer#event_layer_data)
+  * [event: "layer_sumary"](#niclabs.insight.layer.GridLayer#event_layer_sumary)
+
+<a name="new_niclabs.insight.layer.GridLayer"></a>
+#####new layer.GridLayer(dashboard, options)
+Construct a new grid Layer
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this layer belongs to  
+- options `Object` - configuration options for the layer  
+  - id `string` - identifier for the layer  
+  - data `string` | `Array.<Object>` - uri or data array for the layer  
+  - \[grid\] `Object` - options for the heatmap  
+
+**Extends**: `niclabs.insight.layer.Layer`  
+<a name="niclabs.insight.layer.GridLayer.layer.draw"></a>
+#####GridLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])
+Draw the grid according to the internal data on the map
+
+**Params**
+
+- data `Array.<Object>` - data to draw  
+- data[].lat `float` - latitude for the marker  
+- data[].lng `float` - longitude for the marker  
+- \[data[].description\] `string` - description for the marker  
+
+<a name="niclabs.insight.layer.GridLayer.layer.clear"></a>
+#####GridLayer.layer.clear()
+Clear the grid from the map
+
+<a name="niclabs.insight.layer.GridLayer.layer.filter"></a>
+#####GridLayer.layer.filter(fn)
+Filter the layer according to the provided function.
+
+**Params**
+
+- fn `niclabs.insight.layer.Layer~Filter` - filtering function  
+
+<a name="niclabs.insight.layer.GridLayer#event_layer_data"></a>
+#####event: "layer_data"
+Event triggered when an update to the layer data (filtering/update) has ocurred
+
+**Properties**
+
+- id `string` - id for the layer to which the data belongs to  
+- data `Array.<Object>` - new data array  
+
+**Type**: `object`  
+<a name="niclabs.insight.layer.GridLayer#event_layer_sumary"></a>
+#####event: "layer_sumary"
+Event triggered when an update to the (filtering/update) has ocurred
+
+The event provides summary data for blocks to show
+
+**Properties**
+
+- id `string` - id for the layer to which the data belongs to  
+- data `Object` - summarized data  
+
+**Type**: `object`  
 <a name="niclabs.insight.layer.HeatmapLayer"></a>
 ####class: layer.HeatmapLayer
 **Extends**: `niclabs.insight.layer.Layer`  
@@ -949,6 +1141,16 @@ Map compatibility for the insight dashboard
 **Members**
 
 * [insight.map](#niclabs.insight.map)
+  * [map.grid](#niclabs.insight.map.grid)
+    * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
+      * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
+      * [Grid.map](#niclabs.insight.map.grid.Grid.map)
+      * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
+      * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
+    * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
+      * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
+      * [type: HexagonalGrid.Data](#niclabs.insight.map.grid.HexagonalGrid.Data)
+      * [callback: HexagonalGrid~fill](#niclabs.insight.map.grid.HexagonalGrid..fill)
   * [map.heatmap](#niclabs.insight.map.heatmap)
     * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
       * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
@@ -978,12 +1180,125 @@ Map compatibility for the insight dashboard
       * [Marker.visible([visible])](#niclabs.insight.map.marker.Marker.visible)
     * [class: marker.SimpleMarker](#niclabs.insight.map.marker.SimpleMarker)
       * [new marker.SimpleMarker(dashboard, options)](#new_niclabs.insight.map.marker.SimpleMarker)
+  * [type: map.LatLng](#niclabs.insight.map.LatLng)
+  * [type: map.Point](#niclabs.insight.map.Point)
   * [class: map.GoogleMap](#niclabs.insight.map.GoogleMap)
     * [new map.GoogleMap(options)](#new_niclabs.insight.map.GoogleMap)
     * [GoogleMap.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom)
     * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
     * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
+  * [map.GoogleMercator](#niclabs.insight.map.GoogleMercator)
 
+<a name="niclabs.insight.map.grid"></a>
+####map.grid
+Contains all grids definitions for the dashboard
+
+**Members**
+
+* [map.grid](#niclabs.insight.map.grid)
+  * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
+    * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
+    * [Grid.map](#niclabs.insight.map.grid.Grid.map)
+    * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
+    * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
+  * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
+    * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
+    * [type: HexagonalGrid.Data](#niclabs.insight.map.grid.HexagonalGrid.Data)
+    * [callback: HexagonalGrid~fill](#niclabs.insight.map.grid.HexagonalGrid..fill)
+
+<a name="niclabs.insight.map.grid.Grid"></a>
+#####class: grid.Grid
+**Members**
+
+* [class: grid.Grid](#niclabs.insight.map.grid.Grid)
+  * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
+  * [Grid.map](#niclabs.insight.map.grid.Grid.map)
+  * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
+  * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
+
+<a name="new_niclabs.insight.map.grid.Grid"></a>
+######new grid.Grid(dashboard, options)
+Construct a grid over the map
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this layer belongs to  
+- options `Object` - configuration options for the layer  
+
+<a name="niclabs.insight.map.grid.Grid.map"></a>
+######Grid.map
+Map view where the grid belongs to
+
+**Type**: [MapView](#niclabs.insight.MapView)  
+<a name="niclabs.insight.map.grid.Grid.layer"></a>
+######Grid.layer
+Layer to which the grid belongs to
+
+**Type**: [Layer](#niclabs.insight.layer.Layer)  
+<a name="niclabs.insight.map.grid.Grid.clear"></a>
+######Grid.clear()
+Clear the grid from the map
+
+<a name="niclabs.insight.map.grid.HexagonalGrid"></a>
+#####class: grid.HexagonalGrid
+**Members**
+
+* [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
+  * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
+  * [type: HexagonalGrid.Data](#niclabs.insight.map.grid.HexagonalGrid.Data)
+  * [callback: HexagonalGrid~fill](#niclabs.insight.map.grid.HexagonalGrid..fill)
+
+<a name="new_niclabs.insight.map.grid.HexagonalGrid"></a>
+######new grid.HexagonalGrid(dashboard, options)
+Construct an hexagonal grid from the data provided.
+
+The grid divides the visible map into hexagonal tiles of the same size and draws only those
+tiles that have elements below them. If a weight is provided for the the data points
+each hexagon is painted with a function of the point weights inside the hexagon
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this grid belongs to  
+- options `Object` - configuration options for the grid  
+  - layer `string` - identifier for the layer that this grid belongs to  
+  - size `integer` - size for the side of each hexagon (in pixels)  
+  - \[strokeColor='#000000'\] `string` - color for the stroke of each hexagon  
+  - \[strokeOpacity=0.6\] `float` - opacity for the stroke (between 0-1)  
+  - \[strokeWeight=2\] `integer` - border weight for the hexagon  
+  - \[fill='#ffffff'\] `string` | <code>[fill](#niclabs.insight.map.grid.HexagonalGrid..fill)</code> - color for the fill of the hexagon,
+	it can have one of the following values:
+ 	- 'average' calculates the average of the weights in the hexagon and interpolates that value between the values for options.fill_start and options.fill_end
+ 	- 'median' calculates the median of the weights in the hexagon and interpolates as average
+ 	- rgb color (starting with '#') is used as a fixed color for all hexagons
+ 	- a callback receiving the points in the hexagon and returning the value for the color  
+  - \[fillStart='#ff0000'\] `string` - if 'average' or 'median' are used as options for options.fill, it sets the begining of the interpolation interval for the fill function  
+  - \[fillEnd='#00ff00'\] `string` - if 'average' or 'median' are used as options for options.fill, it sets the end of the interpolation interval for the fill function  
+  - \[fillOpacity=0.6\] `float` - opacity for the fill of the hexagon  
+  - data <code>[Array.&lt;Data&gt;](#niclabs.insight.map.grid.HexagonalGrid.Data)</code> - data for the layer  
+
+<a name="niclabs.insight.map.grid.HexagonalGrid.Data"></a>
+######type: HexagonalGrid.Data
+Data point for an hexagonal grid
+
+**Params**
+
+- lat `float` - latitude for the heatmap point  
+- lng `float` - longitude for the heatmap point  
+- \[weight\] `float` - weight for the heatmap point (between 0 and 1)  
+
+**Type**: `Object`  
+<a name="niclabs.insight.map.grid.HexagonalGrid..fill"></a>
+######callback: HexagonalGrid~fill
+Fill calculation function. Receives the list of points of a hexagon and
+returns a color for that hexagon
+
+**Params**
+
+- points <code>[Array.&lt;Data&gt;](#niclabs.insight.map.grid.HexagonalGrid.Data)</code>  
+- fill `string` - color for the hexagon  
+
+**Scope**: inner typedef of [HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)  
+**Type**: `function`  
 <a name="niclabs.insight.map.heatmap"></a>
 ####map.heatmap
 Tools for drawing heatmaps on the map
@@ -1267,6 +1582,26 @@ Simple markers are shown in the map as basic waypoints, with no style options
   - layer `string` - identifier for the layer that this marker belongs to  
 
 **Extends**: `niclabs.insight.map.marker.Marker`  
+<a name="niclabs.insight.map.LatLng"></a>
+####type: map.LatLng
+Object to represent geographic coordinates
+
+**Properties**
+
+- lat `float` - latitude  
+- lng `float` - longitude  
+
+**Type**: `Object`  
+<a name="niclabs.insight.map.Point"></a>
+####type: map.Point
+Cartesian coordinates
+
+**Properties**
+
+- x `float` - horizontal coordinate  
+- y `float` - vertical coordinate  
+
+**Type**: `Object`  
 <a name="niclabs.insight.map.GoogleMap"></a>
 ####class: map.GoogleMap
 **Extends**: `niclabs.insight.MapView`  
@@ -1314,7 +1649,7 @@ the underlying google map center as well
 - \[lat\] `float` - latitude for the map center  
 - \[lng\] `float` - longitude for the map center  
 
-**Returns**: [Coordinates](#niclabs.insight.MapView.Coordinates) - coordinates for the map center  
+**Returns**: [LatLng](#niclabs.insight.map.LatLng) - coordinates for the map center  
 <a name="niclabs.insight.map.GoogleMap#event_map_element_selected"></a>
 #####event: "map_element_selected"
 Event triggered to notify the dashboard that an element of the map has been pressed
@@ -1326,6 +1661,149 @@ Event triggered to notify the dashboard that an element of the map has been pres
 - lng `float` - latitude for the marker  
 
 **Type**: `object`  
+<a name="niclabs.insight.quadtree"></a>
+###insight.quadtree
+Quadtree implementation
+
+**Members**
+
+* [insight.quadtree](#niclabs.insight.quadtree)
+  * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
+  * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
+    * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
+    * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
+    * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
+    * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
+    * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
+    * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
+  * [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
+    * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
+    * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
+    * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
+    * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
+    * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
+
+<a name="niclabs.insight.quadtree.Point"></a>
+####type: quadtree.Point
+A cartesian point
+
+**Params**
+
+- x `float` - horizontal coordinates  
+- y `float` - vertical coordinates  
+
+**Type**: `Object`  
+<a name="niclabs.insight.quadtree.Bounds"></a>
+####class: quadtree.Bounds
+**Members**
+
+* [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
+  * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
+  * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
+  * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
+  * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
+  * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
+  * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
+
+<a name="new_niclabs.insight.quadtree.Bounds"></a>
+#####new quadtree.Bounds(min, max)
+Construct an axis aligned bounding box with the corners
+at the provided coordinates
+
+**Params**
+
+- min <code>[Point](#niclabs.insight.quadtree.Point)</code> - minimal coordinates of the bounding box (e.g. lower left corner if zero is at the lower left corner of the canvas)  
+- max <code>[Point](#niclabs.insight.quadtree.Point)</code> - maximal coordinates of the bounding box (e.g. upper right corner if zero is at the lower left corner of the canvas)  
+
+<a name="niclabs.insight.quadtree.Bounds.center"></a>
+#####Bounds.center
+Center of the bounding box
+
+**Type**: [Point](#niclabs.insight.quadtree.Point)  
+<a name="niclabs.insight.quadtree.Bounds.min"></a>
+#####Bounds.min
+Minimal coordinates of the bounding box
+(e.g. lower left corner if zero is at the lowest leftmost corner of the canvas)
+
+**Type**: [Point](#niclabs.insight.quadtree.Point)  
+<a name="niclabs.insight.quadtree.Bounds.max"></a>
+#####Bounds.max
+Maximal coordinates of the bounding box
+(e.g. upper right corner if zero is at the lowest leftmost corner of the canvas)
+
+**Type**: [Point](#niclabs.insight.quadtree.Point)  
+<a name="niclabs.insight.quadtree.Bounds.contains"></a>
+#####Bounds.contains(point)
+Check if this bounding box contains the given point.
+
+As a convention, a bounding box contains all points inside its borders
+as well as all the points in the east and south borders.
+
+**Params**
+
+- point <code>[Point](#niclabs.insight.quadtree.Point)</code> - point to lookup  
+
+**Returns**: `boolean` - true if the box contains the point  
+<a name="niclabs.insight.quadtree.Bounds.intersects"></a>
+#####Bounds.intersects(box)
+Check if this bounding box intersects the given bounding box
+
+**Params**
+
+- box <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - bounding box to check intersection with  
+
+**Returns**: `boolean` - true if the boxes intersect in at least one point  
+<a name="niclabs.insight.quadtree.PointQuadTree"></a>
+####class: quadtree.PointQuadTree
+**Members**
+
+* [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
+  * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
+  * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
+  * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
+  * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
+  * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
+
+<a name="new_niclabs.insight.quadtree.PointQuadTree"></a>
+#####new quadtree.PointQuadTree(bounds, [capacity], [depth])
+Construct a Point Quadtree
+
+See [http://en.wikipedia.org/wiki/Quadtree](http://en.wikipedia.org/wiki/Quadtree)
+
+**Params**
+
+- bounds <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - bounding box for the quadtree  
+- \[capacity=50\] `integer` - number of points that each node in the quadtree accepts before dividing  
+- \[depth=40\] `integer` - max depth of the quadtree  
+
+<a name="niclabs.insight.quadtree.PointQuadTree.capacity"></a>
+#####PointQuadTree.capacity
+Capacity for the quadtree
+
+**Type**: `integer`  
+<a name="niclabs.insight.quadtree.PointQuadTree.bounds"></a>
+#####PointQuadTree.bounds
+Boundary of the quadtree
+
+**Type**: [Bounds](#niclabs.insight.quadtree.Bounds)  
+<a name="niclabs.insight.quadtree.PointQuadTree.insert"></a>
+#####PointQuadTree.insert(point)
+Insert a new point in the quadtree
+
+**Params**
+
+- point <code>[Point](#niclabs.insight.quadtree.Point)</code> - new point to insert  
+
+**Returns**: `boolean` - true if the point could be inserted (point belongs in the bounds of the quadtree)  
+<a name="niclabs.insight.quadtree.PointQuadTree.query"></a>
+#####PointQuadTree.query(range)
+Return all the points in the specified bounding box
+
+**Params**
+
+- range <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - spatial range to search  
+
+**Returns**: [Array.&lt;Point&gt;](#niclabs.insight.quadtree.Point) - list of points in the given range  
 <a name="niclabs.insight..handler"></a>
 ###callback: insight~handler
 Constructs an insight element (visualization, layer, etc.)
@@ -1555,11 +2033,12 @@ the layers
   * [new insight.MapView(options)](#new_niclabs.insight.MapView)
   * [MapView.element](#niclabs.insight.MapView.element)
   * [MapView.$](#niclabs.insight.MapView.$)
+  * [MapView.lat](#niclabs.insight.MapView.lat)
+  * [MapView.lng](#niclabs.insight.MapView.lng)
+  * [MapView.width](#niclabs.insight.MapView.width)
+  * [MapView.height](#niclabs.insight.MapView.height)
   * [MapView.center([lat], [lng])](#niclabs.insight.MapView.center)
-  * [MapView.lat()](#niclabs.insight.MapView.lat)
-  * [MapView.lng()](#niclabs.insight.MapView.lng)
   * [MapView.zoom([zoom])](#niclabs.insight.MapView.zoom)
-  * [type: MapView.Coordinates](#niclabs.insight.MapView.Coordinates)
   * [event: "map_element_selected"](#niclabs.insight.MapView#event_map_element_selected)
 
 <a name="new_niclabs.insight.MapView"></a>
@@ -1583,6 +2062,26 @@ HTML DOM element for the map view
 jQuery object for map view
 
 **Type**: `jQuery`  
+<a name="niclabs.insight.MapView.lat"></a>
+####MapView.lat
+Latitude for the map center
+
+**Type**: `float`  
+<a name="niclabs.insight.MapView.lng"></a>
+####MapView.lng
+Longitude for the map center
+
+**Type**: `float`  
+<a name="niclabs.insight.MapView.width"></a>
+####MapView.width
+Width for the map container
+
+**Type**: `float`  
+<a name="niclabs.insight.MapView.height"></a>
+####MapView.height
+Height for the map container
+
+**Type**: `float`  
 <a name="niclabs.insight.MapView.center"></a>
 ####MapView.center([lat], [lng])
 Set/get the map center.
@@ -1594,17 +2093,7 @@ map reflects the new center.
 - \[lat\] `float` - latitude for the map center  
 - \[lng\] `float` - longitude for the map center  
 
-**Returns**: [Coordinates](#niclabs.insight.MapView.Coordinates) - coordinates for the map center  
-<a name="niclabs.insight.MapView.lat"></a>
-####MapView.lat()
-Get the latitude for the map center
-
-**Returns**: `float` - latitude for the map center  
-<a name="niclabs.insight.MapView.lng"></a>
-####MapView.lng()
-Get the longitude for the map center
-
-**Returns**: `float` - longitude for the map center  
+**Returns**: [LatLng](#niclabs.insight.map.LatLng) - coordinates for the map center  
 <a name="niclabs.insight.MapView.zoom"></a>
 ####MapView.zoom([zoom])
 Set/get the map zoom level.
@@ -1616,16 +2105,6 @@ map reflects the new zoom.
 - \[zoom\] `int` - zoom  
 
 **Returns**: `int` - zoom level of the map  
-<a name="niclabs.insight.MapView.Coordinates"></a>
-####type: MapView.Coordinates
-Object to represent geographic coordinates
-
-**Properties**
-
-- lat `float` - latitude for the map center  
-- lng `float` - longitude for the map center  
-
-**Type**: `Object`  
 <a name="niclabs.insight.MapView#event_map_element_selected"></a>
 ####event: "map_element_selected"
 Event triggered to notify the dashboard that an element of the map has been pressed
@@ -1637,15 +2116,107 @@ Event triggered to notify the dashboard that an element of the map has been pres
 - lng `float` - latitude for the marker  
 
 **Type**: `object`  
+<a name="niclabs.insight.ElementList"></a>
+###class: insight.ElementList
+**Extends**: `niclabs.insight.Element`  
+**Members**
+
+* [class: insight.ElementList](#niclabs.insight.ElementList)
+  * [new insight.ElementList(dashboard)](#new_niclabs.insight.ElementList)
+  * [ElementList.self.element(obj)](#niclabs.insight.ElementList.self.element)
+  * [ElementList.self.each(iterator)](#niclabs.insight.ElementList.self.each)
+  * [ElementList.self.remove(id)](#niclabs.insight.ElementList.self.remove)
+  * [callback: ElementList~iterator](#niclabs.insight.ElementList..iterator)
+
+<a name="new_niclabs.insight.ElementList"></a>
+####new insight.ElementList(dashboard)
+Construct a list of dashboard elements.
+
+In a list, children can be added either by passing the object directly
+to the `niclabs.insight.ElementList.element()` method or by passing the options
+for constructing the [Element](#niclabs.insight.Element), including the name of the handler.
+
+The list will lookup the handler in the list of registered handlers and
+use it to construct the element
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard where the list belongs to  
+
+**Extends**: `niclabs.insight.Element`  
+<a name="niclabs.insight.ElementList.self.element"></a>
+####ElementList.self.element(obj)
+Add/get an element from the list
+
+- If a number or string is provided as value for obj, the element with that id is returned
+- If a generic object is provided with the handler defined in the 'handler' property, a new element
+is created using the handler and the element is added to the list
+- If an object is provided without handler, it is assumed to be a valid insight Element and added to the
+list as is.
+
+**Params**
+
+- obj `string` | `number` | `Object` | <code>[Element](#niclabs.insight.Element)</code> - element id to get or configuration options for the new element  
+
+**Returns**: [ElementList](#niclabs.insight.ElementList) - - newly created element  
+<a name="niclabs.insight.ElementList.self.each"></a>
+####ElementList.self.each(iterator)
+Iterate over the elements of the list
+
+**Params**
+
+- iterator <code>[iterator](#niclabs.insight.ElementList..iterator)</code>  
+
+<a name="niclabs.insight.ElementList.self.remove"></a>
+####ElementList.self.remove(id)
+Delete the element with specified id from the list
+
+**Params**
+
+- id `string` | `integer` - identifier for the element  
+
+**Returns**: [Element](#niclabs.insight.Element) - removed element  
+<a name="niclabs.insight.ElementList..iterator"></a>
+####callback: ElementList~iterator
+Process a list element
+
+**Params**
+
+- key `string` - key for the element  
+- element <code>[Element](#niclabs.insight.Element)</code> - object associated to the provided key  
+
+**Scope**: inner typedef of [ElementList](#niclabs.insight.ElementList)  
+**Type**: `function`  
+<a name="niclabs.insight.Element"></a>
+###class: insight.Element
+**Members**
+
+* [class: insight.Element](#niclabs.insight.Element)
+  * [new insight.Element(options)](#new_niclabs.insight.Element)
+  * [Element.id](#niclabs.insight.Element.id)
+
+<a name="new_niclabs.insight.Element"></a>
+####new insight.Element(options)
+Construct a generic insight element
+
+**Params**
+
+- options `Object` - configuration options for the element  
+  - id `String` - identifier for the element  
+
+<a name="niclabs.insight.Element.id"></a>
+####Element.id
+Identifier for the insight element
+
+**Type**: `string`  
 <a name="niclabs.insight.InfoView"></a>
 ###class: insight.InfoView
+**Extends**: `niclabs.insight.UiElement`  
 **Members**
 
 * [class: insight.InfoView](#niclabs.insight.InfoView)
   * [new insight.InfoView(dashboard, options)](#new_niclabs.insight.InfoView)
-  * [InfoView.element](#niclabs.insight.InfoView.element)
-  * [InfoView.$](#niclabs.insight.InfoView.$)
-  * [InfoView.block(obj)](#niclabs.insight.InfoView.block)
+  * [InfoView.element.block(obj)](#niclabs.insight.InfoView.element.block)
 
 <a name="new_niclabs.insight.InfoView"></a>
 ####new insight.InfoView(dashboard, options)
@@ -1660,18 +2231,9 @@ about the visualization in general
 - dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard to assign this info view to  
 - options `Object` - list of configuration options for the information view  
 
-<a name="niclabs.insight.InfoView.element"></a>
-####InfoView.element
-HTML DOM element for the information view container
-
-**Type**: `Element`  
-<a name="niclabs.insight.InfoView.$"></a>
-####InfoView.$
-jQuery object for info view container
-
-**Type**: `jQuery`  
-<a name="niclabs.insight.InfoView.block"></a>
-####InfoView.block(obj)
+**Extends**: `niclabs.insight.UiElement`  
+<a name="niclabs.insight.InfoView.element.block"></a>
+####InfoView.element.block(obj)
 Add/get a block from the info view
 
 - If a number or string is provided as value for obj, the block with that id is returned
@@ -1686,3 +2248,46 @@ block list as is.
 - obj `string` | `number` | `Object` | <code>[Block](#niclabs.insight.info.Block)</code> - block id to get or configuration options for the new block  
 
 **Returns**: [Block](#niclabs.insight.info.Block) - - newly created block  
+<a name="niclabs.insight.UiElement"></a>
+###class: insight.UiElement
+**Extends**: `niclabs.insight.Element`  
+**Members**
+
+* [class: insight.UiElement](#niclabs.insight.UiElement)
+  * [new insight.UiElement(options)](#new_niclabs.insight.UiElement)
+  * [UiElement.$](#niclabs.insight.UiElement.$)
+  * [UiElement.element](#niclabs.insight.UiElement.element)
+  * [UiElement.self.append(element)](#niclabs.insight.UiElement.self.append)
+
+<a name="new_niclabs.insight.UiElement"></a>
+####new insight.UiElement(options)
+Construct a UI element
+
+UI elements have an internal DOM representation to
+display on the browser
+
+**Params**
+
+- options `Object` - configuration options for the element  
+  - id `String` - identifier for the element  
+
+**Extends**: `niclabs.insight.Element`  
+<a name="niclabs.insight.UiElement.$"></a>
+####UiElement.$
+DOM Element specified by this UiElement
+
+**Type**: `jQuery`  
+<a name="niclabs.insight.UiElement.element"></a>
+####UiElement.element
+DOM Element specified by this UiElement
+
+**Type**: `jQuery`  
+<a name="niclabs.insight.UiElement.self.append"></a>
+####UiElement.self.append(element)
+Append an element to the DOM tree of this Ui elemtn
+
+**Params**
+
+- element <code>[UiElement](#niclabs.insight.UiElement)</code> - element to append  
+
+**Returns**: [UiElement](#niclabs.insight.UiElement) - reference to this element  
