@@ -69,7 +69,7 @@ niclabs.insight.map.grid.HexagonalGrid = (function() {
 				}
 				else {
 					i = arguments[0];
-					i = arguments[1];
+					j = arguments[1];
 				}
 
 				// From http://www.gamedev.net/page/resources/_/technical/game-programming/coordinates-in-hexagon-based-tile-maps-r1800
@@ -98,16 +98,7 @@ niclabs.insight.map.grid.HexagonalGrid = (function() {
 				var square_pixel_x = coord.x - square_i * 2 * R;
 				var square_pixel_y = coord.y - square_j * (H + side);
 
-
-				var marker = new google.maps.Marker({
-		            position: niclabs.insight.map.GoogleMercator.geographic(
-						{x:  square_i * 2*R + square_pixel_x,
-						y: square_j * (H + side) + square_pixel_y}
-					),
-		            map: niclabs.insight.map().googlemap()
-		        });
-
-				// Is type A if the row is odd
+				// Is type A if the row is even
 				var rowIsTypeA = ((square_j & 1) === 0);
 
 				var hex_i = square_i;
@@ -147,7 +138,7 @@ niclabs.insight.map.grid.HexagonalGrid = (function() {
 			/**
 			 * Draw and return a hexagon tile for the specified coordinates
 			 */
-			draw: function(coord, map) {
+			draw: function(coord, map, config) {
 				if (!('googlemap' in map))
 		            throw new Error("Sorry, I only know how to draw on Google Maps at the moment");
 
@@ -158,15 +149,20 @@ niclabs.insight.map.grid.HexagonalGrid = (function() {
 					coordinates.push(niclabs.insight.map.GoogleMercator.geographic(points[i]));
 				}
 
-				hexagon = new google.maps.Polygon({
-					paths: coordinates,
+				// Set default configuration
+				config = config || {
 					strokeColor: '#000000',
-					strokeOpacity: 0.5,
+					strokeOpacity: 0.6,
 					strokeWeight: 2,
 					fillColor: '#ffffff',
-					fillOpacity: 0.2,
-					geodesic: true
-				});
+					fillOpacity: 0.6,
+				};
+
+				config.paths = coordinates;
+				config.geodesic = true;
+
+				// Create the hexagon with the configuration
+				hexagon = new google.maps.Polygon(config);
 
 				hexagon.setMap(map.googlemap());
 
@@ -177,6 +173,81 @@ niclabs.insight.map.grid.HexagonalGrid = (function() {
 		return self;
 	};
 
+	/**
+	 * Returns a function to calculate the fill as the interpolation on the average between the point weights
+	 *
+	 * @param {string} start_rgb - starting color for the interpolation
+	 * @param {string} end_rgb - ending color for the interpolation
+	 * @return {niclabs.insight.map.grid.HexagonalGrid~fill} average function
+	 */
+	function averageFill(start_rgb, end_rgb) {
+
+
+		return function(points) {
+			var avg = 0;
+			var size = 0;
+
+			for (i = 0; i < points.length; i++) {
+				if ('weight' in points[i]) {
+					avg += points[i].weight;
+					size++;
+				}
+			}
+
+			// Calculate average
+			if (size > 0) {
+				avg = avg / size;
+				return niclabs.insight.Color.rgbToHex(niclabs.insight.Interpolation.interpolateRgb(avg, 1, start_rgb, end_rgb));
+			}
+
+			return '#ffffff';
+		};
+	}
+
+	/**
+	 * Returns a function to calculate the fill as the interpolation on the median between the point weights
+	 *
+	 * @param {string} start_rgb - starting color for the interpolation
+	 * @param {string} end_rgb - ending color for the interpolation
+	 * @return {niclabs.insight.map.grid.HexagonalGrid~fill} median function
+	 */
+	function medianFill(start_rgb, end_rgb) {
+		function partition(data, i, j) {
+	        var pivot = Math.floor((i+j)/2);
+	        var temp;
+	        while(i <= j){
+	            while(data[i].weight < data[pivot].weight)
+	                i++;
+	            while(data[j].weight > data[pivot].weight)
+	                j--;
+	            if(i <= j){
+	                temp = data[i];
+	                data[i]=data[j];
+	                data[j] = temp;
+	                i++;
+					j--;
+	            }
+	        }
+	        return pivot;
+	    }
+
+		start_rgb = niclabs.insight.Color.hexToRgb(start_rgb);
+		end_rgb = niclabs.insight.Color.hexToRgb(end_rgb);
+
+		return function(points) {
+			var median = 0;
+			var left = 0, right = points.length > 0 ? points.length - 1: 0;
+	        var mid = Math.floor((left + right) / 2);
+	        median = partition(points, left, right);
+	        while (median !== mid) {
+	            if(median < mid)
+	                median = partition(points, mid, right);
+	            else median = partition(points, left, mid);
+	        }
+
+			return niclabs.insight.Color.rgbToHex(niclabs.insight.Interpolation.interpolateRgb(points[median].weight, 1, start_rgb, end_rgb));
+		};
+	}
 
     /**
      * Data point for an hexagonal grid
@@ -185,52 +256,145 @@ niclabs.insight.map.grid.HexagonalGrid = (function() {
      * @type {Object}
      * @param {float} lat - latitude for the heatmap point
      * @param {float} lng - longitude for the heatmap point
-     * @param {float=} weight - weight for the heatmap point
+     * @param {float=} weight - weight for the heatmap point (between 0 and 1)
      */
 
 	/**
-     * Construct a new grid
+	 * Fill calculation function. Receives the list of points of a hexagon and
+	 * returns a color for that hexagon
+	 * @callback niclabs.insight.map.grid.HexagonalGrid~fill
+	 * @param {niclabs.insight.map.grid.HexagonalGrid.Data[]} points
+	 * @param {string} fill color for the hexagon
+	 */
+
+	/**
+     * Construct an hexagonal grid from the data provided.
+	 *
+	 * The grid divides the visible map into hexagonal tiles of the same size and draws only those
+	 * tiles that have elements below them. If a weight is provided for the the data points
+	 * each hexagon is painted with a function of the point weights inside the hexagon
      *
      * @class niclabs.insight.map.grid.HexagonalGrid
      * @param {niclabs.insight.Dashboard} dashboard - dashboard that this grid belongs to
      * @param {Object} options - configuration options for the grid
      * @param {string} options.layer - identifier for the layer that this grid belongs to
      * @param {integer} options.size - size for the side of each hexagon (in pixels)
+	 * @param {string} [options.strokeColor='#000000'] - color for the stroke of each hexagon
+	 * @param {float} [options.strokeOpacity=0.6] - opacity for the stroke (between 0-1)
+	 * @param {integer} [options.strokeWeight=2] - border weight for the hexagon
+	 * @param {string|niclabs.insight.map.grid.HexagonalGrid~fill} [options.fill='#ffffff'] - color for the fill of the hexagon,
+	 * 	it can have one of the following values:
+	 *  	- 'average' calculates the average of the weights in the hexagon and interpolates that value between the values for options.fill_start and options.fill_end
+	 *  	- 'median' calculates the median of the weights in the hexagon and interpolates as average
+	 *  	- rgb color (starting with '#') is used as a fixed color for all hexagons
+	 *  	- a callback receiving the points in the hexagon and returning the value for the color
+	 * @param {string} [options.fillStart='#ff0000'] - if 'average' or 'median' are used as options for options.fill, it sets the begining of the interpolation interval for the fill function
+	 * @param {string} [options.fillEnd='#00ff00'] - if 'average' or 'median' are used as options for options.fill, it sets the end of the interpolation interval for the fill function
+	 * @param {float} [options.fillOpacity=0.6] - opacity for the fill of the hexagon
      * @param {niclabs.insight.map.grid.HexagonalGrid.Data[]} options.data - data for the layer
      */
 	var HexagonalGrid = function(dashboard, options) {
 		var grid = niclabs.insight.map.grid.Grid(dashboard, options);
 
-        // function isPointInPoly(poly, pt) {
-        //     for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
-        //         ((poly[i].y <= pt.y && pt.y < poly[j].y) || (poly[j].y <= pt.y && pt.y < poly[i].y)) &&
-        //             (pt.x < (poly[j].x - poly[i].x) * (pt.y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x) &&
-        //             (c = !c);
-        //     return c;
-        // }
-
 		var tiles = [];
+
+		var hexagonConfig = {
+			strokeColor: 'strokeColor' in options ? options.strokeColor : '#000000',
+			strokeOpacity: 'strokeOpacity' in options ? options.strokeOpacity : 0.6,
+			strokeWeight: 'strokeWeight' in options ? options.strokeWeight : 2,
+			fillOpacity: 'fillOpacity' in options ? options.fillOpacity : 0.6,
+		};
+
+		// Default fill function
+		function fillColor() {
+			return '#ffffff';
+		}
+
+		var fill = options.fill || fillColor;
+		if (typeof fill === 'string') {
+			if (options.fill.charAt(0) === '#') {
+				fill = function() {return options.fill;};
+			}
+			else if (options.fill === 'average') {
+				fill = averageFill(options.fillStart || '#ff0000', options.fillEnd || '#00ff00');
+			}
+			else if (options.fill === 'median') {
+				fill = medianFill(options.fillStart || '#ff0000', options.fillEnd || '#00ff00');
+			}
+			else {
+				fill = fillColor;
+			}
+		}
+
+		var worldBounds = niclabs.insight.quadtree.Bounds(
+			niclabs.insight.map.GoogleMercator.cartesian({lat: 90, lng: -180}),
+			niclabs.insight.map.GoogleMercator.cartesian({lat: -90, lng: 180})
+		);
+
+		var quadtree = niclabs.insight.quadtree.PointQuadTree(worldBounds);
+
+		// TODO: put all data points in a world wide quad tree
+		for (var i = 0; i < options.data.length; i++) {
+			var coord = niclabs.insight.map.GoogleMercator.cartesian(options.data[i]);
+
+			options.data[i].x = coord.x;
+			options.data[i].y = coord.y;
+
+			quadtree.insert(options.data[i]);
+		}
+
+		function notifyHexClick(points) {
+			return function() {
+				niclabs.insight.event.trigger('map_element_selected', points);
+			};
+		}
+
+		// TODO: create a function to calculate the color
+
         // Build the grid
         function build(mapBounds) {
 			if (!mapBounds) return;
 
 			var hexagon = HexagonTile(niclabs.insight.map.GoogleMercator.distance(options.size, grid.map.zoom()));
 
-			var ne = niclabs.insight.map.GoogleMercator.cartesian(mapBounds.getNorthEast());
-			var sw = niclabs.insight.map.GoogleMercator.cartesian(mapBounds.getSouthWest());
+			// find all points in the map bounds using the quadtree
+			var points = quadtree.query(niclabs.insight.quadtree.Bounds(
+				niclabs.insight.map.GoogleMercator.cartesian({lat: mapBounds.getNorthEast().lat(), lng: mapBounds.getSouthWest().lng()}),
+				niclabs.insight.map.GoogleMercator.cartesian({lat: mapBounds.getSouthWest().lat(), lng: mapBounds.getNorthEast().lng()})
+			));
 
-			var width = Math.abs(sw.x - ne.x);
-			var height = Math.abs(sw.y - ne.y);
+			var pointSets = [];
+			var hex_i, hex_j;
 
-			//var hexagon = HexagonTile(width/32);
+			for (var i = 0; i < points.length; i++) {
+				var coord = hexagon.tile(points[i]);
+				hex_i = coord[0];
+				hex_j = coord[1];
 
-			var cols = width / (2 * hexagon.r);
-			var rows = height / (hexagon.h + hexagon.s);
+				if (!pointSets[hex_i]) pointSets[hex_i] = [];
+				if (!pointSets[hex_i][hex_j]) pointSets[hex_i][hex_j] = [];
 
-			for (var i = 0; i < options.data.length; i++) {
-				tiles.push(hexagon.draw(hexagon.coordinates(hexagon.tile(options.data[i])), grid.map));
+				// if pointSets[hex_i][hex_j] add the point to the list
+				pointSets[hex_i][hex_j].push(points[i]);
 			}
 
+			tiles = [];
+
+			// for each tile, average (or median) the weights and draw the map
+			for (hex_i in pointSets) {
+				for (hex_j in pointSets[hex_i]) {
+					hexagonConfig.fillColor = fill(pointSets[hex_i][hex_j]);
+
+					// Draw the hexagon
+					// TODO: set the options
+					var tile = hexagon.draw(hexagon.coordinates(hex_i, hex_j), grid.map, hexagonConfig);
+
+					// Add an event to the click
+					google.maps.event.addListener(tile, 'click', notifyHexClick(pointSets[hex_i][hex_j]));
+
+					tiles.push(tile);
+				}
+			}
         }
 
 		grid.clear = function() {
