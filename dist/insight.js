@@ -419,6 +419,126 @@ niclabs.insight = (function ($) {
     };
 })(jQuery);
 
+/**
+ * Color manipulation utils
+ *
+ * @mixin
+ */
+niclabs.insight.Color = (function() {
+    /**
+     * Converts an RGB color value to HSV. Conversion formula
+     * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+     * Assumes r, g, and b are contained in the set [0, 255] and
+     * returns h, s, and v in the set [0, 1].
+     *
+     * Source: http://axonflux.com/handy-rgb-to-hsl-and-rgb-to-hsv-color-model-c
+     *
+     * @memberof niclabs.insight.Color
+     * @param   {Number}  r       The red color value
+     * @param   {Number}  g       The green color value
+     * @param   {Number}  b       The blue color value
+     * @return  {Number[]}        The HSV representation
+     */
+    function rgbToHsv(r, g, b){
+        r = r/255;
+        g = g/255;
+        b = b/255;
+        var max = Math.max(r, g, b), min = Math.min(r, g, b);
+        var h, s, v = max;
+
+        var d = max - min;
+        s = max === 0 ? 0 : d / max;
+
+        if(max == min){
+            h = 0; // achromatic
+        }else{
+            switch(max){
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            h /= 6;
+        }
+
+        return [h, s, v];
+    }
+
+    /**
+     * Converts an HSV color value to RGB. Conversion formula
+     * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+     * Assumes h, s, and v are contained in the set [0, 1] and
+     * returns r, g, and b in the set [0, 255].
+     *
+     * Source: http://axonflux.com/handy-rgb-to-hsl-and-rgb-to-hsv-color-model-c
+     *
+     * @memberof niclabs.insight.Color
+     * @param   {Number}  h       The hue
+     * @param   {Number}  s       The saturation
+     * @param   {Number}  v       The value
+     * @return  {Number[]}        The RGB representation
+     */
+    function hsvToRgb(h, s, v){
+        var r, g, b;
+
+        var i = Math.floor(h * 6);
+        var f = h * 6 - i;
+        var p = v * (1 - s);
+        var q = v * (1 - f * s);
+        var t = v * (1 - (1 - f) * s);
+
+        switch(i % 6){
+            case 0: r = v; g = t; b = p; break;
+            case 1: r = q; g = v; b = p; break;
+            case 2: r = p; g = v; b = t; break;
+            case 3: r = p; g = q; b = v; break;
+            case 4: r = t; g = p; b = v; break;
+            case 5: r = v; g = p; b = q; break;
+        }
+
+        return [r * 255, g * 255, b * 255];
+    }
+
+	function componentToHex(c) {
+		c = Math.floor(c);
+	    var hex = c.toString(16);
+	    return hex.length == 1 ? "0" + hex : hex;
+	}
+
+    /**
+     * Converts a rgb triple into an hexadecimal string
+     *
+     * @memberof niclabs.insight.Color
+     * @param {Number[]} rgb - rgb representation
+     * @return {string} hexadecimal representation
+     */
+	function rgbToHex(rgb) {
+	    return "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
+	}
+
+    /**
+     * Converts a hexadecimal color intro a rgb array
+     *
+     * @memberof niclabs.insight.Color
+     * @param {string} hex - hexadecimal representation of the color
+     * @return {integer[]} - triplet representation of the color
+     */
+    function hexToRgb(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? [
+            parseInt(result[1], 16),
+            parseInt(result[2], 16),
+            parseInt(result[3], 16)
+        ] : null;
+    }
+
+    return {
+        'rgbToHsv': rgbToHsv,
+        'hsvToRgb': hsvToRgb,
+        'rgbToHex': rgbToHex,
+        'hexToRgb': hexToRgb
+    };
+})();
+
 niclabs.insight.Dashboard = (function($) {
     "use strict";
 
@@ -1085,6 +1205,75 @@ niclabs.insight.InfoView = (function($) {
     return InFoView;
 })(jQuery);
 
+/**
+ * Defines interpolation utils
+ *
+ * @mixin
+ */
+niclabs.insight.Interpolation = (function() {
+    /**
+     * Return the position for value in the interval [start_point, end_point]
+     * where value can go from 0 to maximum.
+     *
+     * Source: http://stackoverflow.com/questions/168838/color-scaling-function
+     *
+     * @memberof niclabs.insight.Interpolation
+     * @param {float} value - value to interpolate
+     * @param {flaot} maximum - maximum value that value can take
+     * @param {float} start_point - beginning of the interval
+     * @param {float} end_point - end of the interval
+     * @return {float} - interpolation value
+     */
+    function interpolate(value, maximum, start_point, end_point) {
+        return start_point + (end_point - start_point)*value/maximum;
+    }
+
+    /**
+     * Return the position for value in the 3-dimensional line between
+     * the vectors [s, e], where value can go from 0 to maximum.
+     *
+     * Source: http://stackoverflow.com/questions/168838/color-scaling-function
+     *
+     * @memberof niclabs.insight.Interpolation
+     * @param {float} value - value to interpolate
+     * @param {flaot} maximum - maximum value that value can take
+     * @param {float[]} s - 3d vector to use as start of the interval
+     * @param {float[]} e - 3d vector to use as end of the interval
+     * @return {float[]} - interpolation vector
+     */
+    function interpolate3d(value, maximum, s, e) {
+        var r1= interpolate(value, maximum, s[0], e[0]);
+        var r2= interpolate(value, maximum, s[1], e[1]);
+        var r3= interpolate(value, maximum, s[2], e[2]);
+        return [r1, r2, r3];
+    }
+
+    /**
+     * Calculate interpolated rgb color between the rgb start and end colors
+     * for the value value with the specified maximum
+     *
+     * @memberof niclabs.insight.Interpolation
+     * @param {float} value - value to interpolate
+     * @param {flaot} maximum - maximum value that value can take
+     * @param {integer[]} start_rgb - rgb color to use as start of the range
+     * @param {integer[]} e - rgb color to use as end of the range
+     * @return {integer[]} - interpolated color
+     */
+    function interpolateRgb(value, maximum, start_rgb, end_rgb) {
+        var start_hsv = niclabs.insight.Color.rgbToHsv(start_rgb[0], start_rgb[1], start_rgb[2]);
+        var end_hsv = niclabs.insight.Color.rgbToHsv(end_rgb[0], end_rgb[1], end_rgb[2]);
+
+        var hsv_result = interpolate3d(value, maximum, start_hsv, end_hsv);
+        return niclabs.insight.Color.hsvToRgb(hsv_result[0],hsv_result[1],hsv_result[2]);
+    }
+
+    return {
+        'interpolate': interpolate,
+        'interpolate3d': interpolate3d,
+        'interpolateRgb': interpolateRgb
+    };
+})();
+
 niclabs.insight.MapView = (function($) {
 	"use strict";
 
@@ -1100,13 +1289,6 @@ niclabs.insight.MapView = (function($) {
 	return function(options) {
 		var mapId = '#insight-map-view';
 
-		/**
-		 * Object to represent geographic coordinates
-		 *
-		 * @typedef {Object} niclabs.insight.MapView.Coordinates
-		 * @property {float} lat - latitude for the map center
-		 * @property {float} lng - longitude for the map center
-		 */
 		var center = {
 			lat: options.lat || 0,
 			lng: options.lng || 0
@@ -1130,7 +1312,7 @@ niclabs.insight.MapView = (function($) {
 		* @property {float} lng - latitude for the marker
 		*/
 
-		return {
+		var self = {
 			/**
              * HTML DOM element for the map view
              *
@@ -1149,7 +1331,7 @@ niclabs.insight.MapView = (function($) {
              * @memberof niclabs.insight.MapView
              * @member {jQuery}
              */
-            $: function() {
+            get $ () {
                 var c = $(mapId);
                 container = c.length === 0 ? container : c;
                 return container;
@@ -1163,7 +1345,7 @@ niclabs.insight.MapView = (function($) {
 			 * @memberof niclabs.insight.MapView
 			 * @param {float=} lat - latitude for the map center
 			 * @param {float=} lng - longitude for the map center
-			 * @return {niclabs.insight.MapView.Coordinates} coordinates for the map center
+			 * @return {niclabs.insight.map.LatLng} coordinates for the map center
 			 */
 			center: function(lat, lng) {
 				center.lat = lat = typeof lat === 'undefined' ? center.lat : lat;
@@ -1173,23 +1355,43 @@ niclabs.insight.MapView = (function($) {
 			},
 
 			/**
-			 * Get the latitude for the map center
+			 * Latitude for the map center
 			 *
 			 * @memberof niclabs.insight.MapView
-			 * @return {float} latitude for the map center
+			 * @member {float}
 			 */
-			lat: function() {
+			get lat () {
 				return center.lat;
 			},
 
 			/**
-			 * Get the longitude for the map center
+			 * Longitude for the map center
 			 *
 			 * @memberof niclabs.insight.MapView
-			 * @return {float} longitude for the map center
+			 * @member {float}
 			 */
-			lng: function() {
+			get lng () {
 				return center.lng;
+			},
+
+			/**
+			 * Width for the map container
+			 *
+			 * @memberof niclabs.insight.MapView
+			 * @member {float}
+			 */
+			get width () {
+				return self.$.width();
+			},
+
+			/**
+			 * Height for the map container
+			 *
+			 * @memberof niclabs.insight.MapView
+			 * @member {float}
+			 */
+			get height () {
+				return self.$.height();
 			},
 
 			/**
@@ -1207,6 +1409,8 @@ niclabs.insight.MapView = (function($) {
 				return zoom;
 			},
 		};
+
+		return self;
 	};
 })(jQuery);
 
@@ -2007,6 +2211,90 @@ niclabs.insight.layer = (function () {
     return layer;
 })();
 
+niclabs.insight.layer.GridLayer = (function() {
+    /**
+     * Construct a new grid Layer
+     *
+     * @class niclabs.insight.layer.GridLayer
+     * @extends niclabs.insight.layer.Layer
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this layer belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.id - identifier for the layer
+     * @param {string|Object[]} options.data - uri or data array for the layer
+     * @param {Object=} options.grid - options for the heatmap
+     */
+    var GridLayer = function(dashboard, options) {
+        var layer = niclabs.insight.layer.Layer(dashboard, options);
+
+        var gridOptions = options.grid || {
+            'type': 'hexagon'
+        };
+
+        function createGrid(data, obj) {
+            var grid;
+            if ('type' in obj) {
+                var attr = {'layer': layer.id, 'data': data};
+
+                // Extend the attributes with the data and the options for the marker
+                $.extend(attr, obj);
+
+                grid = niclabs.insight.handler(obj.type)(dashboard, attr);
+            }
+            else {
+                grid = obj;
+
+                // Should we add a way to pass data to the grid?
+            }
+
+            return grid;
+        }
+
+        var grid;
+
+        /**
+         * Draw the grid according to the internal data on the map
+         *
+         * @memberof niclabs.insight.layer.GridLayer
+         * @override
+         * @param {Object[]} data - data to draw
+         * @param {float} data[].lat - latitude for the marker
+         * @param {float} data[].lng - longitude for the marker
+         * @param {string=} data[].description - description for the marker
+         */
+        layer.draw = function(data) {
+            grid = createGrid(data, gridOptions);
+        };
+
+        /**
+         * Clear the grid from the map
+         *
+         * @memberof niclabs.insight.layer.GridLayer
+         * @override
+         */
+        layer.clear = function() {
+            if (grid) grid.clear();
+        };
+
+        /**
+         * Filter the layer according to the provided function.
+         *
+         * @memberof niclabs.insight.layer.GridLayer
+         * @override
+         * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
+         */
+        layer.filter = function(fn) {
+            // TODO. not sure if possible
+        };
+
+        return layer;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('grid-layer', 'layer', GridLayer);
+
+    return GridLayer;
+})();
+
 niclabs.insight.layer.HeatmapLayer = (function($) {
     /**
      * Construct a new heatmap layer
@@ -2377,6 +2665,37 @@ niclabs.insight.layer.MarkerLayer = (function($) {
  * @namespace
  */
 niclabs.insight.map = (function () {
+    /** Converts numeric degrees to radians */
+    if (typeof Number.prototype.toRad === "undefined") {
+        Number.prototype.toRad = function() {
+            return this * Math.PI / 180;
+        };
+    }
+
+    /** Converts numeric radians to degrees */
+    if (typeof Number.prototype.toDeg === "undefined") {
+        Number.prototype.toDeg = function() {
+            return this * 180 / Math.PI;
+        };
+    }
+
+    /**
+     * Object to represent geographic coordinates
+     *
+     * @typedef {Object} niclabs.insight.map.LatLng
+     * @property {float} lat - latitude
+     * @property {float} lng - longitude
+     */
+
+     /**
+      * Cartesian coordinates
+      *
+      * @typedef {Object} niclabs.insight.map.Point
+      * @property {float} x - horizontal coordinate
+      * @property {float} y - vertical coordinate
+      */
+
+
     /**
      * Helper method to assign/get the map view to/from the dashboard
      *
@@ -2406,6 +2725,85 @@ niclabs.insight.map = (function () {
     return map;
 })();
 
+/**
+ * Defines a mercator projection on the map
+ *
+ * Source: {@link https://developers.google.com/maps/documentation/javascript/examples/map-coordinates}
+ *
+ * @mixin
+ */
+niclabs.insight.map.GoogleMercator = (function() {
+    // Source
+    var TILE_SIZE = 256;
+
+    var origin = {x: TILE_SIZE / 2, y: TILE_SIZE / 2};
+    var pixelsPerLonDegree = TILE_SIZE / 360;
+    var pixelsPerLonRadian = TILE_SIZE / (2 * Math.PI);
+
+    function bound(value, opt_min, opt_max) {
+        if (opt_min !== null) value = Math.max(value, opt_min);
+        if (opt_max !== null) value = Math.min(value, opt_max);
+        return value;
+    }
+
+    return {
+        /**
+         * Convert cartesian coordinates to geographic coordinates using a
+         * spherical mercator projection
+         *
+         * @memberof niclabs.insight.map.Mercator
+         * @param {niclabs.insight.map.Point} - cartesian coordinates of the point
+         * @returns {niclabs.insight.map.LatLng} - geographic coordinates of the point
+         */
+        geographic: function(point) {
+            var lng = (point.x - origin.x) / pixelsPerLonDegree;
+            var latRadians = (point.y - origin.y) / -pixelsPerLonRadian;
+            var lat = (2 * Math.atan(Math.exp(latRadians)) - Math.PI / 2).toDeg();
+
+            return {'lat': lat, 'lng': lng};
+        },
+
+        /**
+         * Convert geographic coordinates to cartesian coordinates using a
+         * spherical mercator projection (Google Maps style)
+         *
+         * For more information see {@link https://alastaira.wordpress.com/2011/01/23/the-google-maps-bing-maps-spherical-mercator-projection/}
+         *
+         * @memberof niclabs.insight.map.Mercator
+         * @param {niclabs.insight.map.latLng} coord - geographic coordinates of the point
+         * @returns {niclabs.insight.map.Point} - cartesian coordinates of the point
+         */
+        cartesian: function(coord) {
+            // If it is a Google Maps LatLng
+            if (typeof coord.lat === 'function' && typeof coord.lng === 'function')
+                coord = {'lat': coord.lat(), 'lng': coord.lng()};
+
+            var x = origin.x + coord.lng * pixelsPerLonDegree;
+
+            // Truncating to 0.9999 effectively limits latitude to 89.189. This is
+            // about a third of a tile past the edge of the world tile.
+            var siny = bound(Math.sin(coord.lat.toRad()), -0.9999, 0.9999);
+            var y = origin.y + 0.5 * Math.log((1 + siny) / (1 - siny)) * -pixelsPerLonRadian;
+
+            return {'x': x, 'y': y};
+        },
+
+        /**
+         * Return equivalent distance in the coordinate space
+         * given the pixel distance and the zoom level of the map
+         *
+         * @memberof niclabs.insight.map.Mercator
+         * @param {float} pixels - distance in pixels
+         * @param {int} zoom - zoom level of the map
+         * @returns {float} distance in world coordinate space
+         */
+        distance: function(pixels, zoom) {
+            zoom = typeof zoom !== 'undefined' ? zoom : 12;
+            return pixels / (1 << zoom);
+        }
+    };
+})();
+
 niclabs.insight.map.GoogleMap = (function($) {
     "use strict";
 
@@ -2426,7 +2824,7 @@ niclabs.insight.map.GoogleMap = (function($) {
 
         var googlemap = new google.maps.Map(map.element, {
             zoom: map.zoom(),
-            center: new google.maps.LatLng(map.lat(), map.lng()),
+            center: new google.maps.LatLng(map.lat, map.lng),
             disableDefaultUI: true
         });
 
@@ -2483,7 +2881,7 @@ niclabs.insight.map.GoogleMap = (function($) {
          * @memberof niclabs.insight.map.GoogleMap
          * @param {float=} lat - latitude for the map center
          * @param {float=} lng - longitude for the map center
-         * @return {niclabs.insight.MapView.Coordinates} coordinates for the map center
+         * @return {niclabs.insight.map.LatLng} coordinates for the map center
          */
         map.center = function(lat, lng) {
             var c = center(lat, lng);
@@ -2514,6 +2912,728 @@ niclabs.insight.map.GoogleMap = (function($) {
 
     return GoogleMap;
 })(jQuery);
+
+/**
+ * Quadtree implementation
+ *
+ * @namespace
+ */
+niclabs.insight.quadtree = {};
+
+/**
+ * A cartesian point
+ *
+ * @typedef niclabs.insight.quadtree.Point
+ * @type {Object}
+ * @param {float} x - horizontal coordinates
+ * @param {float} y - vertical coordinates
+ */
+
+niclabs.insight.quadtree.Bounds = (function() {
+    /**
+     * Construct an axis aligned bounding box with the corners
+     * at the provided coordinates
+     *
+     * @class niclabs.insight.quadtree.Bounds
+     * @param {niclabs.insight.quadtree.Point} min - minimal coordinates of the bounding box (e.g. lower left corner if zero is at the lower left corner of the canvas)
+     * @param {niclabs.insight.quadtree.Point} max - maximal coordinates of the bounding box (e.g. upper right corner if zero is at the lower left corner of the canvas)
+     */
+    var Bounds = function(min, max) {
+        var center = {x: (min.x + max.x) / 2.0,
+            y: (min.y + max.y) / 2.0};
+
+
+        return {
+            /**
+             * Center of the bounding box
+             *
+             * @memberof niclabs.insight.quadtree.Bounds
+             * @member {niclabs.insight.quadtree.Point}
+             */
+            get center () {
+                return center;
+            },
+
+            /**
+             * Minimal coordinates of the bounding box
+             * (e.g. lower left corner if zero is at the lowest leftmost corner of the canvas)
+             *
+             * @memberof niclabs.insight.quadtree.Bounds
+             * @member {niclabs.insight.quadtree.Point}
+             */
+            get min () {
+                return min;
+            },
+
+            /**
+             * Maximal coordinates of the bounding box
+             * (e.g. upper right corner if zero is at the lowest leftmost corner of the canvas)
+             *
+             * @memberof niclabs.insight.quadtree.Bounds
+             * @member {niclabs.insight.quadtree.Point}
+             */
+            get max () {
+                return max;
+            },
+
+            /**
+             * Check if this bounding box contains the given point.
+             *
+             * As a convention, a bounding box contains all points inside its borders
+             * as well as all the points in the east and south borders.
+             *
+             * @memberof niclabs.insight.quadtree.Bounds
+             * @param {niclabs.insight.quadtree.Point} point - point to lookup
+             * @returns {boolean} true if the box contains the point
+             */
+            contains: function(point) {
+                return min.x <= point.x && point.x < max.x && min.y <= point.y && point.y < max.y;
+            },
+
+            /**
+             * Check if this bounding box intersects the given bounding box
+             *
+             * @memberof niclabs.insight.quadtree.Bounds
+             * @param {niclabs.insight.quadtree.Bounds} box - bounding box to check intersection with
+             * @returns {boolean} true if the boxes intersect in at least one point
+             */
+            intersects: function(box) {
+                // The explanation: http://gamemath.com/2011/09/detecting-whether-two-boxes-overlap/
+                if (max.x < box.min.x) return false; // self is left of box
+                if (min.x > box.max.x) return false; // self is right of box
+                if (max.y < box.min.y) return false; // self is above of box
+                if (min.y > box.max.y) return false; // self is below of box
+                return true; // boxes overlap
+            }
+        };
+    };
+
+    return Bounds;
+})();
+
+niclabs.insight.quadtree.PointQuadTree = (function () {
+    /**
+     * Construct a Point Quadtree
+     *
+     * See {@link http://en.wikipedia.org/wiki/Quadtree}
+     *
+     * @class niclabs.insight.quadtree.PointQuadTree
+     * @param {niclabs.insight.quadtree.Bounds} bounds - bounding box for the quadtree
+     * @param {integer} [capacity=50] - number of points that each node in the quadtree accepts before dividing
+     * @param {integer} [depth=40] - max depth of the quadtree
+     */
+    var PointQuadTree = function (bounds, capacity, depth) {
+        capacity = capacity || 50;
+        depth = depth || 40;
+
+        var points = [];
+
+        // Children (also quadtrees)
+        var northWest, northEast, southWest, southEast;
+
+        /**
+         * Subdivide the tree
+         *
+         * @memberof niclabs.insight.quadtree.PointQuadTree
+         * @access private
+         */
+        function subdivide() {
+            northWest = PointQuadTree(niclabs.insight.quadtree.Bounds(bounds.min, bounds.center), capacity, depth - 1);
+            northEast = PointQuadTree(niclabs.insight.quadtree.Bounds(
+                {x: bounds.center.x, y: bounds.min.y},
+                {x: bounds.max.x, y: bounds.center.y}),
+                capacity, depth - 1);
+            southWest = PointQuadTree(niclabs.insight.quadtree.Bounds(
+                {x: bounds.min.x, y: bounds.center.y},
+                {x: bounds.center.x, y: bounds.max.y}),
+                capacity, depth - 1);
+            southEast = PointQuadTree(niclabs.insight.quadtree.Bounds(bounds.center, bounds.max, capacity, depth - 1));
+        }
+
+        var self = {
+            /**
+             * Capacity for the quadtree
+             *
+             * @memberof niclabs.insight.quadtree.PointQuadTree
+             * @member {integer}
+             */
+            get capacity() {
+                return capacity;
+            },
+
+            /**
+             * Boundary of the quadtree
+             * @memberof niclabs.insight.quadtree.PointQuadTree
+             * @member {niclabs.insight.quadtree.Bounds}
+             */
+            get bounds() {
+                return bounds;
+            },
+
+            /**
+             * Insert a new point in the quadtree
+             *
+             * @memberof niclabs.insight.quadtree.PointQuadTree
+             * @param {niclabs.insight.quadtree.Point} point - new point to insert
+             * @returns {boolean} true if the point could be inserted (point belongs in the bounds of the quadtree)
+             */
+            insert: function (point) {
+                // Ignore objects that do not belong in this quad tree
+                if (!bounds.contains(point)) {
+                    return false; // object cannot be added
+                }
+
+                // If there is space in this quad tree, add the object here
+                if (points.length < capacity || depth <= 0) {
+                    points.push(point);
+                    return true;
+                }
+
+                // Otherwise, subdivide and then add the point to whichever node will accept it
+                if (northWest === undefined)
+                    subdivide();
+
+                if (northWest.insert(point)) return true;
+                if (northEast.insert(point)) return true;
+                if (southWest.insert(point)) return true;
+                if (southEast.insert(point)) return true;
+
+                // Otherwise, the point cannot be inserted for some unknown reason (this should never happen)
+                return false;
+            },
+
+            /**
+             * Return all the points in the specified bounding box
+             *
+             * @memberof niclabs.insight.quadtree.PointQuadTree
+             * @param {niclabs.insight.quadtree.Bounds} range - spatial range to search
+             * @returns {niclabs.insight.quadtree.Point[]} list of points in the given range
+             */
+            query: function(range, pointsInRange) {
+                pointsInRange = typeof pointsInRange === 'undefined' ? [] : pointsInRange;
+
+                if (!bounds.intersects(range)) {
+                    return pointsInRange; // Empty list
+                }
+
+                // Check points at this level
+                for (var i = 0; i < points.length; i++) {
+                    if (range.contains(points[i])) {
+                        pointsInRange.push(points[i]);
+                    }
+                }
+
+                // Terminate here if there are no children
+                if (northWest === undefined)
+                    return pointsInRange;
+
+                // Otherwise add the points from the children
+                northWest.query(range, pointsInRange);
+                northEast.query(range, pointsInRange);
+                southWest.query(range, pointsInRange);
+                southEast.query(range, pointsInRange);
+
+                // Otherwise add the points from the children
+                return pointsInRange;
+            }
+        };
+
+        return self;
+    };
+
+    return PointQuadTree;
+})();
+
+/**
+ * Contains all grids definitions for the dashboard
+ *
+ * @namespace
+ */
+niclabs.insight.map.grid = {};
+
+niclabs.insight.map.grid.Grid = (function() {
+	/**
+	 * Construct a grid over the map
+	 *
+	 * @class niclabs.insight.map.grid.Grid
+	 * @param {niclabs.insight.Dashboard} dashboard - dashboard that this layer belongs to
+     * @param {Object} options - configuration options for the layer
+	 */
+	var Grid = function(dashboard, options) {
+		if (!('layer' in options))
+            throw new Error('The grid must be associated to a layer');
+
+        var layer;
+        if (!(layer = dashboard.layer(options.layer)))
+            throw new Error('The layer '+layer+' does not exist in the dashboard');
+
+        var map;
+        if (!(map = dashboard.map()))
+            throw new Error('No map has been initialized for the dashboard yet');
+
+        if (!('googlemap' in map))
+            throw new Error("Grids are only supported for Google Maps at the moment");
+
+        var self = {
+            /**
+             * Map view where the grid belongs to
+             * @memberof niclabs.insight.map.grid.Grid
+             * @member {niclabs.insight.MapView}
+             */
+            get map () {
+                return map;
+            },
+
+            /**
+             * Layer to which the grid belongs to
+             *
+             * @memberof niclabs.insight.map.grid.Grid
+             * @member {niclabs.insight.layer.Layer}
+             */
+            get layer () {
+                return layer;
+            },
+
+            /**
+             * Clear the grid from the map
+             *
+             * @memberof niclabs.insight.map.grid.Grid
+             */
+            clear: function() {
+            },
+        };
+
+        return self;
+	};
+
+	return Grid;
+})();
+
+niclabs.insight.map.grid.HexagonalGrid = (function() {
+	var HEXAGON_ORIENTATION_FLAT = 'flat';
+    var HEXAGON_ORIENTATION_POINTY = 'pointy';
+
+	/**
+     * Define a hexagon tile to be drawn on the map
+     *
+	 * @param {float} side - side (or radius) of the hexagon
+     */
+	var HexagonTile = function(side) {
+		// See http://www.codeproject.com/Articles/14948/Hexagonal-grid-for-games-and-other-projects-Part
+        // for the description of R and H
+        var R = Math.cos(Math.PI / 6) * side;
+        var H = Math.sin(Math.PI / 6) * side;
+
+		/**
+		* Returns coordinates for the vertices of the hexagon at the given location
+		*
+		* @returns {float[]}  coordinates of the vertices
+		*/
+		function vertices(coord) {
+			// Convert coordinates to cartesian
+			if (coord.lat) {
+				coord = niclabs.insight.map.GoogleMercator.cartesian(coord);
+			}
+
+			//x,y coordinates are top center point
+			var points = [];
+			points[0] = {'x': coord.x,     'y': coord.y};
+			points[1] = {'x': coord.x + R, 'y': coord.y + H};
+			points[2] = {'x': coord.x + R, 'y': coord.y + side + H};
+			points[3] = {'x': coord.x,     'y': coord.y + side + H + H};
+			points[4] = {'x': coord.x - R, 'y': coord.y + side + H};
+			points[5] = {'x': coord.x - R, 'y': coord.y + H};
+
+			return points;
+		}
+
+		var self = {
+			/**
+			 * Side of the hexagon
+			 */
+			get s () {
+				return side;
+			},
+
+			/**
+			 * Distance of the hexagon
+			 */
+			get r () {
+				return R;
+			},
+
+			/**
+			 * Height of the hexagon
+			 */
+			get h () {
+				return H;
+			},
+
+			/**
+			* Return the coordinates for the hexagon in tile (i,j)
+			*/
+			coordinates: function() {
+				var i, j;
+				if (arguments.length == 1) {
+					i = arguments[0][0];
+					j = arguments[0][1];
+				}
+				else {
+					i = arguments[0];
+					j = arguments[1];
+				}
+
+				// From http://www.gamedev.net/page/resources/_/technical/game-programming/coordinates-in-hexagon-based-tile-maps-r1800
+				var x = i * 2 * R + (j & 1) * R + R;
+				var y = j * (H + side);
+
+				return {'x': x, 'y': y};
+			},
+
+			/**
+			 * Get the tile (i,j) for the given coordinates
+			 *
+			 * See: http://www.gamedev.net/page/resources/_/technical/game-programming/coordinates-in-hexagon-based-tile-maps-r1800
+			 */
+			tile: function(coord) {
+				// Convert coordinates to cartesian
+				if (coord.lat) {
+					coord = niclabs.insight.map.GoogleMercator.cartesian(coord);
+				}
+
+				// Coordinates for the square
+				var square_i = Math.floor(coord.x / (2 * R));
+				var square_j = Math.floor(coord.y / (H + side));
+
+				// Coordinates of the pixel with respect to the edge of the square
+				var square_pixel_x = coord.x - square_i * 2 * R;
+				var square_pixel_y = coord.y - square_j * (H + side);
+
+				// Is type A if the row is even
+				var rowIsTypeA = ((square_j & 1) === 0);
+
+				var hex_i = square_i;
+				var hex_j = square_j;
+
+				if (rowIsTypeA) {
+					if (square_pixel_x <= R && square_pixel_y < (- H / R) * square_pixel_x + H) {
+						hex_i = square_i - 1;
+						hex_j = square_j - 1;
+					}
+					else if (square_pixel_x > R && square_pixel_y < (H / R) * square_pixel_x - H) {
+						hex_i = square_i;
+						hex_j = square_j - 1;
+					}
+				}
+				else {
+					if (square_pixel_x <= R) {
+						if (square_pixel_y < (H / R) * square_pixel_x) {
+							hex_i = square_i;
+							hex_j = square_j - 1;
+						}
+						else {
+							hex_i = square_i - 1;
+							hex_j = square_j;
+						}
+					}
+					else if (square_pixel_x > R){
+						if (square_pixel_y < (- H / R) * square_pixel_x + 2 * H) {
+							hex_i = square_i;
+							hex_j = square_j - 1;
+						}
+					}
+				}
+				return [hex_i, hex_j];
+			},
+
+			/**
+			 * Draw and return a hexagon tile for the specified coordinates
+			 */
+			draw: function(coord, map, config) {
+				if (!('googlemap' in map))
+		            throw new Error("Sorry, I only know how to draw on Google Maps at the moment");
+
+				var hexagon;
+				var points = vertices(coord);
+				var coordinates = [];
+				for (var i = 0; i < points.length; i++) {
+					coordinates.push(niclabs.insight.map.GoogleMercator.geographic(points[i]));
+				}
+
+				// Set default configuration
+				config = config || {
+					strokeColor: '#000000',
+					strokeOpacity: 0.6,
+					strokeWeight: 2,
+					fillColor: '#ffffff',
+					fillOpacity: 0.6,
+				};
+
+				config.paths = coordinates;
+				config.geodesic = true;
+
+				// Create the hexagon with the configuration
+				hexagon = new google.maps.Polygon(config);
+
+				hexagon.setMap(map.googlemap());
+
+				return hexagon;
+			}
+		};
+
+		return self;
+	};
+
+	/**
+	 * Returns a function to calculate the fill as the interpolation on the average between the point weights
+	 *
+	 * @param {string} start_rgb - starting color for the interpolation
+	 * @param {string} end_rgb - ending color for the interpolation
+	 * @return {niclabs.insight.map.grid.HexagonalGrid~fill} average function
+	 */
+	function averageFill(start_rgb, end_rgb) {
+
+
+		return function(points) {
+			var avg = 0;
+			var size = 0;
+
+			for (i = 0; i < points.length; i++) {
+				if ('weight' in points[i]) {
+					avg += points[i].weight;
+					size++;
+				}
+			}
+
+			// Calculate average
+			if (size > 0) {
+				avg = avg / size;
+				return niclabs.insight.Color.rgbToHex(niclabs.insight.Interpolation.interpolateRgb(avg, 1, start_rgb, end_rgb));
+			}
+
+			return '#ffffff';
+		};
+	}
+
+	/**
+	 * Returns a function to calculate the fill as the interpolation on the median between the point weights
+	 *
+	 * @param {string} start_rgb - starting color for the interpolation
+	 * @param {string} end_rgb - ending color for the interpolation
+	 * @return {niclabs.insight.map.grid.HexagonalGrid~fill} median function
+	 */
+	function medianFill(start_rgb, end_rgb) {
+		function partition(data, i, j) {
+	        var pivot = Math.floor((i+j)/2);
+	        var temp;
+	        while(i <= j){
+	            while(data[i].weight < data[pivot].weight)
+	                i++;
+	            while(data[j].weight > data[pivot].weight)
+	                j--;
+	            if(i <= j){
+	                temp = data[i];
+	                data[i]=data[j];
+	                data[j] = temp;
+	                i++;
+					j--;
+	            }
+	        }
+	        return pivot;
+	    }
+
+		start_rgb = niclabs.insight.Color.hexToRgb(start_rgb);
+		end_rgb = niclabs.insight.Color.hexToRgb(end_rgb);
+
+		return function(points) {
+			var median = 0;
+			var left = 0, right = points.length > 0 ? points.length - 1: 0;
+	        var mid = Math.floor((left + right) / 2);
+	        median = partition(points, left, right);
+	        while (median !== mid) {
+	            if(median < mid)
+	                median = partition(points, mid, right);
+	            else median = partition(points, left, mid);
+	        }
+
+			return niclabs.insight.Color.rgbToHex(niclabs.insight.Interpolation.interpolateRgb(points[median].weight, 1, start_rgb, end_rgb));
+		};
+	}
+
+    /**
+     * Data point for an hexagonal grid
+     *
+     * @typedef niclabs.insight.map.grid.HexagonalGrid.Data
+     * @type {Object}
+     * @param {float} lat - latitude for the heatmap point
+     * @param {float} lng - longitude for the heatmap point
+     * @param {float=} weight - weight for the heatmap point (between 0 and 1)
+     */
+
+	/**
+	 * Fill calculation function. Receives the list of points of a hexagon and
+	 * returns a color for that hexagon
+	 * @callback niclabs.insight.map.grid.HexagonalGrid~fill
+	 * @param {niclabs.insight.map.grid.HexagonalGrid.Data[]} points
+	 * @param {string} fill color for the hexagon
+	 */
+
+	/**
+     * Construct an hexagonal grid from the data provided.
+	 *
+	 * The grid divides the visible map into hexagonal tiles of the same size and draws only those
+	 * tiles that have elements below them. If a weight is provided for the the data points
+	 * each hexagon is painted with a function of the point weights inside the hexagon
+     *
+     * @class niclabs.insight.map.grid.HexagonalGrid
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this grid belongs to
+     * @param {Object} options - configuration options for the grid
+     * @param {string} options.layer - identifier for the layer that this grid belongs to
+     * @param {integer} options.size - size for the side of each hexagon (in pixels)
+	 * @param {string} [options.strokeColor='#000000'] - color for the stroke of each hexagon
+	 * @param {float} [options.strokeOpacity=0.6] - opacity for the stroke (between 0-1)
+	 * @param {integer} [options.strokeWeight=2] - border weight for the hexagon
+	 * @param {string|niclabs.insight.map.grid.HexagonalGrid~fill} [options.fill='#ffffff'] - color for the fill of the hexagon,
+	 * 	it can have one of the following values:
+	 *  	- 'average' calculates the average of the weights in the hexagon and interpolates that value between the values for options.fill_start and options.fill_end
+	 *  	- 'median' calculates the median of the weights in the hexagon and interpolates as average
+	 *  	- rgb color (starting with '#') is used as a fixed color for all hexagons
+	 *  	- a callback receiving the points in the hexagon and returning the value for the color
+	 * @param {string} [options.fillStart='#ff0000'] - if 'average' or 'median' are used as options for options.fill, it sets the begining of the interpolation interval for the fill function
+	 * @param {string} [options.fillEnd='#00ff00'] - if 'average' or 'median' are used as options for options.fill, it sets the end of the interpolation interval for the fill function
+	 * @param {float} [options.fillOpacity=0.6] - opacity for the fill of the hexagon
+     * @param {niclabs.insight.map.grid.HexagonalGrid.Data[]} options.data - data for the layer
+     */
+	var HexagonalGrid = function(dashboard, options) {
+		var grid = niclabs.insight.map.grid.Grid(dashboard, options);
+
+		var tiles = [];
+
+		var hexagonConfig = {
+			strokeColor: 'strokeColor' in options ? options.strokeColor : '#000000',
+			strokeOpacity: 'strokeOpacity' in options ? options.strokeOpacity : 0.6,
+			strokeWeight: 'strokeWeight' in options ? options.strokeWeight : 2,
+			fillOpacity: 'fillOpacity' in options ? options.fillOpacity : 0.6,
+		};
+
+		// Default fill function
+		function fillColor() {
+			return '#ffffff';
+		}
+
+		var fill = options.fill || fillColor;
+		if (typeof fill === 'string') {
+			if (options.fill.charAt(0) === '#') {
+				fill = function() {return options.fill;};
+			}
+			else if (options.fill === 'average') {
+				fill = averageFill(options.fillStart || '#ff0000', options.fillEnd || '#00ff00');
+			}
+			else if (options.fill === 'median') {
+				fill = medianFill(options.fillStart || '#ff0000', options.fillEnd || '#00ff00');
+			}
+			else {
+				fill = fillColor;
+			}
+		}
+
+		var worldBounds = niclabs.insight.quadtree.Bounds(
+			niclabs.insight.map.GoogleMercator.cartesian({lat: 90, lng: -180}),
+			niclabs.insight.map.GoogleMercator.cartesian({lat: -90, lng: 180})
+		);
+
+		var quadtree = niclabs.insight.quadtree.PointQuadTree(worldBounds);
+
+		// TODO: put all data points in a world wide quad tree
+		for (var i = 0; i < options.data.length; i++) {
+			var coord = niclabs.insight.map.GoogleMercator.cartesian(options.data[i]);
+
+			options.data[i].x = coord.x;
+			options.data[i].y = coord.y;
+
+			quadtree.insert(options.data[i]);
+		}
+
+		function notifyHexClick(points) {
+			return function() {
+				niclabs.insight.event.trigger('map_element_selected', points);
+			};
+		}
+
+		// TODO: create a function to calculate the color
+
+        // Build the grid
+        function build(mapBounds) {
+			if (!mapBounds) return;
+
+			var hexagon = HexagonTile(niclabs.insight.map.GoogleMercator.distance(options.size, grid.map.zoom()));
+
+			// find all points in the map bounds using the quadtree
+			var points = quadtree.query(niclabs.insight.quadtree.Bounds(
+				niclabs.insight.map.GoogleMercator.cartesian({lat: mapBounds.getNorthEast().lat(), lng: mapBounds.getSouthWest().lng()}),
+				niclabs.insight.map.GoogleMercator.cartesian({lat: mapBounds.getSouthWest().lat(), lng: mapBounds.getNorthEast().lng()})
+			));
+
+			var pointSets = [];
+			var hex_i, hex_j;
+
+			for (var i = 0; i < points.length; i++) {
+				var coord = hexagon.tile(points[i]);
+				hex_i = coord[0];
+				hex_j = coord[1];
+
+				if (!pointSets[hex_i]) pointSets[hex_i] = [];
+				if (!pointSets[hex_i][hex_j]) pointSets[hex_i][hex_j] = [];
+
+				// if pointSets[hex_i][hex_j] add the point to the list
+				pointSets[hex_i][hex_j].push(points[i]);
+			}
+
+			tiles = [];
+
+			// for each tile, average (or median) the weights and draw the map
+			for (hex_i in pointSets) {
+				for (hex_j in pointSets[hex_i]) {
+					hexagonConfig.fillColor = fill(pointSets[hex_i][hex_j]);
+
+					// Draw the hexagon
+					// TODO: set the options
+					var tile = hexagon.draw(hexagon.coordinates(hex_i, hex_j), grid.map, hexagonConfig);
+
+					// Add an event to the click
+					google.maps.event.addListener(tile, 'click', notifyHexClick(pointSets[hex_i][hex_j]));
+
+					tiles.push(tile);
+				}
+			}
+        }
+
+		grid.clear = function() {
+			for (var i = 0; i < tiles.length; i++) {
+				tiles[i].setMap(null);
+			}
+		};
+
+        // Listen to boundary changes
+        google.maps.event.addListener(grid.map.googlemap(), 'bounds_changed', function() {
+            var bounds = this.getBounds();
+            window.setTimeout(function() {
+				grid.clear();
+                build(bounds);
+            }, 50);
+        });
+
+		// Build the initial grid
+		build(grid.map.googlemap().getBounds());
+
+        return grid;
+	};
+
+    // Register the handler
+    niclabs.insight.handler('hexagon', 'grid', HexagonalGrid);
+
+	return HexagonalGrid;
+})();
 
 /**
  * Tools for drawing heatmaps on the map
