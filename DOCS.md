@@ -17,11 +17,6 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
     * [insight.info([obj])](#niclabs.insight.info(2))
     * [insight.layer(obj, [activate])](#niclabs.insight.layer(2))
     * [insight.map([obj])](#niclabs.insight.map(2))
-    * [insight.event](#niclabs.insight.event)
-      * [event.on(event, listener)](#niclabs.insight.event.on)
-      * [event.off(event, listener)](#niclabs.insight.event.off)
-      * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
-      * [callback: event~listener](#niclabs.insight.event..listener)
     * [insight.info](#niclabs.insight.info)
       * [class: info.Block](#niclabs.insight.info.Block)
         * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
@@ -39,6 +34,11 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
       * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
         * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
+    * [insight.event](#niclabs.insight.event)
+      * [event.on(event, listener)](#niclabs.insight.event.on)
+      * [event.off(event, listener)](#niclabs.insight.event.off)
+      * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
+      * [callback: event~listener](#niclabs.insight.event..listener)
     * [insight.layer](#niclabs.insight.layer)
       * [class: layer.GridLayer](#niclabs.insight.layer.GridLayer)
         * [new layer.GridLayer(dashboard, options)](#new_niclabs.insight.layer.GridLayer)
@@ -72,16 +72,6 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
         * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
     * [insight.map](#niclabs.insight.map)
-      * [map.grid](#niclabs.insight.map.grid)
-        * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
-          * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
-          * [Grid.map](#niclabs.insight.map.grid.Grid.map)
-          * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
-          * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
-        * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
-          * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
-          * [type: HexagonalGrid.Data](#niclabs.insight.map.grid.HexagonalGrid.Data)
-          * [callback: HexagonalGrid~fill](#niclabs.insight.map.grid.HexagonalGrid..fill)
       * [map.heatmap](#niclabs.insight.map.heatmap)
         * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
           * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
@@ -96,6 +86,16 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
           * [new heatmap.SegmentHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.SegmentHeatmap)
           * [SegmentHeatmap.self.clear()](#niclabs.insight.map.heatmap.SegmentHeatmap.self.clear)
           * [type: SegmentHeatmap.Data](#niclabs.insight.map.heatmap.SegmentHeatmap.Data)
+      * [map.grid](#niclabs.insight.map.grid)
+        * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
+          * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
+          * [Grid.map](#niclabs.insight.map.grid.Grid.map)
+          * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
+          * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
+        * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
+          * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
+          * [type: HexagonalGrid.Data](#niclabs.insight.map.grid.HexagonalGrid.Data)
+          * [callback: HexagonalGrid~fill](#niclabs.insight.map.grid.HexagonalGrid..fill)
       * [map.marker](#niclabs.insight.map.marker)
         * [class: marker.CircleMarker](#niclabs.insight.map.marker.CircleMarker)
           * [new marker.CircleMarker(dashboard, options)](#new_niclabs.insight.map.marker.CircleMarker)
@@ -208,11 +208,6 @@ understand what is going on in the city
   * [insight.info([obj])](#niclabs.insight.info(2))
   * [insight.layer(obj, [activate])](#niclabs.insight.layer(2))
   * [insight.map([obj])](#niclabs.insight.map(2))
-  * [insight.event](#niclabs.insight.event)
-    * [event.on(event, listener)](#niclabs.insight.event.on)
-    * [event.off(event, listener)](#niclabs.insight.event.off)
-    * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
-    * [callback: event~listener](#niclabs.insight.event..listener)
   * [insight.info](#niclabs.insight.info)
     * [class: info.Block](#niclabs.insight.info.Block)
       * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
@@ -230,6 +225,11 @@ understand what is going on in the city
       * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
     * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
       * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
+  * [insight.event](#niclabs.insight.event)
+    * [event.on(event, listener)](#niclabs.insight.event.on)
+    * [event.off(event, listener)](#niclabs.insight.event.off)
+    * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
+    * [callback: event~listener](#niclabs.insight.event..listener)
   * [insight.layer](#niclabs.insight.layer)
     * [class: layer.GridLayer](#niclabs.insight.layer.GridLayer)
       * [new layer.GridLayer(dashboard, options)](#new_niclabs.insight.layer.GridLayer)
@@ -263,16 +263,6 @@ understand what is going on in the city
       * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
       * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
   * [insight.map](#niclabs.insight.map)
-    * [map.grid](#niclabs.insight.map.grid)
-      * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
-        * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
-        * [Grid.map](#niclabs.insight.map.grid.Grid.map)
-        * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
-        * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
-      * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
-        * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
-        * [type: HexagonalGrid.Data](#niclabs.insight.map.grid.HexagonalGrid.Data)
-        * [callback: HexagonalGrid~fill](#niclabs.insight.map.grid.HexagonalGrid..fill)
     * [map.heatmap](#niclabs.insight.map.heatmap)
       * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
         * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
@@ -287,6 +277,16 @@ understand what is going on in the city
         * [new heatmap.SegmentHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.SegmentHeatmap)
         * [SegmentHeatmap.self.clear()](#niclabs.insight.map.heatmap.SegmentHeatmap.self.clear)
         * [type: SegmentHeatmap.Data](#niclabs.insight.map.heatmap.SegmentHeatmap.Data)
+    * [map.grid](#niclabs.insight.map.grid)
+      * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
+        * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
+        * [Grid.map](#niclabs.insight.map.grid.Grid.map)
+        * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
+        * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
+      * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
+        * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
+        * [type: HexagonalGrid.Data](#niclabs.insight.map.grid.HexagonalGrid.Data)
+        * [callback: HexagonalGrid~fill](#niclabs.insight.map.grid.HexagonalGrid..fill)
     * [map.marker](#niclabs.insight.map.marker)
       * [class: marker.CircleMarker](#niclabs.insight.map.marker.CircleMarker)
         * [new marker.CircleMarker(dashboard, options)](#new_niclabs.insight.map.marker.CircleMarker)
@@ -508,71 +508,6 @@ var map = niclabs.insight.map({
 });
 ```
 
-<a name="niclabs.insight.event"></a>
-###insight.event
-Very basic event manager for the dashboard
-
-**Example**  
-```javascript
-// Subscribe to the event
-var eventId = niclabs.insight.event.on('hello', function(who) {
-     alert("HELLO "+who+"!!!");
-});
-
-// Trigger the event
-niclabs.insight.event.trigger('hello', "John"); // Shows alert 'HELLO John!!!'
-
-// Unsubscribe
-niclabs.insight.event.off('hello', eventId);
-```
-
-**Members**
-
-* [insight.event](#niclabs.insight.event)
-  * [event.on(event, listener)](#niclabs.insight.event.on)
-  * [event.off(event, listener)](#niclabs.insight.event.off)
-  * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
-  * [callback: event~listener](#niclabs.insight.event..listener)
-
-<a name="niclabs.insight.event.on"></a>
-####event.on(event, listener)
-Listen for an event. A listener callback can only be assigned once for an event
-
-**Params**
-
-- event `string` - event type  
-- listener <code>[listener](#niclabs.insight.event..listener)</code> - callback to process the event  
-
-**Returns**: `number` - id of the listener  
-<a name="niclabs.insight.event.off"></a>
-####event.off(event, listener)
-Stop listening for an event.
-
-**Params**
-
-- event `string` - event type  
-- listener <code>[listener](#niclabs.insight.event..listener)</code> | `number` - callback to remove or id of the listener provided by `niclabs.insight.event.on()`  
-
-**Returns**: `boolean` - true if the listener was found and was succesfully removed  
-<a name="niclabs.insight.event.trigger"></a>
-####event.trigger(event, [data])
-Trigger an event
-
-**Params**
-
-- event `string` - event type  
-- \[data\] `Object` - data to pass to the callback  
-
-<a name="niclabs.insight.event..listener"></a>
-####callback: event~listener
-Insight event listener
-
-**Params**
-
-- data `Object` - data for the callback function, dependant on the event  
-
-**Scope**: inner typedef of [event](#niclabs.insight.event)  
-**Type**: `function`  
 <a name="niclabs.insight.info"></a>
 ###insight.info
 Contains the definitions for the information blocks supported by insight
@@ -781,6 +716,71 @@ TODO: describe what is a summary information block
  in the block  
 
 **Extends**: `niclabs.insight.info.Block`  
+<a name="niclabs.insight.event"></a>
+###insight.event
+Very basic event manager for the dashboard
+
+**Example**  
+```javascript
+// Subscribe to the event
+var eventId = niclabs.insight.event.on('hello', function(who) {
+     alert("HELLO "+who+"!!!");
+});
+
+// Trigger the event
+niclabs.insight.event.trigger('hello', "John"); // Shows alert 'HELLO John!!!'
+
+// Unsubscribe
+niclabs.insight.event.off('hello', eventId);
+```
+
+**Members**
+
+* [insight.event](#niclabs.insight.event)
+  * [event.on(event, listener)](#niclabs.insight.event.on)
+  * [event.off(event, listener)](#niclabs.insight.event.off)
+  * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
+  * [callback: event~listener](#niclabs.insight.event..listener)
+
+<a name="niclabs.insight.event.on"></a>
+####event.on(event, listener)
+Listen for an event. A listener callback can only be assigned once for an event
+
+**Params**
+
+- event `string` - event type  
+- listener <code>[listener](#niclabs.insight.event..listener)</code> - callback to process the event  
+
+**Returns**: `number` - id of the listener  
+<a name="niclabs.insight.event.off"></a>
+####event.off(event, listener)
+Stop listening for an event.
+
+**Params**
+
+- event `string` - event type  
+- listener <code>[listener](#niclabs.insight.event..listener)</code> | `number` - callback to remove or id of the listener provided by `niclabs.insight.event.on()`  
+
+**Returns**: `boolean` - true if the listener was found and was succesfully removed  
+<a name="niclabs.insight.event.trigger"></a>
+####event.trigger(event, [data])
+Trigger an event
+
+**Params**
+
+- event `string` - event type  
+- \[data\] `Object` - data to pass to the callback  
+
+<a name="niclabs.insight.event..listener"></a>
+####callback: event~listener
+Insight event listener
+
+**Params**
+
+- data `Object` - data for the callback function, dependant on the event  
+
+**Scope**: inner typedef of [event](#niclabs.insight.event)  
+**Type**: `function`  
 <a name="niclabs.insight.layer"></a>
 ###insight.layer
 Visualization layers for the dashboard
@@ -1141,16 +1141,6 @@ Map compatibility for the insight dashboard
 **Members**
 
 * [insight.map](#niclabs.insight.map)
-  * [map.grid](#niclabs.insight.map.grid)
-    * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
-      * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
-      * [Grid.map](#niclabs.insight.map.grid.Grid.map)
-      * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
-      * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
-    * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
-      * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
-      * [type: HexagonalGrid.Data](#niclabs.insight.map.grid.HexagonalGrid.Data)
-      * [callback: HexagonalGrid~fill](#niclabs.insight.map.grid.HexagonalGrid..fill)
   * [map.heatmap](#niclabs.insight.map.heatmap)
     * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
       * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
@@ -1165,6 +1155,16 @@ Map compatibility for the insight dashboard
       * [new heatmap.SegmentHeatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.SegmentHeatmap)
       * [SegmentHeatmap.self.clear()](#niclabs.insight.map.heatmap.SegmentHeatmap.self.clear)
       * [type: SegmentHeatmap.Data](#niclabs.insight.map.heatmap.SegmentHeatmap.Data)
+  * [map.grid](#niclabs.insight.map.grid)
+    * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
+      * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
+      * [Grid.map](#niclabs.insight.map.grid.Grid.map)
+      * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
+      * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
+    * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
+      * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
+      * [type: HexagonalGrid.Data](#niclabs.insight.map.grid.HexagonalGrid.Data)
+      * [callback: HexagonalGrid~fill](#niclabs.insight.map.grid.HexagonalGrid..fill)
   * [map.marker](#niclabs.insight.map.marker)
     * [class: marker.CircleMarker](#niclabs.insight.map.marker.CircleMarker)
       * [new marker.CircleMarker(dashboard, options)](#new_niclabs.insight.map.marker.CircleMarker)
@@ -1189,116 +1189,6 @@ Map compatibility for the insight dashboard
     * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
   * [map.GoogleMercator](#niclabs.insight.map.GoogleMercator)
 
-<a name="niclabs.insight.map.grid"></a>
-####map.grid
-Contains all grids definitions for the dashboard
-
-**Members**
-
-* [map.grid](#niclabs.insight.map.grid)
-  * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
-    * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
-    * [Grid.map](#niclabs.insight.map.grid.Grid.map)
-    * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
-    * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
-  * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
-    * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
-    * [type: HexagonalGrid.Data](#niclabs.insight.map.grid.HexagonalGrid.Data)
-    * [callback: HexagonalGrid~fill](#niclabs.insight.map.grid.HexagonalGrid..fill)
-
-<a name="niclabs.insight.map.grid.Grid"></a>
-#####class: grid.Grid
-**Members**
-
-* [class: grid.Grid](#niclabs.insight.map.grid.Grid)
-  * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
-  * [Grid.map](#niclabs.insight.map.grid.Grid.map)
-  * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
-  * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
-
-<a name="new_niclabs.insight.map.grid.Grid"></a>
-######new grid.Grid(dashboard, options)
-Construct a grid over the map
-
-**Params**
-
-- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this layer belongs to  
-- options `Object` - configuration options for the layer  
-
-<a name="niclabs.insight.map.grid.Grid.map"></a>
-######Grid.map
-Map view where the grid belongs to
-
-**Type**: [MapView](#niclabs.insight.MapView)  
-<a name="niclabs.insight.map.grid.Grid.layer"></a>
-######Grid.layer
-Layer to which the grid belongs to
-
-**Type**: [Layer](#niclabs.insight.layer.Layer)  
-<a name="niclabs.insight.map.grid.Grid.clear"></a>
-######Grid.clear()
-Clear the grid from the map
-
-<a name="niclabs.insight.map.grid.HexagonalGrid"></a>
-#####class: grid.HexagonalGrid
-**Members**
-
-* [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
-  * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
-  * [type: HexagonalGrid.Data](#niclabs.insight.map.grid.HexagonalGrid.Data)
-  * [callback: HexagonalGrid~fill](#niclabs.insight.map.grid.HexagonalGrid..fill)
-
-<a name="new_niclabs.insight.map.grid.HexagonalGrid"></a>
-######new grid.HexagonalGrid(dashboard, options)
-Construct an hexagonal grid from the data provided.
-
-The grid divides the visible map into hexagonal tiles of the same size and draws only those
-tiles that have elements below them. If a weight is provided for the the data points
-each hexagon is painted with a function of the point weights inside the hexagon
-
-**Params**
-
-- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this grid belongs to  
-- options `Object` - configuration options for the grid  
-  - layer `string` - identifier for the layer that this grid belongs to  
-  - size `integer` - size for the side of each hexagon (in pixels)  
-  - \[strokeColor='#000000'\] `string` - color for the stroke of each hexagon  
-  - \[strokeOpacity=0.6\] `float` - opacity for the stroke (between 0-1)  
-  - \[strokeWeight=2\] `integer` - border weight for the hexagon  
-  - \[fill='#ffffff'\] `string` | <code>[fill](#niclabs.insight.map.grid.HexagonalGrid..fill)</code> - color for the fill of the hexagon,
-	it can have one of the following values:
- 	- 'average' calculates the average of the weights in the hexagon and interpolates that value between the values for options.fill_start and options.fill_end
- 	- 'median' calculates the median of the weights in the hexagon and interpolates as average
- 	- rgb color (starting with '#') is used as a fixed color for all hexagons
- 	- a callback receiving the points in the hexagon and returning the value for the color  
-  - \[fillStart='#ff0000'\] `string` - if 'average' or 'median' are used as options for options.fill, it sets the begining of the interpolation interval for the fill function  
-  - \[fillEnd='#00ff00'\] `string` - if 'average' or 'median' are used as options for options.fill, it sets the end of the interpolation interval for the fill function  
-  - \[fillOpacity=0.6\] `float` - opacity for the fill of the hexagon  
-  - data <code>[Array.&lt;Data&gt;](#niclabs.insight.map.grid.HexagonalGrid.Data)</code> - data for the layer  
-
-<a name="niclabs.insight.map.grid.HexagonalGrid.Data"></a>
-######type: HexagonalGrid.Data
-Data point for an hexagonal grid
-
-**Params**
-
-- lat `float` - latitude for the heatmap point  
-- lng `float` - longitude for the heatmap point  
-- \[weight\] `float` - weight for the heatmap point (between 0 and 1)  
-
-**Type**: `Object`  
-<a name="niclabs.insight.map.grid.HexagonalGrid..fill"></a>
-######callback: HexagonalGrid~fill
-Fill calculation function. Receives the list of points of a hexagon and
-returns a color for that hexagon
-
-**Params**
-
-- points <code>[Array.&lt;Data&gt;](#niclabs.insight.map.grid.HexagonalGrid.Data)</code>  
-- fill `string` - color for the hexagon  
-
-**Scope**: inner typedef of [HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)  
-**Type**: `function`  
 <a name="niclabs.insight.map.heatmap"></a>
 ####map.heatmap
 Tools for drawing heatmaps on the map
@@ -1435,6 +1325,116 @@ Data segment for SegmentHeatmap
 - \[weight\] `float` - weight for the heatmap segment. Defaults to 1.  
 
 **Type**: `Object`  
+<a name="niclabs.insight.map.grid"></a>
+####map.grid
+Contains all grids definitions for the dashboard
+
+**Members**
+
+* [map.grid](#niclabs.insight.map.grid)
+  * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
+    * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
+    * [Grid.map](#niclabs.insight.map.grid.Grid.map)
+    * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
+    * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
+  * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
+    * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
+    * [type: HexagonalGrid.Data](#niclabs.insight.map.grid.HexagonalGrid.Data)
+    * [callback: HexagonalGrid~fill](#niclabs.insight.map.grid.HexagonalGrid..fill)
+
+<a name="niclabs.insight.map.grid.Grid"></a>
+#####class: grid.Grid
+**Members**
+
+* [class: grid.Grid](#niclabs.insight.map.grid.Grid)
+  * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
+  * [Grid.map](#niclabs.insight.map.grid.Grid.map)
+  * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
+  * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
+
+<a name="new_niclabs.insight.map.grid.Grid"></a>
+######new grid.Grid(dashboard, options)
+Construct a grid over the map
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this layer belongs to  
+- options `Object` - configuration options for the layer  
+
+<a name="niclabs.insight.map.grid.Grid.map"></a>
+######Grid.map
+Map view where the grid belongs to
+
+**Type**: [MapView](#niclabs.insight.MapView)  
+<a name="niclabs.insight.map.grid.Grid.layer"></a>
+######Grid.layer
+Layer to which the grid belongs to
+
+**Type**: [Layer](#niclabs.insight.layer.Layer)  
+<a name="niclabs.insight.map.grid.Grid.clear"></a>
+######Grid.clear()
+Clear the grid from the map
+
+<a name="niclabs.insight.map.grid.HexagonalGrid"></a>
+#####class: grid.HexagonalGrid
+**Members**
+
+* [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
+  * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
+  * [type: HexagonalGrid.Data](#niclabs.insight.map.grid.HexagonalGrid.Data)
+  * [callback: HexagonalGrid~fill](#niclabs.insight.map.grid.HexagonalGrid..fill)
+
+<a name="new_niclabs.insight.map.grid.HexagonalGrid"></a>
+######new grid.HexagonalGrid(dashboard, options)
+Construct an hexagonal grid from the data provided.
+
+The grid divides the visible map into hexagonal tiles of the same size and draws only those
+tiles that have elements below them. If a weight is provided for the the data points
+each hexagon is painted with a function of the point weights inside the hexagon
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this grid belongs to  
+- options `Object` - configuration options for the grid  
+  - layer `string` - identifier for the layer that this grid belongs to  
+  - size `integer` - size for the side of each hexagon (in pixels)  
+  - \[strokeColor='#000000'\] `string` - color for the stroke of each hexagon  
+  - \[strokeOpacity=0.6\] `float` - opacity for the stroke (between 0-1)  
+  - \[strokeWeight=2\] `integer` - border weight for the hexagon  
+  - \[fill='#ffffff'\] `string` | <code>[fill](#niclabs.insight.map.grid.HexagonalGrid..fill)</code> - color for the fill of the hexagon,
+	it can have one of the following values:
+ 	- 'average' calculates the average of the weights in the hexagon and interpolates that value between the values for options.fill_start and options.fill_end
+ 	- 'median' calculates the median of the weights in the hexagon and interpolates as average
+ 	- rgb color (starting with '#') is used as a fixed color for all hexagons
+ 	- a callback receiving the points in the hexagon and returning the value for the color  
+  - \[fillStart='#ff0000'\] `string` - if 'average' or 'median' are used as options for options.fill, it sets the begining of the interpolation interval for the fill function  
+  - \[fillEnd='#00ff00'\] `string` - if 'average' or 'median' are used as options for options.fill, it sets the end of the interpolation interval for the fill function  
+  - \[fillOpacity=0.6\] `float` - opacity for the fill of the hexagon  
+  - data <code>[Array.&lt;Data&gt;](#niclabs.insight.map.grid.HexagonalGrid.Data)</code> - data for the layer  
+
+<a name="niclabs.insight.map.grid.HexagonalGrid.Data"></a>
+######type: HexagonalGrid.Data
+Data point for an hexagonal grid
+
+**Params**
+
+- lat `float` - latitude for the heatmap point  
+- lng `float` - longitude for the heatmap point  
+- \[weight\] `float` - weight for the heatmap point (between 0 and 1)  
+
+**Type**: `Object`  
+<a name="niclabs.insight.map.grid.HexagonalGrid..fill"></a>
+######callback: HexagonalGrid~fill
+Fill calculation function. Receives the list of points of a hexagon and
+returns a color for that hexagon
+
+**Params**
+
+- points <code>[Array.&lt;Data&gt;](#niclabs.insight.map.grid.HexagonalGrid.Data)</code>  
+- fill `string` - color for the hexagon  
+
+**Scope**: inner typedef of [HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)  
+**Type**: `function`  
 <a name="niclabs.insight.map.marker"></a>
 ####map.marker
 Collection of markers available for drawing on the map

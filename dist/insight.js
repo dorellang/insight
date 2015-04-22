@@ -3392,7 +3392,8 @@ niclabs.insight.map.grid.HexagonalGrid = (function() {
 	 * @return {niclabs.insight.map.grid.HexagonalGrid~fill} average function
 	 */
 	function averageFill(start_rgb, end_rgb) {
-
+		start_rgb = niclabs.insight.Color.hexToRgb(start_rgb);
+		end_rgb = niclabs.insight.Color.hexToRgb(end_rgb);
 
 		return function(points) {
 			var avg = 0;
