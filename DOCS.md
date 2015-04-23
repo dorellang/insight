@@ -71,6 +71,21 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [MarkerLayer.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
         * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
         * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
+    * [insight.quadtree](#niclabs.insight.quadtree)
+      * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
+      * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
+        * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
+        * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
+        * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
+        * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
+        * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
+        * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
+      * [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
+        * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
+        * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
+        * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
+        * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
+        * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
     * [insight.map](#niclabs.insight.map)
       * [map.grid](#niclabs.insight.map.grid)
         * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
@@ -138,21 +153,6 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
         * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
       * [map.GoogleMercator](#niclabs.insight.map.GoogleMercator)
-    * [insight.quadtree](#niclabs.insight.quadtree)
-      * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
-      * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
-        * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
-        * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
-        * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
-        * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
-        * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
-        * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
-      * [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
-        * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
-        * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
-        * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
-        * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
-        * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
     * [callback: insight~handler](#niclabs.insight..handler)
     * [class: insight.Dashboard](#niclabs.insight.Dashboard)
       * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
@@ -281,6 +281,21 @@ understand what is going on in the city
       * [MarkerLayer.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
       * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
       * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
+  * [insight.quadtree](#niclabs.insight.quadtree)
+    * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
+    * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
+      * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
+      * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
+      * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
+      * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
+      * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
+      * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
+    * [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
+      * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
+      * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
+      * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
+      * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
+      * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
   * [insight.map](#niclabs.insight.map)
     * [map.grid](#niclabs.insight.map.grid)
       * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
@@ -348,21 +363,6 @@ understand what is going on in the city
       * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
       * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
     * [map.GoogleMercator](#niclabs.insight.map.GoogleMercator)
-  * [insight.quadtree](#niclabs.insight.quadtree)
-    * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
-    * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
-      * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
-      * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
-      * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
-      * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
-      * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
-      * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
-    * [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
-      * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
-      * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
-      * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
-      * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
-      * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
   * [callback: insight~handler](#niclabs.insight..handler)
   * [class: insight.Dashboard](#niclabs.insight.Dashboard)
     * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
@@ -1172,6 +1172,149 @@ The event provides summary data for blocks to show
 - data `Object` - summarized data  
 
 **Type**: `object`  
+<a name="niclabs.insight.quadtree"></a>
+###insight.quadtree
+Quadtree implementation
+
+**Members**
+
+* [insight.quadtree](#niclabs.insight.quadtree)
+  * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
+  * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
+    * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
+    * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
+    * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
+    * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
+    * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
+    * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
+  * [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
+    * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
+    * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
+    * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
+    * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
+    * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
+
+<a name="niclabs.insight.quadtree.Point"></a>
+####type: quadtree.Point
+A cartesian point
+
+**Params**
+
+- x `float` - horizontal coordinates  
+- y `float` - vertical coordinates  
+
+**Type**: `Object`  
+<a name="niclabs.insight.quadtree.Bounds"></a>
+####class: quadtree.Bounds
+**Members**
+
+* [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
+  * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
+  * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
+  * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
+  * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
+  * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
+  * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
+
+<a name="new_niclabs.insight.quadtree.Bounds"></a>
+#####new quadtree.Bounds(min, max)
+Construct an axis aligned bounding box with the corners
+at the provided coordinates
+
+**Params**
+
+- min <code>[Point](#niclabs.insight.quadtree.Point)</code> - minimal coordinates of the bounding box (e.g. lower left corner if zero is at the lower left corner of the canvas)  
+- max <code>[Point](#niclabs.insight.quadtree.Point)</code> - maximal coordinates of the bounding box (e.g. upper right corner if zero is at the lower left corner of the canvas)  
+
+<a name="niclabs.insight.quadtree.Bounds.center"></a>
+#####Bounds.center
+Center of the bounding box
+
+**Type**: [Point](#niclabs.insight.quadtree.Point)  
+<a name="niclabs.insight.quadtree.Bounds.min"></a>
+#####Bounds.min
+Minimal coordinates of the bounding box
+(e.g. lower left corner if zero is at the lowest leftmost corner of the canvas)
+
+**Type**: [Point](#niclabs.insight.quadtree.Point)  
+<a name="niclabs.insight.quadtree.Bounds.max"></a>
+#####Bounds.max
+Maximal coordinates of the bounding box
+(e.g. upper right corner if zero is at the lowest leftmost corner of the canvas)
+
+**Type**: [Point](#niclabs.insight.quadtree.Point)  
+<a name="niclabs.insight.quadtree.Bounds.contains"></a>
+#####Bounds.contains(point)
+Check if this bounding box contains the given point.
+
+As a convention, a bounding box contains all points inside its borders
+as well as all the points in the east and south borders.
+
+**Params**
+
+- point <code>[Point](#niclabs.insight.quadtree.Point)</code> - point to lookup  
+
+**Returns**: `boolean` - true if the box contains the point  
+<a name="niclabs.insight.quadtree.Bounds.intersects"></a>
+#####Bounds.intersects(box)
+Check if this bounding box intersects the given bounding box
+
+**Params**
+
+- box <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - bounding box to check intersection with  
+
+**Returns**: `boolean` - true if the boxes intersect in at least one point  
+<a name="niclabs.insight.quadtree.PointQuadTree"></a>
+####class: quadtree.PointQuadTree
+**Members**
+
+* [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
+  * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
+  * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
+  * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
+  * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
+  * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
+
+<a name="new_niclabs.insight.quadtree.PointQuadTree"></a>
+#####new quadtree.PointQuadTree(bounds, [capacity], [depth])
+Construct a Point Quadtree
+
+See [http://en.wikipedia.org/wiki/Quadtree](http://en.wikipedia.org/wiki/Quadtree)
+
+**Params**
+
+- bounds <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - bounding box for the quadtree  
+- \[capacity=50\] `integer` - number of points that each node in the quadtree accepts before dividing  
+- \[depth=40\] `integer` - max depth of the quadtree  
+
+<a name="niclabs.insight.quadtree.PointQuadTree.capacity"></a>
+#####PointQuadTree.capacity
+Capacity for the quadtree
+
+**Type**: `integer`  
+<a name="niclabs.insight.quadtree.PointQuadTree.bounds"></a>
+#####PointQuadTree.bounds
+Boundary of the quadtree
+
+**Type**: [Bounds](#niclabs.insight.quadtree.Bounds)  
+<a name="niclabs.insight.quadtree.PointQuadTree.insert"></a>
+#####PointQuadTree.insert(point)
+Insert a new point in the quadtree
+
+**Params**
+
+- point <code>[Point](#niclabs.insight.quadtree.Point)</code> - new point to insert  
+
+**Returns**: `boolean` - true if the point could be inserted (point belongs in the bounds of the quadtree)  
+<a name="niclabs.insight.quadtree.PointQuadTree.query"></a>
+#####PointQuadTree.query(range)
+Return all the points in the specified bounding box
+
+**Params**
+
+- range <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - spatial range to search  
+
+**Returns**: [Array.&lt;Point&gt;](#niclabs.insight.quadtree.Point) - list of points in the given range  
 <a name="niclabs.insight.map"></a>
 ###insight.map
 Map compatibility for the insight dashboard
@@ -1966,149 +2109,6 @@ Event triggered to notify the dashboard that an element of the map has been pres
 - lng `float` - latitude for the marker  
 
 **Type**: `object`  
-<a name="niclabs.insight.quadtree"></a>
-###insight.quadtree
-Quadtree implementation
-
-**Members**
-
-* [insight.quadtree](#niclabs.insight.quadtree)
-  * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
-  * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
-    * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
-    * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
-    * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
-    * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
-    * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
-    * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
-  * [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
-    * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
-    * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
-    * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
-    * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
-    * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
-
-<a name="niclabs.insight.quadtree.Point"></a>
-####type: quadtree.Point
-A cartesian point
-
-**Params**
-
-- x `float` - horizontal coordinates  
-- y `float` - vertical coordinates  
-
-**Type**: `Object`  
-<a name="niclabs.insight.quadtree.Bounds"></a>
-####class: quadtree.Bounds
-**Members**
-
-* [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
-  * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
-  * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
-  * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
-  * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
-  * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
-  * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
-
-<a name="new_niclabs.insight.quadtree.Bounds"></a>
-#####new quadtree.Bounds(min, max)
-Construct an axis aligned bounding box with the corners
-at the provided coordinates
-
-**Params**
-
-- min <code>[Point](#niclabs.insight.quadtree.Point)</code> - minimal coordinates of the bounding box (e.g. lower left corner if zero is at the lower left corner of the canvas)  
-- max <code>[Point](#niclabs.insight.quadtree.Point)</code> - maximal coordinates of the bounding box (e.g. upper right corner if zero is at the lower left corner of the canvas)  
-
-<a name="niclabs.insight.quadtree.Bounds.center"></a>
-#####Bounds.center
-Center of the bounding box
-
-**Type**: [Point](#niclabs.insight.quadtree.Point)  
-<a name="niclabs.insight.quadtree.Bounds.min"></a>
-#####Bounds.min
-Minimal coordinates of the bounding box
-(e.g. lower left corner if zero is at the lowest leftmost corner of the canvas)
-
-**Type**: [Point](#niclabs.insight.quadtree.Point)  
-<a name="niclabs.insight.quadtree.Bounds.max"></a>
-#####Bounds.max
-Maximal coordinates of the bounding box
-(e.g. upper right corner if zero is at the lowest leftmost corner of the canvas)
-
-**Type**: [Point](#niclabs.insight.quadtree.Point)  
-<a name="niclabs.insight.quadtree.Bounds.contains"></a>
-#####Bounds.contains(point)
-Check if this bounding box contains the given point.
-
-As a convention, a bounding box contains all points inside its borders
-as well as all the points in the east and south borders.
-
-**Params**
-
-- point <code>[Point](#niclabs.insight.quadtree.Point)</code> - point to lookup  
-
-**Returns**: `boolean` - true if the box contains the point  
-<a name="niclabs.insight.quadtree.Bounds.intersects"></a>
-#####Bounds.intersects(box)
-Check if this bounding box intersects the given bounding box
-
-**Params**
-
-- box <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - bounding box to check intersection with  
-
-**Returns**: `boolean` - true if the boxes intersect in at least one point  
-<a name="niclabs.insight.quadtree.PointQuadTree"></a>
-####class: quadtree.PointQuadTree
-**Members**
-
-* [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
-  * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
-  * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
-  * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
-  * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
-  * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
-
-<a name="new_niclabs.insight.quadtree.PointQuadTree"></a>
-#####new quadtree.PointQuadTree(bounds, [capacity], [depth])
-Construct a Point Quadtree
-
-See [http://en.wikipedia.org/wiki/Quadtree](http://en.wikipedia.org/wiki/Quadtree)
-
-**Params**
-
-- bounds <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - bounding box for the quadtree  
-- \[capacity=50\] `integer` - number of points that each node in the quadtree accepts before dividing  
-- \[depth=40\] `integer` - max depth of the quadtree  
-
-<a name="niclabs.insight.quadtree.PointQuadTree.capacity"></a>
-#####PointQuadTree.capacity
-Capacity for the quadtree
-
-**Type**: `integer`  
-<a name="niclabs.insight.quadtree.PointQuadTree.bounds"></a>
-#####PointQuadTree.bounds
-Boundary of the quadtree
-
-**Type**: [Bounds](#niclabs.insight.quadtree.Bounds)  
-<a name="niclabs.insight.quadtree.PointQuadTree.insert"></a>
-#####PointQuadTree.insert(point)
-Insert a new point in the quadtree
-
-**Params**
-
-- point <code>[Point](#niclabs.insight.quadtree.Point)</code> - new point to insert  
-
-**Returns**: `boolean` - true if the point could be inserted (point belongs in the bounds of the quadtree)  
-<a name="niclabs.insight.quadtree.PointQuadTree.query"></a>
-#####PointQuadTree.query(range)
-Return all the points in the specified bounding box
-
-**Params**
-
-- range <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - spatial range to search  
-
-**Returns**: [Array.&lt;Point&gt;](#niclabs.insight.quadtree.Point) - list of points in the given range  
 <a name="niclabs.insight..handler"></a>
 ###callback: insight~handler
 Constructs an insight element (visualization, layer, etc.)
