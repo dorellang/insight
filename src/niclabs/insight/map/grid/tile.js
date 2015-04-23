@@ -8,10 +8,10 @@ niclabs.insight.map.grid.Tile = (function() {
      *
      * Since a tile is part of a grid, a tile can have a horizontal and vertical cooordinate indicating their
      * position in the grid.
-     * @interface niclabs.insight.map.grid.Tile
+     * @class niclabs.insight.map.grid.Tile
      */
     var Tile = function() {
-        return {
+        var self = {
             /**
              * Return the origin coordinates of the tile (i,j) in cartesian
              * coordinate system. This can be passed as a parameter to
@@ -41,6 +41,18 @@ niclabs.insight.map.grid.Tile = (function() {
             },
 
             /**
+             * Get the vertices for the tile ith origin in coordinates coord
+             *
+             * @memberof niclabs.insight.map.grid.Tile
+             * @abstract
+             * @param {niclabs.insight.map.Point|niclabs.insight.map.LatLng} coord - coordinates of the tile in the map
+             * @return {niclabs.insight.map.Point[]} coordinates of the vertices of the tile
+             */
+            vertices: function(coord) {
+                throw new Error("Not implemented");
+            },
+
+            /**
              * Draw a tile in the given coordinates on the specified map view
              *
              * @memberof niclabs.insight.map.grid.Tile
@@ -55,10 +67,37 @@ niclabs.insight.map.grid.Tile = (function() {
              * @param {float} [options.fillOpacity=0.6] - opacity for the fill of the tile
              * @return {object} object drawn on the map (e.g.) google maps polygon
              */
-            draw: function(coord, map, options) {
-                throw new Error("Not implemented");
-            }
+			draw: function(coord, map, config) {
+				if (!('googlemap' in map))
+		            throw new Error("Sorry, I only know how to draw on Google Maps at the moment");
+
+				var points = self.vertices(coord);
+				var coordinates = [];
+				for (var i = 0; i < points.length; i++) {
+					coordinates.push(niclabs.insight.map.GoogleMercator.geographic(points[i]));
+				}
+
+				// Set default configuration
+				config = config || {
+					strokeColor: '#000000',
+					strokeOpacity: 0.6,
+					strokeWeight: 2,
+					fillColor: '#ffffff',
+					fillOpacity: 0.6,
+				};
+
+				config.paths = coordinates;
+				config.geodesic = true;
+
+				// Create the tile with the configuration
+				var tile = new google.maps.Polygon(config);
+				tile.setMap(map.googlemap());
+
+				return tile;
+			}
         };
+
+        return self;
     };
 
     return Tile;

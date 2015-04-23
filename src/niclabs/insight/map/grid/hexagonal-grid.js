@@ -1,8 +1,4 @@
 niclabs.insight.map.grid.HexagonalGrid = (function() {
-
-
-
-
 	/**
      * Construct an hexagonal grid from the data provided.
 	 *
@@ -32,6 +28,7 @@ niclabs.insight.map.grid.HexagonalGrid = (function() {
 	var HexagonalGrid = function(dashboard, options) {
 		var grid = niclabs.insight.map.grid.Grid(dashboard, options);
 
+		// Calculate the hexagon side according to the zoom
 		grid.tile = function() {
 			return niclabs.insight.map.grid.HexagonTile(niclabs.insight.map.GoogleMercator.distance(options.size, grid.map.zoom()));
 		};
