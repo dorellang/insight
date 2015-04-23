@@ -3402,7 +3402,7 @@ niclabs.insight.map.grid.Grid = (function() {
 			var tile_i, tile_j;
 
 			for (var i = 0; i < points.length; i++) {
-				var coord = tile.tile(points[i]);
+				var coord = tile.query(points[i]);
 				tile_i = coord[0];
 				tile_j = coord[1];
 
@@ -3463,12 +3463,131 @@ niclabs.insight.map.grid.HexagonTile = (function() {
         var R = Math.cos(Math.PI / 6) * side;
         var H = Math.sin(Math.PI / 6) * side;
 
-		/**
-		* Returns coordinates for the vertices of the hexagon at the given location
+        var self = niclabs.insight.map.grid.Tile();
+
+        /**
+		* Side of the hexagon
 		*
-		* @returns {float[]}  coordinates of the vertices
+		* @memberof niclabs.insight.map.grid.HexagonTile
+		* @member {float}
 		*/
-		function vertices(coord) {
+		Object.defineProperty(self, "s", { get: function () { return side; } });
+
+
+        /**
+		* Distance of the hexagon
+		*
+		* @memberof niclabs.insight.map.grid.HexagonTile
+		* @member {float}
+		*/
+		Object.defineProperty(self, "r", { get: function () { return R; } });
+
+
+        /**
+		* Height of the hexagon
+		*
+		* @memberof niclabs.insight.map.grid.HexagonTile
+		* @member {float}
+		*/
+		Object.defineProperty(self, "h", { get: function () { return H; } });
+
+        /**
+         * Return the origin coordinates of the tile (i,j) in cartesian
+         * coordinate system. This can be passed as a parameter to
+         * {@link niclabs.insight.grid.Tile.draw()}
+         *
+         * @memberof niclabs.insight.map.grid.HexagonTile
+         * @param {integer} i - horizontal coordinate of the tile
+         * @param {integer} j - vertical coordinate of the tile
+         * @return {niclabs.insight.map.Point} cartesian origin of the tile
+         */
+        self.origin = function() {
+            var i, j;
+            if (arguments.length == 1) {
+                i = arguments[0][0];
+                j = arguments[0][1];
+            }
+            else {
+                i = arguments[0];
+                j = arguments[1];
+            }
+
+            // From http://www.gamedev.net/page/resources/_/technical/game-programming/coordinates-in-hexagon-based-tile-maps-r1800
+            var x = i * 2 * R + (j & 1) * R + R;
+            var y = j * (H + side);
+
+            return {'x': x, 'y': y};
+        };
+
+        /**
+         * Get the coordinates of the tile [i,j] in the grid that contains the point with
+         * the given coordinates
+         *
+         * See: http://www.gamedev.net/page/resources/_/technical/game-programming/coordinates-in-hexagon-based-tile-maps-r1800
+         *
+         * @memberof niclabs.insight.map.grid.HexagonTile
+         * @param {niclabs.insight.map.Point|niclabs.insight.map.LatLng} coord - coordinates of the point in the map
+         * @return {integer[]} coordinates of the tile that contains the given point
+         */
+        self.query = function(coord) {
+            // Convert coordinates to cartesian
+            if (coord.lat) {
+                coord = niclabs.insight.map.GoogleMercator.cartesian(coord);
+            }
+
+            // Coordinates for the square
+            var square_i = Math.floor(coord.x / (2 * R));
+            var square_j = Math.floor(coord.y / (H + side));
+
+            // Coordinates of the pixel with respect to the edge of the square
+            var square_pixel_x = coord.x - square_i * 2 * R;
+            var square_pixel_y = coord.y - square_j * (H + side);
+
+            // Is type A if the row is even
+            var rowIsTypeA = ((square_j & 1) === 0);
+
+            var hex_i = square_i;
+            var hex_j = square_j;
+
+            if (rowIsTypeA) {
+                if (square_pixel_x <= R && square_pixel_y < (- H / R) * square_pixel_x + H) {
+                    hex_i = square_i - 1;
+                    hex_j = square_j - 1;
+                }
+                else if (square_pixel_x > R && square_pixel_y < (H / R) * square_pixel_x - H) {
+                    hex_i = square_i;
+                    hex_j = square_j - 1;
+                }
+            }
+            else {
+                if (square_pixel_x <= R) {
+                    if (square_pixel_y < (H / R) * square_pixel_x) {
+                        hex_i = square_i;
+                        hex_j = square_j - 1;
+                    }
+                    else {
+                        hex_i = square_i - 1;
+                        hex_j = square_j;
+                    }
+                }
+                else if (square_pixel_x > R){
+                    if (square_pixel_y < (- H / R) * square_pixel_x + 2 * H) {
+                        hex_i = square_i;
+                        hex_j = square_j - 1;
+                    }
+                }
+            }
+            return [hex_i, hex_j];
+        };
+
+        /**
+		* Get the vertices for the tile with origin in coordinates coord
+		*
+		* @memberof niclabs.insight.map.grid.HexagonTile
+		* @param {niclabs.insight.map.Point|niclabs.insight.map.LatLng} coord - coordinates of the tile in the map
+		* @return {niclabs.insight.map.Point[]} coordinates of the vertices of the tile
+		*/
+		self.vertices = function(coord) {
 			// Convert coordinates to cartesian
 			if (coord.lat) {
 				coord = niclabs.insight.map.GoogleMercator.cartesian(coord);
@@ -3484,179 +3603,15 @@ niclabs.insight.map.grid.HexagonTile = (function() {
 			points[5] = {'x': coord.x - R, 'y': coord.y + H};
 
 			return points;
-		}
+        };
 
-		var self = {
-			/**
-			 * Side of the hexagon
-			 */
-			get s () {
-				return side;
-			},
-
-			/**
-			 * Distance of the hexagon
-			 */
-			get r () {
-				return R;
-			},
-
-			/**
-			 * Height of the hexagon
-			 */
-			get h () {
-				return H;
-			},
-
-            /**
-             * Return the origin coordinates of the tile (i,j) in cartesian
-             * coordinate system. This can be passed as a parameter to
-             * {@link niclabs.insight.grid.Tile.draw()}
-             *
-             * @memberof niclabs.insight.map.grid.HexagonTile
-             * @abstract
-             * @param {integer} i - horizontal coordinate of the tile
-             * @param {integer} j - vertical coordinate of the tile
-             * @return {niclabs.insight.map.Point} cartesian origin of the tile
-             */
-			origin: function() {
-				var i, j;
-				if (arguments.length == 1) {
-					i = arguments[0][0];
-					j = arguments[0][1];
-				}
-				else {
-					i = arguments[0];
-					j = arguments[1];
-				}
-
-				// From http://www.gamedev.net/page/resources/_/technical/game-programming/coordinates-in-hexagon-based-tile-maps-r1800
-				var x = i * 2 * R + (j & 1) * R + R;
-				var y = j * (H + side);
-
-				return {'x': x, 'y': y};
-			},
-
-            /**
-             * Get the coordinates of the tile [i,j] in the grid that contains the point with
-             * the given coordinates
-             *
-             * See: http://www.gamedev.net/page/resources/_/technical/game-programming/coordinates-in-hexagon-based-tile-maps-r1800
-             *
-             * @memberof niclabs.insight.map.grid.HexagonTile
-             * @abstract
-             * @param {niclabs.insight.map.Point|niclabs.insight.map.LatLng} coord - coordinates of the point in the map
-             * @return {integer[]} coordinates of the tile that contains the given point
-             */
-			tile: function(coord) {
-				// Convert coordinates to cartesian
-				if (coord.lat) {
-					coord = niclabs.insight.map.GoogleMercator.cartesian(coord);
-				}
-
-				// Coordinates for the square
-				var square_i = Math.floor(coord.x / (2 * R));
-				var square_j = Math.floor(coord.y / (H + side));
-
-				// Coordinates of the pixel with respect to the edge of the square
-				var square_pixel_x = coord.x - square_i * 2 * R;
-				var square_pixel_y = coord.y - square_j * (H + side);
-
-				// Is type A if the row is even
-				var rowIsTypeA = ((square_j & 1) === 0);
-
-				var hex_i = square_i;
-				var hex_j = square_j;
-
-				if (rowIsTypeA) {
-					if (square_pixel_x <= R && square_pixel_y < (- H / R) * square_pixel_x + H) {
-						hex_i = square_i - 1;
-						hex_j = square_j - 1;
-					}
-					else if (square_pixel_x > R && square_pixel_y < (H / R) * square_pixel_x - H) {
-						hex_i = square_i;
-						hex_j = square_j - 1;
-					}
-				}
-				else {
-					if (square_pixel_x <= R) {
-						if (square_pixel_y < (H / R) * square_pixel_x) {
-							hex_i = square_i;
-							hex_j = square_j - 1;
-						}
-						else {
-							hex_i = square_i - 1;
-							hex_j = square_j;
-						}
-					}
-					else if (square_pixel_x > R){
-						if (square_pixel_y < (- H / R) * square_pixel_x + 2 * H) {
-							hex_i = square_i;
-							hex_j = square_j - 1;
-						}
-					}
-				}
-				return [hex_i, hex_j];
-			},
-
-            /**
-             * Draw a tile in the given coordinates on the specified map view
-             *
-             * @memberof niclabs.insight.map.grid.Tile
-             * @abstract
-             * @param {niclabs.insight.map.Point|niclabs.insight.map.LatLng} coord - coordinates of the tile in the map
-             * @param {niclabs.insight.MapView} map - map view to draw the tile on
-             * @param {Object} options - configuration options for drawing the tile
-             * @param {string} [options.strokeColor='#000000'] - color for the stroke of each tile
-             * @param {float} [options.strokeOpacity=0.6] - opacity for the stroke (between 0-1)
-             * @param {integer} [options.strokeWeight=2] - border weight for the tile
-             * @param {string} [options.fillColor='#ffffff'] - color for the fill of the tile
-             * @param {float} [options.fillOpacity=0.6] - opacity for the fill of the tile
-             * @return {object} object drawn on the map (e.g.) google maps polygon
-             */
-			draw: function(coord, map, config) {
-				if (!('googlemap' in map))
-		            throw new Error("Sorry, I only know how to draw on Google Maps at the moment");
-
-				var hexagon;
-				var points = vertices(coord);
-				var coordinates = [];
-				for (var i = 0; i < points.length; i++) {
-					coordinates.push(niclabs.insight.map.GoogleMercator.geographic(points[i]));
-				}
-
-				// Set default configuration
-				config = config || {
-					strokeColor: '#000000',
-					strokeOpacity: 0.6,
-					strokeWeight: 2,
-					fillColor: '#ffffff',
-					fillOpacity: 0.6,
-				};
-
-				config.paths = coordinates;
-				config.geodesic = true;
-
-				// Create the hexagon with the configuration
-				hexagon = new google.maps.Polygon(config);
-
-				hexagon.setMap(map.googlemap());
-
-				return hexagon;
-			}
-		};
-
-		return self;
+        return self;
 	};
 
     return HexagonTile;
 })();
 
 niclabs.insight.map.grid.HexagonalGrid = (function() {
-
-
-
-
 	/**
      * Construct an hexagonal grid from the data provided.
 	 *
@@ -3686,6 +3641,7 @@ niclabs.insight.map.grid.HexagonalGrid = (function() {
 	var HexagonalGrid = function(dashboard, options) {
 		var grid = niclabs.insight.map.grid.Grid(dashboard, options);
 
+		// Calculate the hexagon side according to the zoom
 		grid.tile = function() {
 			return niclabs.insight.map.grid.HexagonTile(niclabs.insight.map.GoogleMercator.distance(options.size, grid.map.zoom()));
 		};
@@ -3699,6 +3655,147 @@ niclabs.insight.map.grid.HexagonalGrid = (function() {
 	return HexagonalGrid;
 })();
 
+niclabs.insight.map.grid.SquareGrid = (function() {
+	/**
+     * Construct a square grid from the data provided.
+	 *
+	 * The grid divides the visible map into square tiles of the same size and draws only those
+	 * tiles that have elements below them. If a weight is provided for the the data points
+	 * each square is painted with a function of the point weights inside the square
+     *
+     * @class niclabs.insight.map.grid.SquareGrid
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this grid belongs to
+     * @param {Object} options - configuration options for the grid
+     * @param {string} options.layer - identifier for the layer that this grid belongs to
+     * @param {integer} options.size - size for the side of each square (in pixels)
+	 * @param {string} [options.strokeColor='#000000'] - color for the stroke of each square
+	 * @param {float} [options.strokeOpacity=0.6] - opacity for the stroke (between 0-1)
+	 * @param {integer} [options.strokeWeight=2] - border weight for the square
+	 * @param {string|niclabs.insight.map.grid.SquareGrid~fill} [options.fill='#ffffff'] - color for the fill of the square,
+	 * 	it can have one of the following values:
+	 *  	- 'average' calculates the average of the weights in the square and interpolates that value between the values for options.fill_start and options.fill_end
+	 *  	- 'median' calculates the median of the weights in the square and interpolates as average
+	 *  	- rgb color (starting with '#') is used as a fixed color for all hexagons
+	 *  	- a callback receiving the points in the square and returning the value for the color
+	 * @param {string} [options.fillStart='#ff0000'] - if 'average' or 'median' are used as options for options.fill, it sets the begining of the interpolation interval for the fill function
+	 * @param {string} [options.fillEnd='#00ff00'] - if 'average' or 'median' are used as options for options.fill, it sets the end of the interpolation interval for the fill function
+	 * @param {float} [options.fillOpacity=0.6] - opacity for the fill of the square
+     * @param {niclabs.insight.map.grid.SquareGrid.Data[]} options.data - data for the layer
+     */
+	var SquareGrid = function(dashboard, options) {
+		var grid = niclabs.insight.map.grid.Grid(dashboard, options);
+
+		// Calculate the square side according to the zoom
+		grid.tile = function() {
+			return niclabs.insight.map.grid.SquareTile(niclabs.insight.map.GoogleMercator.distance(options.size, grid.map.zoom()));
+		};
+
+        return grid;
+	};
+
+    // Register the handler
+    niclabs.insight.handler('square', 'grid', SquareGrid);
+
+	return SquareGrid;
+})();
+
+niclabs.insight.map.grid.SquareTile = (function() {
+    /**
+     * Define a square tile to be drawn on the map
+     *
+     * @class niclabs.insight.map.grid.SquareTile
+     * @implements niclabs.insight.map.grid.Tile
+	 * @param {float} side - side (or radius) of the square
+     */
+	var SquareTile = function(side) {
+		var self = niclabs.insight.map.grid.Tile();
+
+		/**
+		* Side of the square
+		*
+		* @memberof niclabs.insight.map.grid.SquareTile
+		* @member {float}
+		*/
+		Object.defineProperty(self, "s", { get: function () { return side; } });
+
+
+		/**
+		* Return the origin coordinates of the tile (i,j) in cartesian
+		* coordinate system. This can be passed as a parameter to
+		* {@link niclabs.insight.grid.Tile.draw()}
+		*
+		* @memberof niclabs.insight.map.grid.SquareTile
+		* @param {integer} i - horizontal coordinate of the tile
+		* @param {integer} j - vertical coordinate of the tile
+		* @return {niclabs.insight.map.Point} cartesian origin of the tile
+		*/
+		self.origin = function() {
+			var i, j;
+			if (arguments.length == 1) {
+				i = arguments[0][0];
+				j = arguments[0][1];
+			}
+			else {
+				i = arguments[0];
+				j = arguments[1];
+			}
+			var x = i * side;
+			var y = j * side;
+
+			return {'x': x, 'y': y};
+		};
+
+		/**
+		* Get the coordinates of the tile [i,j] in the grid that contains the point with
+		* the given coordinates
+		*             *
+		* @memberof niclabs.insight.map.grid.SquareTile
+		* @param {niclabs.insight.map.Point|niclabs.insight.map.LatLng} coord - coordinates of the point in the map
+		* @return {integer[]} coordinates of the tile that contains the given point
+		*/
+		self.query = function(coord) {
+			// Convert coordinates to cartesian
+			if (coord.lat) {
+				coord = niclabs.insight.map.GoogleMercator.cartesian(coord);
+			}
+
+			// Coordinates for the square
+			var square_i = Math.floor(coord.x / side);
+			var square_j = Math.floor(coord.y / side);
+
+
+			return [square_i, square_j];
+		};
+
+		/**
+		* Get the vertices for the tile with origin in coordinates coord
+		*
+		* @memberof niclabs.insight.map.grid.SquareTile
+		* @param {niclabs.insight.map.Point|niclabs.insight.map.LatLng} coord - coordinates of the tile in the map
+		* @return {niclabs.insight.map.Point[]} coordinates of the vertices of the tile
+		*/
+		self.vertices = function(coord) {
+			// Convert coordinates to cartesian
+			if (coord.lat) {
+				coord = niclabs.insight.map.GoogleMercator.cartesian(coord);
+			}
+
+			//x,y coordinates are top center point
+			var points = [];
+			points[0] = {'x': coord.x, 'y': coord.y};
+			points[1] = {'x': coord.x, 'y': coord.y + side};
+			points[2] = {'x': coord.x + side, 'y': coord.y + side};
+			points[3] = {'x': coord.x + side, 'y': coord.y};
+
+			return points;
+		};
+
+		return self;
+	};
+
+    return SquareTile;
+})();
+
 niclabs.insight.map.grid.Tile = (function() {
     /**
      * Construct an abstract tile for the map
@@ -3709,10 +3806,10 @@ niclabs.insight.map.grid.Tile = (function() {
      *
      * Since a tile is part of a grid, a tile can have a horizontal and vertical cooordinate indicating their
      * position in the grid.
-     * @interface niclabs.insight.map.grid.Tile
+     * @class niclabs.insight.map.grid.Tile
      */
     var Tile = function() {
-        return {
+        var self = {
             /**
              * Return the origin coordinates of the tile (i,j) in cartesian
              * coordinate system. This can be passed as a parameter to
@@ -3742,6 +3839,18 @@ niclabs.insight.map.grid.Tile = (function() {
             },
 
             /**
+             * Get the vertices for the tile ith origin in coordinates coord
+             *
+             * @memberof niclabs.insight.map.grid.Tile
+             * @abstract
+             * @param {niclabs.insight.map.Point|niclabs.insight.map.LatLng} coord - coordinates of the tile in the map
+             * @return {niclabs.insight.map.Point[]} coordinates of the vertices of the tile
+             */
+            vertices: function(coord) {
+                throw new Error("Not implemented");
+            },
+
+            /**
              * Draw a tile in the given coordinates on the specified map view
              *
              * @memberof niclabs.insight.map.grid.Tile
@@ -3756,10 +3865,37 @@ niclabs.insight.map.grid.Tile = (function() {
              * @param {float} [options.fillOpacity=0.6] - opacity for the fill of the tile
              * @return {object} object drawn on the map (e.g.) google maps polygon
              */
-            draw: function(coord, map, options) {
-                throw new Error("Not implemented");
-            }
+			draw: function(coord, map, config) {
+				if (!('googlemap' in map))
+		            throw new Error("Sorry, I only know how to draw on Google Maps at the moment");
+
+				var points = self.vertices(coord);
+				var coordinates = [];
+				for (var i = 0; i < points.length; i++) {
+					coordinates.push(niclabs.insight.map.GoogleMercator.geographic(points[i]));
+				}
+
+				// Set default configuration
+				config = config || {
+					strokeColor: '#000000',
+					strokeOpacity: 0.6,
+					strokeWeight: 2,
+					fillColor: '#ffffff',
+					fillOpacity: 0.6,
+				};
+
+				config.paths = coordinates;
+				config.geodesic = true;
+
+				// Create the tile with the configuration
+				var tile = new google.maps.Polygon(config);
+				tile.setMap(map.googlemap());
+
+				return tile;
+			}
         };
+
+        return self;
     };
 
     return Tile;

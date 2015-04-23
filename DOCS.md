@@ -14,14 +14,31 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
   * [niclabs.insight](#niclabs.insight)
     * [insight.handler(name, [kind], [handler])](#niclabs.insight.handler)
     * [insight.dashboard([options])](#niclabs.insight.dashboard)
+    * [insight.info([obj])](#niclabs.insight.info(2))
     * [insight.layer(obj, [activate])](#niclabs.insight.layer(2))
     * [insight.map([obj])](#niclabs.insight.map(2))
-    * [insight.info([obj])](#niclabs.insight.info(2))
     * [insight.event](#niclabs.insight.event)
       * [event.on(event, listener)](#niclabs.insight.event.on)
       * [event.off(event, listener)](#niclabs.insight.event.off)
       * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
       * [callback: event~listener](#niclabs.insight.event..listener)
+    * [insight.info](#niclabs.insight.info)
+      * [class: info.Block](#niclabs.insight.info.Block)
+        * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+        * [Block.id](#niclabs.insight.info.Block.id)
+        * [Block.element](#niclabs.insight.info.Block.element)
+        * [Block.$](#niclabs.insight.info.Block.$)
+        * [Block.layer](#niclabs.insight.info.Block.layer)
+        * [Block.content](#niclabs.insight.info.Block.content)
+        * [Block.data](#niclabs.insight.info.Block.data)
+        * [Block.remove()](#niclabs.insight.info.Block.remove)
+        * [Block.__data__([data], value)](#niclabs.insight.info.Block.__data__)
+        * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
+      * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
+        * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
+        * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
+      * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+        * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
     * [insight.layer](#niclabs.insight.layer)
       * [class: layer.GridLayer](#niclabs.insight.layer.GridLayer)
         * [new layer.GridLayer(dashboard, options)](#new_niclabs.insight.layer.GridLayer)
@@ -66,10 +83,24 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
           * [callback: Grid~fill](#niclabs.insight.map.grid.Grid..fill)
         * [class: grid.HexagonTile](#niclabs.insight.map.grid.HexagonTile)
           * [new grid.HexagonTile(side)](#new_niclabs.insight.map.grid.HexagonTile)
-          * [HexagonTile.origin(i, j)](#niclabs.insight.map.grid.HexagonTile.origin)
-          * [HexagonTile.tile(coord)](#niclabs.insight.map.grid.HexagonTile.tile)
+          * [HexagonTile.self.origin(i, j)](#niclabs.insight.map.grid.HexagonTile.self.origin)
+          * [HexagonTile.self.query(coord)](#niclabs.insight.map.grid.HexagonTile.self.query)
+          * [HexagonTile.self.vertices(coord)](#niclabs.insight.map.grid.HexagonTile.self.vertices)
         * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
           * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
+        * [class: grid.SquareGrid](#niclabs.insight.map.grid.SquareGrid)
+          * [new grid.SquareGrid(dashboard, options)](#new_niclabs.insight.map.grid.SquareGrid)
+        * [class: grid.SquareTile](#niclabs.insight.map.grid.SquareTile)
+          * [new grid.SquareTile(side)](#new_niclabs.insight.map.grid.SquareTile)
+          * [SquareTile.self.origin(i, j)](#niclabs.insight.map.grid.SquareTile.self.origin)
+          * [SquareTile.self.query(coord)](#niclabs.insight.map.grid.SquareTile.self.query)
+          * [SquareTile.self.vertices(coord)](#niclabs.insight.map.grid.SquareTile.self.vertices)
+        * [class: grid.Tile](#niclabs.insight.map.grid.Tile)
+          * [new grid.Tile()](#new_niclabs.insight.map.grid.Tile)
+          * [Tile.origin(i, j)](#niclabs.insight.map.grid.Tile.origin)
+          * [Tile.query(coord)](#niclabs.insight.map.grid.Tile.query)
+          * [Tile.vertices(coord)](#niclabs.insight.map.grid.Tile.vertices)
+          * [Tile.draw(coord, map, options)](#niclabs.insight.map.grid.Tile.draw)
       * [map.heatmap](#niclabs.insight.map.heatmap)
         * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
           * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
@@ -107,23 +138,6 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
         * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
       * [map.GoogleMercator](#niclabs.insight.map.GoogleMercator)
-    * [insight.info](#niclabs.insight.info)
-      * [class: info.Block](#niclabs.insight.info.Block)
-        * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
-        * [Block.id](#niclabs.insight.info.Block.id)
-        * [Block.element](#niclabs.insight.info.Block.element)
-        * [Block.$](#niclabs.insight.info.Block.$)
-        * [Block.layer](#niclabs.insight.info.Block.layer)
-        * [Block.content](#niclabs.insight.info.Block.content)
-        * [Block.data](#niclabs.insight.info.Block.data)
-        * [Block.remove()](#niclabs.insight.info.Block.remove)
-        * [Block.__data__([data], value)](#niclabs.insight.info.Block.__data__)
-        * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
-      * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
-        * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
-        * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
-      * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-        * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
     * [insight.quadtree](#niclabs.insight.quadtree)
       * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
       * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
@@ -210,14 +224,31 @@ understand what is going on in the city
 * [niclabs.insight](#niclabs.insight)
   * [insight.handler(name, [kind], [handler])](#niclabs.insight.handler)
   * [insight.dashboard([options])](#niclabs.insight.dashboard)
+  * [insight.info([obj])](#niclabs.insight.info(2))
   * [insight.layer(obj, [activate])](#niclabs.insight.layer(2))
   * [insight.map([obj])](#niclabs.insight.map(2))
-  * [insight.info([obj])](#niclabs.insight.info(2))
   * [insight.event](#niclabs.insight.event)
     * [event.on(event, listener)](#niclabs.insight.event.on)
     * [event.off(event, listener)](#niclabs.insight.event.off)
     * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
     * [callback: event~listener](#niclabs.insight.event..listener)
+  * [insight.info](#niclabs.insight.info)
+    * [class: info.Block](#niclabs.insight.info.Block)
+      * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+      * [Block.id](#niclabs.insight.info.Block.id)
+      * [Block.element](#niclabs.insight.info.Block.element)
+      * [Block.$](#niclabs.insight.info.Block.$)
+      * [Block.layer](#niclabs.insight.info.Block.layer)
+      * [Block.content](#niclabs.insight.info.Block.content)
+      * [Block.data](#niclabs.insight.info.Block.data)
+      * [Block.remove()](#niclabs.insight.info.Block.remove)
+      * [Block.__data__([data], value)](#niclabs.insight.info.Block.__data__)
+      * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
+    * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
+      * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
+      * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
+    * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+      * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
   * [insight.layer](#niclabs.insight.layer)
     * [class: layer.GridLayer](#niclabs.insight.layer.GridLayer)
       * [new layer.GridLayer(dashboard, options)](#new_niclabs.insight.layer.GridLayer)
@@ -262,10 +293,24 @@ understand what is going on in the city
         * [callback: Grid~fill](#niclabs.insight.map.grid.Grid..fill)
       * [class: grid.HexagonTile](#niclabs.insight.map.grid.HexagonTile)
         * [new grid.HexagonTile(side)](#new_niclabs.insight.map.grid.HexagonTile)
-        * [HexagonTile.origin(i, j)](#niclabs.insight.map.grid.HexagonTile.origin)
-        * [HexagonTile.tile(coord)](#niclabs.insight.map.grid.HexagonTile.tile)
+        * [HexagonTile.self.origin(i, j)](#niclabs.insight.map.grid.HexagonTile.self.origin)
+        * [HexagonTile.self.query(coord)](#niclabs.insight.map.grid.HexagonTile.self.query)
+        * [HexagonTile.self.vertices(coord)](#niclabs.insight.map.grid.HexagonTile.self.vertices)
       * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
         * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
+      * [class: grid.SquareGrid](#niclabs.insight.map.grid.SquareGrid)
+        * [new grid.SquareGrid(dashboard, options)](#new_niclabs.insight.map.grid.SquareGrid)
+      * [class: grid.SquareTile](#niclabs.insight.map.grid.SquareTile)
+        * [new grid.SquareTile(side)](#new_niclabs.insight.map.grid.SquareTile)
+        * [SquareTile.self.origin(i, j)](#niclabs.insight.map.grid.SquareTile.self.origin)
+        * [SquareTile.self.query(coord)](#niclabs.insight.map.grid.SquareTile.self.query)
+        * [SquareTile.self.vertices(coord)](#niclabs.insight.map.grid.SquareTile.self.vertices)
+      * [class: grid.Tile](#niclabs.insight.map.grid.Tile)
+        * [new grid.Tile()](#new_niclabs.insight.map.grid.Tile)
+        * [Tile.origin(i, j)](#niclabs.insight.map.grid.Tile.origin)
+        * [Tile.query(coord)](#niclabs.insight.map.grid.Tile.query)
+        * [Tile.vertices(coord)](#niclabs.insight.map.grid.Tile.vertices)
+        * [Tile.draw(coord, map, options)](#niclabs.insight.map.grid.Tile.draw)
     * [map.heatmap](#niclabs.insight.map.heatmap)
       * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
         * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
@@ -303,23 +348,6 @@ understand what is going on in the city
       * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
       * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
     * [map.GoogleMercator](#niclabs.insight.map.GoogleMercator)
-  * [insight.info](#niclabs.insight.info)
-    * [class: info.Block](#niclabs.insight.info.Block)
-      * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
-      * [Block.id](#niclabs.insight.info.Block.id)
-      * [Block.element](#niclabs.insight.info.Block.element)
-      * [Block.$](#niclabs.insight.info.Block.$)
-      * [Block.layer](#niclabs.insight.info.Block.layer)
-      * [Block.content](#niclabs.insight.info.Block.content)
-      * [Block.data](#niclabs.insight.info.Block.data)
-      * [Block.remove()](#niclabs.insight.info.Block.remove)
-      * [Block.__data__([data], value)](#niclabs.insight.info.Block.__data__)
-      * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
-    * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
-      * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
-      * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
-    * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-      * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
   * [insight.quadtree](#niclabs.insight.quadtree)
     * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
     * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
@@ -430,6 +458,33 @@ var dashboard = niclabs.insight.dashboard({
 });
 ```
 
+<a name="niclabs.insight.info(2)"></a>
+###insight.info([obj])
+Helper method to assign/get the information view to/from the dashboard
+
+**Params**
+
+- \[obj\] `Object` | <code>[InfoView](#niclabs.insight.InfoView)</code> - configuration for the information view or information view object  
+  - handler `String` - name of the handler to construct the info view  
+
+**Returns**: [InfoView](#niclabs.insight.InfoView) - the dashboard information view  
+**Example**  
+```javascript
+// Create the info view
+niclabs.insight.info({
+     handler: 'basic-info-view', // The view constructor
+     blocks: [{
+         'handler': 'summary-block', // The block constructor
+         'id': '#summary',
+         'title': 'My Marker Summary',
+         'data': { // Default data
+             'description': 'This block will show the details of the selected markers'
+       },
+       ignore: ['layer', 'type', 'src'] // Data elements we don't want on the block
+   }]
+});
+```
+
 <a name="niclabs.insight.layer(2)"></a>
 ###insight.layer(obj, [activate])
 Helper method to add/get a [Layer](#niclabs.insight.layer.Layer) for the dashboard
@@ -488,33 +543,6 @@ var map = niclabs.insight.map({
      'lat': 48.8583,
      'lng': 2.2944,
      'zoom': 15
-});
-```
-
-<a name="niclabs.insight.info(2)"></a>
-###insight.info([obj])
-Helper method to assign/get the information view to/from the dashboard
-
-**Params**
-
-- \[obj\] `Object` | <code>[InfoView](#niclabs.insight.InfoView)</code> - configuration for the information view or information view object  
-  - handler `String` - name of the handler to construct the info view  
-
-**Returns**: [InfoView](#niclabs.insight.InfoView) - the dashboard information view  
-**Example**  
-```javascript
-// Create the info view
-niclabs.insight.info({
-     handler: 'basic-info-view', // The view constructor
-     blocks: [{
-         'handler': 'summary-block', // The block constructor
-         'id': '#summary',
-         'title': 'My Marker Summary',
-         'data': { // Default data
-             'description': 'This block will show the details of the selected markers'
-       },
-       ignore: ['layer', 'type', 'src'] // Data elements we don't want on the block
-   }]
 });
 ```
 
@@ -583,6 +611,214 @@ Insight event listener
 
 **Scope**: inner typedef of [event](#niclabs.insight.event)  
 **Type**: `function`  
+<a name="niclabs.insight.info"></a>
+###insight.info
+Contains the definitions for the information blocks supported by insight
+
+**Members**
+
+* [insight.info](#niclabs.insight.info)
+  * [class: info.Block](#niclabs.insight.info.Block)
+    * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+    * [Block.id](#niclabs.insight.info.Block.id)
+    * [Block.element](#niclabs.insight.info.Block.element)
+    * [Block.$](#niclabs.insight.info.Block.$)
+    * [Block.layer](#niclabs.insight.info.Block.layer)
+    * [Block.content](#niclabs.insight.info.Block.content)
+    * [Block.data](#niclabs.insight.info.Block.data)
+    * [Block.remove()](#niclabs.insight.info.Block.remove)
+    * [Block.__data__([data], value)](#niclabs.insight.info.Block.__data__)
+    * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
+  * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
+    * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
+    * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
+  * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+    * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
+
+<a name="niclabs.insight.info.Block"></a>
+####class: info.Block
+**Members**
+
+* [class: info.Block](#niclabs.insight.info.Block)
+  * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
+  * [Block.id](#niclabs.insight.info.Block.id)
+  * [Block.element](#niclabs.insight.info.Block.element)
+  * [Block.$](#niclabs.insight.info.Block.$)
+  * [Block.layer](#niclabs.insight.info.Block.layer)
+  * [Block.content](#niclabs.insight.info.Block.content)
+  * [Block.data](#niclabs.insight.info.Block.data)
+  * [Block.remove()](#niclabs.insight.info.Block.remove)
+  * [Block.__data__([data], value)](#niclabs.insight.info.Block.__data__)
+  * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
+
+<a name="new_niclabs.insight.info.Block"></a>
+#####new info.Block(dashboard, options)
+Construct a information block
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard to which the block belongs to  
+- options `Object` - configuration options for the block  
+  - id `string` - html identifier for the block  
+  - \[title\] `string` - title for the block  
+  - \[closable=true\] `boolean` - make the block closable  
+  - \[movable=true\] `boolean` - make the block movable  
+  - \[data\] `Object` | `Array.<Object>` | `function` | `String` - data for the block,
+ it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
+ or a url where to get the data. If a layer is provided, events from the layer (`niclabs.insight.MapView#map_element_selected`,
+ `niclabs.insight.layer.Layer#layer_sumary`) will update the data in the block. If no data is provided, it is assumed
+ that all layers affect the block and events from all layers will update the block data. If data depends on a layer
+ options.defaults can be used to set the default data  
+  - preprocess `function` - function to apply on the data (either from an url or a layer) before refreshing the block  
+  - \[defaults\] `Object` | `Array.<Object>` - when the data depends on a layer, defaults sets the initial data to show
+ in the block  
+
+<a name="niclabs.insight.info.Block.id"></a>
+#####Block.id
+id of the block
+
+**Type**: `string`  
+<a name="niclabs.insight.info.Block.element"></a>
+#####Block.element
+HTML DOM element for the block container
+
+**Type**: `Element`  
+<a name="niclabs.insight.info.Block.$"></a>
+#####Block.$
+jQuery object for info block container
+
+**Type**: `jQuery`  
+<a name="niclabs.insight.info.Block.layer"></a>
+#####Block.layer
+Layer id
+
+**Type**: `jQuery`  
+<a name="niclabs.insight.info.Block.content"></a>
+#####Block.content
+jQuery element for the content container
+
+The content of the block is the HTML container that
+comes after the block title
+
+**Type**: `jQuery`  
+<a name="niclabs.insight.info.Block.data"></a>
+#####Block.data
+Set/get the data for the block
+
+**Params**
+
+  - \[data\] `Object` | `Array.<Object>` | `function` | `String` - data for the block,
+ it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
+ or a url where to get the data. If a layer is provided, events from the layer (`niclabs.insight.MapView#map_element_selected`,
+ `niclabs.insight.layer.Layer#layer_sumary`) will update the data in the block. If no data is provided, it is assumed
+ that all layers affect the block and events from all layers will update the block data. If data depends on a layer
+ options.defaults can be used to set the default data.  
+
+**Returns**: `Object` - the current data in the block or the url for the data if the data has not been loaded yet  
+<a name="niclabs.insight.info.Block.remove"></a>
+#####Block.remove()
+Remove the block from the dashboard.
+This method triggers an event to alert all elements of the
+dashboard of the block removal
+
+<a name="niclabs.insight.info.Block.__data__"></a>
+#####Block.__data__([data], value)
+Set/get the internal data value.
+
+**Params**
+
+- \[data\] `Object` | `Array.<Object>` - data for the block  
+- value `Object` - for the internal data  
+
+**Access**: protected  
+<a name="niclabs.insight.info.Block.refresh"></a>
+#####Block.refresh([data])
+Refresh the block using the provided data
+
+**Params**
+
+- \[data\] `Object` - data to refresh  
+
+<a name="niclabs.insight.info.ChartistBlock"></a>
+####class: info.ChartistBlock
+**Extends**: `niclabs.insight.info.Block`  
+**Members**
+
+* [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
+  * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
+  * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
+
+<a name="new_niclabs.insight.info.ChartistBlock"></a>
+#####new info.ChartistBlock(dashboard, constructor, options)
+Construct a new chartist information block
+
+For the configuration options see [http://gionkunz.github.io/chartist-js/](http://gionkunz.github.io/chartist-js/)
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - parent dashboard for the block  
+- constructor `Object` - chartist object to use as constructor  
+- options `Object` - configuration options for the block  
+  - id `string` - html identifier for the block  
+  - \[title\] `string` - title for the block  
+  - chartist <code>[Chartist](#niclabs.insight.info.ChartistBlock.Chartist)</code> - chartist configuration  
+  - \[closable=true\] `boolean` - make the block closable  
+  - \[movable=true\] `boolean` - make the block movable  
+  - \[data\] `Object` | `Array.<Object>` | `function` | `String` - data for the block,
+ it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
+ or a url where to get the data. If a layer is provided, events from the layer (`niclabs.insight.MapView#map_element_selected`,
+ `niclabs.insight.layer.Layer#layer_sumary`) will update the data in the block. If no data is provided, it is assumed
+ that all layers affect the block and events from all layers will update the block data. If data depends on a layer
+ options.defaults can be used to set the default data  
+  - preprocess `function` - function to apply on the data (either from an url or a layer) before refreshing the block  
+  - \[defaults\] `Object` | `Array.<Object>` - when the data depends on a layer, defaults sets the initial data to show
+ in the block  
+
+**Extends**: `niclabs.insight.info.Block`  
+<a name="niclabs.insight.info.ChartistBlock.Chartist"></a>
+#####type: ChartistBlock.Chartist
+Configuration options for chartist charts
+
+**Params**
+
+- class `Object` - chartist css class  
+- labels `Object` - chart labels  
+- \[options\] `Object` - chartist options  
+- \[responsiveOptions\] `Object` - chartist responsive options  
+
+**Type**: `Object`  
+<a name="niclabs.insight.info.SummaryBlock"></a>
+####class: info.SummaryBlock
+**Extends**: `niclabs.insight.info.Block`  
+**Members**
+
+* [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
+  * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
+
+<a name="new_niclabs.insight.info.SummaryBlock"></a>
+#####new info.SummaryBlock(dashboard, options)
+Construct a new summary information block
+TODO: describe what is a summary information block
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - parent dashboard for the block  
+- options `Object` - configuration options for the block  
+  - id `string` - html identifier for the block  
+  - \[title\] `string` - title for the block  
+  - \[closable=true\] `boolean` - make the block closable  
+  - \[movable=true\] `boolean` - make the block movable  
+  - \[data\] `Object` | `Array.<Object>` | `function` | `String` - data for the block,
+ it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
+ or a url where to get the data. If a layer is provided, events from the layer (`niclabs.insight.MapView#map_element_selected`,
+ `niclabs.insight.layer.Layer#layer_sumary`) will update the data in the block. If no data is provided, it is assumed
+ that all layers affect the block and events from all layers will update the block data. If data depends on a layer
+ options.defaults can be used to set the default data  
+  - preprocess `function` - function to apply on the data (either from an url or a layer) before refreshing the block  
+  - \[defaults\] `Object` | `Array.<Object>` - when the data depends on a layer, defaults sets the initial data to show
+ in the block  
+
+**Extends**: `niclabs.insight.info.Block`  
 <a name="niclabs.insight.layer"></a>
 ###insight.layer
 Visualization layers for the dashboard
@@ -954,10 +1190,24 @@ Map compatibility for the insight dashboard
       * [callback: Grid~fill](#niclabs.insight.map.grid.Grid..fill)
     * [class: grid.HexagonTile](#niclabs.insight.map.grid.HexagonTile)
       * [new grid.HexagonTile(side)](#new_niclabs.insight.map.grid.HexagonTile)
-      * [HexagonTile.origin(i, j)](#niclabs.insight.map.grid.HexagonTile.origin)
-      * [HexagonTile.tile(coord)](#niclabs.insight.map.grid.HexagonTile.tile)
+      * [HexagonTile.self.origin(i, j)](#niclabs.insight.map.grid.HexagonTile.self.origin)
+      * [HexagonTile.self.query(coord)](#niclabs.insight.map.grid.HexagonTile.self.query)
+      * [HexagonTile.self.vertices(coord)](#niclabs.insight.map.grid.HexagonTile.self.vertices)
     * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
       * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
+    * [class: grid.SquareGrid](#niclabs.insight.map.grid.SquareGrid)
+      * [new grid.SquareGrid(dashboard, options)](#new_niclabs.insight.map.grid.SquareGrid)
+    * [class: grid.SquareTile](#niclabs.insight.map.grid.SquareTile)
+      * [new grid.SquareTile(side)](#new_niclabs.insight.map.grid.SquareTile)
+      * [SquareTile.self.origin(i, j)](#niclabs.insight.map.grid.SquareTile.self.origin)
+      * [SquareTile.self.query(coord)](#niclabs.insight.map.grid.SquareTile.self.query)
+      * [SquareTile.self.vertices(coord)](#niclabs.insight.map.grid.SquareTile.self.vertices)
+    * [class: grid.Tile](#niclabs.insight.map.grid.Tile)
+      * [new grid.Tile()](#new_niclabs.insight.map.grid.Tile)
+      * [Tile.origin(i, j)](#niclabs.insight.map.grid.Tile.origin)
+      * [Tile.query(coord)](#niclabs.insight.map.grid.Tile.query)
+      * [Tile.vertices(coord)](#niclabs.insight.map.grid.Tile.vertices)
+      * [Tile.draw(coord, map, options)](#niclabs.insight.map.grid.Tile.draw)
   * [map.heatmap](#niclabs.insight.map.heatmap)
     * [class: heatmap.Heatmap](#niclabs.insight.map.heatmap.Heatmap)
       * [new heatmap.Heatmap(dashboard, options)](#new_niclabs.insight.map.heatmap.Heatmap)
@@ -1013,10 +1263,24 @@ Contains all grids definitions for the dashboard
     * [callback: Grid~fill](#niclabs.insight.map.grid.Grid..fill)
   * [class: grid.HexagonTile](#niclabs.insight.map.grid.HexagonTile)
     * [new grid.HexagonTile(side)](#new_niclabs.insight.map.grid.HexagonTile)
-    * [HexagonTile.origin(i, j)](#niclabs.insight.map.grid.HexagonTile.origin)
-    * [HexagonTile.tile(coord)](#niclabs.insight.map.grid.HexagonTile.tile)
+    * [HexagonTile.self.origin(i, j)](#niclabs.insight.map.grid.HexagonTile.self.origin)
+    * [HexagonTile.self.query(coord)](#niclabs.insight.map.grid.HexagonTile.self.query)
+    * [HexagonTile.self.vertices(coord)](#niclabs.insight.map.grid.HexagonTile.self.vertices)
   * [class: grid.HexagonalGrid](#niclabs.insight.map.grid.HexagonalGrid)
     * [new grid.HexagonalGrid(dashboard, options)](#new_niclabs.insight.map.grid.HexagonalGrid)
+  * [class: grid.SquareGrid](#niclabs.insight.map.grid.SquareGrid)
+    * [new grid.SquareGrid(dashboard, options)](#new_niclabs.insight.map.grid.SquareGrid)
+  * [class: grid.SquareTile](#niclabs.insight.map.grid.SquareTile)
+    * [new grid.SquareTile(side)](#new_niclabs.insight.map.grid.SquareTile)
+    * [SquareTile.self.origin(i, j)](#niclabs.insight.map.grid.SquareTile.self.origin)
+    * [SquareTile.self.query(coord)](#niclabs.insight.map.grid.SquareTile.self.query)
+    * [SquareTile.self.vertices(coord)](#niclabs.insight.map.grid.SquareTile.self.vertices)
+  * [class: grid.Tile](#niclabs.insight.map.grid.Tile)
+    * [new grid.Tile()](#new_niclabs.insight.map.grid.Tile)
+    * [Tile.origin(i, j)](#niclabs.insight.map.grid.Tile.origin)
+    * [Tile.query(coord)](#niclabs.insight.map.grid.Tile.query)
+    * [Tile.vertices(coord)](#niclabs.insight.map.grid.Tile.vertices)
+    * [Tile.draw(coord, map, options)](#niclabs.insight.map.grid.Tile.draw)
 
 <a name="niclabs.insight.map.grid.Grid"></a>
 #####class: grid.Grid
@@ -1072,7 +1336,7 @@ Layer to which the grid belongs to
 ######Grid.tile()
 Construct a tile from the options of the grid
 
-**Returns**: `niclabs.insight.map.grid.Tile`  
+**Returns**: [Tile](#niclabs.insight.map.grid.Tile)  
 <a name="niclabs.insight.map.grid.Grid.clear"></a>
 ######Grid.clear()
 Clear the grid from the map
@@ -1106,8 +1370,9 @@ returns a color for that tile
 
 * [class: grid.HexagonTile](#niclabs.insight.map.grid.HexagonTile)
   * [new grid.HexagonTile(side)](#new_niclabs.insight.map.grid.HexagonTile)
-  * [HexagonTile.origin(i, j)](#niclabs.insight.map.grid.HexagonTile.origin)
-  * [HexagonTile.tile(coord)](#niclabs.insight.map.grid.HexagonTile.tile)
+  * [HexagonTile.self.origin(i, j)](#niclabs.insight.map.grid.HexagonTile.self.origin)
+  * [HexagonTile.self.query(coord)](#niclabs.insight.map.grid.HexagonTile.self.query)
+  * [HexagonTile.self.vertices(coord)](#niclabs.insight.map.grid.HexagonTile.self.vertices)
 
 <a name="new_niclabs.insight.map.grid.HexagonTile"></a>
 ######new grid.HexagonTile(side)
@@ -1117,8 +1382,8 @@ Define a hexagon tile to be drawn on the map
 
 - side `float` - side (or radius) of the hexagon  
 
-<a name="niclabs.insight.map.grid.HexagonTile.origin"></a>
-######HexagonTile.origin(i, j)
+<a name="niclabs.insight.map.grid.HexagonTile.self.origin"></a>
+######HexagonTile.self.origin(i, j)
 Return the origin coordinates of the tile (i,j) in cartesian
 coordinate system. This can be passed as a parameter to
 `niclabs.insight.grid.Tile.draw()`
@@ -1129,8 +1394,8 @@ coordinate system. This can be passed as a parameter to
 - j `integer` - vertical coordinate of the tile  
 
 **Returns**: [Point](#niclabs.insight.map.Point) - cartesian origin of the tile  
-<a name="niclabs.insight.map.grid.HexagonTile.tile"></a>
-######HexagonTile.tile(coord)
+<a name="niclabs.insight.map.grid.HexagonTile.self.query"></a>
+######HexagonTile.self.query(coord)
 Get the coordinates of the tile [i,j] in the grid that contains the point with
 the given coordinates
 
@@ -1141,6 +1406,15 @@ See: http://www.gamedev.net/page/resources/_/technical/game-programming/coordina
 - coord <code>[Point](#niclabs.insight.map.Point)</code> | <code>[LatLng](#niclabs.insight.map.LatLng)</code> - coordinates of the point in the map  
 
 **Returns**: `Array.<integer>` - coordinates of the tile that contains the given point  
+<a name="niclabs.insight.map.grid.HexagonTile.self.vertices"></a>
+######HexagonTile.self.vertices(coord)
+Get the vertices for the tile with origin in coordinates coord
+
+**Params**
+
+- coord <code>[Point](#niclabs.insight.map.Point)</code> | <code>[LatLng](#niclabs.insight.map.LatLng)</code> - coordinates of the tile in the map  
+
+**Returns**: [Array.&lt;Point&gt;](#niclabs.insight.map.Point) - coordinates of the vertices of the tile  
 <a name="niclabs.insight.map.grid.HexagonalGrid"></a>
 #####class: grid.HexagonalGrid
 **Members**
@@ -1176,6 +1450,160 @@ each hexagon is painted with a function of the point weights inside the hexagon
   - \[fillOpacity=0.6\] `float` - opacity for the fill of the hexagon  
   - data `Array.<niclabs.insight.map.grid.HexagonalGrid.Data>` - data for the layer  
 
+<a name="niclabs.insight.map.grid.SquareGrid"></a>
+#####class: grid.SquareGrid
+**Members**
+
+* [class: grid.SquareGrid](#niclabs.insight.map.grid.SquareGrid)
+  * [new grid.SquareGrid(dashboard, options)](#new_niclabs.insight.map.grid.SquareGrid)
+
+<a name="new_niclabs.insight.map.grid.SquareGrid"></a>
+######new grid.SquareGrid(dashboard, options)
+Construct a square grid from the data provided.
+
+The grid divides the visible map into square tiles of the same size and draws only those
+tiles that have elements below them. If a weight is provided for the the data points
+each square is painted with a function of the point weights inside the square
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this grid belongs to  
+- options `Object` - configuration options for the grid  
+  - layer `string` - identifier for the layer that this grid belongs to  
+  - size `integer` - size for the side of each square (in pixels)  
+  - \[strokeColor='#000000'\] `string` - color for the stroke of each square  
+  - \[strokeOpacity=0.6\] `float` - opacity for the stroke (between 0-1)  
+  - \[strokeWeight=2\] `integer` - border weight for the square  
+  - \[fill='#ffffff'\] `string` | `niclabs.insight.map.grid.SquareGrid~fill` - color for the fill of the square,
+	it can have one of the following values:
+ 	- 'average' calculates the average of the weights in the square and interpolates that value between the values for options.fill_start and options.fill_end
+ 	- 'median' calculates the median of the weights in the square and interpolates as average
+ 	- rgb color (starting with '#') is used as a fixed color for all hexagons
+ 	- a callback receiving the points in the square and returning the value for the color  
+  - \[fillStart='#ff0000'\] `string` - if 'average' or 'median' are used as options for options.fill, it sets the begining of the interpolation interval for the fill function  
+  - \[fillEnd='#00ff00'\] `string` - if 'average' or 'median' are used as options for options.fill, it sets the end of the interpolation interval for the fill function  
+  - \[fillOpacity=0.6\] `float` - opacity for the fill of the square  
+  - data `Array.<niclabs.insight.map.grid.SquareGrid.Data>` - data for the layer  
+
+<a name="niclabs.insight.map.grid.SquareTile"></a>
+#####class: grid.SquareTile
+**Members**
+
+* [class: grid.SquareTile](#niclabs.insight.map.grid.SquareTile)
+  * [new grid.SquareTile(side)](#new_niclabs.insight.map.grid.SquareTile)
+  * [SquareTile.self.origin(i, j)](#niclabs.insight.map.grid.SquareTile.self.origin)
+  * [SquareTile.self.query(coord)](#niclabs.insight.map.grid.SquareTile.self.query)
+  * [SquareTile.self.vertices(coord)](#niclabs.insight.map.grid.SquareTile.self.vertices)
+
+<a name="new_niclabs.insight.map.grid.SquareTile"></a>
+######new grid.SquareTile(side)
+Define a square tile to be drawn on the map
+
+**Params**
+
+- side `float` - side (or radius) of the square  
+
+<a name="niclabs.insight.map.grid.SquareTile.self.origin"></a>
+######SquareTile.self.origin(i, j)
+Return the origin coordinates of the tile (i,j) in cartesian
+coordinate system. This can be passed as a parameter to
+`niclabs.insight.grid.Tile.draw()`
+
+**Params**
+
+- i `integer` - horizontal coordinate of the tile  
+- j `integer` - vertical coordinate of the tile  
+
+**Returns**: [Point](#niclabs.insight.map.Point) - cartesian origin of the tile  
+<a name="niclabs.insight.map.grid.SquareTile.self.query"></a>
+######SquareTile.self.query(coord)
+Get the coordinates of the tile [i,j] in the grid that contains the point with
+the given coordinates
+            *
+
+**Params**
+
+- coord <code>[Point](#niclabs.insight.map.Point)</code> | <code>[LatLng](#niclabs.insight.map.LatLng)</code> - coordinates of the point in the map  
+
+**Returns**: `Array.<integer>` - coordinates of the tile that contains the given point  
+<a name="niclabs.insight.map.grid.SquareTile.self.vertices"></a>
+######SquareTile.self.vertices(coord)
+Get the vertices for the tile with origin in coordinates coord
+
+**Params**
+
+- coord <code>[Point](#niclabs.insight.map.Point)</code> | <code>[LatLng](#niclabs.insight.map.LatLng)</code> - coordinates of the tile in the map  
+
+**Returns**: [Array.&lt;Point&gt;](#niclabs.insight.map.Point) - coordinates of the vertices of the tile  
+<a name="niclabs.insight.map.grid.Tile"></a>
+#####class: grid.Tile
+**Members**
+
+* [class: grid.Tile](#niclabs.insight.map.grid.Tile)
+  * [new grid.Tile()](#new_niclabs.insight.map.grid.Tile)
+  * [Tile.origin(i, j)](#niclabs.insight.map.grid.Tile.origin)
+  * [Tile.query(coord)](#niclabs.insight.map.grid.Tile.query)
+  * [Tile.vertices(coord)](#niclabs.insight.map.grid.Tile.vertices)
+  * [Tile.draw(coord, map, options)](#niclabs.insight.map.grid.Tile.draw)
+
+<a name="new_niclabs.insight.map.grid.Tile"></a>
+######new grid.Tile()
+Construct an abstract tile for the map
+
+Tiles are used to construct grids in the map. A grid divides the world into equally sized tiles
+and then draws over the map the tiles that have data inside them. If the boundaries of the map
+change, the tile configuration changes.
+
+Since a tile is part of a grid, a tile can have a horizontal and vertical cooordinate indicating their
+position in the grid.
+
+<a name="niclabs.insight.map.grid.Tile.origin"></a>
+######Tile.origin(i, j)
+Return the origin coordinates of the tile (i,j) in cartesian
+coordinate system. This can be passed as a parameter to
+`niclabs.insight.grid.Tile.draw()`
+
+**Params**
+
+- i `integer` - horizontal coordinate of the tile  
+- j `integer` - vertical coordinate of the tile  
+
+**Returns**: [Point](#niclabs.insight.map.Point) - cartesian origin of the tile  
+<a name="niclabs.insight.map.grid.Tile.query"></a>
+######Tile.query(coord)
+Get the coordinates of the tile [i,j] in the grid that contains the point with
+the given coordinates
+
+**Params**
+
+- coord <code>[Point](#niclabs.insight.map.Point)</code> | <code>[LatLng](#niclabs.insight.map.LatLng)</code> - coordinates of the point in the map  
+
+**Returns**: `Array.<integer>` - coordinates of the tile that contains the given point  
+<a name="niclabs.insight.map.grid.Tile.vertices"></a>
+######Tile.vertices(coord)
+Get the vertices for the tile ith origin in coordinates coord
+
+**Params**
+
+- coord <code>[Point](#niclabs.insight.map.Point)</code> | <code>[LatLng](#niclabs.insight.map.LatLng)</code> - coordinates of the tile in the map  
+
+**Returns**: [Array.&lt;Point&gt;](#niclabs.insight.map.Point) - coordinates of the vertices of the tile  
+<a name="niclabs.insight.map.grid.Tile.draw"></a>
+######Tile.draw(coord, map, options)
+Draw a tile in the given coordinates on the specified map view
+
+**Params**
+
+- coord <code>[Point](#niclabs.insight.map.Point)</code> | <code>[LatLng](#niclabs.insight.map.LatLng)</code> - coordinates of the tile in the map  
+- map <code>[MapView](#niclabs.insight.MapView)</code> - map view to draw the tile on  
+- options `Object` - configuration options for drawing the tile  
+  - \[strokeColor='#000000'\] `string` - color for the stroke of each tile  
+  - \[strokeOpacity=0.6\] `float` - opacity for the stroke (between 0-1)  
+  - \[strokeWeight=2\] `integer` - border weight for the tile  
+  - \[fillColor='#ffffff'\] `string` - color for the fill of the tile  
+  - \[fillOpacity=0.6\] `float` - opacity for the fill of the tile  
+
+**Returns**: `object` - object drawn on the map (e.g.) google maps polygon  
 <a name="niclabs.insight.map.heatmap"></a>
 ####map.heatmap
 Tools for drawing heatmaps on the map
@@ -1538,214 +1966,6 @@ Event triggered to notify the dashboard that an element of the map has been pres
 - lng `float` - latitude for the marker  
 
 **Type**: `object`  
-<a name="niclabs.insight.info"></a>
-###insight.info
-Contains the definitions for the information blocks supported by insight
-
-**Members**
-
-* [insight.info](#niclabs.insight.info)
-  * [class: info.Block](#niclabs.insight.info.Block)
-    * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
-    * [Block.id](#niclabs.insight.info.Block.id)
-    * [Block.element](#niclabs.insight.info.Block.element)
-    * [Block.$](#niclabs.insight.info.Block.$)
-    * [Block.layer](#niclabs.insight.info.Block.layer)
-    * [Block.content](#niclabs.insight.info.Block.content)
-    * [Block.data](#niclabs.insight.info.Block.data)
-    * [Block.remove()](#niclabs.insight.info.Block.remove)
-    * [Block.__data__([data], value)](#niclabs.insight.info.Block.__data__)
-    * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
-  * [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
-    * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
-    * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
-  * [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-    * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
-
-<a name="niclabs.insight.info.Block"></a>
-####class: info.Block
-**Members**
-
-* [class: info.Block](#niclabs.insight.info.Block)
-  * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
-  * [Block.id](#niclabs.insight.info.Block.id)
-  * [Block.element](#niclabs.insight.info.Block.element)
-  * [Block.$](#niclabs.insight.info.Block.$)
-  * [Block.layer](#niclabs.insight.info.Block.layer)
-  * [Block.content](#niclabs.insight.info.Block.content)
-  * [Block.data](#niclabs.insight.info.Block.data)
-  * [Block.remove()](#niclabs.insight.info.Block.remove)
-  * [Block.__data__([data], value)](#niclabs.insight.info.Block.__data__)
-  * [Block.refresh([data])](#niclabs.insight.info.Block.refresh)
-
-<a name="new_niclabs.insight.info.Block"></a>
-#####new info.Block(dashboard, options)
-Construct a information block
-
-**Params**
-
-- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard to which the block belongs to  
-- options `Object` - configuration options for the block  
-  - id `string` - html identifier for the block  
-  - \[title\] `string` - title for the block  
-  - \[closable=true\] `boolean` - make the block closable  
-  - \[movable=true\] `boolean` - make the block movable  
-  - \[data\] `Object` | `Array.<Object>` | `function` | `String` - data for the block,
- it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
- or a url where to get the data. If a layer is provided, events from the layer (`niclabs.insight.MapView#map_element_selected`,
- `niclabs.insight.layer.Layer#layer_sumary`) will update the data in the block. If no data is provided, it is assumed
- that all layers affect the block and events from all layers will update the block data. If data depends on a layer
- options.defaults can be used to set the default data  
-  - preprocess `function` - function to apply on the data (either from an url or a layer) before refreshing the block  
-  - \[defaults\] `Object` | `Array.<Object>` - when the data depends on a layer, defaults sets the initial data to show
- in the block  
-
-<a name="niclabs.insight.info.Block.id"></a>
-#####Block.id
-id of the block
-
-**Type**: `string`  
-<a name="niclabs.insight.info.Block.element"></a>
-#####Block.element
-HTML DOM element for the block container
-
-**Type**: `Element`  
-<a name="niclabs.insight.info.Block.$"></a>
-#####Block.$
-jQuery object for info block container
-
-**Type**: `jQuery`  
-<a name="niclabs.insight.info.Block.layer"></a>
-#####Block.layer
-Layer id
-
-**Type**: `jQuery`  
-<a name="niclabs.insight.info.Block.content"></a>
-#####Block.content
-jQuery element for the content container
-
-The content of the block is the HTML container that
-comes after the block title
-
-**Type**: `jQuery`  
-<a name="niclabs.insight.info.Block.data"></a>
-#####Block.data
-Set/get the data for the block
-
-**Params**
-
-  - \[data\] `Object` | `Array.<Object>` | `function` | `String` - data for the block,
- it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
- or a url where to get the data. If a layer is provided, events from the layer (`niclabs.insight.MapView#map_element_selected`,
- `niclabs.insight.layer.Layer#layer_sumary`) will update the data in the block. If no data is provided, it is assumed
- that all layers affect the block and events from all layers will update the block data. If data depends on a layer
- options.defaults can be used to set the default data.  
-
-**Returns**: `Object` - the current data in the block or the url for the data if the data has not been loaded yet  
-<a name="niclabs.insight.info.Block.remove"></a>
-#####Block.remove()
-Remove the block from the dashboard.
-This method triggers an event to alert all elements of the
-dashboard of the block removal
-
-<a name="niclabs.insight.info.Block.__data__"></a>
-#####Block.__data__([data], value)
-Set/get the internal data value.
-
-**Params**
-
-- \[data\] `Object` | `Array.<Object>` - data for the block  
-- value `Object` - for the internal data  
-
-**Access**: protected  
-<a name="niclabs.insight.info.Block.refresh"></a>
-#####Block.refresh([data])
-Refresh the block using the provided data
-
-**Params**
-
-- \[data\] `Object` - data to refresh  
-
-<a name="niclabs.insight.info.ChartistBlock"></a>
-####class: info.ChartistBlock
-**Extends**: `niclabs.insight.info.Block`  
-**Members**
-
-* [class: info.ChartistBlock](#niclabs.insight.info.ChartistBlock)
-  * [new info.ChartistBlock(dashboard, constructor, options)](#new_niclabs.insight.info.ChartistBlock)
-  * [type: ChartistBlock.Chartist](#niclabs.insight.info.ChartistBlock.Chartist)
-
-<a name="new_niclabs.insight.info.ChartistBlock"></a>
-#####new info.ChartistBlock(dashboard, constructor, options)
-Construct a new chartist information block
-
-For the configuration options see [http://gionkunz.github.io/chartist-js/](http://gionkunz.github.io/chartist-js/)
-
-**Params**
-
-- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - parent dashboard for the block  
-- constructor `Object` - chartist object to use as constructor  
-- options `Object` - configuration options for the block  
-  - id `string` - html identifier for the block  
-  - \[title\] `string` - title for the block  
-  - chartist <code>[Chartist](#niclabs.insight.info.ChartistBlock.Chartist)</code> - chartist configuration  
-  - \[closable=true\] `boolean` - make the block closable  
-  - \[movable=true\] `boolean` - make the block movable  
-  - \[data\] `Object` | `Array.<Object>` | `function` | `String` - data for the block,
- it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
- or a url where to get the data. If a layer is provided, events from the layer (`niclabs.insight.MapView#map_element_selected`,
- `niclabs.insight.layer.Layer#layer_sumary`) will update the data in the block. If no data is provided, it is assumed
- that all layers affect the block and events from all layers will update the block data. If data depends on a layer
- options.defaults can be used to set the default data  
-  - preprocess `function` - function to apply on the data (either from an url or a layer) before refreshing the block  
-  - \[defaults\] `Object` | `Array.<Object>` - when the data depends on a layer, defaults sets the initial data to show
- in the block  
-
-**Extends**: `niclabs.insight.info.Block`  
-<a name="niclabs.insight.info.ChartistBlock.Chartist"></a>
-#####type: ChartistBlock.Chartist
-Configuration options for chartist charts
-
-**Params**
-
-- class `Object` - chartist css class  
-- labels `Object` - chart labels  
-- \[options\] `Object` - chartist options  
-- \[responsiveOptions\] `Object` - chartist responsive options  
-
-**Type**: `Object`  
-<a name="niclabs.insight.info.SummaryBlock"></a>
-####class: info.SummaryBlock
-**Extends**: `niclabs.insight.info.Block`  
-**Members**
-
-* [class: info.SummaryBlock](#niclabs.insight.info.SummaryBlock)
-  * [new info.SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock)
-
-<a name="new_niclabs.insight.info.SummaryBlock"></a>
-#####new info.SummaryBlock(dashboard, options)
-Construct a new summary information block
-TODO: describe what is a summary information block
-
-**Params**
-
-- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - parent dashboard for the block  
-- options `Object` - configuration options for the block  
-  - id `string` - html identifier for the block  
-  - \[title\] `string` - title for the block  
-  - \[closable=true\] `boolean` - make the block closable  
-  - \[movable=true\] `boolean` - make the block movable  
-  - \[data\] `Object` | `Array.<Object>` | `function` | `String` - data for the block,
- it can be an object or a list of objects, a callable that returns the data for the block, a layer id (preceded by '#')
- or a url where to get the data. If a layer is provided, events from the layer (`niclabs.insight.MapView#map_element_selected`,
- `niclabs.insight.layer.Layer#layer_sumary`) will update the data in the block. If no data is provided, it is assumed
- that all layers affect the block and events from all layers will update the block data. If data depends on a layer
- options.defaults can be used to set the default data  
-  - preprocess `function` - function to apply on the data (either from an url or a layer) before refreshing the block  
-  - \[defaults\] `Object` | `Array.<Object>` - when the data depends on a layer, defaults sets the initial data to show
- in the block  
-
-**Extends**: `niclabs.insight.info.Block`  
 <a name="niclabs.insight.quadtree"></a>
 ###insight.quadtree
 Quadtree implementation
