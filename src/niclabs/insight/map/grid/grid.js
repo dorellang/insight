@@ -249,7 +249,7 @@ niclabs.insight.map.grid.Grid = (function() {
 			var tile_i, tile_j;
 
 			for (var i = 0; i < points.length; i++) {
-				var coord = tile.tile(points[i]);
+				var coord = tile.query(points[i]);
 				tile_i = coord[0];
 				tile_j = coord[1];
 
