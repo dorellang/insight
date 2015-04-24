@@ -245,7 +245,7 @@ niclabs.insight.Dashboard = (function($) {
              * @return {jQuery} reference to the added element for further customization
              */
             filter: function(filter) {
-                return filterBar.filter(filter);
+                return filters.filter(filter);
             },
 
             /**
@@ -261,10 +261,10 @@ niclabs.insight.Dashboard = (function($) {
 
 
         // Create the filter bar
-        var filterBar = niclabs.insight.FilterBar(self);
+        var filters = niclabs.insight.Filters(self);
 
         // Append the filter bar
-        container.append(filterBar.element);
+        container.append(filters.element);
 
         // Create an event to be notified of a filter change
         niclabs.insight.event.on('filter_changed', function(f) {
