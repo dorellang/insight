@@ -22,6 +22,19 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
       * [event.off(event, listener)](#niclabs.insight.event.off)
       * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
       * [callback: event~listener](#niclabs.insight.event..listener)
+    * [insight.filter](#niclabs.insight.filter)
+      * [class: filter.Filter](#niclabs.insight.filter.Filter)
+        * [new filter.Filter(dashboard, options)](#new_niclabs.insight.filter.Filter)
+        * [Filter.view.apply(element)](#niclabs.insight.filter.Filter.view.apply)
+      * [class: filter.GoogleGeocodingFilter](#niclabs.insight.filter.GoogleGeocodingFilter)
+        * [new filter.GoogleGeocodingFilter(dashboard, options)](#new_niclabs.insight.filter.GoogleGeocodingFilter)
+      * [class: filter.LayerSelector](#niclabs.insight.filter.LayerSelector)
+        * [new filter.LayerSelector(dashboard, options)](#new_niclabs.insight.filter.LayerSelector)
+        * [LayerSelector.view.add(id, name)](#niclabs.insight.filter.LayerSelector.view.add)
+      * [class: filter.SelectionFilter](#niclabs.insight.filter.SelectionFilter)
+        * [new filter.SelectionFilter(dashboard, options)](#new_niclabs.insight.filter.SelectionFilter)
+        * [SelectionFilter.view.apply(element)](#niclabs.insight.filter.SelectionFilter.view.apply)
+        * [type: SelectionFilter.Option](#niclabs.insight.filter.SelectionFilter.Option)
     * [insight.info](#niclabs.insight.info)
       * [class: info.Block](#niclabs.insight.info.Block)
         * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
@@ -57,6 +70,7 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
       * [class: layer.Layer](#niclabs.insight.layer.Layer)
         * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
         * [Layer.id](#niclabs.insight.layer.Layer.id)
+        * [Layer.name](#niclabs.insight.layer.Layer.name)
         * [Layer.data([obj])](#niclabs.insight.layer.Layer.data)
         * [Layer.load()](#niclabs.insight.layer.Layer.load)
         * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
@@ -71,27 +85,13 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [MarkerLayer.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
         * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
         * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
-    * [insight.quadtree](#niclabs.insight.quadtree)
-      * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
-      * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
-        * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
-        * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
-        * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
-        * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
-        * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
-        * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
-      * [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
-        * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
-        * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
-        * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
-        * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
-        * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
     * [insight.map](#niclabs.insight.map)
       * [map.grid](#niclabs.insight.map.grid)
         * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
           * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
           * [Grid.map](#niclabs.insight.map.grid.Grid.map)
           * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
+          * [Grid.refresh()](#niclabs.insight.map.grid.Grid.refresh)
           * [Grid.tile()](#niclabs.insight.map.grid.Grid.tile)
           * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
           * [type: Grid.Data](#niclabs.insight.map.grid.Grid.Data)
@@ -153,6 +153,21 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
         * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
       * [map.GoogleMercator](#niclabs.insight.map.GoogleMercator)
+    * [insight.quadtree](#niclabs.insight.quadtree)
+      * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
+      * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
+        * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
+        * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
+        * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
+        * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
+        * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
+        * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
+      * [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
+        * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
+        * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
+        * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
+        * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
+        * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
     * [callback: insight~handler](#niclabs.insight..handler)
     * [class: insight.Dashboard](#niclabs.insight.Dashboard)
       * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
@@ -167,13 +182,12 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
       * [Dashboard.filter(filter)](#niclabs.insight.Dashboard.filter)
       * [Dashboard.clear()](#niclabs.insight.Dashboard.clear)
       * [event: "active_layer_data"](#niclabs.insight.Dashboard#event_active_layer_data)
-    * [class: insight.FilterBar](#niclabs.insight.FilterBar)
-      * [new insight.FilterBar()](#new_niclabs.insight.FilterBar)
-      * [FilterBar.element](#niclabs.insight.FilterBar.element)
-      * [FilterBar.$](#niclabs.insight.FilterBar.$)
-      * [FilterBar.filter(filter)](#niclabs.insight.FilterBar.filter)
-      * [callback: FilterBar~filter](#niclabs.insight.FilterBar..filter)
-      * [event: "filter_changed"](#niclabs.insight.FilterBar#event_filter_changed)
+    * [class: insight.Filters](#niclabs.insight.Filters)
+      * [new insight.Filters(dashboard, options)](#new_niclabs.insight.Filters)
+      * [Filters.view.filter(obj)](#niclabs.insight.Filters.view.filter)
+      * [callback: Filters~filter](#niclabs.insight.Filters..filter)
+      * [event: "filter_selected"](#niclabs.insight.Filters#event_filter_selected)
+      * [event: "filter_changed"](#niclabs.insight.Filters#event_filter_changed)
     * [class: insight.MapView](#niclabs.insight.MapView)
       * [new insight.MapView(options)](#new_niclabs.insight.MapView)
       * [MapView.element](#niclabs.insight.MapView.element)
@@ -197,11 +211,11 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
     * [class: insight.InfoView](#niclabs.insight.InfoView)
       * [new insight.InfoView(dashboard, options)](#new_niclabs.insight.InfoView)
       * [InfoView.element.block(obj)](#niclabs.insight.InfoView.element.block)
-    * [class: insight.UiElement](#niclabs.insight.UiElement)
-      * [new insight.UiElement(options)](#new_niclabs.insight.UiElement)
-      * [UiElement.$](#niclabs.insight.UiElement.$)
-      * [UiElement.element](#niclabs.insight.UiElement.element)
-      * [UiElement.self.append(element)](#niclabs.insight.UiElement.self.append)
+    * [class: insight.View](#niclabs.insight.View)
+      * [new insight.View(options)](#new_niclabs.insight.View)
+      * [View.$](#niclabs.insight.View.$)
+      * [View.element](#niclabs.insight.View.element)
+      * [View.self.append(element)](#niclabs.insight.View.self.append)
     * [insight.Color](#niclabs.insight.Color)
       * [Color.rgbToHsv(r, g, b)](#niclabs.insight.Color.rgbToHsv)
       * [Color.hsvToRgb(h, s, v)](#niclabs.insight.Color.hsvToRgb)
@@ -232,6 +246,19 @@ understand what is going on in the city
     * [event.off(event, listener)](#niclabs.insight.event.off)
     * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
     * [callback: event~listener](#niclabs.insight.event..listener)
+  * [insight.filter](#niclabs.insight.filter)
+    * [class: filter.Filter](#niclabs.insight.filter.Filter)
+      * [new filter.Filter(dashboard, options)](#new_niclabs.insight.filter.Filter)
+      * [Filter.view.apply(element)](#niclabs.insight.filter.Filter.view.apply)
+    * [class: filter.GoogleGeocodingFilter](#niclabs.insight.filter.GoogleGeocodingFilter)
+      * [new filter.GoogleGeocodingFilter(dashboard, options)](#new_niclabs.insight.filter.GoogleGeocodingFilter)
+    * [class: filter.LayerSelector](#niclabs.insight.filter.LayerSelector)
+      * [new filter.LayerSelector(dashboard, options)](#new_niclabs.insight.filter.LayerSelector)
+      * [LayerSelector.view.add(id, name)](#niclabs.insight.filter.LayerSelector.view.add)
+    * [class: filter.SelectionFilter](#niclabs.insight.filter.SelectionFilter)
+      * [new filter.SelectionFilter(dashboard, options)](#new_niclabs.insight.filter.SelectionFilter)
+      * [SelectionFilter.view.apply(element)](#niclabs.insight.filter.SelectionFilter.view.apply)
+      * [type: SelectionFilter.Option](#niclabs.insight.filter.SelectionFilter.Option)
   * [insight.info](#niclabs.insight.info)
     * [class: info.Block](#niclabs.insight.info.Block)
       * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
@@ -267,6 +294,7 @@ understand what is going on in the city
     * [class: layer.Layer](#niclabs.insight.layer.Layer)
       * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
       * [Layer.id](#niclabs.insight.layer.Layer.id)
+      * [Layer.name](#niclabs.insight.layer.Layer.name)
       * [Layer.data([obj])](#niclabs.insight.layer.Layer.data)
       * [Layer.load()](#niclabs.insight.layer.Layer.load)
       * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
@@ -281,27 +309,13 @@ understand what is going on in the city
       * [MarkerLayer.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
       * [event: "layer_data"](#niclabs.insight.layer.MarkerLayer#event_layer_data)
       * [event: "layer_sumary"](#niclabs.insight.layer.MarkerLayer#event_layer_sumary)
-  * [insight.quadtree](#niclabs.insight.quadtree)
-    * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
-    * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
-      * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
-      * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
-      * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
-      * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
-      * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
-      * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
-    * [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
-      * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
-      * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
-      * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
-      * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
-      * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
   * [insight.map](#niclabs.insight.map)
     * [map.grid](#niclabs.insight.map.grid)
       * [class: grid.Grid](#niclabs.insight.map.grid.Grid)
         * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
         * [Grid.map](#niclabs.insight.map.grid.Grid.map)
         * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
+        * [Grid.refresh()](#niclabs.insight.map.grid.Grid.refresh)
         * [Grid.tile()](#niclabs.insight.map.grid.Grid.tile)
         * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
         * [type: Grid.Data](#niclabs.insight.map.grid.Grid.Data)
@@ -363,6 +377,21 @@ understand what is going on in the city
       * [GoogleMap.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center)
       * [event: "map_element_selected"](#niclabs.insight.map.GoogleMap#event_map_element_selected)
     * [map.GoogleMercator](#niclabs.insight.map.GoogleMercator)
+  * [insight.quadtree](#niclabs.insight.quadtree)
+    * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
+    * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
+      * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
+      * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
+      * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
+      * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
+      * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
+      * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
+    * [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
+      * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
+      * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
+      * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
+      * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
+      * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
   * [callback: insight~handler](#niclabs.insight..handler)
   * [class: insight.Dashboard](#niclabs.insight.Dashboard)
     * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
@@ -377,13 +406,12 @@ understand what is going on in the city
     * [Dashboard.filter(filter)](#niclabs.insight.Dashboard.filter)
     * [Dashboard.clear()](#niclabs.insight.Dashboard.clear)
     * [event: "active_layer_data"](#niclabs.insight.Dashboard#event_active_layer_data)
-  * [class: insight.FilterBar](#niclabs.insight.FilterBar)
-    * [new insight.FilterBar()](#new_niclabs.insight.FilterBar)
-    * [FilterBar.element](#niclabs.insight.FilterBar.element)
-    * [FilterBar.$](#niclabs.insight.FilterBar.$)
-    * [FilterBar.filter(filter)](#niclabs.insight.FilterBar.filter)
-    * [callback: FilterBar~filter](#niclabs.insight.FilterBar..filter)
-    * [event: "filter_changed"](#niclabs.insight.FilterBar#event_filter_changed)
+  * [class: insight.Filters](#niclabs.insight.Filters)
+    * [new insight.Filters(dashboard, options)](#new_niclabs.insight.Filters)
+    * [Filters.view.filter(obj)](#niclabs.insight.Filters.view.filter)
+    * [callback: Filters~filter](#niclabs.insight.Filters..filter)
+    * [event: "filter_selected"](#niclabs.insight.Filters#event_filter_selected)
+    * [event: "filter_changed"](#niclabs.insight.Filters#event_filter_changed)
   * [class: insight.MapView](#niclabs.insight.MapView)
     * [new insight.MapView(options)](#new_niclabs.insight.MapView)
     * [MapView.element](#niclabs.insight.MapView.element)
@@ -407,11 +435,11 @@ understand what is going on in the city
   * [class: insight.InfoView](#niclabs.insight.InfoView)
     * [new insight.InfoView(dashboard, options)](#new_niclabs.insight.InfoView)
     * [InfoView.element.block(obj)](#niclabs.insight.InfoView.element.block)
-  * [class: insight.UiElement](#niclabs.insight.UiElement)
-    * [new insight.UiElement(options)](#new_niclabs.insight.UiElement)
-    * [UiElement.$](#niclabs.insight.UiElement.$)
-    * [UiElement.element](#niclabs.insight.UiElement.element)
-    * [UiElement.self.append(element)](#niclabs.insight.UiElement.self.append)
+  * [class: insight.View](#niclabs.insight.View)
+    * [new insight.View(options)](#new_niclabs.insight.View)
+    * [View.$](#niclabs.insight.View.$)
+    * [View.element](#niclabs.insight.View.element)
+    * [View.self.append(element)](#niclabs.insight.View.self.append)
   * [insight.Color](#niclabs.insight.Color)
     * [Color.rgbToHsv(r, g, b)](#niclabs.insight.Color.rgbToHsv)
     * [Color.hsvToRgb(h, s, v)](#niclabs.insight.Color.hsvToRgb)
@@ -611,6 +639,158 @@ Insight event listener
 
 **Scope**: inner typedef of [event](#niclabs.insight.event)  
 **Type**: `function`  
+<a name="niclabs.insight.filter"></a>
+###insight.filter
+Define all possible filters for the dashboard
+
+**Members**
+
+* [insight.filter](#niclabs.insight.filter)
+  * [class: filter.Filter](#niclabs.insight.filter.Filter)
+    * [new filter.Filter(dashboard, options)](#new_niclabs.insight.filter.Filter)
+    * [Filter.view.apply(element)](#niclabs.insight.filter.Filter.view.apply)
+  * [class: filter.GoogleGeocodingFilter](#niclabs.insight.filter.GoogleGeocodingFilter)
+    * [new filter.GoogleGeocodingFilter(dashboard, options)](#new_niclabs.insight.filter.GoogleGeocodingFilter)
+  * [class: filter.LayerSelector](#niclabs.insight.filter.LayerSelector)
+    * [new filter.LayerSelector(dashboard, options)](#new_niclabs.insight.filter.LayerSelector)
+    * [LayerSelector.view.add(id, name)](#niclabs.insight.filter.LayerSelector.view.add)
+  * [class: filter.SelectionFilter](#niclabs.insight.filter.SelectionFilter)
+    * [new filter.SelectionFilter(dashboard, options)](#new_niclabs.insight.filter.SelectionFilter)
+    * [SelectionFilter.view.apply(element)](#niclabs.insight.filter.SelectionFilter.view.apply)
+    * [type: SelectionFilter.Option](#niclabs.insight.filter.SelectionFilter.Option)
+
+<a name="niclabs.insight.filter.Filter"></a>
+####class: filter.Filter
+**Extends**: `niclabs.insight.View`  
+**Members**
+
+* [class: filter.Filter](#niclabs.insight.filter.Filter)
+  * [new filter.Filter(dashboard, options)](#new_niclabs.insight.filter.Filter)
+  * [Filter.view.apply(element)](#niclabs.insight.filter.Filter.view.apply)
+
+<a name="new_niclabs.insight.filter.Filter"></a>
+#####new filter.Filter(dashboard, options)
+Defines a filter for the dashboard
+
+A filter provides both a visual filtering representation
+and an apply() function to be used on a data element for
+filtering
+
+For instance, a select filter will be visualized as a `<select>`
+HTML element, and calls to apply will pass the call to the appropriate
+filtering function according to the selected element
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this filter belongs to  
+- options `Object` - configuration options for the filter  
+
+**Extends**: `niclabs.insight.View`  
+<a name="niclabs.insight.filter.Filter.view.apply"></a>
+#####Filter.view.apply(element)
+Apply the filter to a data element
+
+**Params**
+
+- element `Object` - data element to evaluate  
+
+**Returns**: `boolean` - - true if the data element passes the filter  
+<a name="niclabs.insight.filter.GoogleGeocodingFilter"></a>
+####class: filter.GoogleGeocodingFilter
+**Extends**: `niclabs.insight.filter.Filter`  
+**Members**
+
+* [class: filter.GoogleGeocodingFilter](#niclabs.insight.filter.GoogleGeocodingFilter)
+  * [new filter.GoogleGeocodingFilter(dashboard, options)](#new_niclabs.insight.filter.GoogleGeocodingFilter)
+
+<a name="new_niclabs.insight.filter.GoogleGeocodingFilter"></a>
+#####new filter.GoogleGeocodingFilter(dashboard, options)
+Constructs a Google Geocoding filter for the dashboard
+
+Application of the filter always returns true, but allows to
+update the map according to a search location
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this filter belongs to  
+- options `Object` - configuration options for the filter  
+
+**Extends**: `niclabs.insight.filter.Filter`  
+<a name="niclabs.insight.filter.LayerSelector"></a>
+####class: filter.LayerSelector
+**Extends**: `niclabs.insight.filter.Filter`  
+**Members**
+
+* [class: filter.LayerSelector](#niclabs.insight.filter.LayerSelector)
+  * [new filter.LayerSelector(dashboard, options)](#new_niclabs.insight.filter.LayerSelector)
+  * [LayerSelector.view.add(id, name)](#niclabs.insight.filter.LayerSelector.view.add)
+
+<a name="new_niclabs.insight.filter.LayerSelector"></a>
+#####new filter.LayerSelector(dashboard, options)
+Construct a layer for the dashboard
+
+The layer selector provides an option to switch between layers of the dashboard
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this filter belongs to  
+- options `Object` - configuration options for the filter  
+
+**Extends**: `niclabs.insight.filter.Filter`  
+<a name="niclabs.insight.filter.LayerSelector.view.add"></a>
+#####LayerSelector.view.add(id, name)
+Add a layer to the selector
+
+**Params**
+
+- id `string` - id for the layer  
+- name `name` - name of the layer  
+
+<a name="niclabs.insight.filter.SelectionFilter"></a>
+####class: filter.SelectionFilter
+**Extends**: `niclabs.insight.filter.Filter`  
+**Members**
+
+* [class: filter.SelectionFilter](#niclabs.insight.filter.SelectionFilter)
+  * [new filter.SelectionFilter(dashboard, options)](#new_niclabs.insight.filter.SelectionFilter)
+  * [SelectionFilter.view.apply(element)](#niclabs.insight.filter.SelectionFilter.view.apply)
+  * [type: SelectionFilter.Option](#niclabs.insight.filter.SelectionFilter.Option)
+
+<a name="new_niclabs.insight.filter.SelectionFilter"></a>
+#####new filter.SelectionFilter(dashboard, options)
+Construct a selection filter for the dashboard
+
+A selection filter will be visualized as a `<select>`
+HTML element, and calls to apply will pass the call to the appropriate
+filtering function according to the selected option
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this filter belongs to  
+- options `Object` - configuration options for the filter  
+  - description `string` - description for this filter to use as default option of the select  
+  - options <code>[Array.&lt;Option&gt;](#niclabs.insight.filter.SelectionFilter.Option)</code> - list of options for the filter  
+
+**Extends**: `niclabs.insight.filter.Filter`  
+<a name="niclabs.insight.filter.SelectionFilter.view.apply"></a>
+#####SelectionFilter.view.apply(element)
+Apply the filter to a data element
+
+**Params**
+
+- element `Object` - data element to evaluate  
+
+**Returns**: `boolean` - - true if the data element passes the filter  
+<a name="niclabs.insight.filter.SelectionFilter.Option"></a>
+#####type: SelectionFilter.Option
+Selection filter option
+
+**Params**
+
+- name `string` - name for the option of the filter  
+- filter <code>[filter](#niclabs.insight.Filters..filter)</code> - callback to filter the data  
+
+**Type**: `Object`  
 <a name="niclabs.insight.info"></a>
 ###insight.info
 Contains the definitions for the information blocks supported by insight
@@ -843,6 +1023,7 @@ Visualization layers for the dashboard
   * [class: layer.Layer](#niclabs.insight.layer.Layer)
     * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
     * [Layer.id](#niclabs.insight.layer.Layer.id)
+    * [Layer.name](#niclabs.insight.layer.Layer.name)
     * [Layer.data([obj])](#niclabs.insight.layer.Layer.data)
     * [Layer.load()](#niclabs.insight.layer.Layer.load)
     * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
@@ -1007,6 +1188,7 @@ The event provides summary data for blocks to show
 * [class: layer.Layer](#niclabs.insight.layer.Layer)
   * [new layer.Layer(dashboard, options)](#new_niclabs.insight.layer.Layer)
   * [Layer.id](#niclabs.insight.layer.Layer.id)
+  * [Layer.name](#niclabs.insight.layer.Layer.name)
   * [Layer.data([obj])](#niclabs.insight.layer.Layer.data)
   * [Layer.load()](#niclabs.insight.layer.Layer.load)
   * [Layer.draw(data)](#niclabs.insight.layer.Layer.draw)
@@ -1026,12 +1208,18 @@ A layer provides a link between a data source and a visualization on the map.
 - dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this layer belongs to  
 - options `Object` - configuration options for the layer  
   - id `string` - identifier for the layer  
+  - \[name=options.id\] `string` - name for the layer in the filter bar  
   - data `string` | `Array.<Object>` - uri or data array for the layer  
   - \[summary\] `Object` | `function` - summary data  
 
 <a name="niclabs.insight.layer.Layer.id"></a>
 #####Layer.id
 id of the layer
+
+**Type**: `string`  
+<a name="niclabs.insight.layer.Layer.name"></a>
+#####Layer.name
+Name for the layer
 
 **Type**: `string`  
 <a name="niclabs.insight.layer.Layer.data"></a>
@@ -1172,149 +1360,6 @@ The event provides summary data for blocks to show
 - data `Object` - summarized data  
 
 **Type**: `object`  
-<a name="niclabs.insight.quadtree"></a>
-###insight.quadtree
-Quadtree implementation
-
-**Members**
-
-* [insight.quadtree](#niclabs.insight.quadtree)
-  * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
-  * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
-    * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
-    * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
-    * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
-    * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
-    * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
-    * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
-  * [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
-    * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
-    * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
-    * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
-    * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
-    * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
-
-<a name="niclabs.insight.quadtree.Point"></a>
-####type: quadtree.Point
-A cartesian point
-
-**Params**
-
-- x `float` - horizontal coordinates  
-- y `float` - vertical coordinates  
-
-**Type**: `Object`  
-<a name="niclabs.insight.quadtree.Bounds"></a>
-####class: quadtree.Bounds
-**Members**
-
-* [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
-  * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
-  * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
-  * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
-  * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
-  * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
-  * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
-
-<a name="new_niclabs.insight.quadtree.Bounds"></a>
-#####new quadtree.Bounds(min, max)
-Construct an axis aligned bounding box with the corners
-at the provided coordinates
-
-**Params**
-
-- min <code>[Point](#niclabs.insight.quadtree.Point)</code> - minimal coordinates of the bounding box (e.g. lower left corner if zero is at the lower left corner of the canvas)  
-- max <code>[Point](#niclabs.insight.quadtree.Point)</code> - maximal coordinates of the bounding box (e.g. upper right corner if zero is at the lower left corner of the canvas)  
-
-<a name="niclabs.insight.quadtree.Bounds.center"></a>
-#####Bounds.center
-Center of the bounding box
-
-**Type**: [Point](#niclabs.insight.quadtree.Point)  
-<a name="niclabs.insight.quadtree.Bounds.min"></a>
-#####Bounds.min
-Minimal coordinates of the bounding box
-(e.g. lower left corner if zero is at the lowest leftmost corner of the canvas)
-
-**Type**: [Point](#niclabs.insight.quadtree.Point)  
-<a name="niclabs.insight.quadtree.Bounds.max"></a>
-#####Bounds.max
-Maximal coordinates of the bounding box
-(e.g. upper right corner if zero is at the lowest leftmost corner of the canvas)
-
-**Type**: [Point](#niclabs.insight.quadtree.Point)  
-<a name="niclabs.insight.quadtree.Bounds.contains"></a>
-#####Bounds.contains(point)
-Check if this bounding box contains the given point.
-
-As a convention, a bounding box contains all points inside its borders
-as well as all the points in the east and south borders.
-
-**Params**
-
-- point <code>[Point](#niclabs.insight.quadtree.Point)</code> - point to lookup  
-
-**Returns**: `boolean` - true if the box contains the point  
-<a name="niclabs.insight.quadtree.Bounds.intersects"></a>
-#####Bounds.intersects(box)
-Check if this bounding box intersects the given bounding box
-
-**Params**
-
-- box <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - bounding box to check intersection with  
-
-**Returns**: `boolean` - true if the boxes intersect in at least one point  
-<a name="niclabs.insight.quadtree.PointQuadTree"></a>
-####class: quadtree.PointQuadTree
-**Members**
-
-* [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
-  * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
-  * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
-  * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
-  * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
-  * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
-
-<a name="new_niclabs.insight.quadtree.PointQuadTree"></a>
-#####new quadtree.PointQuadTree(bounds, [capacity], [depth])
-Construct a Point Quadtree
-
-See [http://en.wikipedia.org/wiki/Quadtree](http://en.wikipedia.org/wiki/Quadtree)
-
-**Params**
-
-- bounds <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - bounding box for the quadtree  
-- \[capacity=50\] `integer` - number of points that each node in the quadtree accepts before dividing  
-- \[depth=40\] `integer` - max depth of the quadtree  
-
-<a name="niclabs.insight.quadtree.PointQuadTree.capacity"></a>
-#####PointQuadTree.capacity
-Capacity for the quadtree
-
-**Type**: `integer`  
-<a name="niclabs.insight.quadtree.PointQuadTree.bounds"></a>
-#####PointQuadTree.bounds
-Boundary of the quadtree
-
-**Type**: [Bounds](#niclabs.insight.quadtree.Bounds)  
-<a name="niclabs.insight.quadtree.PointQuadTree.insert"></a>
-#####PointQuadTree.insert(point)
-Insert a new point in the quadtree
-
-**Params**
-
-- point <code>[Point](#niclabs.insight.quadtree.Point)</code> - new point to insert  
-
-**Returns**: `boolean` - true if the point could be inserted (point belongs in the bounds of the quadtree)  
-<a name="niclabs.insight.quadtree.PointQuadTree.query"></a>
-#####PointQuadTree.query(range)
-Return all the points in the specified bounding box
-
-**Params**
-
-- range <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - spatial range to search  
-
-**Returns**: [Array.&lt;Point&gt;](#niclabs.insight.quadtree.Point) - list of points in the given range  
 <a name="niclabs.insight.map"></a>
 ###insight.map
 Map compatibility for the insight dashboard
@@ -1327,6 +1372,7 @@ Map compatibility for the insight dashboard
       * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
       * [Grid.map](#niclabs.insight.map.grid.Grid.map)
       * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
+      * [Grid.refresh()](#niclabs.insight.map.grid.Grid.refresh)
       * [Grid.tile()](#niclabs.insight.map.grid.Grid.tile)
       * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
       * [type: Grid.Data](#niclabs.insight.map.grid.Grid.Data)
@@ -1400,6 +1446,7 @@ Contains all grids definitions for the dashboard
     * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
     * [Grid.map](#niclabs.insight.map.grid.Grid.map)
     * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
+    * [Grid.refresh()](#niclabs.insight.map.grid.Grid.refresh)
     * [Grid.tile()](#niclabs.insight.map.grid.Grid.tile)
     * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
     * [type: Grid.Data](#niclabs.insight.map.grid.Grid.Data)
@@ -1433,6 +1480,7 @@ Contains all grids definitions for the dashboard
   * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
   * [Grid.map](#niclabs.insight.map.grid.Grid.map)
   * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
+  * [Grid.refresh()](#niclabs.insight.map.grid.Grid.refresh)
   * [Grid.tile()](#niclabs.insight.map.grid.Grid.tile)
   * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
   * [type: Grid.Data](#niclabs.insight.map.grid.Grid.Data)
@@ -1475,6 +1523,10 @@ Map view where the grid belongs to
 Layer to which the grid belongs to
 
 **Type**: [Layer](#niclabs.insight.layer.Layer)  
+<a name="niclabs.insight.map.grid.Grid.refresh"></a>
+######Grid.refresh()
+Refresh the grid with the current map bounds
+
 <a name="niclabs.insight.map.grid.Grid.tile"></a>
 ######Grid.tile()
 Construct a tile from the options of the grid
@@ -2109,6 +2161,149 @@ Event triggered to notify the dashboard that an element of the map has been pres
 - lng `float` - latitude for the marker  
 
 **Type**: `object`  
+<a name="niclabs.insight.quadtree"></a>
+###insight.quadtree
+Quadtree implementation
+
+**Members**
+
+* [insight.quadtree](#niclabs.insight.quadtree)
+  * [type: quadtree.Point](#niclabs.insight.quadtree.Point)
+  * [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
+    * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
+    * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
+    * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
+    * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
+    * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
+    * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
+  * [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
+    * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
+    * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
+    * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
+    * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
+    * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
+
+<a name="niclabs.insight.quadtree.Point"></a>
+####type: quadtree.Point
+A cartesian point
+
+**Params**
+
+- x `float` - horizontal coordinates  
+- y `float` - vertical coordinates  
+
+**Type**: `Object`  
+<a name="niclabs.insight.quadtree.Bounds"></a>
+####class: quadtree.Bounds
+**Members**
+
+* [class: quadtree.Bounds](#niclabs.insight.quadtree.Bounds)
+  * [new quadtree.Bounds(min, max)](#new_niclabs.insight.quadtree.Bounds)
+  * [Bounds.center](#niclabs.insight.quadtree.Bounds.center)
+  * [Bounds.min](#niclabs.insight.quadtree.Bounds.min)
+  * [Bounds.max](#niclabs.insight.quadtree.Bounds.max)
+  * [Bounds.contains(point)](#niclabs.insight.quadtree.Bounds.contains)
+  * [Bounds.intersects(box)](#niclabs.insight.quadtree.Bounds.intersects)
+
+<a name="new_niclabs.insight.quadtree.Bounds"></a>
+#####new quadtree.Bounds(min, max)
+Construct an axis aligned bounding box with the corners
+at the provided coordinates
+
+**Params**
+
+- min <code>[Point](#niclabs.insight.quadtree.Point)</code> - minimal coordinates of the bounding box (e.g. lower left corner if zero is at the lower left corner of the canvas)  
+- max <code>[Point](#niclabs.insight.quadtree.Point)</code> - maximal coordinates of the bounding box (e.g. upper right corner if zero is at the lower left corner of the canvas)  
+
+<a name="niclabs.insight.quadtree.Bounds.center"></a>
+#####Bounds.center
+Center of the bounding box
+
+**Type**: [Point](#niclabs.insight.quadtree.Point)  
+<a name="niclabs.insight.quadtree.Bounds.min"></a>
+#####Bounds.min
+Minimal coordinates of the bounding box
+(e.g. lower left corner if zero is at the lowest leftmost corner of the canvas)
+
+**Type**: [Point](#niclabs.insight.quadtree.Point)  
+<a name="niclabs.insight.quadtree.Bounds.max"></a>
+#####Bounds.max
+Maximal coordinates of the bounding box
+(e.g. upper right corner if zero is at the lowest leftmost corner of the canvas)
+
+**Type**: [Point](#niclabs.insight.quadtree.Point)  
+<a name="niclabs.insight.quadtree.Bounds.contains"></a>
+#####Bounds.contains(point)
+Check if this bounding box contains the given point.
+
+As a convention, a bounding box contains all points inside its borders
+as well as all the points in the east and south borders.
+
+**Params**
+
+- point <code>[Point](#niclabs.insight.quadtree.Point)</code> - point to lookup  
+
+**Returns**: `boolean` - true if the box contains the point  
+<a name="niclabs.insight.quadtree.Bounds.intersects"></a>
+#####Bounds.intersects(box)
+Check if this bounding box intersects the given bounding box
+
+**Params**
+
+- box <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - bounding box to check intersection with  
+
+**Returns**: `boolean` - true if the boxes intersect in at least one point  
+<a name="niclabs.insight.quadtree.PointQuadTree"></a>
+####class: quadtree.PointQuadTree
+**Members**
+
+* [class: quadtree.PointQuadTree](#niclabs.insight.quadtree.PointQuadTree)
+  * [new quadtree.PointQuadTree(bounds, [capacity], [depth])](#new_niclabs.insight.quadtree.PointQuadTree)
+  * [PointQuadTree.capacity](#niclabs.insight.quadtree.PointQuadTree.capacity)
+  * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
+  * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
+  * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
+
+<a name="new_niclabs.insight.quadtree.PointQuadTree"></a>
+#####new quadtree.PointQuadTree(bounds, [capacity], [depth])
+Construct a Point Quadtree
+
+See [http://en.wikipedia.org/wiki/Quadtree](http://en.wikipedia.org/wiki/Quadtree)
+
+**Params**
+
+- bounds <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - bounding box for the quadtree  
+- \[capacity=50\] `integer` - number of points that each node in the quadtree accepts before dividing  
+- \[depth=40\] `integer` - max depth of the quadtree  
+
+<a name="niclabs.insight.quadtree.PointQuadTree.capacity"></a>
+#####PointQuadTree.capacity
+Capacity for the quadtree
+
+**Type**: `integer`  
+<a name="niclabs.insight.quadtree.PointQuadTree.bounds"></a>
+#####PointQuadTree.bounds
+Boundary of the quadtree
+
+**Type**: [Bounds](#niclabs.insight.quadtree.Bounds)  
+<a name="niclabs.insight.quadtree.PointQuadTree.insert"></a>
+#####PointQuadTree.insert(point)
+Insert a new point in the quadtree
+
+**Params**
+
+- point <code>[Point](#niclabs.insight.quadtree.Point)</code> - new point to insert  
+
+**Returns**: `boolean` - true if the point could be inserted (point belongs in the bounds of the quadtree)  
+<a name="niclabs.insight.quadtree.PointQuadTree.query"></a>
+#####PointQuadTree.query(range)
+Return all the points in the specified bounding box
+
+**Params**
+
+- range <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - spatial range to search  
+
+**Returns**: [Array.&lt;Point&gt;](#niclabs.insight.quadtree.Point) - list of points in the given range  
 <a name="niclabs.insight..handler"></a>
 ###callback: insight~handler
 Constructs an insight element (visualization, layer, etc.)
@@ -2155,6 +2350,7 @@ the information view can be composed contain multiple blocks of information
 - options `Object` - configuration options for the dashboard  
   - \[layout='none'\] `string` - Dashboard layout, one of ['left', 'right', 'none'], puts the info window to the left, to the right or it removes it  
   - anchor `string` - Required id for anchoring the dashboard  
+  - geocoding `boolean` - false to disable geocoding  
 
 <a name="niclabs.insight.Dashboard.element"></a>
 ####Dashboard.element
@@ -2272,44 +2468,40 @@ Event triggered when an update to the active layer data (filtering/update) has o
 - data `Array.<Object>` - new data array  
 
 **Type**: `object`  
-<a name="niclabs.insight.FilterBar"></a>
-###class: insight.FilterBar
+<a name="niclabs.insight.Filters"></a>
+###class: insight.Filters
+**Extends**: `niclabs.insight.View`  
 **Members**
 
-* [class: insight.FilterBar](#niclabs.insight.FilterBar)
-  * [new insight.FilterBar()](#new_niclabs.insight.FilterBar)
-  * [FilterBar.element](#niclabs.insight.FilterBar.element)
-  * [FilterBar.$](#niclabs.insight.FilterBar.$)
-  * [FilterBar.filter(filter)](#niclabs.insight.FilterBar.filter)
-  * [callback: FilterBar~filter](#niclabs.insight.FilterBar..filter)
-  * [event: "filter_changed"](#niclabs.insight.FilterBar#event_filter_changed)
+* [class: insight.Filters](#niclabs.insight.Filters)
+  * [new insight.Filters(dashboard, options)](#new_niclabs.insight.Filters)
+  * [Filters.view.filter(obj)](#niclabs.insight.Filters.view.filter)
+  * [callback: Filters~filter](#niclabs.insight.Filters..filter)
+  * [event: "filter_selected"](#niclabs.insight.Filters#event_filter_selected)
+  * [event: "filter_changed"](#niclabs.insight.Filters#event_filter_changed)
 
-<a name="new_niclabs.insight.FilterBar"></a>
-####new insight.FilterBar()
+<a name="new_niclabs.insight.Filters"></a>
+####new insight.Filters(dashboard, options)
 Constructs a filter bar for the dashboard
 
-<a name="niclabs.insight.FilterBar.element"></a>
-####FilterBar.element
-HTML DOM element for the filter bar container
+**Params**
 
-**Type**: `Element`  
-<a name="niclabs.insight.FilterBar.$"></a>
-####FilterBar.$
-jQuery object for the filter bar container
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this view belongs to  
+- options `Object` - configuration options for the filters  
 
-**Type**: `jQuery`  
-<a name="niclabs.insight.FilterBar.filter"></a>
-####FilterBar.filter(filter)
+**Extends**: `niclabs.insight.View`  
+<a name="niclabs.insight.Filters.view.filter"></a>
+####Filters.view.filter(obj)
 Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
 of the filter for further customizations
 
 **Params**
 
-- filter `Object` | `number` - configuration for the filter or filter index  
+- obj `Object` | <code>[Filter](#niclabs.insight.filter.Filter)</code> | `number` - configuration for the filter or filter identifier  
 
 **Returns**: `jQuery` - reference to the added element for further customization  
-<a name="niclabs.insight.FilterBar..filter"></a>
-####callback: FilterBar~filter
+<a name="niclabs.insight.Filters..filter"></a>
+####callback: Filters~filter
 Function to act as a filter for the data
 
 The function returns false if the data must be removed from the visualization
@@ -2317,19 +2509,26 @@ or true if the data must be kept
 
 **Params**
 
-- data `Object` - data element to evaluate  
+- element `Object` - data element to evaluate  
 
-**Scope**: inner typedef of [FilterBar](#niclabs.insight.FilterBar)  
+**Scope**: inner typedef of [Filters](#niclabs.insight.Filters)  
 **Type**: `function`  
 **Returns**: `boolean` - true if the data passes the filter  
-<a name="niclabs.insight.FilterBar#event_filter_changed"></a>
+<a name="niclabs.insight.Filters#event_filter_selected"></a>
+####event: "filter_selected"
+Event triggered when a filter has been selected
+
+It serves to communicate to the filters view that one of its filters has changed
+
+**Type**: [Filter](#niclabs.insight.filter.Filter)  
+<a name="niclabs.insight.Filters#event_filter_changed"></a>
 ####event: "filter_changed"
 Event triggered when a filter has changed
 
 It will pass as parameter the filtering function to apply to
 the layers
 
-**Type**: [filter](#niclabs.insight.FilterBar..filter)  
+**Type**: [filter](#niclabs.insight.Filters..filter)  
 <a name="niclabs.insight.MapView"></a>
 ###class: insight.MapView
 **Members**
@@ -2468,6 +2667,8 @@ list as is.
 ####ElementList.self.each(iterator)
 Iterate over the elements of the list
 
+The iteration is stopped when the iterating function returns false
+
 **Params**
 
 - iterator <code>[iterator](#niclabs.insight.ElementList..iterator)</code>  
@@ -2516,7 +2717,7 @@ Identifier for the insight element
 **Type**: `string`  
 <a name="niclabs.insight.InfoView"></a>
 ###class: insight.InfoView
-**Extends**: `niclabs.insight.UiElement`  
+**Extends**: `niclabs.insight.View`  
 **Members**
 
 * [class: insight.InfoView](#niclabs.insight.InfoView)
@@ -2536,7 +2737,7 @@ about the visualization in general
 - dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard to assign this info view to  
 - options `Object` - list of configuration options for the information view  
 
-**Extends**: `niclabs.insight.UiElement`  
+**Extends**: `niclabs.insight.View`  
 <a name="niclabs.insight.InfoView.element.block"></a>
 ####InfoView.element.block(obj)
 Add/get a block from the info view
@@ -2553,22 +2754,22 @@ block list as is.
 - obj `string` | `number` | `Object` | <code>[Block](#niclabs.insight.info.Block)</code> - block id to get or configuration options for the new block  
 
 **Returns**: [Block](#niclabs.insight.info.Block) - - newly created block  
-<a name="niclabs.insight.UiElement"></a>
-###class: insight.UiElement
+<a name="niclabs.insight.View"></a>
+###class: insight.View
 **Extends**: `niclabs.insight.Element`  
 **Members**
 
-* [class: insight.UiElement](#niclabs.insight.UiElement)
-  * [new insight.UiElement(options)](#new_niclabs.insight.UiElement)
-  * [UiElement.$](#niclabs.insight.UiElement.$)
-  * [UiElement.element](#niclabs.insight.UiElement.element)
-  * [UiElement.self.append(element)](#niclabs.insight.UiElement.self.append)
+* [class: insight.View](#niclabs.insight.View)
+  * [new insight.View(options)](#new_niclabs.insight.View)
+  * [View.$](#niclabs.insight.View.$)
+  * [View.element](#niclabs.insight.View.element)
+  * [View.self.append(element)](#niclabs.insight.View.self.append)
 
-<a name="new_niclabs.insight.UiElement"></a>
-####new insight.UiElement(options)
-Construct a UI element
+<a name="new_niclabs.insight.View"></a>
+####new insight.View(options)
+Construct a View
 
-UI elements have an internal DOM representation to
+A view has an internal DOM representation to
 display on the browser
 
 **Params**
@@ -2577,22 +2778,22 @@ display on the browser
   - id `String` - identifier for the element  
 
 **Extends**: `niclabs.insight.Element`  
-<a name="niclabs.insight.UiElement.$"></a>
-####UiElement.$
-DOM Element specified by this UiElement
+<a name="niclabs.insight.View.$"></a>
+####View.$
+DOM Element specified by this View
 
 **Type**: `jQuery`  
-<a name="niclabs.insight.UiElement.element"></a>
-####UiElement.element
-DOM Element specified by this UiElement
+<a name="niclabs.insight.View.element"></a>
+####View.element
+DOM Element specified by this View
 
 **Type**: `jQuery`  
-<a name="niclabs.insight.UiElement.self.append"></a>
-####UiElement.self.append(element)
-Append an element to the DOM tree of this Ui elemtn
+<a name="niclabs.insight.View.self.append"></a>
+####View.self.append(element)
+Append an element to the DOM tree of this view
 
 **Params**
 
-- element <code>[UiElement](#niclabs.insight.UiElement)</code> - element to append  
+- element <code>[View](#niclabs.insight.View)</code> - element to append  
 
-**Returns**: [UiElement](#niclabs.insight.UiElement) - reference to this element  
+**Returns**: [View](#niclabs.insight.View) - reference to this element  
