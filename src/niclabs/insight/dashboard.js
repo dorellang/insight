@@ -197,6 +197,9 @@ niclabs.insight.Dashboard = (function($) {
                 // Switch to the new layer if activate is true
                 if (activate || Object.size(layers) === 1) self.active(id);
 
+                // Add the layer to the selector
+                layerSelector.add(lyr.id, lyr.name);
+
                 return lyr;
             },
 
@@ -278,6 +281,9 @@ niclabs.insight.Dashboard = (function($) {
                 if (activeLayer) activeLayer.clear();
             }
         };
+
+        var layerSelector = niclabs.insight.filter.LayerSelector(self, {id: 'layer-selector'});
+        filters.filter(layerSelector);
 
         return self;
     };
