@@ -6,6 +6,8 @@ niclabs.insight.Filters = (function($) {
      *
      * @class niclabs.insight.Filters
      * @augments {niclabs.insight.View}
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this view belongs to
+     * @param {Object} options - configuration options for the filters
      */
     return function(dashboard, options) {
         options = options || {};
@@ -17,61 +19,8 @@ niclabs.insight.Filters = (function($) {
         // Bar container
         view.$.addClass('filters');
 
-        ///var container = $('<div>').setID(barId).addClass('filters');
-
         // List of filters
-        var filters = [];
-
-        /**
-         * Compose the filters selected by the user
-         */
-        function composeFilters() {
-            var callbacks = [];
-            for (var i = 0; i < filters.length; i++) {
-                if (filters[i].element.prop('selectedIndex') > 0) {
-                    callbacks.push(filters[i].options[filters[i].element.prop('selectedIndex') - 1].filter);
-                }
-            }
-
-            return function(data) {
-                for (var i = 0; i < callbacks.length; i++) {
-                    if (!callbacks[i](data)) return false;
-                }
-                return true;
-            };
-        }
-
-        /* Google maps geocoder and search bar*/
-        var geocoder = new google.maps.Geocoder();
-
-        // Create the search box
-        var search = $('<input>')
-            .addClass('search')
-            .attr('type', 'search')
-            .attr('placeholder', 'Enter location');
-
-        // Append search box to bar
-        view.$.append($('<div>').addClass('filter').append(search));
-
-        var geocode = function() {
-            var map = dashboard.map().googlemap();
-            var address = search.val();
-            geocoder.geocode({
-                'address': address
-            }, function(results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    map.setCenter(results[0].geometry.location);
-                    // map.setZoom(12);
-                    map.fitBounds(results[0].geometry.bounds);
-                } else {
-                    // TODO: this message should go in a status bar
-                    search.val('not found: ' + address);
-                }
-            });
-        };
-
-        search.on('change', geocode);
-
+        var filters = niclabs.insight.ElementList(dashboard);
 
         /**
          * Function to act as a filter for the data
@@ -84,51 +33,62 @@ niclabs.insight.Filters = (function($) {
          * @returns {boolean} true if the data passes the filter
          */
 
+
+        /**
+         * Data selector to act as filter for the layer data
+         *
+         * The selector is a composition of the application of all the individual filters
+         * of this filter view
+         */
+        function selector(element) {
+            var result = true;
+            filters.each(function(key, filter) {
+                if (!filter.apply(element)) {
+                    result = false;
+                    return false;
+                }
+            });
+
+            return result;
+        }
+
+        /**
+         * Event triggered when a filter has been selected
+         *
+         * It serves to communicate to the filters view that one of its filters has changed
+         *
+         * @event niclabs.insight.Filters#filter_selected
+         * @type {niclabs.insight.filter.Filter}
+         */
+        niclabs.insight.event.on('filter_selected', function(filter) {
+            /**
+             * Event triggered when a filter has changed
+             *
+             * It will pass as parameter the filtering function to apply to
+             * the layers
+             *
+             * @event niclabs.insight.Filters#filter_changed
+             * @type {niclabs.insight.Filters~filter}
+             */
+            niclabs.insight.event.trigger('filter_changed', selector);
+        });
+
+
          /**
           * Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
           * of the filter for further customizations
           *
           * @memberof niclabs.insight.Filters
-          * @param {Object|number} filter configuration for the filter or filter index
+          * @param {Object|niclabs.insight.filter.Filter|number} obj - configuration for the filter or filter identifier
           * @return {jQuery} reference to the added element for further customization
           */
-        view.filter = function(filter) {
-            if (typeof filter === 'number') return filters[filter];
+        view.filter = function(obj) {
+            var filter = filters.element(obj);
 
-            var select = $('<select>');
+            // Append the filter to the view
+            view.append(filter);
 
-            var description = filter.description || '';
-            var option = $('<option>').text(description);
-            select.append(option);
-
-            var i;
-            for (i = 0; i < filter.options.length; i++) {
-                option = $('<option>').text(filter.options[i].name);
-                select.append(option);
-            }
-
-            select.on('change', function() {
-                /**
-                 * Event triggered when a filter has changed
-                 *
-                 * It will pass as parameter the filtering function to apply to
-                 * the layers
-                 *
-                 * @event niclabs.insight.Filters#filter_changed
-                 * @type {niclabs.insight.Filters~filter}
-                 */
-                niclabs.insight.event.trigger('filter_changed', composeFilters());
-            });
-
-            // Add the selector to the filter bar
-            view.$.append($('<div>').addClass('filter').append(select));
-
-            filter.element = select;
-
-            // Add the filter to the filter list
-            filters.push(filter);
-
-            return select;
+            return filter;
         };
 
         return view;
