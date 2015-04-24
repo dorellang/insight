@@ -1,4 +1,4 @@
-niclabs.insight.layer.Layer = (function($) {
+ niclabs.insight.layer.Layer = (function($) {
     "use strict";
 
     /**
@@ -10,6 +10,7 @@ niclabs.insight.layer.Layer = (function($) {
      * @param {niclabs.insight.Dashboard} dashboard - dashboard that this layer belongs to
      * @param {Object} options - configuration options for the layer
      * @param {string} options.id - identifier for the layer
+     * @param {string=} [options.name=options.id] - name for the layer in the filter bar
      * @param {string|Object[]} options.data - uri or data array for the layer
      * @param {Object|Function} [options.summary] - summary data
      */
@@ -20,6 +21,7 @@ niclabs.insight.layer.Layer = (function($) {
             throw Error("All layers must have an id.");
         }
         var id = options.id;
+        var name = options.name || options.id;
 
         if (!('data' in options)) {
             throw Error("All layers must provide a data source.");
@@ -47,6 +49,15 @@ niclabs.insight.layer.Layer = (function($) {
              */
             get id () {
                 return id;
+            },
+
+            /**
+             * Name for the layer
+             * @memberof niclabs.insight.layer.Layer
+             * @member {string}
+             */
+            get name() {
+                return name;
             },
 
             /**
