@@ -23,6 +23,66 @@ var niclabs = {};
 niclabs.insight = (function ($) {
     "use strict";
 
+
+    // Production steps of ECMA-262, Edition 5, 15.4.4.18
+    // Reference: http://es5.github.io/#x15.4.4.18
+    if (!Array.prototype.forEach) {
+
+        Array.prototype.forEach = function (callback, thisArg) {
+
+            var T, k;
+
+            if (this === null) {
+                throw new TypeError(' this is null or not defined');
+            }
+
+            // 1. Let O be the result of calling ToObject passing the |this| value as the argument.
+            var O = Object(this);
+
+            // 2. Let lenValue be the result of calling the Get internal method of O with the argument "length".
+            // 3. Let len be ToUint32(lenValue).
+            var len = O.length >>> 0;
+
+            // 4. If IsCallable(callback) is false, throw a TypeError exception.
+            // See: http://es5.github.com/#x9.11
+            if (typeof callback !== "function") {
+                throw new TypeError(callback + ' is not a function');
+            }
+
+            // 5. If thisArg was supplied, let T be thisArg; else let T be undefined.
+            if (arguments.length > 1) {
+                T = thisArg;
+            }
+
+            // 6. Let k be 0
+            k = 0;
+
+            // 7. Repeat, while k < len
+            while (k < len) {
+
+                var kValue;
+
+                // a. Let Pk be ToString(k).
+                //   This is implicit for LHS operands of the in operator
+                // b. Let kPresent be the result of calling the HasProperty internal method of O with argument Pk.
+                //   This step can be combined with c
+                // c. If kPresent is true, then
+                if (k in O) {
+
+                    // i. Let kValue be the result of calling the Get internal method of O with argument Pk.
+                    kValue = O[k];
+
+                    // ii. Call the Call internal method of callback with T as the this value and
+                    // argument list containing kValue, k, and O.
+                    callback.call(T, kValue, k, O);
+                }
+                // d. Increase k by 1.
+                k++;
+            }
+            // 8. return undefined
+        };
+    }
+
      /**
       * Bind a jquery element to a template
       *
@@ -557,6 +617,7 @@ niclabs.insight.Dashboard = (function($) {
      * @param {Object} options - configuration options for the dashboard
      * @param {string} [options.layout='none'] - Dashboard layout, one of ['left', 'right', 'none'], puts the info window to the left, to the right or it removes it
      * @param {string} options.anchor - Required id for anchoring the dashboard
+     * @param {boolean} options.geocoding - false to disable geocoding
      */
     return function(options) {
         var layoutOptions = ['left', 'right', 'none'];
@@ -607,6 +668,18 @@ niclabs.insight.Dashboard = (function($) {
             }
         });
 
+        // Create the filter bar
+        var filters = niclabs.insight.Filters(self);
+
+        // Append the default filter bar
+        container.append(filters.element);
+
+        // Create an event to be notified of a filter change
+        niclabs.insight.event.on('filter_changed', function(f) {
+            $.each(layers, function(name, layer) {
+                layer.filter(f);
+            });
+        });
 
         var self = {
             /**
@@ -678,6 +751,13 @@ niclabs.insight.Dashboard = (function($) {
                         mapView = obj;
                     }
                     $(dashboardId).append(mapView.element);
+
+                    if (options.geocoding !== false) {
+                        // Append the GeoCoder
+                        if ('googlemap' in mapView) {
+                            filters.filter(niclabs.insight.filter.GoogleGeocodingFilter(self, {id: 'geocoder'}));
+                        }
+                    }
                 }
                 return mapView;
             },
@@ -717,6 +797,9 @@ niclabs.insight.Dashboard = (function($) {
 
                 // Switch to the new layer if activate is true
                 if (activate || Object.size(layers) === 1) self.active(id);
+
+                // Add the layer to the selector
+                layerSelector.add(lyr.id, lyr.name);
 
                 return lyr;
             },
@@ -786,7 +869,7 @@ niclabs.insight.Dashboard = (function($) {
              * @return {jQuery} reference to the added element for further customization
              */
             filter: function(filter) {
-                return filterBar.filter(filter);
+                return filters.filter(filter);
             },
 
             /**
@@ -800,19 +883,8 @@ niclabs.insight.Dashboard = (function($) {
             }
         };
 
-
-        // Create the filter bar
-        var filterBar = niclabs.insight.FilterBar(self);
-
-        // Append the filter bar
-        container.append(filterBar.element);
-
-        // Create an event to be notified of a filter change
-        niclabs.insight.event.on('filter_changed', function(f) {
-            $.each(layers, function(name, layer) {
-                layer.filter(f);
-            });
-        });
+        var layerSelector = niclabs.insight.filter.LayerSelector(self, {id: 'layer-selector'});
+        filters.filter(layerSelector);
 
         return self;
     };
@@ -861,8 +933,8 @@ niclabs.insight.ElementList = (function() {
          * @returns {niclabs.insight.ElementList} - newly created element
          */
         self.element = function(obj) {
-            if (typeof obj == 'string') return elements[obj];
-            if (typeof obj == 'number') return elements[elementId(obj)];
+            if (typeof obj === 'string') return elements[obj];
+            if (typeof obj === 'number') return elements[elementId(obj)];
 
             var elem, id;
             if ('handler' in obj) {
@@ -892,12 +964,16 @@ niclabs.insight.ElementList = (function() {
         /**
          * Iterate over the elements of the list
          *
+         * The iteration is stopped when the iterating function returns false
+         *
          * @memberof niclabs.insight.ElementList
          * @param {niclabs.insight.ElementList~iterator} iterator
          */
         self.each = function(iterator) {
             for (var key in elements) {
-                iterator(key, elements[key]);
+                if (iterator(key, elements[key]) === false) {
+                    return false;
+                }
             }
         };
 
@@ -957,73 +1033,29 @@ niclabs.insight.Element = (function($) {
     return Element;
 })(jQuery);
 
-niclabs.insight.FilterBar = (function($) {
+niclabs.insight.Filters = (function($) {
     "use strict";
 
     /**
      * Constructs a filter bar for the dashboard
      *
-     * @class niclabs.insight.FilterBar
+     * @class niclabs.insight.Filters
+     * @augments {niclabs.insight.View}
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this view belongs to
+     * @param {Object} options - configuration options for the filters
      */
     return function(dashboard, options) {
-        var barId = '#insight-filters';
+        options = options || {};
+
+        var barId = options.id || 'insight-filters';
+
+        var view = niclabs.insight.View({id: barId});
 
         // Bar container
-        var container = $('<div>').setID(barId).addClass('filters');
+        view.$.addClass('filters');
 
         // List of filters
-        var filters = [];
-
-        /**
-         * Compose the filters selected by the user
-         */
-        function composeFilters() {
-            var callbacks = [];
-            for (var i = 0; i < filters.length; i++) {
-                if (filters[i].element.prop('selectedIndex') > 0) {
-                    callbacks.push(filters[i].options[filters[i].element.prop('selectedIndex') - 1].filter);
-                }
-            }
-
-            return function(data) {
-                for (var i = 0; i < callbacks.length; i++) {
-                    if (!callbacks[i](data)) return false;
-                }
-                return true;
-            };
-        }
-
-        /* Google maps geocoder and search bar*/
-        var geocoder = new google.maps.Geocoder();
-
-        // Create the search box
-        var search = $('<input>')
-            .addClass('search')
-            .attr('type', 'search')
-            .attr('placeholder', 'Enter location');
-
-        // Append search box to bar
-        container.append($('<div>').addClass('filter').append(search));
-
-        var geocode = function() {
-            var map = dashboard.map().googlemap();
-            var address = search.val();
-            geocoder.geocode({
-                'address': address
-            }, function(results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    map.setCenter(results[0].geometry.location);
-                    // map.setZoom(12);
-                    map.fitBounds(results[0].geometry.bounds);
-                } else {
-                    // TODO: this message should go in a status bar
-                    search.val('not found: ' + address);
-                }
-            });
-        };
-
-        search.on('change', geocode);
-
+        var filters = niclabs.insight.ElementList(dashboard);
 
         /**
          * Function to act as a filter for the data
@@ -1031,83 +1063,70 @@ niclabs.insight.FilterBar = (function($) {
          * The function returns false if the data must be removed from the visualization
          * or true if the data must be kept
          *
-         * @callback niclabs.insight.FilterBar~filter
-         * @param {Object} data - data element to evaluate
+         * @callback niclabs.insight.Filters~filter
+         * @param {Object} element - data element to evaluate
          * @returns {boolean} true if the data passes the filter
          */
 
-        return {
-            /**
-             * HTML DOM element for the filter bar container
-             *
-             * @memberof niclabs.insight.FilterBar
-             * @member {Element}
-             */
-            get element () {
-                var c = $(barId);
-                container = c.length === 0 ? container : c;
-                return container[0];
-            },
 
-            /**
-             * jQuery object for the filter bar container
-             *
-             * @memberof niclabs.insight.FilterBar
-             * @member {jQuery}
-             */
-            $: function() {
-                var c = $(barId);
-                container = c.length === 0 ? container : c;
-                return container;
-            },
-
-            /**
-             * Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
-             * of the filter for further customizations
-             *
-             * @memberof niclabs.insight.FilterBar
-             * @param {Object|number} filter configuration for the filter or filter index
-             * @return {jQuery} reference to the added element for further customization
-             */
-            filter: function(filter) {
-                if (typeof filter === 'number') return filters[filter];
-
-                var select = $('<select>');
-
-                var description = filter.description || '';
-                var option = $('<option>').text(description);
-                select.append(option);
-
-                var i;
-                for (i = 0; i < filter.options.length; i++) {
-                    option = $('<option>').text(filter.options[i].name);
-                    select.append(option);
+        /**
+         * Data selector to act as filter for the layer data
+         *
+         * The selector is a composition of the application of all the individual filters
+         * of this filter view
+         */
+        function selector(element) {
+            var result = true;
+            filters.each(function(key, filter) {
+                if (!filter.apply(element)) {
+                    result = false;
+                    return false;
                 }
+            });
 
-                select.on('change', function() {
-                    /**
-                     * Event triggered when a filter has changed
-                     *
-                     * It will pass as parameter the filtering function to apply to
-                     * the layers
-                     *
-                     * @event niclabs.insight.FilterBar#filter_changed
-                     * @type {niclabs.insight.FilterBar~filter}
-                     */
-                    niclabs.insight.event.trigger('filter_changed', composeFilters());
-                });
+            return result;
+        }
 
-                // Add the selector to the filter bar
-                container.append($('<div>').addClass('filter').append(select));
+        /**
+         * Event triggered when a filter has been selected
+         *
+         * It serves to communicate to the filters view that one of its filters has changed
+         *
+         * @event niclabs.insight.Filters#filter_selected
+         * @type {niclabs.insight.filter.Filter}
+         */
+        niclabs.insight.event.on('filter_selected', function(filter) {
+            /**
+             * Event triggered when a filter has changed
+             *
+             * It will pass as parameter the filtering function to apply to
+             * the layers
+             *
+             * @event niclabs.insight.Filters#filter_changed
+             * @type {niclabs.insight.Filters~filter}
+             */
+            niclabs.insight.event.trigger('filter_changed', selector);
+        });
 
-                filter.element = select;
 
-                // Add the filter to the filter list
-                filters.push(filter);
+         /**
+          * Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
+          * of the filter for further customizations
+          *
+          * @memberof niclabs.insight.Filters
+          * @param {Object|niclabs.insight.filter.Filter|number} obj - configuration for the filter or filter identifier
+          * @return {jQuery} reference to the added element for further customization
+          */
+        view.filter = function(obj) {
+            var filter = filters.element(obj);
 
-                return select;
-            },
+            // Append the filter to the view
+            view.append(filter);
+
+            return filter;
         };
+
+        return view;
     };
 })(jQuery);
 
@@ -1122,7 +1141,7 @@ niclabs.insight.InfoView = (function($) {
      * about the visualization in general
      *
      * @class niclabs.insight.InfoView
-     * @extends {niclabs.insight.UiElement}
+     * @extends {niclabs.insight.View}
      * @param {niclabs.insight.Dashboard} dashboard - dashboard to assign this info view to
      * @param {Object} options - list of configuration options for the information view
      */
@@ -1133,7 +1152,7 @@ niclabs.insight.InfoView = (function($) {
         var infoViewId = options.id || "insight-info-view";
 
 
-        var element = niclabs.insight.UiElement({id: infoViewId});
+        var element = niclabs.insight.View({id: infoViewId});
 
         // Create the info view
         element.$.addClass('info');
@@ -1414,27 +1433,27 @@ niclabs.insight.MapView = (function($) {
 	};
 })(jQuery);
 
-niclabs.insight.UiElement = (function($) {
+niclabs.insight.View = (function($) {
     /**
-     * Construct a UI element
+     * Construct a View
      *
-     * UI elements have an internal DOM representation to
+     * A view has an internal DOM representation to
      * display on the browser
      *
-     * @class niclabs.insight.UiElement
+     * @class niclabs.insight.View
      * @extends niclabs.insight.Element
      * @param {Object} options - configuration options for the element
      * @param {String} options.id - identifier for the element
      */
-    var UiElement = function(options) {
+    var View = function(options) {
         var self = niclabs.insight.Element(options);
 
         var node = $('<div>').attr('id', self.id);
 
         /**
-         * DOM Element specified by this UiElement
+         * DOM Element specified by this View
          *
-         * @memberof niclabs.insight.UiElement
+         * @memberof niclabs.insight.View
          * @name $
          * @member {jQuery}
          */
@@ -1451,9 +1470,9 @@ niclabs.insight.UiElement = (function($) {
         });
 
         /**
-         * DOM Element specified by this UiElement
+         * DOM Element specified by this View
          *
-         * @memberof niclabs.insight.UiElement
+         * @memberof niclabs.insight.View
          * @name element
          * @member {jQuery}
          */
@@ -1465,11 +1484,11 @@ niclabs.insight.UiElement = (function($) {
 
 
         /**
-         * Append an element to the DOM tree of this Ui elemtn
+         * Append an element to the DOM tree of this view
          *
-         * @memberof niclabs.insight.UiElement
-         * @param {niclabs.insight.UiElement} element - element to append
-         * @return {niclabs.insight.UiElement} reference to this element
+         * @memberof niclabs.insight.View
+         * @param {niclabs.insight.View} element - element to append
+         * @return {niclabs.insight.View} reference to this element
          */
         self.append = function(element) {
             self.$.append(element.$);
@@ -1480,7 +1499,7 @@ niclabs.insight.UiElement = (function($) {
         return self;
     };
 
-    return UiElement;
+    return View;
 })(jQuery);
 
 /**
@@ -1588,6 +1607,243 @@ niclabs.insight.event = (function() {
         }
     };
 })();
+
+/**
+ * Define all possible filters for the dashboard
+ *
+ * @namespace
+ */
+niclabs.insight.filter = {};
+
+niclabs.insight.filter.Filter = (function() {
+    /**
+     * Defines a filter for the dashboard
+     *
+     * A filter provides both a visual filtering representation
+     * and an apply() function to be used on a data element for
+     * filtering
+     *
+     * For instance, a select filter will be visualized as a `<select>`
+     * HTML element, and calls to apply will pass the call to the appropriate
+     * filtering function according to the selected element
+     *
+     * @class niclabs.insight.filter.Filter
+     * @augments niclabs.insight.View
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this filter belongs to
+     * @param {Object} options - configuration options for the filter
+     */
+    var Filter = function(dashboard, options) {
+        var view = niclabs.insight.View(options);
+
+        // Configure the view
+        view.$.addClass('filter');
+
+        /**
+         * Apply the filter to a data element
+         *
+         * @memberof niclabs.insight.filter.Filter
+         * @abstract
+         * @param {Object} element - data element to evaluate
+         * @return {boolean} - true if the data element passes the filter
+         */
+        view.apply = function(element) {
+            return true;
+        };
+
+        return view;
+    };
+
+    return Filter;
+})();
+
+niclabs.insight.filter.GoogleGeocodingFilter = (function(google) {
+    /**
+     * Constructs a Google Geocoding filter for the dashboard
+     *
+     * Application of the filter always returns true, but allows to
+     * update the map according to a search location
+     *
+     * @class niclabs.insight.filter.GoogleGeocodingFilter
+     * @augments niclabs.insight.filter.Filter
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this filter belongs to
+     * @param {Object} options - configuration options for the filter
+     */
+    var GoogleGeocodingFilter = function(dashboard, options) {
+        var filter = niclabs.insight.filter.Filter(dashboard, options);
+
+        if (!('googlemap' in dashboard.map()))
+            throw new Error("Sorry, Google Geocoding can only be used with Google Maps");
+
+        /* Google maps geocoder and search bar*/
+        var geocoder = new google.maps.Geocoder();
+
+        // Create the search box
+        var search = $('<input>')
+            .addClass('search')
+            .attr('type', 'search')
+            .attr('placeholder', 'Enter location');
+
+        // Append search box to the filter
+        filter.$.append(search);
+
+        var geocode = function() {
+            var map = dashboard.map().googlemap();
+            var address = search.val();
+            geocoder.geocode({
+                'address': address
+            }, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    // map.setZoom(12);
+                    map.fitBounds(results[0].geometry.bounds);
+                } else {
+                    // TODO: this message should go in a status bar
+                    search.val('not found: ' + address);
+                }
+            });
+        };
+
+        search.on('change', geocode);
+
+
+        return filter;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('google-geocoder', 'filter', GoogleGeocodingFilter);
+
+    return GoogleGeocodingFilter;
+})(google);
+
+niclabs.insight.filter.LayerSelector = (function($) {
+
+
+    /**
+     * Construct a layer for the dashboard
+     *
+     * The layer selector provides an option to switch between layers of the dashboard
+     *
+     * @class niclabs.insight.filter.LayerSelector
+     * @augments niclabs.insight.filter.Filter
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this filter belongs to
+     * @param {Object} options - configuration options for the filter
+     */
+    var LayerSelector = function(dashboard, options) {
+        var view = niclabs.insight.filter.Filter(dashboard, options);
+
+        var layers = {};
+
+        // Configure the view
+        var select = $('<select>');
+
+        select.on('change', function() {
+            dashboard.active($(this).val());
+        });
+
+        // Add the selector to the view
+        view.$.append(select);
+
+        /**
+         * Add a layer to the selector
+         *
+         * @memberof niclabs.insight.filter.LayerSelector
+         * @param {string} id - id for the layer
+         * @param {name} name - name of the layer
+         */
+        view.add = function(id, name) {
+            layers[id] = name;
+            select.append($('<option>').attr('value', id).text(name));
+        };
+
+        return view;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('layer-selector', 'filter', LayerSelector);
+
+    return LayerSelector;
+})(jQuery);
+
+niclabs.insight.filter.SelectionFilter = (function($) {
+
+    /**
+     * Selection filter option
+     *
+     * @typedef niclabs.insight.filter.SelectionFilter.Option
+     * @type {Object}
+     * @param {string} name - name for the option of the filter
+     * @param {niclabs.insight.Filters~filter} filter - callback to filter the data
+     */
+
+    /**
+     * Construct a selection filter for the dashboard
+     *
+     * A selection filter will be visualized as a `<select>`
+     * HTML element, and calls to apply will pass the call to the appropriate
+     * filtering function according to the selected option
+     *
+     * @class niclabs.insight.filter.SelectionFilter
+     * @augments niclabs.insight.filter.Filter
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this filter belongs to
+     * @param {Object} options - configuration options for the filter
+     * @param {string} options.description - description for this filter to use as default option of the select
+     * @param {niclabs.insight.filter.SelectionFilter.Option[]} options.options - list of options for the filter
+     */
+    var SelectionFilter = function(dashboard, options) {
+        var view = niclabs.insight.filter.Filter(dashboard, options);
+
+        var selectOptions = options.options || [];
+
+        // Configure the view
+        var select = $('<select>');
+        select.append($('<option>').text(options.description || ''));
+
+        selectOptions.forEach(function(option) {
+            select.append($('<option>').text(option.name));
+        });
+
+        function noFilter(element) {
+            return true;
+        }
+
+        var filter = noFilter;
+
+        select.on('change', function() {
+            filter = noFilter;
+            var index = $(this).prop('selectedIndex');
+            if (index > 0) {
+                // Use the selected filter
+                filter = selectOptions[index - 1].filter;
+            }
+
+            niclabs.insight.event.trigger('filter_selected', view);
+        });
+
+        // Add the selector to the view
+        view.$.append(select);
+
+
+        /**
+         * Apply the filter to a data element
+         *
+         * @memberof niclabs.insight.filter.SelectionFilter
+         * @abstract
+         * @param {Object} element - data element to evaluate
+         * @return {boolean} - true if the data element passes the filter
+         */
+        view.apply = function(element) {
+            // Use the selected filter function
+            return filter(element);
+        };
+
+        return view;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('selection-filter', 'filter', SelectionFilter);
+
+    return SelectionFilter;
+})(jQuery);
 
 /**
  * Contains the definitions for the information blocks supported by insight
@@ -2379,7 +2635,7 @@ niclabs.insight.layer.HeatmapLayer = (function($) {
     return HeatmapLayer;
 })(jQuery);
 
-niclabs.insight.layer.Layer = (function($) {
+ niclabs.insight.layer.Layer = (function($) {
     "use strict";
 
     /**
@@ -2391,6 +2647,7 @@ niclabs.insight.layer.Layer = (function($) {
      * @param {niclabs.insight.Dashboard} dashboard - dashboard that this layer belongs to
      * @param {Object} options - configuration options for the layer
      * @param {string} options.id - identifier for the layer
+     * @param {string=} [options.name=options.id] - name for the layer in the filter bar
      * @param {string|Object[]} options.data - uri or data array for the layer
      * @param {Object|Function} [options.summary] - summary data
      */
@@ -2401,6 +2658,7 @@ niclabs.insight.layer.Layer = (function($) {
             throw Error("All layers must have an id.");
         }
         var id = options.id;
+        var name = options.name || options.id;
 
         if (!('data' in options)) {
             throw Error("All layers must provide a data source.");
@@ -2428,6 +2686,15 @@ niclabs.insight.layer.Layer = (function($) {
              */
             get id () {
                 return id;
+            },
+
+            /**
+             * Name for the layer
+             * @memberof niclabs.insight.layer.Layer
+             * @member {string}
+             */
+            get name() {
+                return name;
             },
 
             /**
@@ -3361,6 +3628,15 @@ niclabs.insight.map.grid.Grid = (function() {
                 return layer;
             },
 
+			/**
+			 * Refresh the grid with the current map bounds
+			 *
+			 * @memberof niclabs.insight.map.grid.Grid
+			 */
+			refresh: function() {
+				// Build the initial grid
+				build(self.map.googlemap().getBounds());
+			},
 
 			/**
 			 * Construct a tile from the options of the grid
@@ -3439,9 +3715,6 @@ niclabs.insight.map.grid.Grid = (function() {
                 build(bounds);
             }, 50);
         });
-
-		// Build the initial grid
-		build(self.map.googlemap().getBounds());
 
         return self;
 	};
@@ -3646,6 +3919,9 @@ niclabs.insight.map.grid.HexagonalGrid = (function() {
 			return niclabs.insight.map.grid.HexagonTile(niclabs.insight.map.GoogleMercator.distance(options.size, grid.map.zoom()));
 		};
 
+		// Refresh the grid 
+		grid.refresh();
+
         return grid;
 	};
 
@@ -3689,6 +3965,9 @@ niclabs.insight.map.grid.SquareGrid = (function() {
 		grid.tile = function() {
 			return niclabs.insight.map.grid.SquareTile(niclabs.insight.map.GoogleMercator.distance(options.size, grid.map.zoom()));
 		};
+
+		// Refresh the grid
+		grid.refresh();
 
         return grid;
 	};
