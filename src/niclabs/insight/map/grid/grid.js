@@ -208,6 +208,15 @@ niclabs.insight.map.grid.Grid = (function() {
                 return layer;
             },
 
+			/**
+			 * Refresh the grid with the current map bounds
+			 *
+			 * @memberof niclabs.insight.map.grid.Grid
+			 */
+			refresh: function() {
+				// Build the initial grid
+				build(self.map.googlemap().getBounds());
+			},
 
 			/**
 			 * Construct a tile from the options of the grid
@@ -286,9 +295,6 @@ niclabs.insight.map.grid.Grid = (function() {
                 build(bounds);
             }, 50);
         });
-
-		// Build the initial grid
-		build(self.map.googlemap().getBounds());
 
         return self;
 	};
