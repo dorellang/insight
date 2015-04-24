@@ -33,6 +33,9 @@ niclabs.insight.map.grid.SquareGrid = (function() {
 			return niclabs.insight.map.grid.SquareTile(niclabs.insight.map.GoogleMercator.distance(options.size, grid.map.zoom()));
 		};
 
+		// Refresh the grid
+		grid.refresh();
+
         return grid;
 	};
 
