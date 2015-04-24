@@ -1,24 +1,24 @@
-niclabs.insight.UiElement = (function($) {
+niclabs.insight.View = (function($) {
     /**
-     * Construct a UI element
+     * Construct a View
      *
-     * UI elements have an internal DOM representation to
+     * A view has an internal DOM representation to
      * display on the browser
      *
-     * @class niclabs.insight.UiElement
+     * @class niclabs.insight.View
      * @extends niclabs.insight.Element
      * @param {Object} options - configuration options for the element
      * @param {String} options.id - identifier for the element
      */
-    var UiElement = function(options) {
+    var View = function(options) {
         var self = niclabs.insight.Element(options);
 
         var node = $('<div>').attr('id', self.id);
 
         /**
-         * DOM Element specified by this UiElement
+         * DOM Element specified by this View
          *
-         * @memberof niclabs.insight.UiElement
+         * @memberof niclabs.insight.View
          * @name $
          * @member {jQuery}
          */
@@ -35,9 +35,9 @@ niclabs.insight.UiElement = (function($) {
         });
 
         /**
-         * DOM Element specified by this UiElement
+         * DOM Element specified by this View
          *
-         * @memberof niclabs.insight.UiElement
+         * @memberof niclabs.insight.View
          * @name element
          * @member {jQuery}
          */
@@ -49,11 +49,11 @@ niclabs.insight.UiElement = (function($) {
 
 
         /**
-         * Append an element to the DOM tree of this Ui elemtn
+         * Append an element to the DOM tree of this view
          *
-         * @memberof niclabs.insight.UiElement
-         * @param {niclabs.insight.UiElement} element - element to append
-         * @return {niclabs.insight.UiElement} reference to this element
+         * @memberof niclabs.insight.View
+         * @param {niclabs.insight.View} element - element to append
+         * @return {niclabs.insight.View} reference to this element
          */
         self.append = function(element) {
             self.$.append(element.$);
@@ -64,5 +64,5 @@ niclabs.insight.UiElement = (function($) {
         return self;
     };
 
-    return UiElement;
+    return View;
 })(jQuery);

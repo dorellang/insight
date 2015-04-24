@@ -5,14 +5,14 @@ niclabs.insight.Filters = (function($) {
      * Constructs a filter bar for the dashboard
      *
      * @class niclabs.insight.Filters
-     * @augments {niclabs.insight.UiElement}
+     * @augments {niclabs.insight.View}
      */
     return function(dashboard, options) {
         options = options || {};
 
         var barId = options.id || 'insight-filters';
 
-        var view = niclabs.insight.UiElement({id: barId});
+        var view = niclabs.insight.View({id: barId});
 
         // Bar container
         view.$.addClass('filters');

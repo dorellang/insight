@@ -9,7 +9,7 @@ niclabs.insight.InfoView = (function($) {
      * about the visualization in general
      *
      * @class niclabs.insight.InfoView
-     * @extends {niclabs.insight.UiElement}
+     * @extends {niclabs.insight.View}
      * @param {niclabs.insight.Dashboard} dashboard - dashboard to assign this info view to
      * @param {Object} options - list of configuration options for the information view
      */
@@ -20,7 +20,7 @@ niclabs.insight.InfoView = (function($) {
         var infoViewId = options.id || "insight-info-view";
 
 
-        var element = niclabs.insight.UiElement({id: infoViewId});
+        var element = niclabs.insight.View({id: infoViewId});
 
         // Create the info view
         element.$.addClass('info');
