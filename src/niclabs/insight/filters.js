@@ -1,10 +1,10 @@
-niclabs.insight.FilterBar = (function($) {
+niclabs.insight.Filters = (function($) {
     "use strict";
 
     /**
      * Constructs a filter bar for the dashboard
      *
-     * @class niclabs.insight.FilterBar
+     * @class niclabs.insight.Filters
      */
     return function(dashboard, options) {
         var barId = '#insight-filters';
@@ -72,7 +72,7 @@ niclabs.insight.FilterBar = (function($) {
          * The function returns false if the data must be removed from the visualization
          * or true if the data must be kept
          *
-         * @callback niclabs.insight.FilterBar~filter
+         * @callback niclabs.insight.Filters~filter
          * @param {Object} data - data element to evaluate
          * @returns {boolean} true if the data passes the filter
          */
@@ -81,7 +81,7 @@ niclabs.insight.FilterBar = (function($) {
             /**
              * HTML DOM element for the filter bar container
              *
-             * @memberof niclabs.insight.FilterBar
+             * @memberof niclabs.insight.Filters
              * @member {Element}
              */
             get element () {
@@ -93,7 +93,7 @@ niclabs.insight.FilterBar = (function($) {
             /**
              * jQuery object for the filter bar container
              *
-             * @memberof niclabs.insight.FilterBar
+             * @memberof niclabs.insight.Filters
              * @member {jQuery}
              */
             $: function() {
@@ -106,7 +106,7 @@ niclabs.insight.FilterBar = (function($) {
              * Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
              * of the filter for further customizations
              *
-             * @memberof niclabs.insight.FilterBar
+             * @memberof niclabs.insight.Filters
              * @param {Object|number} filter configuration for the filter or filter index
              * @return {jQuery} reference to the added element for further customization
              */
@@ -132,8 +132,8 @@ niclabs.insight.FilterBar = (function($) {
                      * It will pass as parameter the filtering function to apply to
                      * the layers
                      *
-                     * @event niclabs.insight.FilterBar#filter_changed
-                     * @type {niclabs.insight.FilterBar~filter}
+                     * @event niclabs.insight.Filters#filter_changed
+                     * @type {niclabs.insight.Filters~filter}
                      */
                     niclabs.insight.event.trigger('filter_changed', composeFilters());
                 });
