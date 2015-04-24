@@ -33,6 +33,9 @@ niclabs.insight.map.grid.HexagonalGrid = (function() {
 			return niclabs.insight.map.grid.HexagonTile(niclabs.insight.map.GoogleMercator.distance(options.size, grid.map.zoom()));
 		};
 
+		// Refresh the grid 
+		grid.refresh();
+
         return grid;
 	};
 
