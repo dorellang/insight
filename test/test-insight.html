@@ -89,6 +89,7 @@
         });
 
         dashboard.filter({
+            handler: 'selection-filter',
             description: 'Landmark', // the empty string is used if not provided
             options: [{
                 name: 'Not Eiffel Tower',
@@ -96,9 +97,9 @@
                     return data.landmark.indexOf("Eiffel") < 0;
                 }
             }, {
-                name: 'Not Champ de Mars',
+                name: 'Not Orsay',
                 filter: function(data) {
-                    return data.landmark.indexOf("Mars") < 0;
+                    return data.landmark.indexOf("Orsay") < 0;
                 }
             }, ]
         });
