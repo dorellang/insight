@@ -5,12 +5,19 @@ niclabs.insight.Filters = (function($) {
      * Constructs a filter bar for the dashboard
      *
      * @class niclabs.insight.Filters
+     * @augments {niclabs.insight.UiElement}
      */
     return function(dashboard, options) {
-        var barId = '#insight-filters';
+        options = options || {};
+
+        var barId = options.id || 'insight-filters';
+
+        var view = niclabs.insight.UiElement({id: barId});
 
         // Bar container
-        var container = $('<div>').setID(barId).addClass('filters');
+        view.$.addClass('filters');
+
+        ///var container = $('<div>').setID(barId).addClass('filters');
 
         // List of filters
         var filters = [];
@@ -44,7 +51,7 @@ niclabs.insight.Filters = (function($) {
             .attr('placeholder', 'Enter location');
 
         // Append search box to bar
-        container.append($('<div>').addClass('filter').append(search));
+        view.$.append($('<div>').addClass('filter').append(search));
 
         var geocode = function() {
             var map = dashboard.map().googlemap();
@@ -73,81 +80,57 @@ niclabs.insight.Filters = (function($) {
          * or true if the data must be kept
          *
          * @callback niclabs.insight.Filters~filter
-         * @param {Object} data - data element to evaluate
+         * @param {Object} element - data element to evaluate
          * @returns {boolean} true if the data passes the filter
          */
 
-        return {
-            /**
-             * HTML DOM element for the filter bar container
-             *
-             * @memberof niclabs.insight.Filters
-             * @member {Element}
-             */
-            get element () {
-                var c = $(barId);
-                container = c.length === 0 ? container : c;
-                return container[0];
-            },
+         /**
+          * Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
+          * of the filter for further customizations
+          *
+          * @memberof niclabs.insight.Filters
+          * @param {Object|number} filter configuration for the filter or filter index
+          * @return {jQuery} reference to the added element for further customization
+          */
+        view.filter = function(filter) {
+            if (typeof filter === 'number') return filters[filter];
 
-            /**
-             * jQuery object for the filter bar container
-             *
-             * @memberof niclabs.insight.Filters
-             * @member {jQuery}
-             */
-            $: function() {
-                var c = $(barId);
-                container = c.length === 0 ? container : c;
-                return container;
-            },
+            var select = $('<select>');
 
-            /**
-             * Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
-             * of the filter for further customizations
-             *
-             * @memberof niclabs.insight.Filters
-             * @param {Object|number} filter configuration for the filter or filter index
-             * @return {jQuery} reference to the added element for further customization
-             */
-            filter: function(filter) {
-                if (typeof filter === 'number') return filters[filter];
+            var description = filter.description || '';
+            var option = $('<option>').text(description);
+            select.append(option);
 
-                var select = $('<select>');
-
-                var description = filter.description || '';
-                var option = $('<option>').text(description);
+            var i;
+            for (i = 0; i < filter.options.length; i++) {
+                option = $('<option>').text(filter.options[i].name);
                 select.append(option);
+            }
 
-                var i;
-                for (i = 0; i < filter.options.length; i++) {
-                    option = $('<option>').text(filter.options[i].name);
-                    select.append(option);
-                }
+            select.on('change', function() {
+                /**
+                 * Event triggered when a filter has changed
+                 *
+                 * It will pass as parameter the filtering function to apply to
+                 * the layers
+                 *
+                 * @event niclabs.insight.Filters#filter_changed
+                 * @type {niclabs.insight.Filters~filter}
+                 */
+                niclabs.insight.event.trigger('filter_changed', composeFilters());
+            });
 
-                select.on('change', function() {
-                    /**
-                     * Event triggered when a filter has changed
-                     *
-                     * It will pass as parameter the filtering function to apply to
-                     * the layers
-                     *
-                     * @event niclabs.insight.Filters#filter_changed
-                     * @type {niclabs.insight.Filters~filter}
-                     */
-                    niclabs.insight.event.trigger('filter_changed', composeFilters());
-                });
+            // Add the selector to the filter bar
+            view.$.append($('<div>').addClass('filter').append(select));
 
-                // Add the selector to the filter bar
-                container.append($('<div>').addClass('filter').append(select));
+            filter.element = select;
 
-                filter.element = select;
+            // Add the filter to the filter list
+            filters.push(filter);
 
-                // Add the filter to the filter list
-                filters.push(filter);
-
-                return select;
-            },
+            return select;
         };
+
+        return view;
     };
 })(jQuery);
