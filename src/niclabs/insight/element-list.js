@@ -41,8 +41,8 @@ niclabs.insight.ElementList = (function() {
          * @returns {niclabs.insight.ElementList} - newly created element
          */
         self.element = function(obj) {
-            if (typeof obj == 'string') return elements[obj];
-            if (typeof obj == 'number') return elements[elementId(obj)];
+            if (typeof obj === 'string') return elements[obj];
+            if (typeof obj === 'number') return elements[elementId(obj)];
 
             var elem, id;
             if ('handler' in obj) {
@@ -72,12 +72,16 @@ niclabs.insight.ElementList = (function() {
         /**
          * Iterate over the elements of the list
          *
+         * The iteration is stopped when the iterating function returns false
+         *
          * @memberof niclabs.insight.ElementList
          * @param {niclabs.insight.ElementList~iterator} iterator
          */
         self.each = function(iterator) {
             for (var key in elements) {
-                iterator(key, elements[key]);
+                if (iterator(key, elements[key]) === false) {
+                    return false;
+                }
             }
         };
 
