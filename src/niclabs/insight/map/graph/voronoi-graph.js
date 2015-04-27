@@ -19,9 +19,9 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
      * @param {niclabs.insight.Dashboard} dashboard - dashboard that this graph belongs to
      * @param {Object} options - configuration options for the graph
      * @param {niclabs.insight.map.graph.VoronoiGraph.Data[]} options.data - array of points to draw the graph
-     * @param {string=#FF0000} options.strokeColor - Color for the graph edges
-     * @param {float=2} options.strokeWeight - Width for the graph edges
-     * @param {float=1} options.strokeOpacity - Opacity for the graph edges.
+     * @param {string} [options.strokeColor='#ff0000'] - Color for the graph edges
+     * @param {float} [options.strokeWeight=2] - Width for the graph edges
+     * @param {float} [options.strokeOpacity=1] - Opacity for the graph edges.
      */
     var VoronoiGraph = function(dashboard, options) {
         if (!('data' in options)) {
@@ -45,10 +45,13 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
                 latlngArray[i] = new google.maps.LatLng( data[i].lat,data[i].lng );
             }
 
+            // Pre-process data input
             var MapPositions = niclabs.insight.map.graph.transformMapPositions(data);
 
+            // Delaunay triangulation
             var DT = FindDelaunayTriangulation(MapPositions);
 
+            // Create Polylines
             var Polylines = [];
             for (i=0; i<DT.vor_edges.length; i++) {
                 var edge = DT.vor_edges[i];
@@ -72,7 +75,7 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
               	});
 
                 Polylines.push(GPln);
-                //GPln.setMap(self.map.googlemap());
+
             }
 
             markers = [];

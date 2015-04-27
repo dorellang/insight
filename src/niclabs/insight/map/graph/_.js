@@ -1,15 +1,20 @@
 /**
- * Tools for drawing graphs on the map
+ * Tools for drawing graphs on the map. To calculate the spherical voronoi/delaunay
+ * uses the ThirdParty libray delaunayTriangles.js
+ *
  *
  * @namespace
  */
 niclabs.insight.map.graph = (function($) {
 
     return {
-        /** This part MUST be improved
 
         /**
-         * TODO: Missing documentation
+         * Postprocess the delaunay/voronoi diagram output. Returns an array of
+         * objects {lat:, lng:} defining the polylines to be drawn.
+         *
+         * @param {Object[]} Positions - Vectors on an unit sphere.
+         * @param {number[]} Verts - Index of vertices.
          */
         createLines: function(Positions, Verts) {
 
@@ -39,7 +44,10 @@ niclabs.insight.map.graph = (function($) {
         },
 
         /**
-         * TODO: Missing documentation
+         * Split two vectors. In this way, a line can be draw as a curve.
+         *
+         * @param {float[]} p0 - Vector on an unit sphere.
+         * @param {float[]} p1 - Vector on an unit sphere.
          */
         SplitSegment: function(p0, p1) {
 
@@ -67,7 +75,9 @@ niclabs.insight.map.graph = (function($) {
         },
 
         /**
-         * TODO: Missing documentation
+         * Preprocess the data for the delaunay/voronoi diagram input.
+         *
+         * @param {Object[]} data - data point object {lat:,lng:}.
          */
         transformMapPositions: function(data){
 
