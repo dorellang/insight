@@ -3509,6 +3509,7 @@ niclabs.insight.map.diagram = (function($) {
          * Postprocess the delaunay/voronoi diagram output. Returns an array of
          * objects {lat:, lng:} defining the polylines to be drawn.
          *
+         * @memberof niclabs.insight.map.diagram
          * @param {Object[]} Positions - Vectors on an unit sphere.
          * @param {number[]} Verts - Index of vertices.
          */
@@ -3542,6 +3543,7 @@ niclabs.insight.map.diagram = (function($) {
         /**
          * Split two vectors. In this way, a line can be draw as a curve.
          *
+         * @memberof niclabs.insight.map.diagram
          * @param {float[]} p0 - Vector on an unit sphere.
          * @param {float[]} p1 - Vector on an unit sphere.
          */
@@ -3573,6 +3575,7 @@ niclabs.insight.map.diagram = (function($) {
         /**
          * Preprocess the data for the delaunay/voronoi diagram input.
          *
+         * @memberof niclabs.insight.map.diagram
          * @param {Object[]} data - data point object {lat:,lng:}.
          */
         transformMapPositions: function(data){
