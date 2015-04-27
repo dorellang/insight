@@ -19,9 +19,9 @@ niclabs.insight.map.graph.DelaunayGraph = (function($) {
      * @param {niclabs.insight.Dashboard} dashboard - dashboard that this graph belongs to
      * @param {Object} options - configuration options for the graph
      * @param {niclabs.insight.map.graph.DelaunayGraph.Data[]} options.data - array of points to draw the graph
-     * @param {string=#FF0000} options.strokeColor - Color for the graph edges
-     * @param {float=2} options.strokeWeight - Width for the graph edges
-     * @param {float=1} options.strokeOpacity - Opacity for the graph edges.
+     * @param {string} [options.strokeColor='#ff0000'] - Color for the graph edges
+     * @param {float} [options.strokeWeight=2] - Width for the graph edges
+     * @param {float} [options.strokeOpacity=1] - Opacity for the graph edges.
      */
     var DelaunayGraph = function(dashboard, options) {
         if (!('data' in options)) {
