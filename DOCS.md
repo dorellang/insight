@@ -1,26 +1,3 @@
-## Objects
-<dl>
-<dt><a href="#niclabs">niclabs</a> : <code>object</code></dt>
-<dd><p><a href="http://niclabs.cl/">NIC Chile Research Labs</a> is the Internet Laboratory of the
-<a href="http://www.fcfm.uchile.cl/">Faculty of Physical and Mathematical Sciences of the University of Chile (FCFM)</a>,
-founded by <a href="http://www.nic.cl">NIC Chile</a> and host of <a href="http://www.inria.cl/?page_id=23&amp;lang=en">INRIA Chile Internet Project</a>.</p>
-<p>Our main research areas are: Internet protocols (layer 3-4), DNS, Internet QoS, Internet QoE, and computer networks.</p>
-<p>We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.</p>
-</dd>
-</dl>
-## Functions
-<dl>
-<dt><a href="#createLines">createLines(Positions, Verts)</a></dt>
-<dd><p>Postprocess the delaunay/voronoi diagram output. Returns an array of
-objects {lat:, lng:} defining the polylines to be drawn.</p>
-</dd>
-<dt><a href="#SplitSegment">SplitSegment(p0, p1)</a></dt>
-<dd><p>Split two vectors. In this way, a line can be draw as a curve.</p>
-</dd>
-<dt><a href="#transformMapPositions">transformMapPositions(data)</a></dt>
-<dd><p>Preprocess the data for the delaunay/voronoi diagram input.</p>
-</dd>
-</dl>
 <a name="niclabs"></a>
 ## niclabs : <code>object</code>
 [NIC Chile Research Labs](http://niclabs.cl/) is the Internet Laboratory of the
@@ -212,6 +189,9 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
             * [new VoronoiDiagram(dashboard, options)](#new_niclabs.insight.map.diagram.VoronoiDiagram_new)
             * [.self.clear()](#niclabs.insight.map.diagram.VoronoiDiagram.self.clear)
             * [.Data](#niclabs.insight.map.diagram.VoronoiDiagram.Data) : <code>Object</code>
+          * [.createLines(Positions, Verts)](#niclabs.insight.map.diagram.createLines)
+          * [.SplitSegment(p0, p1)](#niclabs.insight.map.diagram.SplitSegment)
+          * [.transformMapPositions(data)](#niclabs.insight.map.diagram.transformMapPositions)
         * [.grid](#niclabs.insight.map.grid) : <code>object</code>
           * [.Grid](#niclabs.insight.map.grid.Grid)
             * [new Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid_new)
@@ -485,6 +465,9 @@ understand what is going on in the city
           * [new VoronoiDiagram(dashboard, options)](#new_niclabs.insight.map.diagram.VoronoiDiagram_new)
           * [.self.clear()](#niclabs.insight.map.diagram.VoronoiDiagram.self.clear)
           * [.Data](#niclabs.insight.map.diagram.VoronoiDiagram.Data) : <code>Object</code>
+        * [.createLines(Positions, Verts)](#niclabs.insight.map.diagram.createLines)
+        * [.SplitSegment(p0, p1)](#niclabs.insight.map.diagram.SplitSegment)
+        * [.transformMapPositions(data)](#niclabs.insight.map.diagram.transformMapPositions)
       * [.grid](#niclabs.insight.map.grid) : <code>object</code>
         * [.Grid](#niclabs.insight.map.grid.Grid)
           * [new Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid_new)
@@ -2184,6 +2167,9 @@ Map compatibility for the insight dashboard
         * [new VoronoiDiagram(dashboard, options)](#new_niclabs.insight.map.diagram.VoronoiDiagram_new)
         * [.self.clear()](#niclabs.insight.map.diagram.VoronoiDiagram.self.clear)
         * [.Data](#niclabs.insight.map.diagram.VoronoiDiagram.Data) : <code>Object</code>
+      * [.createLines(Positions, Verts)](#niclabs.insight.map.diagram.createLines)
+      * [.SplitSegment(p0, p1)](#niclabs.insight.map.diagram.SplitSegment)
+      * [.transformMapPositions(data)](#niclabs.insight.map.diagram.transformMapPositions)
     * [.grid](#niclabs.insight.map.grid) : <code>object</code>
       * [.Grid](#niclabs.insight.map.grid.Grid)
         * [new Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid_new)
@@ -2344,6 +2330,9 @@ uses the ThirdParty libray delaunayTriangles.js
     * [new VoronoiDiagram(dashboard, options)](#new_niclabs.insight.map.diagram.VoronoiDiagram_new)
     * [.self.clear()](#niclabs.insight.map.diagram.VoronoiDiagram.self.clear)
     * [.Data](#niclabs.insight.map.diagram.VoronoiDiagram.Data) : <code>Object</code>
+  * [.createLines(Positions, Verts)](#niclabs.insight.map.diagram.createLines)
+  * [.SplitSegment(p0, p1)](#niclabs.insight.map.diagram.SplitSegment)
+  * [.transformMapPositions(data)](#niclabs.insight.map.diagram.transformMapPositions)
 
 <a name="niclabs.insight.map.diagram.DelaunayDiagram"></a>
 ###### diagram.DelaunayDiagram
@@ -2474,6 +2463,39 @@ Data point for VoronoiDiagram
 | lat | <code>float</code> | latitude for the diagram point |
 | lng | <code>float</code> | longitude for the diagram point |
 | landmark | <code>string</code> | landmark that the point indicates |
+
+<a name="niclabs.insight.map.diagram.createLines"></a>
+###### diagram.createLines(Positions, Verts)
+Postprocess the delaunay/voronoi diagram output. Returns an array of
+objects {lat:, lng:} defining the polylines to be drawn.
+
+**Kind**: static method of <code>[diagram](#niclabs.insight.map.diagram)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| Positions | <code>Array.&lt;Object&gt;</code> | Vectors on an unit sphere. |
+| Verts | <code>Array.&lt;number&gt;</code> | Index of vertices. |
+
+<a name="niclabs.insight.map.diagram.SplitSegment"></a>
+###### diagram.SplitSegment(p0, p1)
+Split two vectors. In this way, a line can be draw as a curve.
+
+**Kind**: static method of <code>[diagram](#niclabs.insight.map.diagram)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| p0 | <code>Array.&lt;float&gt;</code> | Vector on an unit sphere. |
+| p1 | <code>Array.&lt;float&gt;</code> | Vector on an unit sphere. |
+
+<a name="niclabs.insight.map.diagram.transformMapPositions"></a>
+###### diagram.transformMapPositions(data)
+Preprocess the data for the delaunay/voronoi diagram input.
+
+**Kind**: static method of <code>[diagram](#niclabs.insight.map.diagram)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>Array.&lt;Object&gt;</code> | data point object {lat:,lng:}. |
 
 <a name="niclabs.insight.map.grid"></a>
 ##### map.grid : <code>object</code>
@@ -3474,37 +3496,4 @@ Constructs an insight element (visualization, layer, etc.)
 | --- | --- | --- |
 | dashboard | <code>[Dashboard](#niclabs.insight.Dashboard)</code> | to assign to the handler |
 | options | <code>Object</code> | configuration options for the handler, depending on the kind |
-
-<a name="createLines"></a>
-## createLines(Positions, Verts)
-Postprocess the delaunay/voronoi diagram output. Returns an array of
-objects {lat:, lng:} defining the polylines to be drawn.
-
-**Kind**: global function  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| Positions | <code>Array.&lt;Object&gt;</code> | Vectors on an unit sphere. |
-| Verts | <code>Array.&lt;number&gt;</code> | Index of vertices. |
-
-<a name="SplitSegment"></a>
-## SplitSegment(p0, p1)
-Split two vectors. In this way, a line can be draw as a curve.
-
-**Kind**: global function  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| p0 | <code>Array.&lt;float&gt;</code> | Vector on an unit sphere. |
-| p1 | <code>Array.&lt;float&gt;</code> | Vector on an unit sphere. |
-
-<a name="transformMapPositions"></a>
-## transformMapPositions(data)
-Preprocess the data for the delaunay/voronoi diagram input.
-
-**Kind**: global function  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| data | <code>Array.&lt;Object&gt;</code> | data point object {lat:,lng:}. |
 
