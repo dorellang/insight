@@ -16,6 +16,7 @@ niclabs.insight.Dashboard = (function($) {
      * @param {Object} options - configuration options for the dashboard
      * @param {string} [options.layout='none'] - Dashboard layout, one of ['left', 'right', 'none'], puts the info window to the left, to the right or it removes it
      * @param {string} options.anchor - Required id for anchoring the dashboard
+     * @param {boolean} options.geocoding - false to disable geocoding
      */
     return function(options) {
         var layoutOptions = ['left', 'right', 'none'];
@@ -66,6 +67,18 @@ niclabs.insight.Dashboard = (function($) {
             }
         });
 
+        // Create the filter bar
+        var filters = niclabs.insight.Filters(self);
+
+        // Append the default filter bar
+        container.append(filters.element);
+
+        // Create an event to be notified of a filter change
+        niclabs.insight.event.on('filter_changed', function(f) {
+            $.each(layers, function(name, layer) {
+                layer.filter(f);
+            });
+        });
 
         var self = {
             /**
@@ -137,6 +150,13 @@ niclabs.insight.Dashboard = (function($) {
                         mapView = obj;
                     }
                     $(dashboardId).append(mapView.element);
+
+                    if (options.geocoding !== false) {
+                        // Append the GeoCoder
+                        if ('googlemap' in mapView) {
+                            filters.filter(niclabs.insight.filter.GoogleGeocodingFilter(self, {id: 'geocoder'}));
+                        }
+                    }
                 }
                 return mapView;
             },
@@ -176,6 +196,9 @@ niclabs.insight.Dashboard = (function($) {
 
                 // Switch to the new layer if activate is true
                 if (activate || Object.size(layers) === 1) self.active(id);
+
+                // Add the layer to the selector
+                layerSelector.add(lyr.id, lyr.name);
 
                 return lyr;
             },
@@ -245,7 +268,7 @@ niclabs.insight.Dashboard = (function($) {
              * @return {jQuery} reference to the added element for further customization
              */
             filter: function(filter) {
-                return filterBar.filter(filter);
+                return filters.filter(filter);
             },
 
             /**
@@ -259,19 +282,8 @@ niclabs.insight.Dashboard = (function($) {
             }
         };
 
-
-        // Create the filter bar
-        var filterBar = niclabs.insight.FilterBar(self);
-
-        // Append the filter bar
-        container.append(filterBar.element);
-
-        // Create an event to be notified of a filter change
-        niclabs.insight.event.on('filter_changed', function(f) {
-            $.each(layers, function(name, layer) {
-                layer.filter(f);
-            });
-        });
+        var layerSelector = niclabs.insight.filter.LayerSelector(self, {id: 'layer-selector'});
+        filters.filter(layerSelector);
 
         return self;
     };

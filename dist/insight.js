@@ -23,6 +23,66 @@ var niclabs = {};
 niclabs.insight = (function ($) {
     "use strict";
 
+
+    // Production steps of ECMA-262, Edition 5, 15.4.4.18
+    // Reference: http://es5.github.io/#x15.4.4.18
+    if (!Array.prototype.forEach) {
+
+        Array.prototype.forEach = function (callback, thisArg) {
+
+            var T, k;
+
+            if (this === null) {
+                throw new TypeError(' this is null or not defined');
+            }
+
+            // 1. Let O be the result of calling ToObject passing the |this| value as the argument.
+            var O = Object(this);
+
+            // 2. Let lenValue be the result of calling the Get internal method of O with the argument "length".
+            // 3. Let len be ToUint32(lenValue).
+            var len = O.length >>> 0;
+
+            // 4. If IsCallable(callback) is false, throw a TypeError exception.
+            // See: http://es5.github.com/#x9.11
+            if (typeof callback !== "function") {
+                throw new TypeError(callback + ' is not a function');
+            }
+
+            // 5. If thisArg was supplied, let T be thisArg; else let T be undefined.
+            if (arguments.length > 1) {
+                T = thisArg;
+            }
+
+            // 6. Let k be 0
+            k = 0;
+
+            // 7. Repeat, while k < len
+            while (k < len) {
+
+                var kValue;
+
+                // a. Let Pk be ToString(k).
+                //   This is implicit for LHS operands of the in operator
+                // b. Let kPresent be the result of calling the HasProperty internal method of O with argument Pk.
+                //   This step can be combined with c
+                // c. If kPresent is true, then
+                if (k in O) {
+
+                    // i. Let kValue be the result of calling the Get internal method of O with argument Pk.
+                    kValue = O[k];
+
+                    // ii. Call the Call internal method of callback with T as the this value and
+                    // argument list containing kValue, k, and O.
+                    callback.call(T, kValue, k, O);
+                }
+                // d. Increase k by 1.
+                k++;
+            }
+            // 8. return undefined
+        };
+    }
+
      /**
       * Bind a jquery element to a template
       *
@@ -419,6 +479,126 @@ niclabs.insight = (function ($) {
     };
 })(jQuery);
 
+/**
+ * Color manipulation utils
+ *
+ * @mixin
+ */
+niclabs.insight.Color = (function() {
+    /**
+     * Converts an RGB color value to HSV. Conversion formula
+     * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+     * Assumes r, g, and b are contained in the set [0, 255] and
+     * returns h, s, and v in the set [0, 1].
+     *
+     * Source: http://axonflux.com/handy-rgb-to-hsl-and-rgb-to-hsv-color-model-c
+     *
+     * @memberof niclabs.insight.Color
+     * @param   {Number}  r       The red color value
+     * @param   {Number}  g       The green color value
+     * @param   {Number}  b       The blue color value
+     * @return  {Number[]}        The HSV representation
+     */
+    function rgbToHsv(r, g, b){
+        r = r/255;
+        g = g/255;
+        b = b/255;
+        var max = Math.max(r, g, b), min = Math.min(r, g, b);
+        var h, s, v = max;
+
+        var d = max - min;
+        s = max === 0 ? 0 : d / max;
+
+        if(max == min){
+            h = 0; // achromatic
+        }else{
+            switch(max){
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            h /= 6;
+        }
+
+        return [h, s, v];
+    }
+
+    /**
+     * Converts an HSV color value to RGB. Conversion formula
+     * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+     * Assumes h, s, and v are contained in the set [0, 1] and
+     * returns r, g, and b in the set [0, 255].
+     *
+     * Source: http://axonflux.com/handy-rgb-to-hsl-and-rgb-to-hsv-color-model-c
+     *
+     * @memberof niclabs.insight.Color
+     * @param   {Number}  h       The hue
+     * @param   {Number}  s       The saturation
+     * @param   {Number}  v       The value
+     * @return  {Number[]}        The RGB representation
+     */
+    function hsvToRgb(h, s, v){
+        var r, g, b;
+
+        var i = Math.floor(h * 6);
+        var f = h * 6 - i;
+        var p = v * (1 - s);
+        var q = v * (1 - f * s);
+        var t = v * (1 - (1 - f) * s);
+
+        switch(i % 6){
+            case 0: r = v; g = t; b = p; break;
+            case 1: r = q; g = v; b = p; break;
+            case 2: r = p; g = v; b = t; break;
+            case 3: r = p; g = q; b = v; break;
+            case 4: r = t; g = p; b = v; break;
+            case 5: r = v; g = p; b = q; break;
+        }
+
+        return [r * 255, g * 255, b * 255];
+    }
+
+	function componentToHex(c) {
+		c = Math.floor(c);
+	    var hex = c.toString(16);
+	    return hex.length == 1 ? "0" + hex : hex;
+	}
+
+    /**
+     * Converts a rgb triple into an hexadecimal string
+     *
+     * @memberof niclabs.insight.Color
+     * @param {Number[]} rgb - rgb representation
+     * @return {string} hexadecimal representation
+     */
+	function rgbToHex(rgb) {
+	    return "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
+	}
+
+    /**
+     * Converts a hexadecimal color intro a rgb array
+     *
+     * @memberof niclabs.insight.Color
+     * @param {string} hex - hexadecimal representation of the color
+     * @return {integer[]} - triplet representation of the color
+     */
+    function hexToRgb(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? [
+            parseInt(result[1], 16),
+            parseInt(result[2], 16),
+            parseInt(result[3], 16)
+        ] : null;
+    }
+
+    return {
+        'rgbToHsv': rgbToHsv,
+        'hsvToRgb': hsvToRgb,
+        'rgbToHex': rgbToHex,
+        'hexToRgb': hexToRgb
+    };
+})();
+
 niclabs.insight.Dashboard = (function($) {
     "use strict";
 
@@ -437,6 +617,7 @@ niclabs.insight.Dashboard = (function($) {
      * @param {Object} options - configuration options for the dashboard
      * @param {string} [options.layout='none'] - Dashboard layout, one of ['left', 'right', 'none'], puts the info window to the left, to the right or it removes it
      * @param {string} options.anchor - Required id for anchoring the dashboard
+     * @param {boolean} options.geocoding - false to disable geocoding
      */
     return function(options) {
         var layoutOptions = ['left', 'right', 'none'];
@@ -487,6 +668,18 @@ niclabs.insight.Dashboard = (function($) {
             }
         });
 
+        // Create the filter bar
+        var filters = niclabs.insight.Filters(self);
+
+        // Append the default filter bar
+        container.append(filters.element);
+
+        // Create an event to be notified of a filter change
+        niclabs.insight.event.on('filter_changed', function(f) {
+            $.each(layers, function(name, layer) {
+                layer.filter(f);
+            });
+        });
 
         var self = {
             /**
@@ -558,6 +751,13 @@ niclabs.insight.Dashboard = (function($) {
                         mapView = obj;
                     }
                     $(dashboardId).append(mapView.element);
+
+                    if (options.geocoding !== false) {
+                        // Append the GeoCoder
+                        if ('googlemap' in mapView) {
+                            filters.filter(niclabs.insight.filter.GoogleGeocodingFilter(self, {id: 'geocoder'}));
+                        }
+                    }
                 }
                 return mapView;
             },
@@ -597,6 +797,9 @@ niclabs.insight.Dashboard = (function($) {
 
                 // Switch to the new layer if activate is true
                 if (activate || Object.size(layers) === 1) self.active(id);
+
+                // Add the layer to the selector
+                layerSelector.add(lyr.id, lyr.name);
 
                 return lyr;
             },
@@ -666,7 +869,7 @@ niclabs.insight.Dashboard = (function($) {
              * @return {jQuery} reference to the added element for further customization
              */
             filter: function(filter) {
-                return filterBar.filter(filter);
+                return filters.filter(filter);
             },
 
             /**
@@ -680,91 +883,179 @@ niclabs.insight.Dashboard = (function($) {
             }
         };
 
-
-        // Create the filter bar
-        var filterBar = niclabs.insight.FilterBar(self);
-
-        // Append the filter bar
-        container.append(filterBar.element);
-
-        // Create an event to be notified of a filter change
-        niclabs.insight.event.on('filter_changed', function(f) {
-            $.each(layers, function(name, layer) {
-                layer.filter(f);
-            });
-        });
+        var layerSelector = niclabs.insight.filter.LayerSelector(self, {id: 'layer-selector'});
+        filters.filter(layerSelector);
 
         return self;
     };
 })(jQuery);
 
-niclabs.insight.FilterBar = (function($) {
+niclabs.insight.ElementList = (function() {
+    /**
+     * Construct a list of dashboard elements.
+     *
+     * In a list, children can be added either by passing the object directly
+     * to the {@link niclabs.insight.ElementList.element()} method or by passing the options
+     * for constructing the {@link niclabs.insight.Element}, including the name of the handler.
+     *
+     * The list will lookup the handler in the list of registered handlers and
+     * use it to construct the element
+     *
+     * @class niclabs.insight.ElementList
+     * @extends niclabs.insight.Element
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard where the list belongs to
+     */
+    var ElementList = function(dashboard) {
+        var self = {};
+
+        var elements = {};
+        var numberedElements = 0;
+
+        /**
+         * Get a new block id for an block without id
+         */
+        function elementId(index) {
+            index = typeof index === 'undefined' ? numberedElements++ : index;
+            return '__' + index;
+        }
+
+        /**
+         * Add/get an element from the list
+         *
+         * - If a number or string is provided as value for obj, the element with that id is returned
+         * - If a generic object is provided with the handler defined in the 'handler' property, a new element
+         * is created using the handler and the element is added to the list
+         * - If an object is provided without handler, it is assumed to be a valid insight Element and added to the
+         * list as is.
+         *
+         * @memberof niclabs.insight.ElementList
+         * @param {string|number|Object|niclabs.insight.Element} obj - element id to get or configuration options for the new element
+         * @returns {niclabs.insight.ElementList} - newly created element
+         */
+        self.element = function(obj) {
+            if (typeof obj === 'string') return elements[obj];
+            if (typeof obj === 'number') return elements[elementId(obj)];
+
+            var elem, id;
+            if ('handler' in obj) {
+                id = obj.id = obj.id || elementId();
+                elem = niclabs.insight.handler(obj.handler)(dashboard, obj);
+            }
+            else {
+                elem = obj;
+                id = elem.id;
+            }
+
+            elements[id] = elem;
+
+            return elem;
+        };
+
+
+        /**
+         * Process a list element
+         *
+         * @callback niclabs.insight.ElementList~iterator
+         * @param {string} key - key for the element
+         * @param {niclabs.insight.Element} element - object associated to the provided key
+         */
+
+
+        /**
+         * Iterate over the elements of the list
+         *
+         * The iteration is stopped when the iterating function returns false
+         *
+         * @memberof niclabs.insight.ElementList
+         * @param {niclabs.insight.ElementList~iterator} iterator
+         */
+        self.each = function(iterator) {
+            for (var key in elements) {
+                if (iterator(key, elements[key]) === false) {
+                    return false;
+                }
+            }
+        };
+
+        /**
+         * Delete the element with specified id from the list
+         *
+         * @memberof niclabs.insight.ElementList
+         * @param {string|integer} id - identifier for the element
+         * @returns {niclabs.insight.Element} removed element
+         */
+        self.remove = function(id) {
+            if (typeof obj == 'number') id = elementId(id);
+            if (id in elements) {
+                var elem = elements[id];
+                delete elements[id];
+                return elem;
+            }
+        };
+
+        return self;
+    };
+
+    return ElementList;
+})();
+
+niclabs.insight.Element = (function($) {
+    /**
+     * Construct a generic insight element
+     *
+     * @class niclabs.insight.Element
+     * @param {Object} options - configuration options for the element
+     * @param {String} options.id - identifier for the element
+     */
+    var Element = function(options) {
+        if (!('id' in options)) {
+            throw Error("All UI elements must define an identifier");
+        }
+
+        var id = options.id;
+        if (!/^[^#. '"]+$/.test(id)) {
+            throw Error("The UI element id must be at least 1 character long and cannot contain the following characters ['#','.',' ', '\'', '\"'])");
+        }
+
+        return {
+            /**
+             * Identifier for the insight element
+             *
+             * @memberof niclabs.insight.Element
+             * @member {string}
+             */
+            get id () {
+                return id;
+            },
+        };
+    };
+
+    return Element;
+})(jQuery);
+
+niclabs.insight.Filters = (function($) {
     "use strict";
 
     /**
      * Constructs a filter bar for the dashboard
      *
-     * @class niclabs.insight.FilterBar
+     * @class niclabs.insight.Filters
+     * @augments {niclabs.insight.View}
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this view belongs to
+     * @param {Object} options - configuration options for the filters
      */
     return function(dashboard, options) {
-        var barId = '#insight-filters';
+        options = options || {};
+
+        var barId = options.id || 'insight-filters';
+
+        var view = niclabs.insight.View({id: barId});
 
         // Bar container
-        var container = $('<div>').setID(barId).addClass('filters');
+        view.$.addClass('filters');
 
         // List of filters
-        var filters = [];
-
-        /**
-         * Compose the filters selected by the user
-         */
-        function composeFilters() {
-            var callbacks = [];
-            for (var i = 0; i < filters.length; i++) {
-                if (filters[i].element.prop('selectedIndex') > 0) {
-                    callbacks.push(filters[i].options[filters[i].element.prop('selectedIndex') - 1].filter);
-                }
-            }
-
-            return function(data) {
-                for (var i = 0; i < callbacks.length; i++) {
-                    if (!callbacks[i](data)) return false;
-                }
-                return true;
-            };
-        }
-
-        /* Google maps geocoder and search bar*/
-        var geocoder = new google.maps.Geocoder();
-
-        // Create the search box
-        var search = $('<input>')
-            .addClass('search')
-            .attr('type', 'search')
-            .attr('placeholder', 'Enter location');
-
-        // Append search box to bar
-        container.append($('<div>').addClass('filter').append(search));
-
-        var geocode = function() {
-            var map = dashboard.map().googlemap();
-            var address = search.val();
-            geocoder.geocode({
-                'address': address
-            }, function(results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    map.setCenter(results[0].geometry.location);
-                    // map.setZoom(12);
-                    map.fitBounds(results[0].geometry.bounds);
-                } else {
-                    // TODO: this message should go in a status bar
-                    search.val('not found: ' + address);
-                }
-            });
-        };
-
-        search.on('change', geocode);
-
+        var filters = niclabs.insight.ElementList(dashboard);
 
         /**
          * Function to act as a filter for the data
@@ -772,83 +1063,70 @@ niclabs.insight.FilterBar = (function($) {
          * The function returns false if the data must be removed from the visualization
          * or true if the data must be kept
          *
-         * @callback niclabs.insight.FilterBar~filter
-         * @param {Object} data - data element to evaluate
+         * @callback niclabs.insight.Filters~filter
+         * @param {Object} element - data element to evaluate
          * @returns {boolean} true if the data passes the filter
          */
 
-        return {
-            /**
-             * HTML DOM element for the filter bar container
-             *
-             * @memberof niclabs.insight.FilterBar
-             * @member {Element}
-             */
-            get element () {
-                var c = $(barId);
-                container = c.length === 0 ? container : c;
-                return container[0];
-            },
 
-            /**
-             * jQuery object for the filter bar container
-             *
-             * @memberof niclabs.insight.FilterBar
-             * @member {jQuery}
-             */
-            $: function() {
-                var c = $(barId);
-                container = c.length === 0 ? container : c;
-                return container;
-            },
-
-            /**
-             * Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
-             * of the filter for further customizations
-             *
-             * @memberof niclabs.insight.FilterBar
-             * @param {Object|number} filter configuration for the filter or filter index
-             * @return {jQuery} reference to the added element for further customization
-             */
-            filter: function(filter) {
-                if (typeof filter === 'number') return filters[filter];
-
-                var select = $('<select>');
-
-                var description = filter.description || '';
-                var option = $('<option>').text(description);
-                select.append(option);
-
-                var i;
-                for (i = 0; i < filter.options.length; i++) {
-                    option = $('<option>').text(filter.options[i].name);
-                    select.append(option);
+        /**
+         * Data selector to act as filter for the layer data
+         *
+         * The selector is a composition of the application of all the individual filters
+         * of this filter view
+         */
+        function selector(element) {
+            var result = true;
+            filters.each(function(key, filter) {
+                if (!filter.apply(element)) {
+                    result = false;
+                    return false;
                 }
+            });
 
-                select.on('change', function() {
-                    /**
-                     * Event triggered when a filter has changed
-                     *
-                     * It will pass as parameter the filtering function to apply to
-                     * the layers
-                     *
-                     * @event niclabs.insight.FilterBar#filter_changed
-                     * @type {niclabs.insight.FilterBar~filter}
-                     */
-                    niclabs.insight.event.trigger('filter_changed', composeFilters());
-                });
+            return result;
+        }
 
-                // Add the selector to the filter bar
-                container.append($('<div>').addClass('filter').append(select));
+        /**
+         * Event triggered when a filter has been selected
+         *
+         * It serves to communicate to the filters view that one of its filters has changed
+         *
+         * @event niclabs.insight.Filters#filter_selected
+         * @type {niclabs.insight.filter.Filter}
+         */
+        niclabs.insight.event.on('filter_selected', function(filter) {
+            /**
+             * Event triggered when a filter has changed
+             *
+             * It will pass as parameter the filtering function to apply to
+             * the layers
+             *
+             * @event niclabs.insight.Filters#filter_changed
+             * @type {niclabs.insight.Filters~filter}
+             */
+            niclabs.insight.event.trigger('filter_changed', selector);
+        });
 
-                filter.element = select;
 
-                // Add the filter to the filter list
-                filters.push(filter);
+         /**
+          * Add/get a filter from the filter bar, displayed as a `<select>` object in the UI, it returns the jquery element
+          * of the filter for further customizations
+          *
+          * @memberof niclabs.insight.Filters
+          * @param {Object|niclabs.insight.filter.Filter|number} obj - configuration for the filter or filter identifier
+          * @return {jQuery} reference to the added element for further customization
+          */
+        view.filter = function(obj) {
+            var filter = filters.element(obj);
 
-                return select;
-            },
+            // Append the filter to the view
+            view.append(filter);
+
+            return filter;
         };
+
+        return view;
     };
 })(jQuery);
 
@@ -863,6 +1141,7 @@ niclabs.insight.InfoView = (function($) {
      * about the visualization in general
      *
      * @class niclabs.insight.InfoView
+     * @extends {niclabs.insight.View}
      * @param {niclabs.insight.Dashboard} dashboard - dashboard to assign this info view to
      * @param {Object} options - list of configuration options for the information view
      */
@@ -870,12 +1149,13 @@ niclabs.insight.InfoView = (function($) {
         // Default visualization property list
         options = options || {};
 
-        var infoViewId = "#insight-info-view";
+        var infoViewId = options.id || "insight-info-view";
+
+
+        var element = niclabs.insight.View({id: infoViewId});
 
         // Create the info view
-        var container = $('<div>')
-            .setID(infoViewId)
-            .addClass('info');
+        element.$.addClass('info');
 
         if (dashboard.config('layout') !== 'none') {
             var resizeOrientation;
@@ -886,19 +1166,10 @@ niclabs.insight.InfoView = (function($) {
             else if (dashboard.config('layout') === 'right') {
                 resizeOrientation = 'w';
             }
-            container.resizable(resizeOrientation);
+            element.$.resizable(resizeOrientation);
         }
 
-        var numberedBlocks = 0;
-        var blocks = {};
-
-        /**
-         * Get a new block id for an block without id
-         */
-        function blockId(index) {
-            index = typeof index === 'undefined' ? numberedBlocks++ : index;
-            return 'block' + index;
-        }
+        var blocks = niclabs.insight.ElementList(dashboard);
 
         /**
          * Add/get a block from the info view
@@ -914,27 +1185,14 @@ niclabs.insight.InfoView = (function($) {
          * @param {string|number|Object| niclabs.insight.info.Block} obj - block id to get or configuration options for the new block
          * @returns {niclabs.insight.info.Block} - newly created block
          */
-        function block(obj) {
-            if (typeof obj == 'string') return blocks[obj];
-            if (typeof obj == 'number') return blocks[blockId(obj)];
-
-            var blk, id;
-            if ('handler' in obj) {
-                id = obj.id = obj.id || blockId();
-                blk = niclabs.insight.handler(obj.handler)(self, obj);
-            }
-            else {
-                blk = obj;
-                id = blk.id;
-            }
-
-            blocks[id] = blk;
+        element.block = function(obj) {
+            var blk = blocks.element(obj);
 
             // Append block to container
-            container.append(blk.element);
+            element.$.append(blk.element);
 
             return blk;
-        }
+        };
 
         // For index
         var i;
@@ -942,142 +1200,22 @@ niclabs.insight.InfoView = (function($) {
         // Create the blocks in the options list
         if (options.blocks) {
             for (i = 0; i < options.blocks.length; i++) {
-                block(options.blocks[i]);
+                element.block(options.blocks[i]);
             }
         }
 
         // Add a resize handler
-        container.on('resize', function(e) {
-            for (var key in blocks) {
-                blocks[key].refresh();
-            }
+        element.$.on('resize', function(e) {
+            blocks.each(function(key, block) {
+                block.refresh();
+            });
         });
 
         // Perform cleanup on block removal
         niclabs.insight.event.on('remove-block', function(obj) {
-            delete blocks[obj.id];
-            //var index = $.inArray(dataSourceTable[obj['data-source']], obj.id);
-            //dataSourceTable[obj['data-source']].splice(index, 1);
+            blocks.remove(obj.id);
         });
-
-        // var visualizations = {};
-        // var dataSourceTable = {};
-
-        // /**
-        //  * Create a visualization according to the type provided in
-        //  * props.visualization
-        //  *
-        //  * TODO: there must be a better way to do this
-        //  *
-        //  * @param (Object) props properties for the visualization
-        //  * @return (Object) visualization after data is loaded
-        //  */
-        // function createVisualization(props) {
-        //     var type = props.visualization;
-        //
-        //     var callback = function(pr) {
-        //         var viz;
-        //
-        //         if (!type)
-        //             return;
-        //
-        //         else if (type === 'summary-viz')
-        //             viz = new CityDashboard.SummaryVisualization(pr);
-        //         else if (type === 'linechart-viz')
-        //             // TODO: check that the library is loaded first
-        //             viz = new CityDashboard.ChartistVisualization(pr, Chartist.Line);
-        //         else if (type === 'barchart-viz')
-        //             viz = new CityDashboard.ChartistVisualization(pr, Chartist.Bar);
-        //         else if (type === 'piechart-viz')
-        //             viz = new CityDashboard.ChartistVisualization(pr, Chartist.Pie);
-        //         else if (type === 'd3-viz')
-        //             viz = new CityDashboard.D3Visualization(pr);
-        //         else if (type === 'general-viz')
-        //             viz = new CityDashboard.GeneralVisualization(pr);
-        //
-        //         visualizations[viz.id] = viz;
-        //         dataSourceTable[viz.data_source] = dataSourceTable[viz.data_source] || [];
-        //         dataSourceTable[viz.data_source].push(viz);
-        //
-        //         return viz;
-        //     };
-        //
-        //     return CityDashboard.getData(props['data-source'], callback, props);
-        // }
-
-        // // Get the window element
-        // var infoWindow = CityDashboard.container('info');
-
-        // var handler = function(event, arg) {
-        //     infoWindow.off('marker-pressed');
-        //
-        //     if (arg.attr.id && !(arg.attr.id in visualizations)) {
-        //         var config = $.extend({}, arg.attr);
-        //         config.data = arg.value;
-        //         config['data-source'] = arg.id;
-        //         // {
-        //         //   'visualization': arg['attr']['visualization'],
-        //         //   'id': arg['attr']['id'],
-        //         //   'data-source': arg['id'],
-        //         //   'data': arg.value,
-        //         //   'preprocess': arg['attr']['preprocess'],
-        //         //   'title': arg['attr']['title'],
-        //         //   'properties': arg['attr']['properties'],
-        //         //   'labels': arg['attr']['labels'],
-        //         //   'checkbox': arg['attr']['checkbox'],
-        //         //   'checkbox-handler': arg['attr']['checkbox-handler'],
-        //         //   'viz': arg['attr']['viz']
-        //         // };
-        //
-        //         createVisualization(config);
-        //     }
-        //
-        //     var vizs = dataSourceTable[arg.id] || [];
-        //     for (var i = vizs.length - 1; i >= 0; i--) {
-        //         vizs[i].setData(arg.value);
-        //         vizs[i].refresh();
-        //     }
-        //
-        //     infoWindow.on('marker-pressed', handler);
-        // };
-
-        // // Add the handler
-        // infoWindow.on('marker-pressed', handler);
-        //
-
-        var self = {
-            /**
-             * HTML DOM element for the information view container
-             *
-             * @memberof niclabs.insight.InfoView
-             * @member {Element}
-             */
-            get element () {
-                var c = $(infoViewId);
-                container = c.length === 0 ? container : c;
-                return container[0];
-            },
-
-            /**
-             * jQuery object for info view container
-             *
-             * @memberof niclabs.insight.InfoView
-             * @member {jQuery}
-             */
-            $: function() {
-                var c = $(infoViewId);
-                container = c.length === 0 ? container : c;
-                return container;
-            },
-
-            /**
-             * Add/get a block from the info view
-             */
-            block: block,
-
-        };
-
-        return self;
+        return element;
     };
 
     // Register the info view constructor
@@ -1085,6 +1223,75 @@ niclabs.insight.InfoView = (function($) {
 
     return InFoView;
 })(jQuery);
+
+/**
+ * Defines interpolation utils
+ *
+ * @mixin
+ */
+niclabs.insight.Interpolation = (function() {
+    /**
+     * Return the position for value in the interval [start_point, end_point]
+     * where value can go from 0 to maximum.
+     *
+     * Source: http://stackoverflow.com/questions/168838/color-scaling-function
+     *
+     * @memberof niclabs.insight.Interpolation
+     * @param {float} value - value to interpolate
+     * @param {flaot} maximum - maximum value that value can take
+     * @param {float} start_point - beginning of the interval
+     * @param {float} end_point - end of the interval
+     * @return {float} - interpolation value
+     */
+    function interpolate(value, maximum, start_point, end_point) {
+        return start_point + (end_point - start_point)*value/maximum;
+    }
+
+    /**
+     * Return the position for value in the 3-dimensional line between
+     * the vectors [s, e], where value can go from 0 to maximum.
+     *
+     * Source: http://stackoverflow.com/questions/168838/color-scaling-function
+     *
+     * @memberof niclabs.insight.Interpolation
+     * @param {float} value - value to interpolate
+     * @param {flaot} maximum - maximum value that value can take
+     * @param {float[]} s - 3d vector to use as start of the interval
+     * @param {float[]} e - 3d vector to use as end of the interval
+     * @return {float[]} - interpolation vector
+     */
+    function interpolate3d(value, maximum, s, e) {
+        var r1= interpolate(value, maximum, s[0], e[0]);
+        var r2= interpolate(value, maximum, s[1], e[1]);
+        var r3= interpolate(value, maximum, s[2], e[2]);
+        return [r1, r2, r3];
+    }
+
+    /**
+     * Calculate interpolated rgb color between the rgb start and end colors
+     * for the value value with the specified maximum
+     *
+     * @memberof niclabs.insight.Interpolation
+     * @param {float} value - value to interpolate
+     * @param {flaot} maximum - maximum value that value can take
+     * @param {integer[]} start_rgb - rgb color to use as start of the range
+     * @param {integer[]} e - rgb color to use as end of the range
+     * @return {integer[]} - interpolated color
+     */
+    function interpolateRgb(value, maximum, start_rgb, end_rgb) {
+        var start_hsv = niclabs.insight.Color.rgbToHsv(start_rgb[0], start_rgb[1], start_rgb[2]);
+        var end_hsv = niclabs.insight.Color.rgbToHsv(end_rgb[0], end_rgb[1], end_rgb[2]);
+
+        var hsv_result = interpolate3d(value, maximum, start_hsv, end_hsv);
+        return niclabs.insight.Color.hsvToRgb(hsv_result[0],hsv_result[1],hsv_result[2]);
+    }
+
+    return {
+        'interpolate': interpolate,
+        'interpolate3d': interpolate3d,
+        'interpolateRgb': interpolateRgb
+    };
+})();
 
 niclabs.insight.MapView = (function($) {
 	"use strict";
@@ -1101,13 +1308,6 @@ niclabs.insight.MapView = (function($) {
 	return function(options) {
 		var mapId = '#insight-map-view';
 
-		/**
-		 * Object to represent geographic coordinates
-		 *
-		 * @typedef {Object} niclabs.insight.MapView.Coordinates
-		 * @property {float} lat - latitude for the map center
-		 * @property {float} lng - longitude for the map center
-		 */
 		var center = {
 			lat: options.lat || 0,
 			lng: options.lng || 0
@@ -1131,7 +1331,7 @@ niclabs.insight.MapView = (function($) {
 		* @property {float} lng - latitude for the marker
 		*/
 
-		return {
+		var self = {
 			/**
              * HTML DOM element for the map view
              *
@@ -1150,7 +1350,7 @@ niclabs.insight.MapView = (function($) {
              * @memberof niclabs.insight.MapView
              * @member {jQuery}
              */
-            $: function() {
+            get $ () {
                 var c = $(mapId);
                 container = c.length === 0 ? container : c;
                 return container;
@@ -1164,7 +1364,7 @@ niclabs.insight.MapView = (function($) {
 			 * @memberof niclabs.insight.MapView
 			 * @param {float=} lat - latitude for the map center
 			 * @param {float=} lng - longitude for the map center
-			 * @return {niclabs.insight.MapView.Coordinates} coordinates for the map center
+			 * @return {niclabs.insight.map.LatLng} coordinates for the map center
 			 */
 			center: function(lat, lng) {
 				center.lat = lat = typeof lat === 'undefined' ? center.lat : lat;
@@ -1174,23 +1374,43 @@ niclabs.insight.MapView = (function($) {
 			},
 
 			/**
-			 * Get the latitude for the map center
+			 * Latitude for the map center
 			 *
 			 * @memberof niclabs.insight.MapView
-			 * @return {float} latitude for the map center
+			 * @member {float}
 			 */
-			lat: function() {
+			get lat () {
 				return center.lat;
 			},
 
 			/**
-			 * Get the longitude for the map center
+			 * Longitude for the map center
 			 *
 			 * @memberof niclabs.insight.MapView
-			 * @return {float} longitude for the map center
+			 * @member {float}
 			 */
-			lng: function() {
+			get lng () {
 				return center.lng;
+			},
+
+			/**
+			 * Width for the map container
+			 *
+			 * @memberof niclabs.insight.MapView
+			 * @member {float}
+			 */
+			get width () {
+				return self.$.width();
+			},
+
+			/**
+			 * Height for the map container
+			 *
+			 * @memberof niclabs.insight.MapView
+			 * @member {float}
+			 */
+			get height () {
+				return self.$.height();
 			},
 
 			/**
@@ -1208,7 +1428,78 @@ niclabs.insight.MapView = (function($) {
 				return zoom;
 			},
 		};
+
+		return self;
 	};
+})(jQuery);
+
+niclabs.insight.View = (function($) {
+    /**
+     * Construct a View
+     *
+     * A view has an internal DOM representation to
+     * display on the browser
+     *
+     * @class niclabs.insight.View
+     * @extends niclabs.insight.Element
+     * @param {Object} options - configuration options for the element
+     * @param {String} options.id - identifier for the element
+     */
+    var View = function(options) {
+        var self = niclabs.insight.Element(options);
+
+        var node = $('<div>').attr('id', self.id);
+
+        /**
+         * DOM Element specified by this View
+         *
+         * @memberof niclabs.insight.View
+         * @name $
+         * @member {jQuery}
+         */
+        Object.defineProperty(self, "$", {
+            get: function () {
+                // Try to get the id from the document if it has been attached
+                var n = $('#' + self.id);
+
+                // Otherwise return the unattached node
+                node = n.length === 0 ? node : n;
+
+                return node;
+            }
+        });
+
+        /**
+         * DOM Element specified by this View
+         *
+         * @memberof niclabs.insight.View
+         * @name element
+         * @member {jQuery}
+         */
+        Object.defineProperty(self, "element", {
+            get: function () {
+                return self.$[0];
+            }
+        });
+
+
+        /**
+         * Append an element to the DOM tree of this view
+         *
+         * @memberof niclabs.insight.View
+         * @param {niclabs.insight.View} element - element to append
+         * @return {niclabs.insight.View} reference to this element
+         */
+        self.append = function(element) {
+            self.$.append(element.$);
+
+            return self;
+        };
+
+        return self;
+    };
+
+    return View;
 })(jQuery);
 
 /**
@@ -1316,6 +1607,243 @@ niclabs.insight.event = (function() {
         }
     };
 })();
+
+/**
+ * Define all possible filters for the dashboard
+ *
+ * @namespace
+ */
+niclabs.insight.filter = {};
+
+niclabs.insight.filter.Filter = (function() {
+    /**
+     * Defines a filter for the dashboard
+     *
+     * A filter provides both a visual filtering representation
+     * and an apply() function to be used on a data element for
+     * filtering
+     *
+     * For instance, a select filter will be visualized as a `<select>`
+     * HTML element, and calls to apply will pass the call to the appropriate
+     * filtering function according to the selected element
+     *
+     * @class niclabs.insight.filter.Filter
+     * @augments niclabs.insight.View
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this filter belongs to
+     * @param {Object} options - configuration options for the filter
+     */
+    var Filter = function(dashboard, options) {
+        var view = niclabs.insight.View(options);
+
+        // Configure the view
+        view.$.addClass('filter');
+
+        /**
+         * Apply the filter to a data element
+         *
+         * @memberof niclabs.insight.filter.Filter
+         * @abstract
+         * @param {Object} element - data element to evaluate
+         * @return {boolean} - true if the data element passes the filter
+         */
+        view.apply = function(element) {
+            return true;
+        };
+
+        return view;
+    };
+
+    return Filter;
+})();
+
+niclabs.insight.filter.GoogleGeocodingFilter = (function(google) {
+    /**
+     * Constructs a Google Geocoding filter for the dashboard
+     *
+     * Application of the filter always returns true, but allows to
+     * update the map according to a search location
+     *
+     * @class niclabs.insight.filter.GoogleGeocodingFilter
+     * @augments niclabs.insight.filter.Filter
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this filter belongs to
+     * @param {Object} options - configuration options for the filter
+     */
+    var GoogleGeocodingFilter = function(dashboard, options) {
+        var filter = niclabs.insight.filter.Filter(dashboard, options);
+
+        if (!('googlemap' in dashboard.map()))
+            throw new Error("Sorry, Google Geocoding can only be used with Google Maps");
+
+        /* Google maps geocoder and search bar*/
+        var geocoder = new google.maps.Geocoder();
+
+        // Create the search box
+        var search = $('<input>')
+            .addClass('search')
+            .attr('type', 'search')
+            .attr('placeholder', 'Enter location');
+
+        // Append search box to the filter
+        filter.$.append(search);
+
+        var geocode = function() {
+            var map = dashboard.map().googlemap();
+            var address = search.val();
+            geocoder.geocode({
+                'address': address
+            }, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    // map.setZoom(12);
+                    map.fitBounds(results[0].geometry.bounds);
+                } else {
+                    // TODO: this message should go in a status bar
+                    search.val('not found: ' + address);
+                }
+            });
+        };
+
+        search.on('change', geocode);
+
+
+        return filter;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('google-geocoder', 'filter', GoogleGeocodingFilter);
+
+    return GoogleGeocodingFilter;
+})(google);
+
+niclabs.insight.filter.LayerSelector = (function($) {
+
+
+    /**
+     * Construct a layer for the dashboard
+     *
+     * The layer selector provides an option to switch between layers of the dashboard
+     *
+     * @class niclabs.insight.filter.LayerSelector
+     * @augments niclabs.insight.filter.Filter
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this filter belongs to
+     * @param {Object} options - configuration options for the filter
+     */
+    var LayerSelector = function(dashboard, options) {
+        var view = niclabs.insight.filter.Filter(dashboard, options);
+
+        var layers = {};
+
+        // Configure the view
+        var select = $('<select>');
+
+        select.on('change', function() {
+            dashboard.active($(this).val());
+        });
+
+        // Add the selector to the view
+        view.$.append(select);
+
+        /**
+         * Add a layer to the selector
+         *
+         * @memberof niclabs.insight.filter.LayerSelector
+         * @param {string} id - id for the layer
+         * @param {name} name - name of the layer
+         */
+        view.add = function(id, name) {
+            layers[id] = name;
+            select.append($('<option>').attr('value', id).text(name));
+        };
+
+        return view;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('layer-selector', 'filter', LayerSelector);
+
+    return LayerSelector;
+})(jQuery);
+
+niclabs.insight.filter.SelectionFilter = (function($) {
+
+    /**
+     * Selection filter option
+     *
+     * @typedef niclabs.insight.filter.SelectionFilter.Option
+     * @type {Object}
+     * @param {string} name - name for the option of the filter
+     * @param {niclabs.insight.Filters~filter} filter - callback to filter the data
+     */
+
+    /**
+     * Construct a selection filter for the dashboard
+     *
+     * A selection filter will be visualized as a `<select>`
+     * HTML element, and calls to apply will pass the call to the appropriate
+     * filtering function according to the selected option
+     *
+     * @class niclabs.insight.filter.SelectionFilter
+     * @augments niclabs.insight.filter.Filter
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this filter belongs to
+     * @param {Object} options - configuration options for the filter
+     * @param {string} options.description - description for this filter to use as default option of the select
+     * @param {niclabs.insight.filter.SelectionFilter.Option[]} options.options - list of options for the filter
+     */
+    var SelectionFilter = function(dashboard, options) {
+        var view = niclabs.insight.filter.Filter(dashboard, options);
+
+        var selectOptions = options.options || [];
+
+        // Configure the view
+        var select = $('<select>');
+        select.append($('<option>').text(options.description || ''));
+
+        selectOptions.forEach(function(option) {
+            select.append($('<option>').text(option.name));
+        });
+
+        function noFilter(element) {
+            return true;
+        }
+
+        var filter = noFilter;
+
+        select.on('change', function() {
+            filter = noFilter;
+            var index = $(this).prop('selectedIndex');
+            if (index > 0) {
+                // Use the selected filter
+                filter = selectOptions[index - 1].filter;
+            }
+
+            niclabs.insight.event.trigger('filter_selected', view);
+        });
+
+        // Add the selector to the view
+        view.$.append(select);
+
+
+        /**
+         * Apply the filter to a data element
+         *
+         * @memberof niclabs.insight.filter.SelectionFilter
+         * @abstract
+         * @param {Object} element - data element to evaluate
+         * @return {boolean} - true if the data element passes the filter
+         */
+        view.apply = function(element) {
+            // Use the selected filter function
+            return filter(element);
+        };
+
+        return view;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('selection-filter', 'filter', SelectionFilter);
+
+    return SelectionFilter;
+})(jQuery);
 
 /**
  * Contains the definitions for the information blocks supported by insight
@@ -1939,43 +2467,50 @@ niclabs.insight.layer = (function () {
     return layer;
 })();
 
-niclabs.insight.layer.GraphLayer = (function($) {
+niclabs.insight.layer.GridLayer = (function() {
     /**
-     * Construct a new graph layer
+     * Construct a new grid Layer
      *
+     * @class niclabs.insight.layer.GridLayer
+     * @extends niclabs.insight.layer.Layer
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this layer belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.id - identifier for the layer
+     * @param {string|Object[]} options.data - uri or data array for the layer
+     * @param {Object=} options.grid - options for the heatmap
      */
-    var GraphLayer = function(dashboard, options) {
+    var GridLayer = function(dashboard, options) {
         var layer = niclabs.insight.layer.Layer(dashboard, options);
 
-        var graphOptions = options.heatmap || {
-            'type': 'voronoi-graph'
+        var gridOptions = options.grid || {
+            'type': 'hexagon'
         };
 
-        function createGraph(data, obj) {
-            var graph;
+        function createGrid(data, obj) {
+            var grid;
             if ('type' in obj) {
                 var attr = {'layer': layer.id, 'data': data};
 
                 // Extend the attributes with the data and the options for the marker
                 $.extend(attr, obj);
 
-                graph = niclabs.insight.handler(obj.type)(dashboard, attr);
+                grid = niclabs.insight.handler(obj.type)(dashboard, attr);
             }
             else {
-              graph = obj;
+                grid = obj;
 
-                // Should we add a way to pass data to the heatmap?
+                // Should we add a way to pass data to the grid?
             }
 
-            return graph;
+            return grid;
         }
 
-        var graph;
+        var grid;
 
         /**
-         * Draw the heatmap according to the internal data on the map
+         * Draw the grid according to the internal data on the map
          *
-         * @memberof niclabs.insight.layer.GraphLayer
+         * @memberof niclabs.insight.layer.GridLayer
          * @override
          * @param {Object[]} data - data to draw
          * @param {float} data[].lat - latitude for the marker
@@ -1983,23 +2518,23 @@ niclabs.insight.layer.GraphLayer = (function($) {
          * @param {string=} data[].description - description for the marker
          */
         layer.draw = function(data) {
-            graph = createGraph(data, graphOptions);
+            grid = createGrid(data, gridOptions);
         };
 
         /**
-         * Clear the graph from the map
+         * Clear the grid from the map
          *
-         * @memberof niclabs.insight.layer.GraphLayer
+         * @memberof niclabs.insight.layer.GridLayer
          * @override
          */
         layer.clear = function() {
-            if (graph) graph.clear();
+            if (grid) grid.clear();
         };
 
         /**
          * Filter the layer according to the provided function.
          *
-         * @memberof niclabs.insight.layer.GraphLayer
+         * @memberof niclabs.insight.layer.GridLayer
          * @override
          * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
          */
@@ -2011,10 +2546,10 @@ niclabs.insight.layer.GraphLayer = (function($) {
     };
 
     // Register the handler
-    niclabs.insight.handler('graph-layer', 'layer', GraphLayer);
+    niclabs.insight.handler('grid-layer', 'layer', GridLayer);
 
-    return GraphLayer;
-})(jQuery);
+    return GridLayer;
+})();
 
 niclabs.insight.layer.HeatmapLayer = (function($) {
     /**
@@ -2100,7 +2635,7 @@ niclabs.insight.layer.HeatmapLayer = (function($) {
     return HeatmapLayer;
 })(jQuery);
 
-niclabs.insight.layer.Layer = (function($) {
+ niclabs.insight.layer.Layer = (function($) {
     "use strict";
 
     /**
@@ -2112,6 +2647,7 @@ niclabs.insight.layer.Layer = (function($) {
      * @param {niclabs.insight.Dashboard} dashboard - dashboard that this layer belongs to
      * @param {Object} options - configuration options for the layer
      * @param {string} options.id - identifier for the layer
+     * @param {string=} [options.name=options.id] - name for the layer in the filter bar
      * @param {string|Object[]} options.data - uri or data array for the layer
      * @param {Object|Function} [options.summary] - summary data
      */
@@ -2122,6 +2658,7 @@ niclabs.insight.layer.Layer = (function($) {
             throw Error("All layers must have an id.");
         }
         var id = options.id;
+        var name = options.name || options.id;
 
         if (!('data' in options)) {
             throw Error("All layers must provide a data source.");
@@ -2149,6 +2686,15 @@ niclabs.insight.layer.Layer = (function($) {
              */
             get id () {
                 return id;
+            },
+
+            /**
+             * Name for the layer
+             * @memberof niclabs.insight.layer.Layer
+             * @member {string}
+             */
+            get name() {
+                return name;
             },
 
             /**
@@ -2386,6 +2932,37 @@ niclabs.insight.layer.MarkerLayer = (function($) {
  * @namespace
  */
 niclabs.insight.map = (function () {
+    /** Converts numeric degrees to radians */
+    if (typeof Number.prototype.toRad === "undefined") {
+        Number.prototype.toRad = function() {
+            return this * Math.PI / 180;
+        };
+    }
+
+    /** Converts numeric radians to degrees */
+    if (typeof Number.prototype.toDeg === "undefined") {
+        Number.prototype.toDeg = function() {
+            return this * 180 / Math.PI;
+        };
+    }
+
+    /**
+     * Object to represent geographic coordinates
+     *
+     * @typedef {Object} niclabs.insight.map.LatLng
+     * @property {float} lat - latitude
+     * @property {float} lng - longitude
+     */
+
+     /**
+      * Cartesian coordinates
+      *
+      * @typedef {Object} niclabs.insight.map.Point
+      * @property {float} x - horizontal coordinate
+      * @property {float} y - vertical coordinate
+      */
+
+
     /**
      * Helper method to assign/get the map view to/from the dashboard
      *
@@ -2415,6 +2992,85 @@ niclabs.insight.map = (function () {
     return map;
 })();
 
+/**
+ * Defines a mercator projection on the map
+ *
+ * Source: {@link https://developers.google.com/maps/documentation/javascript/examples/map-coordinates}
+ *
+ * @mixin
+ */
+niclabs.insight.map.GoogleMercator = (function() {
+    // Source
+    var TILE_SIZE = 256;
+
+    var origin = {x: TILE_SIZE / 2, y: TILE_SIZE / 2};
+    var pixelsPerLonDegree = TILE_SIZE / 360;
+    var pixelsPerLonRadian = TILE_SIZE / (2 * Math.PI);
+
+    function bound(value, opt_min, opt_max) {
+        if (opt_min !== null) value = Math.max(value, opt_min);
+        if (opt_max !== null) value = Math.min(value, opt_max);
+        return value;
+    }
+
+    return {
+        /**
+         * Convert cartesian coordinates to geographic coordinates using a
+         * spherical mercator projection
+         *
+         * @memberof niclabs.insight.map.Mercator
+         * @param {niclabs.insight.map.Point} - cartesian coordinates of the point
+         * @returns {niclabs.insight.map.LatLng} - geographic coordinates of the point
+         */
+        geographic: function(point) {
+            var lng = (point.x - origin.x) / pixelsPerLonDegree;
+            var latRadians = (point.y - origin.y) / -pixelsPerLonRadian;
+            var lat = (2 * Math.atan(Math.exp(latRadians)) - Math.PI / 2).toDeg();
+
+            return {'lat': lat, 'lng': lng};
+        },
+
+        /**
+         * Convert geographic coordinates to cartesian coordinates using a
+         * spherical mercator projection (Google Maps style)
+         *
+         * For more information see {@link https://alastaira.wordpress.com/2011/01/23/the-google-maps-bing-maps-spherical-mercator-projection/}
+         *
+         * @memberof niclabs.insight.map.Mercator
+         * @param {niclabs.insight.map.latLng} coord - geographic coordinates of the point
+         * @returns {niclabs.insight.map.Point} - cartesian coordinates of the point
+         */
+        cartesian: function(coord) {
+            // If it is a Google Maps LatLng
+            if (typeof coord.lat === 'function' && typeof coord.lng === 'function')
+                coord = {'lat': coord.lat(), 'lng': coord.lng()};
+
+            var x = origin.x + coord.lng * pixelsPerLonDegree;
+
+            // Truncating to 0.9999 effectively limits latitude to 89.189. This is
+            // about a third of a tile past the edge of the world tile.
+            var siny = bound(Math.sin(coord.lat.toRad()), -0.9999, 0.9999);
+            var y = origin.y + 0.5 * Math.log((1 + siny) / (1 - siny)) * -pixelsPerLonRadian;
+
+            return {'x': x, 'y': y};
+        },
+
+        /**
+         * Return equivalent distance in the coordinate space
+         * given the pixel distance and the zoom level of the map
+         *
+         * @memberof niclabs.insight.map.Mercator
+         * @param {float} pixels - distance in pixels
+         * @param {int} zoom - zoom level of the map
+         * @returns {float} distance in world coordinate space
+         */
+        distance: function(pixels, zoom) {
+            zoom = typeof zoom !== 'undefined' ? zoom : 12;
+            return pixels / (1 << zoom);
+        }
+    };
+})();
+
 niclabs.insight.map.GoogleMap = (function($) {
     "use strict";
 
@@ -2435,7 +3091,7 @@ niclabs.insight.map.GoogleMap = (function($) {
 
         var googlemap = new google.maps.Map(map.element, {
             zoom: map.zoom(),
-            center: new google.maps.LatLng(map.lat(), map.lng()),
+            center: new google.maps.LatLng(map.lat, map.lng),
             disableDefaultUI: true
         });
 
@@ -2492,7 +3148,7 @@ niclabs.insight.map.GoogleMap = (function($) {
          * @memberof niclabs.insight.map.GoogleMap
          * @param {float=} lat - latitude for the map center
          * @param {float=} lng - longitude for the map center
-         * @return {niclabs.insight.MapView.Coordinates} coordinates for the map center
+         * @return {niclabs.insight.map.LatLng} coordinates for the map center
          */
         map.center = function(lat, lng) {
             var c = center(lat, lng);
@@ -2525,23 +3181,367 @@ niclabs.insight.map.GoogleMap = (function($) {
 })(jQuery);
 
 /**
- * Tools for drawing graphs on the map
+ * Quadtree implementation
  *
  * @namespace
  */
-niclabs.insight.map.graph = {};
+niclabs.insight.quadtree = {};
 
-niclabs.insight.map.graph.Graph = (function($) {
+/**
+ * A cartesian point
+ *
+ * @typedef niclabs.insight.quadtree.Point
+ * @type {Object}
+ * @param {float} x - horizontal coordinates
+ * @param {float} y - vertical coordinates
+ */
+
+niclabs.insight.quadtree.Bounds = (function() {
     /**
-     * Construct a Graph over the map
+     * Construct an axis aligned bounding box with the corners
+     * at the provided coordinates
      *
-     * @class niclabs.insight.map.graph.Graph
-     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
-     * @param {Object} options - configuration options for the graph
+     * @class niclabs.insight.quadtree.Bounds
+     * @param {niclabs.insight.quadtree.Point} min - minimal coordinates of the bounding box (e.g. lower left corner if zero is at the lower left corner of the canvas)
+     * @param {niclabs.insight.quadtree.Point} max - maximal coordinates of the bounding box (e.g. upper right corner if zero is at the lower left corner of the canvas)
      */
-    var Graph = function(dashboard, options) {
-        if (!('layer' in options))
-            throw new Error('The Graph must be associated to a layer');
+    var Bounds = function(min, max) {
+        var center = {x: (min.x + max.x) / 2.0,
+            y: (min.y + max.y) / 2.0};
+
+
+        return {
+            /**
+             * Center of the bounding box
+             *
+             * @memberof niclabs.insight.quadtree.Bounds
+             * @member {niclabs.insight.quadtree.Point}
+             */
+            get center () {
+                return center;
+            },
+
+            /**
+             * Minimal coordinates of the bounding box
+             * (e.g. lower left corner if zero is at the lowest leftmost corner of the canvas)
+             *
+             * @memberof niclabs.insight.quadtree.Bounds
+             * @member {niclabs.insight.quadtree.Point}
+             */
+            get min () {
+                return min;
+            },
+
+            /**
+             * Maximal coordinates of the bounding box
+             * (e.g. upper right corner if zero is at the lowest leftmost corner of the canvas)
+             *
+             * @memberof niclabs.insight.quadtree.Bounds
+             * @member {niclabs.insight.quadtree.Point}
+             */
+            get max () {
+                return max;
+            },
+
+            /**
+             * Check if this bounding box contains the given point.
+             *
+             * As a convention, a bounding box contains all points inside its borders
+             * as well as all the points in the east and south borders.
+             *
+             * @memberof niclabs.insight.quadtree.Bounds
+             * @param {niclabs.insight.quadtree.Point} point - point to lookup
+             * @returns {boolean} true if the box contains the point
+             */
+            contains: function(point) {
+                return min.x <= point.x && point.x < max.x && min.y <= point.y && point.y < max.y;
+            },
+
+            /**
+             * Check if this bounding box intersects the given bounding box
+             *
+             * @memberof niclabs.insight.quadtree.Bounds
+             * @param {niclabs.insight.quadtree.Bounds} box - bounding box to check intersection with
+             * @returns {boolean} true if the boxes intersect in at least one point
+             */
+            intersects: function(box) {
+                // The explanation: http://gamemath.com/2011/09/detecting-whether-two-boxes-overlap/
+                if (max.x < box.min.x) return false; // self is left of box
+                if (min.x > box.max.x) return false; // self is right of box
+                if (max.y < box.min.y) return false; // self is above of box
+                if (min.y > box.max.y) return false; // self is below of box
+                return true; // boxes overlap
+            }
+        };
+    };
+
+    return Bounds;
+})();
+
+niclabs.insight.quadtree.PointQuadTree = (function () {
+    /**
+     * Construct a Point Quadtree
+     *
+     * See {@link http://en.wikipedia.org/wiki/Quadtree}
+     *
+     * @class niclabs.insight.quadtree.PointQuadTree
+     * @param {niclabs.insight.quadtree.Bounds} bounds - bounding box for the quadtree
+     * @param {integer} [capacity=50] - number of points that each node in the quadtree accepts before dividing
+     * @param {integer} [depth=40] - max depth of the quadtree
+     */
+    var PointQuadTree = function (bounds, capacity, depth) {
+        capacity = capacity || 50;
+        depth = depth || 40;
+
+        var points = [];
+
+        // Children (also quadtrees)
+        var northWest, northEast, southWest, southEast;
+
+        /**
+         * Subdivide the tree
+         *
+         * @memberof niclabs.insight.quadtree.PointQuadTree
+         * @access private
+         */
+        function subdivide() {
+            northWest = PointQuadTree(niclabs.insight.quadtree.Bounds(bounds.min, bounds.center), capacity, depth - 1);
+            northEast = PointQuadTree(niclabs.insight.quadtree.Bounds(
+                {x: bounds.center.x, y: bounds.min.y},
+                {x: bounds.max.x, y: bounds.center.y}),
+                capacity, depth - 1);
+            southWest = PointQuadTree(niclabs.insight.quadtree.Bounds(
+                {x: bounds.min.x, y: bounds.center.y},
+                {x: bounds.center.x, y: bounds.max.y}),
+                capacity, depth - 1);
+            southEast = PointQuadTree(niclabs.insight.quadtree.Bounds(bounds.center, bounds.max, capacity, depth - 1));
+        }
+
+        var self = {
+            /**
+             * Capacity for the quadtree
+             *
+             * @memberof niclabs.insight.quadtree.PointQuadTree
+             * @member {integer}
+             */
+            get capacity() {
+                return capacity;
+            },
+
+            /**
+             * Boundary of the quadtree
+             * @memberof niclabs.insight.quadtree.PointQuadTree
+             * @member {niclabs.insight.quadtree.Bounds}
+             */
+            get bounds() {
+                return bounds;
+            },
+
+            /**
+             * Insert a new point in the quadtree
+             *
+             * @memberof niclabs.insight.quadtree.PointQuadTree
+             * @param {niclabs.insight.quadtree.Point} point - new point to insert
+             * @returns {boolean} true if the point could be inserted (point belongs in the bounds of the quadtree)
+             */
+            insert: function (point) {
+                // Ignore objects that do not belong in this quad tree
+                if (!bounds.contains(point)) {
+                    return false; // object cannot be added
+                }
+
+                // If there is space in this quad tree, add the object here
+                if (points.length < capacity || depth <= 0) {
+                    points.push(point);
+                    return true;
+                }
+
+                // Otherwise, subdivide and then add the point to whichever node will accept it
+                if (northWest === undefined)
+                    subdivide();
+
+                if (northWest.insert(point)) return true;
+                if (northEast.insert(point)) return true;
+                if (southWest.insert(point)) return true;
+                if (southEast.insert(point)) return true;
+
+                // Otherwise, the point cannot be inserted for some unknown reason (this should never happen)
+                return false;
+            },
+
+            /**
+             * Return all the points in the specified bounding box
+             *
+             * @memberof niclabs.insight.quadtree.PointQuadTree
+             * @param {niclabs.insight.quadtree.Bounds} range - spatial range to search
+             * @returns {niclabs.insight.quadtree.Point[]} list of points in the given range
+             */
+            query: function(range, pointsInRange) {
+                pointsInRange = typeof pointsInRange === 'undefined' ? [] : pointsInRange;
+
+                if (!bounds.intersects(range)) {
+                    return pointsInRange; // Empty list
+                }
+
+                // Check points at this level
+                for (var i = 0; i < points.length; i++) {
+                    if (range.contains(points[i])) {
+                        pointsInRange.push(points[i]);
+                    }
+                }
+
+                // Terminate here if there are no children
+                if (northWest === undefined)
+                    return pointsInRange;
+
+                // Otherwise add the points from the children
+                northWest.query(range, pointsInRange);
+                northEast.query(range, pointsInRange);
+                southWest.query(range, pointsInRange);
+                southEast.query(range, pointsInRange);
+
+                // Otherwise add the points from the children
+                return pointsInRange;
+            }
+        };
+
+        return self;
+    };
+
+    return PointQuadTree;
+})();
+
+/**
+ * Contains all grids definitions for the dashboard
+ *
+ * @namespace
+ */
+niclabs.insight.map.grid = {};
+
+niclabs.insight.map.grid.Grid = (function() {
+	/**
+	 * Returns a function to calculate the fill as the interpolation on the average between the point weights
+	 *
+	 * @param {string} start_rgb - starting color for the interpolation
+	 * @param {string} end_rgb - ending color for the interpolation
+	 * @return {niclabs.insight.map.grid.HexagonalGrid~fill} average function
+	 */
+	function averageFill(start_rgb, end_rgb) {
+		start_rgb = niclabs.insight.Color.hexToRgb(start_rgb);
+		end_rgb = niclabs.insight.Color.hexToRgb(end_rgb);
+
+		return function(points) {
+			var avg = 0;
+			var size = 0;
+
+			for (i = 0; i < points.length; i++) {
+				if ('weight' in points[i]) {
+					avg += points[i].weight;
+					size++;
+				}
+			}
+
+			// Calculate average
+			if (size > 0) {
+				avg = avg / size;
+				return niclabs.insight.Color.rgbToHex(niclabs.insight.Interpolation.interpolateRgb(avg, 1, start_rgb, end_rgb));
+			}
+
+			return '#ffffff';
+		};
+	}
+
+	/**
+	 * Returns a function to calculate the fill as the interpolation on the median between the point weights
+	 *
+	 * @param {string} start_rgb - starting color for the interpolation
+	 * @param {string} end_rgb - ending color for the interpolation
+	 * @return {niclabs.insight.map.grid.HexagonalGrid~fill} median function
+	 */
+	function medianFill(start_rgb, end_rgb) {
+		function partition(data, i, j) {
+	        var pivot = Math.floor((i+j)/2);
+	        var temp;
+	        while(i <= j){
+	            while(data[i].weight < data[pivot].weight)
+	                i++;
+	            while(data[j].weight > data[pivot].weight)
+	                j--;
+	            if(i <= j){
+	                temp = data[i];
+	                data[i]=data[j];
+	                data[j] = temp;
+	                i++;
+					j--;
+	            }
+	        }
+	        return pivot;
+	    }
+
+		start_rgb = niclabs.insight.Color.hexToRgb(start_rgb);
+		end_rgb = niclabs.insight.Color.hexToRgb(end_rgb);
+
+		return function(points) {
+			var median = 0;
+			var left = 0, right = points.length > 0 ? points.length - 1: 0;
+	        var mid = Math.floor((left + right) / 2);
+	        median = partition(points, left, right);
+	        while (median !== mid) {
+	            if(median < mid)
+	                median = partition(points, mid, right);
+	            else median = partition(points, left, mid);
+	        }
+
+			return niclabs.insight.Color.rgbToHex(niclabs.insight.Interpolation.interpolateRgb(points[median].weight, 1, start_rgb, end_rgb));
+		};
+	}
+
+	/**
+     * Data point for a grid
+     *
+     * @typedef niclabs.insight.map.grid.Grid.Data
+     * @type {Object}
+     * @param {float} lat - latitude for the data point
+     * @param {float} lng - longitude for the data point
+     * @param {float=} weight - weight for the data point (between 0 and 1)
+     */
+
+	/**
+	 * Fill calculation function. Receives the list of points of a grid tile and
+	 * returns a color for that tile
+	 * @callback niclabs.insight.map.grid.Grid~fill
+	 * @param {niclabs.insight.map.grid.Grid.Data[]} points
+	 * @param {string} fill color for the trile
+	 */
+
+	/**
+     * Construct an grid from the data provided.
+	 *
+	 * The grid divides the visible map into equally sized tiles and draws only those
+	 * tiles that have elements below them. If a weight is provided for the the data points
+	 * each tile is painted with a function of the point weights inside the tile
+     *
+     * @class niclabs.insight.map.grid.Grid
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this grid belongs to
+     * @param {Object} options - configuration options for the grid
+     * @param {string} options.layer - identifier for the layer that this grid belongs to
+	 * @param {string} [options.strokeColor='#000000'] - color for the stroke of each tile
+	 * @param {float} [options.strokeOpacity=0.6] - opacity for the stroke (between 0-1)
+	 * @param {integer} [options.strokeWeight=2] - border weight for the tile
+	 * @param {string|niclabs.insight.map.grid.Grid~fill} [options.fill='#ffffff'] - color for the fill of the tile,
+	 * 	it can have one of the following values:
+	 *  	- 'average' calculates the average of the weights in the tile and interpolates that value between the values for options.fill_start and options.fill_end
+	 *  	- 'median' calculates the median of the weights in the tile and interpolates as average
+	 *  	- rgb color (starting with '#') is used as a fixed color for all tiles
+	 *  	- a callback receiving the points in the tile and returning the value for the color
+	 * @param {string} [options.fillStart='#ff0000'] - if 'average' or 'median' are used as options for options.fill, it sets the begining of the interpolation interval for the fill function
+	 * @param {string} [options.fillEnd='#00ff00'] - if 'average' or 'median' are used as options for options.fill, it sets the end of the interpolation interval for the fill function
+	 * @param {float} [options.fillOpacity=0.6] - opacity for the fill of the tile
+     * @param {niclabs.insight.map.grid.Grid.Data[]} options.data - data for the grid
+     */
+	var Grid = function(dashboard, options) {
+		if (!('layer' in options))
+            throw new Error('The grid must be associated to a layer');
 
         var layer;
         if (!(layer = dashboard.layer(options.layer)))
@@ -2552,12 +3552,66 @@ niclabs.insight.map.graph.Graph = (function($) {
             throw new Error('No map has been initialized for the dashboard yet');
 
         if (!('googlemap' in map))
-            throw new Error("Graphs are only supported for Google Maps at the moment");
+            throw new Error("Grids are only supported for Google Maps at the moment");
+
+		var tiles = [];
+
+		var tileConfig = {
+			strokeColor: 'strokeColor' in options ? options.strokeColor : '#000000',
+			strokeOpacity: 'strokeOpacity' in options ? options.strokeOpacity : 0.6,
+			strokeWeight: 'strokeWeight' in options ? options.strokeWeight : 2,
+			fillOpacity: 'fillOpacity' in options ? options.fillOpacity : 0.6,
+		};
+
+		// Default fill function
+		function fillColor() {
+			return '#ffffff';
+		}
+
+		var fill = options.fill || fillColor;
+		if (typeof fill === 'string') {
+			if (options.fill.charAt(0) === '#') {
+				fill = function() {return options.fill;};
+			}
+			else if (options.fill === 'average') {
+				fill = averageFill(options.fillStart || '#ff0000', options.fillEnd || '#00ff00');
+			}
+			else if (options.fill === 'median') {
+				fill = medianFill(options.fillStart || '#ff0000', options.fillEnd || '#00ff00');
+			}
+			else {
+				fill = fillColor;
+			}
+		}
+
+		var worldBounds = niclabs.insight.quadtree.Bounds(
+			niclabs.insight.map.GoogleMercator.cartesian({lat: 90, lng: -180}),
+			niclabs.insight.map.GoogleMercator.cartesian({lat: -90, lng: 180})
+		);
+
+		var quadtree = niclabs.insight.quadtree.PointQuadTree(worldBounds);
+
+		// TODO: put all data points in a world wide quad tree
+		for (var i = 0; i < options.data.length; i++) {
+			var coord = niclabs.insight.map.GoogleMercator.cartesian(options.data[i]);
+
+			options.data[i].x = coord.x;
+			options.data[i].y = coord.y;
+
+			quadtree.insert(options.data[i]);
+		}
+
+		function notifyTileClick(points) {
+			return function() {
+				niclabs.insight.event.trigger('map_element_selected', points);
+			};
+		}
+
 
         var self = {
             /**
-             * Map view where the graph belongs to
-             * @memberof niclabs.insight.map.graph.Graph
+             * Map view where the grid belongs to
+             * @memberof niclabs.insight.map.grid.Grid
              * @member {niclabs.insight.MapView}
              */
             get map () {
@@ -2565,81 +3619,566 @@ niclabs.insight.map.graph.Graph = (function($) {
             },
 
             /**
-             * Layer to which the graph belongs to
+             * Layer to which the grid belongs to
              *
-             * @memberof niclabs.insight.map.graph.Graph
+             * @memberof niclabs.insight.map.grid.Grid
              * @member {niclabs.insight.layer.Layer}
              */
             get layer () {
                 return layer;
             },
 
+			/**
+			 * Refresh the grid with the current map bounds
+			 *
+			 * @memberof niclabs.insight.map.grid.Grid
+			 */
+			refresh: function() {
+				// Build the initial grid
+				build(self.map.googlemap().getBounds());
+			},
+
+			/**
+			 * Construct a tile from the options of the grid
+			 *
+			 * @memberof niclabs.insight.map.grid.Grid
+			 * @abstract
+			 * @return {niclabs.insight.map.grid.Tile}
+			 */
+			tile: function() {
+				throw new Error("Not implemented");
+			},
+
             /**
-             * Clear the graph from the map
+             * Clear the grid from the map
              *
-             * @memberof niclabs.insight.map.graph.Graph
+             * @memberof niclabs.insight.map.grid.Grid
              */
             clear: function() {
+				for (var i = 0; i < tiles.length; i++) {
+					tiles[i].setMap(null);
+				}
             },
         };
 
+
+		// Build the grid
+        function build(mapBounds) {
+			if (!mapBounds) return;
+
+			var tile = self.tile();
+
+			// find all points in the map bounds using the quadtree
+			var points = quadtree.query(niclabs.insight.quadtree.Bounds(
+				niclabs.insight.map.GoogleMercator.cartesian({lat: mapBounds.getNorthEast().lat(), lng: mapBounds.getSouthWest().lng()}),
+				niclabs.insight.map.GoogleMercator.cartesian({lat: mapBounds.getSouthWest().lat(), lng: mapBounds.getNorthEast().lng()})
+			));
+
+			var pointSets = [];
+			var tile_i, tile_j;
+
+			for (var i = 0; i < points.length; i++) {
+				var coord = tile.query(points[i]);
+				tile_i = coord[0];
+				tile_j = coord[1];
+
+				if (!pointSets[tile_i]) pointSets[tile_i] = [];
+				if (!pointSets[tile_i][tile_j]) pointSets[tile_i][tile_j] = [];
+
+				// if pointSets[tile_i][tile_j] add the point to the list
+				pointSets[tile_i][tile_j].push(points[i]);
+			}
+
+			tiles = [];
+
+			// for each tile, average (or median) the weights and draw the map
+			for (tile_i in pointSets) {
+				for (tile_j in pointSets[tile_i]) {
+					tileConfig.fillColor = fill(pointSets[tile_i][tile_j]);
+
+					// Draw the tile
+					var mapTile = tile.draw(tile.origin(tile_i, tile_j), self.map, tileConfig);
+
+					// Add an event to the click
+					google.maps.event.addListener(mapTile, 'click', notifyTileClick(pointSets[tile_i][tile_j]));
+
+					tiles.push(mapTile);
+				}
+			}
+        }
+
+		// Listen to boundary changes
+        google.maps.event.addListener(self.map.googlemap(), 'bounds_changed', function() {
+            var bounds = this.getBounds();
+            window.setTimeout(function() {
+				self.clear();
+                build(bounds);
+            }, 50);
+        });
+
         return self;
-    };
+	};
 
-    return Graph;
-})(jQuery);
+	return Grid;
+})();
 
-niclabs.insight.map.graph.VoronoiGraph = (function($) {
+niclabs.insight.map.grid.HexagonTile = (function() {
+    /**
+     * Define a hexagon tile to be drawn on the map
+     *
+     * @class niclabs.insight.map.grid.HexagonTile
+     * @implements niclabs.insight.map.grid.Tile
+	 * @param {float} side - side (or radius) of the hexagon
+     */
+	var HexagonTile = function(side) {
+		// See http://www.codeproject.com/Articles/14948/Hexagonal-grid-for-games-and-other-projects-Part
+        // for the description of R and H
+        var R = Math.cos(Math.PI / 6) * side;
+        var H = Math.sin(Math.PI / 6) * side;
 
-    var VoronoiGraph = function(dashboard, options) {
-        if (!('data' in options)) {
-            throw Error('No data provided for the graph');
-        }
-
-        var self = niclabs.insight.map.graph.Graph(dashboard, options);
-
-        /**
-         * Create a google map graph
-         */
-        function googleMapsVoronoiGraph(data) {
-
-            console.log(data);
-            return 1;
-        }
-
-        // Create the graph
-        var graph = googleMapsVoronoiGraph(options.data);
-
-        // Set the options
-
-        // Set the graph
-        graph.setMap(self.map.googlemap());
-
-        // Store the parent
-        var clear = self.clear;
+        var self = niclabs.insight.map.grid.Tile();
 
         /**
-         * Clear the map
+		* Side of the hexagon
+		*
+		* @memberof niclabs.insight.map.grid.HexagonTile
+		* @member {float}
+		*/
+		Object.defineProperty(self, "s", { get: function () { return side; } });
+
+
+        /**
+		* Distance of the hexagon
+		*
+		* @memberof niclabs.insight.map.grid.HexagonTile
+		* @member {float}
+		*/
+		Object.defineProperty(self, "r", { get: function () { return R; } });
+
+
+        /**
+		* Height of the hexagon
+		*
+		* @memberof niclabs.insight.map.grid.HexagonTile
+		* @member {float}
+		*/
+		Object.defineProperty(self, "h", { get: function () { return H; } });
+
+        /**
+         * Return the origin coordinates of the tile (i,j) in cartesian
+         * coordinate system. This can be passed as a parameter to
+         * {@link niclabs.insight.grid.Tile.draw()}
          *
-         * @memberof niclabs.insight.map.graph.VoronoiGraph
-         * @overrides
+         * @memberof niclabs.insight.map.grid.HexagonTile
+         * @param {integer} i - horizontal coordinate of the tile
+         * @param {integer} j - vertical coordinate of the tile
+         * @return {niclabs.insight.map.Point} cartesian origin of the tile
          */
-        self.clear = function() {
-            // Call the parent
-            clear();
+        self.origin = function() {
+            var i, j;
+            if (arguments.length == 1) {
+                i = arguments[0][0];
+                j = arguments[0][1];
+            }
+            else {
+                i = arguments[0];
+                j = arguments[1];
+            }
 
-            // Remove the map
-            graph.setMap(null);
+            // From http://www.gamedev.net/page/resources/_/technical/game-programming/coordinates-in-hexagon-based-tile-maps-r1800
+            var x = i * 2 * R + (j & 1) * R + R;
+            var y = j * (H + side);
+
+            return {'x': x, 'y': y};
+        };
+
+        /**
+         * Get the coordinates of the tile [i,j] in the grid that contains the point with
+         * the given coordinates
+         *
+         * See: http://www.gamedev.net/page/resources/_/technical/game-programming/coordinates-in-hexagon-based-tile-maps-r1800
+         *
+         * @memberof niclabs.insight.map.grid.HexagonTile
+         * @param {niclabs.insight.map.Point|niclabs.insight.map.LatLng} coord - coordinates of the point in the map
+         * @return {integer[]} coordinates of the tile that contains the given point
+         */
+        self.query = function(coord) {
+            // Convert coordinates to cartesian
+            if (coord.lat) {
+                coord = niclabs.insight.map.GoogleMercator.cartesian(coord);
+            }
+
+            // Coordinates for the square
+            var square_i = Math.floor(coord.x / (2 * R));
+            var square_j = Math.floor(coord.y / (H + side));
+
+            // Coordinates of the pixel with respect to the edge of the square
+            var square_pixel_x = coord.x - square_i * 2 * R;
+            var square_pixel_y = coord.y - square_j * (H + side);
+
+            // Is type A if the row is even
+            var rowIsTypeA = ((square_j & 1) === 0);
+
+            var hex_i = square_i;
+            var hex_j = square_j;
+
+            if (rowIsTypeA) {
+                if (square_pixel_x <= R && square_pixel_y < (- H / R) * square_pixel_x + H) {
+                    hex_i = square_i - 1;
+                    hex_j = square_j - 1;
+                }
+                else if (square_pixel_x > R && square_pixel_y < (H / R) * square_pixel_x - H) {
+                    hex_i = square_i;
+                    hex_j = square_j - 1;
+                }
+            }
+            else {
+                if (square_pixel_x <= R) {
+                    if (square_pixel_y < (H / R) * square_pixel_x) {
+                        hex_i = square_i;
+                        hex_j = square_j - 1;
+                    }
+                    else {
+                        hex_i = square_i - 1;
+                        hex_j = square_j;
+                    }
+                }
+                else if (square_pixel_x > R){
+                    if (square_pixel_y < (- H / R) * square_pixel_x + 2 * H) {
+                        hex_i = square_i;
+                        hex_j = square_j - 1;
+                    }
+                }
+            }
+            return [hex_i, hex_j];
+        };
+
+        /**
+		* Get the vertices for the tile with origin in coordinates coord
+		*
+		* @memberof niclabs.insight.map.grid.HexagonTile
+		* @param {niclabs.insight.map.Point|niclabs.insight.map.LatLng} coord - coordinates of the tile in the map
+		* @return {niclabs.insight.map.Point[]} coordinates of the vertices of the tile
+		*/
+		self.vertices = function(coord) {
+			// Convert coordinates to cartesian
+			if (coord.lat) {
+				coord = niclabs.insight.map.GoogleMercator.cartesian(coord);
+			}
+
+			//x,y coordinates are top center point
+			var points = [];
+			points[0] = {'x': coord.x,     'y': coord.y};
+			points[1] = {'x': coord.x + R, 'y': coord.y + H};
+			points[2] = {'x': coord.x + R, 'y': coord.y + side + H};
+			points[3] = {'x': coord.x,     'y': coord.y + side + H + H};
+			points[4] = {'x': coord.x - R, 'y': coord.y + side + H};
+			points[5] = {'x': coord.x - R, 'y': coord.y + H};
+
+			return points;
+        };
+
+        return self;
+	};
+
+    return HexagonTile;
+})();
+
+niclabs.insight.map.grid.HexagonalGrid = (function() {
+	/**
+     * Construct an hexagonal grid from the data provided.
+	 *
+	 * The grid divides the visible map into hexagonal tiles of the same size and draws only those
+	 * tiles that have elements below them. If a weight is provided for the the data points
+	 * each hexagon is painted with a function of the point weights inside the hexagon
+     *
+     * @class niclabs.insight.map.grid.HexagonalGrid
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this grid belongs to
+     * @param {Object} options - configuration options for the grid
+     * @param {string} options.layer - identifier for the layer that this grid belongs to
+     * @param {integer} options.size - size for the side of each hexagon (in pixels)
+	 * @param {string} [options.strokeColor='#000000'] - color for the stroke of each hexagon
+	 * @param {float} [options.strokeOpacity=0.6] - opacity for the stroke (between 0-1)
+	 * @param {integer} [options.strokeWeight=2] - border weight for the hexagon
+	 * @param {string|niclabs.insight.map.grid.HexagonalGrid~fill} [options.fill='#ffffff'] - color for the fill of the hexagon,
+	 * 	it can have one of the following values:
+	 *  	- 'average' calculates the average of the weights in the hexagon and interpolates that value between the values for options.fill_start and options.fill_end
+	 *  	- 'median' calculates the median of the weights in the hexagon and interpolates as average
+	 *  	- rgb color (starting with '#') is used as a fixed color for all hexagons
+	 *  	- a callback receiving the points in the hexagon and returning the value for the color
+	 * @param {string} [options.fillStart='#ff0000'] - if 'average' or 'median' are used as options for options.fill, it sets the begining of the interpolation interval for the fill function
+	 * @param {string} [options.fillEnd='#00ff00'] - if 'average' or 'median' are used as options for options.fill, it sets the end of the interpolation interval for the fill function
+	 * @param {float} [options.fillOpacity=0.6] - opacity for the fill of the hexagon
+     * @param {niclabs.insight.map.grid.HexagonalGrid.Data[]} options.data - data for the layer
+     */
+	var HexagonalGrid = function(dashboard, options) {
+		var grid = niclabs.insight.map.grid.Grid(dashboard, options);
+
+		// Calculate the hexagon side according to the zoom
+		grid.tile = function() {
+			return niclabs.insight.map.grid.HexagonTile(niclabs.insight.map.GoogleMercator.distance(options.size, grid.map.zoom()));
+		};
+
+		// Refresh the grid 
+		grid.refresh();
+
+        return grid;
+	};
+
+    // Register the handler
+    niclabs.insight.handler('hexagon', 'grid', HexagonalGrid);
+
+	return HexagonalGrid;
+})();
+
+niclabs.insight.map.grid.SquareGrid = (function() {
+	/**
+     * Construct a square grid from the data provided.
+	 *
+	 * The grid divides the visible map into square tiles of the same size and draws only those
+	 * tiles that have elements below them. If a weight is provided for the the data points
+	 * each square is painted with a function of the point weights inside the square
+     *
+     * @class niclabs.insight.map.grid.SquareGrid
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this grid belongs to
+     * @param {Object} options - configuration options for the grid
+     * @param {string} options.layer - identifier for the layer that this grid belongs to
+     * @param {integer} options.size - size for the side of each square (in pixels)
+	 * @param {string} [options.strokeColor='#000000'] - color for the stroke of each square
+	 * @param {float} [options.strokeOpacity=0.6] - opacity for the stroke (between 0-1)
+	 * @param {integer} [options.strokeWeight=2] - border weight for the square
+	 * @param {string|niclabs.insight.map.grid.SquareGrid~fill} [options.fill='#ffffff'] - color for the fill of the square,
+	 * 	it can have one of the following values:
+	 *  	- 'average' calculates the average of the weights in the square and interpolates that value between the values for options.fill_start and options.fill_end
+	 *  	- 'median' calculates the median of the weights in the square and interpolates as average
+	 *  	- rgb color (starting with '#') is used as a fixed color for all hexagons
+	 *  	- a callback receiving the points in the square and returning the value for the color
+	 * @param {string} [options.fillStart='#ff0000'] - if 'average' or 'median' are used as options for options.fill, it sets the begining of the interpolation interval for the fill function
+	 * @param {string} [options.fillEnd='#00ff00'] - if 'average' or 'median' are used as options for options.fill, it sets the end of the interpolation interval for the fill function
+	 * @param {float} [options.fillOpacity=0.6] - opacity for the fill of the square
+     * @param {niclabs.insight.map.grid.SquareGrid.Data[]} options.data - data for the layer
+     */
+	var SquareGrid = function(dashboard, options) {
+		var grid = niclabs.insight.map.grid.Grid(dashboard, options);
+
+		// Calculate the square side according to the zoom
+		grid.tile = function() {
+			return niclabs.insight.map.grid.SquareTile(niclabs.insight.map.GoogleMercator.distance(options.size, grid.map.zoom()));
+		};
+
+		// Refresh the grid
+		grid.refresh();
+
+        return grid;
+	};
+
+    // Register the handler
+    niclabs.insight.handler('square', 'grid', SquareGrid);
+
+	return SquareGrid;
+})();
+
+niclabs.insight.map.grid.SquareTile = (function() {
+    /**
+     * Define a square tile to be drawn on the map
+     *
+     * @class niclabs.insight.map.grid.SquareTile
+     * @implements niclabs.insight.map.grid.Tile
+	 * @param {float} side - side (or radius) of the square
+     */
+	var SquareTile = function(side) {
+		var self = niclabs.insight.map.grid.Tile();
+
+		/**
+		* Side of the square
+		*
+		* @memberof niclabs.insight.map.grid.SquareTile
+		* @member {float}
+		*/
+		Object.defineProperty(self, "s", { get: function () { return side; } });
+
+
+		/**
+		* Return the origin coordinates of the tile (i,j) in cartesian
+		* coordinate system. This can be passed as a parameter to
+		* {@link niclabs.insight.grid.Tile.draw()}
+		*
+		* @memberof niclabs.insight.map.grid.SquareTile
+		* @param {integer} i - horizontal coordinate of the tile
+		* @param {integer} j - vertical coordinate of the tile
+		* @return {niclabs.insight.map.Point} cartesian origin of the tile
+		*/
+		self.origin = function() {
+			var i, j;
+			if (arguments.length == 1) {
+				i = arguments[0][0];
+				j = arguments[0][1];
+			}
+			else {
+				i = arguments[0];
+				j = arguments[1];
+			}
+			var x = i * side;
+			var y = j * side;
+
+			return {'x': x, 'y': y};
+		};
+
+		/**
+		* Get the coordinates of the tile [i,j] in the grid that contains the point with
+		* the given coordinates
+		*             *
+		* @memberof niclabs.insight.map.grid.SquareTile
+		* @param {niclabs.insight.map.Point|niclabs.insight.map.LatLng} coord - coordinates of the point in the map
+		* @return {integer[]} coordinates of the tile that contains the given point
+		*/
+		self.query = function(coord) {
+			// Convert coordinates to cartesian
+			if (coord.lat) {
+				coord = niclabs.insight.map.GoogleMercator.cartesian(coord);
+			}
+
+			// Coordinates for the square
+			var square_i = Math.floor(coord.x / side);
+			var square_j = Math.floor(coord.y / side);
+
+
+			return [square_i, square_j];
+		};
+
+		/**
+		* Get the vertices for the tile with origin in coordinates coord
+		*
+		* @memberof niclabs.insight.map.grid.SquareTile
+		* @param {niclabs.insight.map.Point|niclabs.insight.map.LatLng} coord - coordinates of the tile in the map
+		* @return {niclabs.insight.map.Point[]} coordinates of the vertices of the tile
+		*/
+		self.vertices = function(coord) {
+			// Convert coordinates to cartesian
+			if (coord.lat) {
+				coord = niclabs.insight.map.GoogleMercator.cartesian(coord);
+			}
+
+			//x,y coordinates are top center point
+			var points = [];
+			points[0] = {'x': coord.x, 'y': coord.y};
+			points[1] = {'x': coord.x, 'y': coord.y + side};
+			points[2] = {'x': coord.x + side, 'y': coord.y + side};
+			points[3] = {'x': coord.x + side, 'y': coord.y};
+
+			return points;
+		};
+
+		return self;
+	};
+
+    return SquareTile;
+})();
+
+niclabs.insight.map.grid.Tile = (function() {
+    /**
+     * Construct an abstract tile for the map
+     *
+     * Tiles are used to construct grids in the map. A grid divides the world into equally sized tiles
+     * and then draws over the map the tiles that have data inside them. If the boundaries of the map
+     * change, the tile configuration changes.
+     *
+     * Since a tile is part of a grid, a tile can have a horizontal and vertical cooordinate indicating their
+     * position in the grid.
+     * @class niclabs.insight.map.grid.Tile
+     */
+    var Tile = function() {
+        var self = {
+            /**
+             * Return the origin coordinates of the tile (i,j) in cartesian
+             * coordinate system. This can be passed as a parameter to
+             * {@link niclabs.insight.grid.Tile.draw()}
+             *
+             * @memberof niclabs.insight.map.grid.Tile
+             * @abstract
+             * @param {integer} i - horizontal coordinate of the tile
+             * @param {integer} j - vertical coordinate of the tile
+             * @return {niclabs.insight.map.Point} cartesian origin of the tile
+             */
+            origin: function(i, j) {
+                throw new Error("Not implemented");
+            },
+
+            /**
+             * Get the coordinates of the tile [i,j] in the grid that contains the point with
+             * the given coordinates
+             *
+             * @memberof niclabs.insight.map.grid.Tile
+             * @abstract
+             * @param {niclabs.insight.map.Point|niclabs.insight.map.LatLng} coord - coordinates of the point in the map
+             * @return {integer[]} coordinates of the tile that contains the given point
+             */
+            query: function(coord) {
+                throw new Error("Not implemented");
+            },
+
+            /**
+             * Get the vertices for the tile ith origin in coordinates coord
+             *
+             * @memberof niclabs.insight.map.grid.Tile
+             * @abstract
+             * @param {niclabs.insight.map.Point|niclabs.insight.map.LatLng} coord - coordinates of the tile in the map
+             * @return {niclabs.insight.map.Point[]} coordinates of the vertices of the tile
+             */
+            vertices: function(coord) {
+                throw new Error("Not implemented");
+            },
+
+            /**
+             * Draw a tile in the given coordinates on the specified map view
+             *
+             * @memberof niclabs.insight.map.grid.Tile
+             * @abstract
+             * @param {niclabs.insight.map.Point|niclabs.insight.map.LatLng} coord - coordinates of the tile in the map
+             * @param {niclabs.insight.MapView} map - map view to draw the tile on
+             * @param {Object} options - configuration options for drawing the tile
+             * @param {string} [options.strokeColor='#000000'] - color for the stroke of each tile
+             * @param {float} [options.strokeOpacity=0.6] - opacity for the stroke (between 0-1)
+             * @param {integer} [options.strokeWeight=2] - border weight for the tile
+             * @param {string} [options.fillColor='#ffffff'] - color for the fill of the tile
+             * @param {float} [options.fillOpacity=0.6] - opacity for the fill of the tile
+             * @return {object} object drawn on the map (e.g.) google maps polygon
+             */
+			draw: function(coord, map, config) {
+				if (!('googlemap' in map))
+		            throw new Error("Sorry, I only know how to draw on Google Maps at the moment");
+
+				var points = self.vertices(coord);
+				var coordinates = [];
+				for (var i = 0; i < points.length; i++) {
+					coordinates.push(niclabs.insight.map.GoogleMercator.geographic(points[i]));
+				}
+
+				// Set default configuration
+				config = config || {
+					strokeColor: '#000000',
+					strokeOpacity: 0.6,
+					strokeWeight: 2,
+					fillColor: '#ffffff',
+					fillOpacity: 0.6,
+				};
+
+				config.paths = coordinates;
+				config.geodesic = true;
+
+				// Create the tile with the configuration
+				var tile = new google.maps.Polygon(config);
+				tile.setMap(map.googlemap());
+
+				return tile;
+			}
         };
 
         return self;
     };
 
-    // Register the handler
-    niclabs.insight.handler('voronoi-graph', 'graph', VoronoiGraph);
-
-    return VoronoiGraph;
-})(jQuery);
+    return Tile;
+})();
 
 /**
  * Tools for drawing heatmaps on the map

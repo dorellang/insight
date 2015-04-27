@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <!--
     THIS IS A TEST.
 
     IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW
 
-    GRIDS
+    HEATMAP
 
     -->
 
-    <title>Test 6 - Grids</title>
+    <title>Test 8 - Heatmap</title>
 
     <style>
       html,
@@ -26,47 +26,67 @@
       }
     </style>
 
-    <link rel="stylesheet" type="text/css" href="css/CityDashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/insight.css">
     <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
-    
+
     <script src="js/chartist.min.js"></script>
     <script src="js/jquery-1.11.1.min.js"></script>
-    <script src="//maps.googleapis.com/maps/api/js?v="></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization"></script>
 
-    <script src="js/CityDashboard.min.js"></script>
+    <script src="js/insight.js"></script>
 
   </head>
 
   <body><div id="dashboard"></div></body>
 
   <script>
-    // Binding the map and the information window.
-    var myDashboard = new CityDashboard.Dashboard({
-      'anchor': '#dashboard',
-      'layout': 'left'
+    /// Binding the map and the information window.
+    var dashboard = niclabs.insight.dashboard({
+        'anchor': '#dashboard',
+        'layout': 'none'
     });
 
-    // Setting up our map.
-    var map = new CityDashboard.GoogleMap({
-      'lat': -33.442909,
-      'lng': -70.65387,
-      'zoom': 12
+    var map = niclabs.insight.map({
+        'handler': 'google-map',
+        'lat': 48.8583,
+        'lng': 2.2944,
+        'zoom': 15
     });
 
-    // Setting up our information window.
-    var infoWindow = new CityDashboard.InfoWindow({});
-
-    myDashboard
-    .addLayer({
-      'id': '#squareGrid',
-      'layer': 'grid-layer',
-      'data-source': '#squareGrid',
-      'data': [],
-      'layer_attr': {
-        'type': 'square',
-        //'color': 'green',
-        'size': '0.03'
-    }});
+    niclabs.insight.layer({
+        handler: 'grid-layer',
+        data: [{
+            'lat': 48.860611,
+            'lng': 2.337644,
+            'landmark': 'Musee du Louvre',
+            'weight': 0.5
+        }, {
+            'lat': 48.859961,
+            'lng': 2.326561,
+            'landmark': 'Musée D’Orsay',
+            'weight': 0.8
+        }, {
+            'lat': 48.873792,
+            'lng': 2.295028,
+            'landmark': 'L’Arc de Triomphe',
+            'weight': 0.4,
+        }, {
+            'lat': 48.852968,
+            'lng': 2.349902,
+            'landmark': 'Cathédrale Notre-Dame',
+            'weight': 0.95
+        }, {
+            'lat': 48.85837,
+            'lng': 2.294481,
+            'landmark': 'Tour Eiffel',
+            'weight': 0.14
+        }],
+        grid: {
+            'type': 'hexagon',
+            'size': 32,
+            'fill': 'average'
+        }
+    });
 
   </script>
 </html>

@@ -13,13 +13,6 @@ niclabs.insight.MapView = (function($) {
 	return function(options) {
 		var mapId = '#insight-map-view';
 
-		/**
-		 * Object to represent geographic coordinates
-		 *
-		 * @typedef {Object} niclabs.insight.MapView.Coordinates
-		 * @property {float} lat - latitude for the map center
-		 * @property {float} lng - longitude for the map center
-		 */
 		var center = {
 			lat: options.lat || 0,
 			lng: options.lng || 0
@@ -43,7 +36,7 @@ niclabs.insight.MapView = (function($) {
 		* @property {float} lng - latitude for the marker
 		*/
 
-		return {
+		var self = {
 			/**
              * HTML DOM element for the map view
              *
@@ -62,7 +55,7 @@ niclabs.insight.MapView = (function($) {
              * @memberof niclabs.insight.MapView
              * @member {jQuery}
              */
-            $: function() {
+            get $ () {
                 var c = $(mapId);
                 container = c.length === 0 ? container : c;
                 return container;
@@ -76,7 +69,7 @@ niclabs.insight.MapView = (function($) {
 			 * @memberof niclabs.insight.MapView
 			 * @param {float=} lat - latitude for the map center
 			 * @param {float=} lng - longitude for the map center
-			 * @return {niclabs.insight.MapView.Coordinates} coordinates for the map center
+			 * @return {niclabs.insight.map.LatLng} coordinates for the map center
 			 */
 			center: function(lat, lng) {
 				center.lat = lat = typeof lat === 'undefined' ? center.lat : lat;
@@ -86,23 +79,43 @@ niclabs.insight.MapView = (function($) {
 			},
 
 			/**
-			 * Get the latitude for the map center
+			 * Latitude for the map center
 			 *
 			 * @memberof niclabs.insight.MapView
-			 * @return {float} latitude for the map center
+			 * @member {float}
 			 */
-			lat: function() {
+			get lat () {
 				return center.lat;
 			},
 
 			/**
-			 * Get the longitude for the map center
+			 * Longitude for the map center
 			 *
 			 * @memberof niclabs.insight.MapView
-			 * @return {float} longitude for the map center
+			 * @member {float}
 			 */
-			lng: function() {
+			get lng () {
 				return center.lng;
+			},
+
+			/**
+			 * Width for the map container
+			 *
+			 * @memberof niclabs.insight.MapView
+			 * @member {float}
+			 */
+			get width () {
+				return self.$.width();
+			},
+
+			/**
+			 * Height for the map container
+			 *
+			 * @memberof niclabs.insight.MapView
+			 * @member {float}
+			 */
+			get height () {
+				return self.$.height();
 			},
 
 			/**
@@ -120,5 +133,7 @@ niclabs.insight.MapView = (function($) {
 				return zoom;
 			},
 		};
+
+		return self;
 	};
 })(jQuery);
