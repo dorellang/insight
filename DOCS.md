@@ -139,6 +139,15 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [.SummaryBlock](#niclabs.insight.info.SummaryBlock) ⇐ <code>[Block](#niclabs.insight.info.Block)</code>
           * [new SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock_new)
       * [.layer](#niclabs.insight.layer) : <code>object</code>
+        * [.DiagramLayer](#niclabs.insight.layer.DiagramLayer) ⇐ <code>[Layer](#niclabs.insight.layer.Layer)</code>
+          * [new DiagramLayer(dashboard, options)](#new_niclabs.insight.layer.DiagramLayer_new)
+          * _instance_
+            * ["layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
+            * ["layer_sumary"](#niclabs.insight.layer.Layer#event_layer_sumary)
+          * _static_
+            * [.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.DiagramLayer.layer.draw)
+            * [.layer.clear()](#niclabs.insight.layer.DiagramLayer.layer.clear)
+            * [.layer.filter(fn)](#niclabs.insight.layer.DiagramLayer.layer.filter)
         * [.GridLayer](#niclabs.insight.layer.GridLayer) ⇐ <code>[Layer](#niclabs.insight.layer.Layer)</code>
           * [new GridLayer(dashboard, options)](#new_niclabs.insight.layer.GridLayer_new)
           * _instance_
@@ -188,21 +197,21 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
             * [.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom) ⇒ <code>int</code>
             * [.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center) ⇒ <code>[LatLng](#niclabs.insight.map.LatLng)</code>
         * [.GoogleMercator](#niclabs.insight.map.GoogleMercator)
-        * [.graph](#niclabs.insight.map.graph) : <code>object</code>
-          * [.DelaunayGraph](#niclabs.insight.map.graph.DelaunayGraph)
-            * [new DelaunayGraph(dashboard, options)](#new_niclabs.insight.map.graph.DelaunayGraph_new)
-            * [.self.clear()](#niclabs.insight.map.graph.DelaunayGraph.self.clear)
-            * [.Data](#niclabs.insight.map.graph.DelaunayGraph.Data) : <code>Object</code>
-          * [.Graph](#niclabs.insight.map.graph.Graph)
-            * [new Graph(dashboard, options)](#new_niclabs.insight.map.graph.Graph_new)
-            * [.map](#niclabs.insight.map.graph.Graph.map) : <code>[MapView](#niclabs.insight.MapView)</code>
-            * [.layer](#niclabs.insight.map.graph.Graph.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-            * [.clear()](#niclabs.insight.map.graph.Graph.clear)
-            * [.setMap()](#niclabs.insight.map.graph.Graph.setMap)
-          * [.VoronoiGraph](#niclabs.insight.map.graph.VoronoiGraph)
-            * [new VoronoiGraph(dashboard, options)](#new_niclabs.insight.map.graph.VoronoiGraph_new)
-            * [.self.clear()](#niclabs.insight.map.graph.VoronoiGraph.self.clear)
-            * [.Data](#niclabs.insight.map.graph.VoronoiGraph.Data) : <code>Object</code>
+        * [.diagram](#niclabs.insight.map.diagram) : <code>object</code>
+          * [.DelaunayDiagram](#niclabs.insight.map.diagram.DelaunayDiagram)
+            * [new DelaunayDiagram(dashboard, options)](#new_niclabs.insight.map.diagram.DelaunayDiagram_new)
+            * [.self.clear()](#niclabs.insight.map.diagram.DelaunayDiagram.self.clear)
+            * [.Data](#niclabs.insight.map.diagram.DelaunayDiagram.Data) : <code>Object</code>
+          * [.Diagram](#niclabs.insight.map.diagram.Diagram)
+            * [new Diagram(dashboard, options)](#new_niclabs.insight.map.diagram.Diagram_new)
+            * [.map](#niclabs.insight.map.diagram.Diagram.map) : <code>[MapView](#niclabs.insight.MapView)</code>
+            * [.layer](#niclabs.insight.map.diagram.Diagram.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
+            * [.clear()](#niclabs.insight.map.diagram.Diagram.clear)
+            * [.setMap()](#niclabs.insight.map.diagram.Diagram.setMap)
+          * [.VoronoiDiagram](#niclabs.insight.map.diagram.VoronoiDiagram)
+            * [new VoronoiDiagram(dashboard, options)](#new_niclabs.insight.map.diagram.VoronoiDiagram_new)
+            * [.self.clear()](#niclabs.insight.map.diagram.VoronoiDiagram.self.clear)
+            * [.Data](#niclabs.insight.map.diagram.VoronoiDiagram.Data) : <code>Object</code>
         * [.grid](#niclabs.insight.map.grid) : <code>object</code>
           * [.Grid](#niclabs.insight.map.grid.Grid)
             * [new Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid_new)
@@ -403,6 +412,15 @@ understand what is going on in the city
       * [.SummaryBlock](#niclabs.insight.info.SummaryBlock) ⇐ <code>[Block](#niclabs.insight.info.Block)</code>
         * [new SummaryBlock(dashboard, options)](#new_niclabs.insight.info.SummaryBlock_new)
     * [.layer](#niclabs.insight.layer) : <code>object</code>
+      * [.DiagramLayer](#niclabs.insight.layer.DiagramLayer) ⇐ <code>[Layer](#niclabs.insight.layer.Layer)</code>
+        * [new DiagramLayer(dashboard, options)](#new_niclabs.insight.layer.DiagramLayer_new)
+        * _instance_
+          * ["layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
+          * ["layer_sumary"](#niclabs.insight.layer.Layer#event_layer_sumary)
+        * _static_
+          * [.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.DiagramLayer.layer.draw)
+          * [.layer.clear()](#niclabs.insight.layer.DiagramLayer.layer.clear)
+          * [.layer.filter(fn)](#niclabs.insight.layer.DiagramLayer.layer.filter)
       * [.GridLayer](#niclabs.insight.layer.GridLayer) ⇐ <code>[Layer](#niclabs.insight.layer.Layer)</code>
         * [new GridLayer(dashboard, options)](#new_niclabs.insight.layer.GridLayer_new)
         * _instance_
@@ -452,21 +470,21 @@ understand what is going on in the city
           * [.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom) ⇒ <code>int</code>
           * [.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center) ⇒ <code>[LatLng](#niclabs.insight.map.LatLng)</code>
       * [.GoogleMercator](#niclabs.insight.map.GoogleMercator)
-      * [.graph](#niclabs.insight.map.graph) : <code>object</code>
-        * [.DelaunayGraph](#niclabs.insight.map.graph.DelaunayGraph)
-          * [new DelaunayGraph(dashboard, options)](#new_niclabs.insight.map.graph.DelaunayGraph_new)
-          * [.self.clear()](#niclabs.insight.map.graph.DelaunayGraph.self.clear)
-          * [.Data](#niclabs.insight.map.graph.DelaunayGraph.Data) : <code>Object</code>
-        * [.Graph](#niclabs.insight.map.graph.Graph)
-          * [new Graph(dashboard, options)](#new_niclabs.insight.map.graph.Graph_new)
-          * [.map](#niclabs.insight.map.graph.Graph.map) : <code>[MapView](#niclabs.insight.MapView)</code>
-          * [.layer](#niclabs.insight.map.graph.Graph.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-          * [.clear()](#niclabs.insight.map.graph.Graph.clear)
-          * [.setMap()](#niclabs.insight.map.graph.Graph.setMap)
-        * [.VoronoiGraph](#niclabs.insight.map.graph.VoronoiGraph)
-          * [new VoronoiGraph(dashboard, options)](#new_niclabs.insight.map.graph.VoronoiGraph_new)
-          * [.self.clear()](#niclabs.insight.map.graph.VoronoiGraph.self.clear)
-          * [.Data](#niclabs.insight.map.graph.VoronoiGraph.Data) : <code>Object</code>
+      * [.diagram](#niclabs.insight.map.diagram) : <code>object</code>
+        * [.DelaunayDiagram](#niclabs.insight.map.diagram.DelaunayDiagram)
+          * [new DelaunayDiagram(dashboard, options)](#new_niclabs.insight.map.diagram.DelaunayDiagram_new)
+          * [.self.clear()](#niclabs.insight.map.diagram.DelaunayDiagram.self.clear)
+          * [.Data](#niclabs.insight.map.diagram.DelaunayDiagram.Data) : <code>Object</code>
+        * [.Diagram](#niclabs.insight.map.diagram.Diagram)
+          * [new Diagram(dashboard, options)](#new_niclabs.insight.map.diagram.Diagram_new)
+          * [.map](#niclabs.insight.map.diagram.Diagram.map) : <code>[MapView](#niclabs.insight.MapView)</code>
+          * [.layer](#niclabs.insight.map.diagram.Diagram.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
+          * [.clear()](#niclabs.insight.map.diagram.Diagram.clear)
+          * [.setMap()](#niclabs.insight.map.diagram.Diagram.setMap)
+        * [.VoronoiDiagram](#niclabs.insight.map.diagram.VoronoiDiagram)
+          * [new VoronoiDiagram(dashboard, options)](#new_niclabs.insight.map.diagram.VoronoiDiagram_new)
+          * [.self.clear()](#niclabs.insight.map.diagram.VoronoiDiagram.self.clear)
+          * [.Data](#niclabs.insight.map.diagram.VoronoiDiagram.Data) : <code>Object</code>
       * [.grid](#niclabs.insight.map.grid) : <code>object</code>
         * [.Grid](#niclabs.insight.map.grid.Grid)
           * [new Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid_new)
@@ -1635,6 +1653,15 @@ Visualization layers for the dashboard
 **Kind**: static namespace of <code>[insight](#niclabs.insight)</code>  
 
   * [.layer](#niclabs.insight.layer) : <code>object</code>
+    * [.DiagramLayer](#niclabs.insight.layer.DiagramLayer) ⇐ <code>[Layer](#niclabs.insight.layer.Layer)</code>
+      * [new DiagramLayer(dashboard, options)](#new_niclabs.insight.layer.DiagramLayer_new)
+      * _instance_
+        * ["layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
+        * ["layer_sumary"](#niclabs.insight.layer.Layer#event_layer_sumary)
+      * _static_
+        * [.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.DiagramLayer.layer.draw)
+        * [.layer.clear()](#niclabs.insight.layer.DiagramLayer.layer.clear)
+        * [.layer.filter(fn)](#niclabs.insight.layer.DiagramLayer.layer.filter)
     * [.GridLayer](#niclabs.insight.layer.GridLayer) ⇐ <code>[Layer](#niclabs.insight.layer.Layer)</code>
       * [new GridLayer(dashboard, options)](#new_niclabs.insight.layer.GridLayer_new)
       * _instance_
@@ -1676,6 +1703,88 @@ Visualization layers for the dashboard
         * [.layer.clear()](#niclabs.insight.layer.MarkerLayer.layer.clear)
         * [.layer.filter(fn)](#niclabs.insight.layer.MarkerLayer.layer.filter)
 
+<a name="niclabs.insight.layer.DiagramLayer"></a>
+##### layer.DiagramLayer ⇐ <code>[Layer](#niclabs.insight.layer.Layer)</code>
+**Kind**: static class of <code>[layer](#niclabs.insight.layer)</code>  
+**Extends:** <code>[Layer](#niclabs.insight.layer.Layer)</code>  
+
+* [.DiagramLayer](#niclabs.insight.layer.DiagramLayer) ⇐ <code>[Layer](#niclabs.insight.layer.Layer)</code>
+  * [new DiagramLayer(dashboard, options)](#new_niclabs.insight.layer.DiagramLayer_new)
+  * _instance_
+    * ["layer_data"](#niclabs.insight.layer.Layer#event_layer_data)
+    * ["layer_sumary"](#niclabs.insight.layer.Layer#event_layer_sumary)
+  * _static_
+    * [.layer.draw(data, data[].lat, data[].lng, [data[].description])](#niclabs.insight.layer.DiagramLayer.layer.draw)
+    * [.layer.clear()](#niclabs.insight.layer.DiagramLayer.layer.clear)
+    * [.layer.filter(fn)](#niclabs.insight.layer.DiagramLayer.layer.filter)
+
+<a name="new_niclabs.insight.layer.DiagramLayer_new"></a>
+###### new DiagramLayer(dashboard, options)
+Construct a new diagram layer
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| dashboard | <code>[Dashboard](#niclabs.insight.Dashboard)</code> | dashboard that this layer belongs to |
+| options | <code>Object</code> | configuration options for the layer |
+| options.id | <code>string</code> | identifier for the layer |
+| options.data | <code>string</code> &#124; <code>Array.&lt;Object&gt;</code> | uri or data array for the layer |
+| [options.diagram] | <code>Object</code> | options for the diagram |
+
+<a name="niclabs.insight.layer.Layer#event_layer_data"></a>
+###### "layer_data"
+Event triggered when an update to the layer data (filtering/update) has ocurred
+
+**Kind**: event emitted by <code>[DiagramLayer](#niclabs.insight.layer.DiagramLayer)</code>  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| id | <code>string</code> | id for the layer to which the data belongs to |
+| data | <code>Array.&lt;Object&gt;</code> | new data array |
+
+<a name="niclabs.insight.layer.Layer#event_layer_sumary"></a>
+###### "layer_sumary"
+Event triggered when an update to the (filtering/update) has ocurred
+
+The event provides summary data for blocks to show
+
+**Kind**: event emitted by <code>[DiagramLayer](#niclabs.insight.layer.DiagramLayer)</code>  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| id | <code>string</code> | id for the layer to which the data belongs to |
+| data | <code>Object</code> | summarized data |
+
+<a name="niclabs.insight.layer.DiagramLayer.layer.draw"></a>
+###### DiagramLayer.layer.draw(data, data[].lat, data[].lng, [data[].description])
+Draw the diagram according to the internal data on the map
+
+**Kind**: static method of <code>[DiagramLayer](#niclabs.insight.layer.DiagramLayer)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>Array.&lt;Object&gt;</code> | data to draw |
+| data[].lat | <code>float</code> | latitude for the marker |
+| data[].lng | <code>float</code> | longitude for the marker |
+| [data[].description] | <code>string</code> | description for the marker |
+
+<a name="niclabs.insight.layer.DiagramLayer.layer.clear"></a>
+###### DiagramLayer.layer.clear()
+Clear the diagram from the map
+
+**Kind**: static method of <code>[DiagramLayer](#niclabs.insight.layer.DiagramLayer)</code>  
+<a name="niclabs.insight.layer.DiagramLayer.layer.filter"></a>
+###### DiagramLayer.layer.filter(fn)
+Filter the layer according to the provided function.
+
+**Kind**: static method of <code>[DiagramLayer](#niclabs.insight.layer.DiagramLayer)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fn | <code>niclabs.insight.layer.Layer~Filter</code> | filtering function |
+
 <a name="niclabs.insight.layer.GridLayer"></a>
 ##### layer.GridLayer ⇐ <code>[Layer](#niclabs.insight.layer.Layer)</code>
 **Kind**: static class of <code>[layer](#niclabs.insight.layer)</code>  
@@ -1702,7 +1811,7 @@ Construct a new grid Layer
 | options | <code>Object</code> | configuration options for the layer |
 | options.id | <code>string</code> | identifier for the layer |
 | options.data | <code>string</code> &#124; <code>Array.&lt;Object&gt;</code> | uri or data array for the layer |
-| [options.grid] | <code>Object</code> | options for the heatmap |
+| [options.grid] | <code>Object</code> | options for the grid |
 
 <a name="niclabs.insight.layer.Layer#event_layer_data"></a>
 ###### "layer_data"
@@ -2060,21 +2169,21 @@ Map compatibility for the insight dashboard
         * [.map.zoom([zoom])](#niclabs.insight.map.GoogleMap.map.zoom) ⇒ <code>int</code>
         * [.map.center([lat], [lng])](#niclabs.insight.map.GoogleMap.map.center) ⇒ <code>[LatLng](#niclabs.insight.map.LatLng)</code>
     * [.GoogleMercator](#niclabs.insight.map.GoogleMercator)
-    * [.graph](#niclabs.insight.map.graph) : <code>object</code>
-      * [.DelaunayGraph](#niclabs.insight.map.graph.DelaunayGraph)
-        * [new DelaunayGraph(dashboard, options)](#new_niclabs.insight.map.graph.DelaunayGraph_new)
-        * [.self.clear()](#niclabs.insight.map.graph.DelaunayGraph.self.clear)
-        * [.Data](#niclabs.insight.map.graph.DelaunayGraph.Data) : <code>Object</code>
-      * [.Graph](#niclabs.insight.map.graph.Graph)
-        * [new Graph(dashboard, options)](#new_niclabs.insight.map.graph.Graph_new)
-        * [.map](#niclabs.insight.map.graph.Graph.map) : <code>[MapView](#niclabs.insight.MapView)</code>
-        * [.layer](#niclabs.insight.map.graph.Graph.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-        * [.clear()](#niclabs.insight.map.graph.Graph.clear)
-        * [.setMap()](#niclabs.insight.map.graph.Graph.setMap)
-      * [.VoronoiGraph](#niclabs.insight.map.graph.VoronoiGraph)
-        * [new VoronoiGraph(dashboard, options)](#new_niclabs.insight.map.graph.VoronoiGraph_new)
-        * [.self.clear()](#niclabs.insight.map.graph.VoronoiGraph.self.clear)
-        * [.Data](#niclabs.insight.map.graph.VoronoiGraph.Data) : <code>Object</code>
+    * [.diagram](#niclabs.insight.map.diagram) : <code>object</code>
+      * [.DelaunayDiagram](#niclabs.insight.map.diagram.DelaunayDiagram)
+        * [new DelaunayDiagram(dashboard, options)](#new_niclabs.insight.map.diagram.DelaunayDiagram_new)
+        * [.self.clear()](#niclabs.insight.map.diagram.DelaunayDiagram.self.clear)
+        * [.Data](#niclabs.insight.map.diagram.DelaunayDiagram.Data) : <code>Object</code>
+      * [.Diagram](#niclabs.insight.map.diagram.Diagram)
+        * [new Diagram(dashboard, options)](#new_niclabs.insight.map.diagram.Diagram_new)
+        * [.map](#niclabs.insight.map.diagram.Diagram.map) : <code>[MapView](#niclabs.insight.MapView)</code>
+        * [.layer](#niclabs.insight.map.diagram.Diagram.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
+        * [.clear()](#niclabs.insight.map.diagram.Diagram.clear)
+        * [.setMap()](#niclabs.insight.map.diagram.Diagram.setMap)
+      * [.VoronoiDiagram](#niclabs.insight.map.diagram.VoronoiDiagram)
+        * [new VoronoiDiagram(dashboard, options)](#new_niclabs.insight.map.diagram.VoronoiDiagram_new)
+        * [.self.clear()](#niclabs.insight.map.diagram.VoronoiDiagram.self.clear)
+        * [.Data](#niclabs.insight.map.diagram.VoronoiDiagram.Data) : <code>Object</code>
     * [.grid](#niclabs.insight.map.grid) : <code>object</code>
       * [.Grid](#niclabs.insight.map.grid.Grid)
         * [new Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid_new)
@@ -2213,157 +2322,157 @@ Defines a mercator projection on the map
 Source: [https://developers.google.com/maps/documentation/javascript/examples/map-coordinates](https://developers.google.com/maps/documentation/javascript/examples/map-coordinates)
 
 **Kind**: static mixin of <code>[map](#niclabs.insight.map)</code>  
-<a name="niclabs.insight.map.graph"></a>
-##### map.graph : <code>object</code>
-Tools for drawing graphs on the map. To calculate the spherical voronoi/delaunay
+<a name="niclabs.insight.map.diagram"></a>
+##### map.diagram : <code>object</code>
+Tools for drawing diagrams on the map. To calculate the spherical voronoi/delaunay
 uses the ThirdParty libray delaunayTriangles.js
 
 **Kind**: static namespace of <code>[map](#niclabs.insight.map)</code>  
 
-* [.graph](#niclabs.insight.map.graph) : <code>object</code>
-  * [.DelaunayGraph](#niclabs.insight.map.graph.DelaunayGraph)
-    * [new DelaunayGraph(dashboard, options)](#new_niclabs.insight.map.graph.DelaunayGraph_new)
-    * [.self.clear()](#niclabs.insight.map.graph.DelaunayGraph.self.clear)
-    * [.Data](#niclabs.insight.map.graph.DelaunayGraph.Data) : <code>Object</code>
-  * [.Graph](#niclabs.insight.map.graph.Graph)
-    * [new Graph(dashboard, options)](#new_niclabs.insight.map.graph.Graph_new)
-    * [.map](#niclabs.insight.map.graph.Graph.map) : <code>[MapView](#niclabs.insight.MapView)</code>
-    * [.layer](#niclabs.insight.map.graph.Graph.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-    * [.clear()](#niclabs.insight.map.graph.Graph.clear)
-    * [.setMap()](#niclabs.insight.map.graph.Graph.setMap)
-  * [.VoronoiGraph](#niclabs.insight.map.graph.VoronoiGraph)
-    * [new VoronoiGraph(dashboard, options)](#new_niclabs.insight.map.graph.VoronoiGraph_new)
-    * [.self.clear()](#niclabs.insight.map.graph.VoronoiGraph.self.clear)
-    * [.Data](#niclabs.insight.map.graph.VoronoiGraph.Data) : <code>Object</code>
+* [.diagram](#niclabs.insight.map.diagram) : <code>object</code>
+  * [.DelaunayDiagram](#niclabs.insight.map.diagram.DelaunayDiagram)
+    * [new DelaunayDiagram(dashboard, options)](#new_niclabs.insight.map.diagram.DelaunayDiagram_new)
+    * [.self.clear()](#niclabs.insight.map.diagram.DelaunayDiagram.self.clear)
+    * [.Data](#niclabs.insight.map.diagram.DelaunayDiagram.Data) : <code>Object</code>
+  * [.Diagram](#niclabs.insight.map.diagram.Diagram)
+    * [new Diagram(dashboard, options)](#new_niclabs.insight.map.diagram.Diagram_new)
+    * [.map](#niclabs.insight.map.diagram.Diagram.map) : <code>[MapView](#niclabs.insight.MapView)</code>
+    * [.layer](#niclabs.insight.map.diagram.Diagram.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
+    * [.clear()](#niclabs.insight.map.diagram.Diagram.clear)
+    * [.setMap()](#niclabs.insight.map.diagram.Diagram.setMap)
+  * [.VoronoiDiagram](#niclabs.insight.map.diagram.VoronoiDiagram)
+    * [new VoronoiDiagram(dashboard, options)](#new_niclabs.insight.map.diagram.VoronoiDiagram_new)
+    * [.self.clear()](#niclabs.insight.map.diagram.VoronoiDiagram.self.clear)
+    * [.Data](#niclabs.insight.map.diagram.VoronoiDiagram.Data) : <code>Object</code>
 
-<a name="niclabs.insight.map.graph.DelaunayGraph"></a>
-###### graph.DelaunayGraph
-**Kind**: static class of <code>[graph](#niclabs.insight.map.graph)</code>  
+<a name="niclabs.insight.map.diagram.DelaunayDiagram"></a>
+###### diagram.DelaunayDiagram
+**Kind**: static class of <code>[diagram](#niclabs.insight.map.diagram)</code>  
 
-* [.DelaunayGraph](#niclabs.insight.map.graph.DelaunayGraph)
-  * [new DelaunayGraph(dashboard, options)](#new_niclabs.insight.map.graph.DelaunayGraph_new)
-  * [.self.clear()](#niclabs.insight.map.graph.DelaunayGraph.self.clear)
-  * [.Data](#niclabs.insight.map.graph.DelaunayGraph.Data) : <code>Object</code>
+* [.DelaunayDiagram](#niclabs.insight.map.diagram.DelaunayDiagram)
+  * [new DelaunayDiagram(dashboard, options)](#new_niclabs.insight.map.diagram.DelaunayDiagram_new)
+  * [.self.clear()](#niclabs.insight.map.diagram.DelaunayDiagram.self.clear)
+  * [.Data](#niclabs.insight.map.diagram.DelaunayDiagram.Data) : <code>Object</code>
 
-<a name="new_niclabs.insight.map.graph.DelaunayGraph_new"></a>
-####### new DelaunayGraph(dashboard, options)
+<a name="new_niclabs.insight.map.diagram.DelaunayDiagram_new"></a>
+####### new DelaunayDiagram(dashboard, options)
 Draw a delaunay triangulation over the map
 
 In a delaunay triangulation, each data point is a location where the delaunay triangulation
-is based on. A delaunay graph is drawn with the provided configuration.
+is based on. A delaunay diagram is drawn with the provided configuration.
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| dashboard | <code>[Dashboard](#niclabs.insight.Dashboard)</code> |  | dashboard that this graph belongs to |
-| options | <code>Object</code> |  | configuration options for the graph |
-| options.data | <code>[Array.&lt;Data&gt;](#niclabs.insight.map.graph.DelaunayGraph.Data)</code> |  | array of points to draw the graph |
-| [options.strokeColor] | <code>string</code> | <code>&quot;&#x27;#ff0000&#x27;&quot;</code> | Color for the graph edges |
-| [options.strokeWeight] | <code>float</code> | <code>2</code> | Width for the graph edges |
-| [options.strokeOpacity] | <code>float</code> | <code>1</code> | Opacity for the graph edges. |
+| dashboard | <code>[Dashboard](#niclabs.insight.Dashboard)</code> |  | dashboard that this diagram belongs to |
+| options | <code>Object</code> |  | configuration options for the diagram |
+| options.data | <code>[Array.&lt;Data&gt;](#niclabs.insight.map.diagram.DelaunayDiagram.Data)</code> |  | array of points to draw the graph |
+| [options.strokeColor] | <code>string</code> | <code>&quot;&#x27;#ff0000&#x27;&quot;</code> | Color for the diagram edges |
+| [options.strokeWeight] | <code>float</code> | <code>2</code> | Width for the diagram edges |
+| [options.strokeOpacity] | <code>float</code> | <code>1</code> | Opacity for the diagram edges. |
 
-<a name="niclabs.insight.map.graph.DelaunayGraph.self.clear"></a>
-####### DelaunayGraph.self.clear()
+<a name="niclabs.insight.map.diagram.DelaunayDiagram.self.clear"></a>
+####### DelaunayDiagram.self.clear()
 Clear the map
 
-**Kind**: static method of <code>[DelaunayGraph](#niclabs.insight.map.graph.DelaunayGraph)</code>  
+**Kind**: static method of <code>[DelaunayDiagram](#niclabs.insight.map.diagram.DelaunayDiagram)</code>  
 **Overrides**:   
-<a name="niclabs.insight.map.graph.DelaunayGraph.Data"></a>
-####### DelaunayGraph.Data : <code>Object</code>
-Data point for DelaunayGraph
+<a name="niclabs.insight.map.diagram.DelaunayDiagram.Data"></a>
+####### DelaunayDiagram.Data : <code>Object</code>
+Data point for DelaunayDiagram
 
-**Kind**: static typedef of <code>[DelaunayGraph](#niclabs.insight.map.graph.DelaunayGraph)</code>  
+**Kind**: static typedef of <code>[DelaunayDiagram](#niclabs.insight.map.diagram.DelaunayDiagram)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| lat | <code>float</code> | latitude for the graph point |
-| lng | <code>float</code> | longitude for the graph point |
+| lat | <code>float</code> | latitude for the diagram point |
+| lng | <code>float</code> | longitude for the diagram point |
 | landmark | <code>string</code> | landmark that the point indicates |
 
-<a name="niclabs.insight.map.graph.Graph"></a>
-###### graph.Graph
-**Kind**: static class of <code>[graph](#niclabs.insight.map.graph)</code>  
+<a name="niclabs.insight.map.diagram.Diagram"></a>
+###### diagram.Diagram
+**Kind**: static class of <code>[diagram](#niclabs.insight.map.diagram)</code>  
 
-* [.Graph](#niclabs.insight.map.graph.Graph)
-  * [new Graph(dashboard, options)](#new_niclabs.insight.map.graph.Graph_new)
-  * [.map](#niclabs.insight.map.graph.Graph.map) : <code>[MapView](#niclabs.insight.MapView)</code>
-  * [.layer](#niclabs.insight.map.graph.Graph.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-  * [.clear()](#niclabs.insight.map.graph.Graph.clear)
-  * [.setMap()](#niclabs.insight.map.graph.Graph.setMap)
+* [.Diagram](#niclabs.insight.map.diagram.Diagram)
+  * [new Diagram(dashboard, options)](#new_niclabs.insight.map.diagram.Diagram_new)
+  * [.map](#niclabs.insight.map.diagram.Diagram.map) : <code>[MapView](#niclabs.insight.MapView)</code>
+  * [.layer](#niclabs.insight.map.diagram.Diagram.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
+  * [.clear()](#niclabs.insight.map.diagram.Diagram.clear)
+  * [.setMap()](#niclabs.insight.map.diagram.Diagram.setMap)
 
-<a name="new_niclabs.insight.map.graph.Graph_new"></a>
-####### new Graph(dashboard, options)
-Construct a Graph over the map
+<a name="new_niclabs.insight.map.diagram.Diagram_new"></a>
+####### new Diagram(dashboard, options)
+Construct a Diagram over the map
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| dashboard | <code>[Dashboard](#niclabs.insight.Dashboard)</code> | dashboard that this graph belongs to |
-| options | <code>Object</code> | configuration options for the graph |
+| dashboard | <code>[Dashboard](#niclabs.insight.Dashboard)</code> | dashboard that this diagram belongs to |
+| options | <code>Object</code> | configuration options for the diagram |
 
-<a name="niclabs.insight.map.graph.Graph.map"></a>
-####### Graph.map : <code>[MapView](#niclabs.insight.MapView)</code>
-Map view where the graph belongs to
+<a name="niclabs.insight.map.diagram.Diagram.map"></a>
+####### Diagram.map : <code>[MapView](#niclabs.insight.MapView)</code>
+Map view where the diagram belongs to
 
-**Kind**: static property of <code>[Graph](#niclabs.insight.map.graph.Graph)</code>  
-<a name="niclabs.insight.map.graph.Graph.layer"></a>
-####### Graph.layer : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-Layer to which the graph belongs to
+**Kind**: static property of <code>[Diagram](#niclabs.insight.map.diagram.Diagram)</code>  
+<a name="niclabs.insight.map.diagram.Diagram.layer"></a>
+####### Diagram.layer : <code>[Layer](#niclabs.insight.layer.Layer)</code>
+Layer to which the diagram belongs to
 
-**Kind**: static property of <code>[Graph](#niclabs.insight.map.graph.Graph)</code>  
-<a name="niclabs.insight.map.graph.Graph.clear"></a>
-####### Graph.clear()
-Clear the graph from the map
+**Kind**: static property of <code>[Diagram](#niclabs.insight.map.diagram.Diagram)</code>  
+<a name="niclabs.insight.map.diagram.Diagram.clear"></a>
+####### Diagram.clear()
+Clear the diagram from the map
 
-**Kind**: static method of <code>[Graph](#niclabs.insight.map.graph.Graph)</code>  
-<a name="niclabs.insight.map.graph.Graph.setMap"></a>
-####### Graph.setMap()
-Set the map of the graph.
+**Kind**: static method of <code>[Diagram](#niclabs.insight.map.diagram.Diagram)</code>  
+<a name="niclabs.insight.map.diagram.Diagram.setMap"></a>
+####### Diagram.setMap()
+Set the map of the diagram.
 TODO: can be done better?
 
-**Kind**: static method of <code>[Graph](#niclabs.insight.map.graph.Graph)</code>  
-<a name="niclabs.insight.map.graph.VoronoiGraph"></a>
-###### graph.VoronoiGraph
-**Kind**: static class of <code>[graph](#niclabs.insight.map.graph)</code>  
+**Kind**: static method of <code>[Diagram](#niclabs.insight.map.diagram.Diagram)</code>  
+<a name="niclabs.insight.map.diagram.VoronoiDiagram"></a>
+###### diagram.VoronoiDiagram
+**Kind**: static class of <code>[diagram](#niclabs.insight.map.diagram)</code>  
 
-* [.VoronoiGraph](#niclabs.insight.map.graph.VoronoiGraph)
-  * [new VoronoiGraph(dashboard, options)](#new_niclabs.insight.map.graph.VoronoiGraph_new)
-  * [.self.clear()](#niclabs.insight.map.graph.VoronoiGraph.self.clear)
-  * [.Data](#niclabs.insight.map.graph.VoronoiGraph.Data) : <code>Object</code>
+* [.VoronoiDiagram](#niclabs.insight.map.diagram.VoronoiDiagram)
+  * [new VoronoiDiagram(dashboard, options)](#new_niclabs.insight.map.diagram.VoronoiDiagram_new)
+  * [.self.clear()](#niclabs.insight.map.diagram.VoronoiDiagram.self.clear)
+  * [.Data](#niclabs.insight.map.diagram.VoronoiDiagram.Data) : <code>Object</code>
 
-<a name="new_niclabs.insight.map.graph.VoronoiGraph_new"></a>
-####### new VoronoiGraph(dashboard, options)
+<a name="new_niclabs.insight.map.diagram.VoronoiDiagram_new"></a>
+####### new VoronoiDiagram(dashboard, options)
 Draw a voronoi diagram over the map
 
 In a voronoi diagram, each data point is a location where the voronoi diagram
-is based on. A voronoi graph is drawn with the provided configuration.
+is based on. A voronoi diagram is drawn with the provided configuration.
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| dashboard | <code>[Dashboard](#niclabs.insight.Dashboard)</code> |  | dashboard that this graph belongs to |
-| options | <code>Object</code> |  | configuration options for the graph |
-| options.data | <code>[Array.&lt;Data&gt;](#niclabs.insight.map.graph.VoronoiGraph.Data)</code> |  | array of points to draw the graph |
-| [options.strokeColor] | <code>string</code> | <code>&quot;&#x27;#ff0000&#x27;&quot;</code> | Color for the graph edges |
-| [options.strokeWeight] | <code>float</code> | <code>2</code> | Width for the graph edges |
-| [options.strokeOpacity] | <code>float</code> | <code>1</code> | Opacity for the graph edges. |
+| dashboard | <code>[Dashboard](#niclabs.insight.Dashboard)</code> |  | dashboard that this diagram belongs to |
+| options | <code>Object</code> |  | configuration options for the diagram |
+| options.data | <code>[Array.&lt;Data&gt;](#niclabs.insight.map.diagram.VoronoiDiagram.Data)</code> |  | array of points to draw the graph |
+| [options.strokeColor] | <code>string</code> | <code>&quot;&#x27;#ff0000&#x27;&quot;</code> | Color for the diagram edges |
+| [options.strokeWeight] | <code>float</code> | <code>2</code> | Width for the diagram edges |
+| [options.strokeOpacity] | <code>float</code> | <code>1</code> | Opacity for the diagram edges. |
 
-<a name="niclabs.insight.map.graph.VoronoiGraph.self.clear"></a>
-####### VoronoiGraph.self.clear()
+<a name="niclabs.insight.map.diagram.VoronoiDiagram.self.clear"></a>
+####### VoronoiDiagram.self.clear()
 Clear the map
 
-**Kind**: static method of <code>[VoronoiGraph](#niclabs.insight.map.graph.VoronoiGraph)</code>  
+**Kind**: static method of <code>[VoronoiDiagram](#niclabs.insight.map.diagram.VoronoiDiagram)</code>  
 **Overrides**:   
-<a name="niclabs.insight.map.graph.VoronoiGraph.Data"></a>
-####### VoronoiGraph.Data : <code>Object</code>
-Data point for VoronoiGraph
+<a name="niclabs.insight.map.diagram.VoronoiDiagram.Data"></a>
+####### VoronoiDiagram.Data : <code>Object</code>
+Data point for VoronoiDiagram
 
-**Kind**: static typedef of <code>[VoronoiGraph](#niclabs.insight.map.graph.VoronoiGraph)</code>  
+**Kind**: static typedef of <code>[VoronoiDiagram](#niclabs.insight.map.diagram.VoronoiDiagram)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| lat | <code>float</code> | latitude for the graph point |
-| lng | <code>float</code> | longitude for the graph point |
+| lat | <code>float</code> | latitude for the diagram point |
+| lng | <code>float</code> | longitude for the diagram point |
 | landmark | <code>string</code> | landmark that the point indicates |
 
 <a name="niclabs.insight.map.grid"></a>
@@ -2913,14 +3022,6 @@ Collection of markers available for drawing on the map
 ###### marker.CircleMarker ⇐ <code>[Marker](#niclabs.insight.map.marker.Marker)</code>
 **Kind**: static class of <code>[marker](#niclabs.insight.map.marker)</code>  
 **Extends:** <code>[Marker](#niclabs.insight.map.marker.Marker)</code>  
-**Params**: <code>float</code> options.lat - latitude for the marker  
-**Params**: <code>float</code> options.lng - longitude for the marker  
-**Params**: <code>string</code> options.landmark - landmark that the marker indicates  
-**Params**: <code>number</code> [options.radius=400] - radius for the circle  
-**Params**: <code>string</code> [options.strokeColor=&#x27;#ff0000&#x27;] - color for the circle perimenter line  
-**Params**: <code>float</code> [options.strokeOpacity=0.8] - opacity for the circle perimeter line  
-**Params**: <code>string</code> [options.fillColor=&#x27;#ff0000&#x27;] - color for the circle filling  
-**Params**: <code>float</code> [options.fillOpacity=0.35] - opacity for the circle filling  
 <a name="new_niclabs.insight.map.marker.CircleMarker_new"></a>
 ####### new CircleMarker(dashboard, options)
 Constructor for circle markers
@@ -2928,20 +3029,24 @@ Constructor for circle markers
 Circle markers are drawn in the map as circular waypoints
 
 
-| Param | Type | Description |
-| --- | --- | --- |
-| dashboard | <code>[Dashboard](#niclabs.insight.Dashboard)</code> | dashboard that this marker belongs to |
-| options | <code>Object</code> | configuration options for the layer |
-| options.layer | <code>string</code> | identifier for the layer that this marker belongs to |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| dashboard | <code>[Dashboard](#niclabs.insight.Dashboard)</code> |  | dashboard that this marker belongs to |
+| options | <code>Object</code> |  | configuration options for the layer |
+| options.layer | <code>string</code> |  | identifier for the layer that this marker belongs to |
+| options.lat | <code>float</code> |  | latitude for the marker |
+| options.lng | <code>float</code> |  | longitude for the marker |
+| options.landmark | <code>string</code> |  | landmark that the marker indicates |
+| [options.radius] | <code>number</code> | <code>400</code> | radius for the circle |
+| [options.strokeColor] | <code>string</code> | <code>&quot;&#x27;#ff0000&#x27;&quot;</code> | color for the circle perimenter line |
+| [options.strokeOpacity] | <code>float</code> | <code>0.8</code> | opacity for the circle perimeter line |
+| [options.fillColor] | <code>string</code> | <code>&quot;&#x27;#ff0000&#x27;&quot;</code> | color for the circle filling |
+| [options.fillOpacity] | <code>float</code> | <code>0.35</code> | opacity for the circle filling |
 
 <a name="niclabs.insight.map.marker.ImageMarker"></a>
 ###### marker.ImageMarker ⇐ <code>[Marker](#niclabs.insight.map.marker.Marker)</code>
 **Kind**: static class of <code>[marker](#niclabs.insight.map.marker)</code>  
 **Extends:** <code>[Marker](#niclabs.insight.map.marker.Marker)</code>  
-**Params**: <code>float</code> options.lat - latitude for the marker  
-**Params**: <code>float</code> options.lng - longitude for the marker  
-**Params**: <code>string</code> options.landmark - landmark that the marker indicates  
-**Params**: <code>string</code> options.src - image source  
 <a name="new_niclabs.insight.map.marker.ImageMarker_new"></a>
 ####### new ImageMarker(dashboard, options)
 Constructor for an image marker
@@ -2954,13 +3059,14 @@ An image marker includes an image for each waypoint
 | dashboard | <code>[Dashboard](#niclabs.insight.Dashboard)</code> | dashboard that this marker belongs to |
 | options | <code>Object</code> | configuration options for the layer |
 | options.layer | <code>string</code> | identifier for the layer that this marker belongs to |
+| options.lat | <code>float</code> | latitude for the marker |
+| options.lng | <code>float</code> | longitude for the marker |
+| options.landmark | <code>string</code> | landmark that the marker indicates |
+| options.src | <code>string</code> | image source |
 
 <a name="niclabs.insight.map.marker.Marker"></a>
 ###### marker.Marker
 **Kind**: static class of <code>[marker](#niclabs.insight.map.marker)</code>  
-**Params**: <code>float</code> options.lat - latitude for the marker  
-**Params**: <code>float</code> options.lng - longitude for the marker  
-**Params**: <code>string</code> options.landmark - landmark that the marker indicates  
 
 * [.Marker](#niclabs.insight.map.marker.Marker)
   * [new Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker_new)
@@ -2981,6 +3087,9 @@ Construct a new marker
 | dashboard | <code>[Dashboard](#niclabs.insight.Dashboard)</code> | dashboard that this marker belongs to |
 | options | <code>Object</code> | configuration options for the layer |
 | options.layer | <code>string</code> | identifier for the layer that this marker belongs to |
+| options.lat | <code>float</code> | latitude for the marker |
+| options.lng | <code>float</code> | longitude for the marker |
+| options.landmark | <code>string</code> | landmark that the marker indicates |
 
 <a name="niclabs.insight.map.marker.Marker.map"></a>
 ####### Marker.map : <code>[MapView](#niclabs.insight.MapView)</code>
@@ -3031,9 +3140,6 @@ Set/get the visibility for the marker
 ###### marker.SimpleMarker ⇐ <code>[Marker](#niclabs.insight.map.marker.Marker)</code>
 **Kind**: static class of <code>[marker](#niclabs.insight.map.marker)</code>  
 **Extends:** <code>[Marker](#niclabs.insight.map.marker.Marker)</code>  
-**Params**: <code>float</code> options.lat - latitude for the marker  
-**Params**: <code>float</code> options.lng - longitude for the marker  
-**Params**: <code>string</code> options.landmark - landmark that the marker indicates  
 <a name="new_niclabs.insight.map.marker.SimpleMarker_new"></a>
 ####### new SimpleMarker(dashboard, options)
 Constructor for simple markers
@@ -3046,6 +3152,9 @@ Simple markers are shown in the map as basic waypoints, with no style options
 | dashboard | <code>[Dashboard](#niclabs.insight.Dashboard)</code> | dashboard that this marker belongs to |
 | options | <code>Object</code> | configuration options for the layer |
 | options.layer | <code>string</code> | identifier for the layer that this marker belongs to |
+| options.lat | <code>float</code> | latitude for the marker |
+| options.lng | <code>float</code> | longitude for the marker |
+| options.landmark | <code>string</code> | landmark that the marker indicates |
 
 <a name="niclabs.insight.map.LatLng"></a>
 ##### map.LatLng : <code>Object</code>

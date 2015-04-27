@@ -1,11 +1,11 @@
-niclabs.insight.map.graph.DelaunayGraph = (function($) {
+niclabs.insight.map.diagram.DelaunayDiagram = (function($) {
     /**
-     * Data point for DelaunayGraph
+     * Data point for DelaunayDiagram
      *
-     * @typedef niclabs.insight.map.graph.DelaunayGraph.Data
+     * @typedef niclabs.insight.map.diagram.DelaunayDiagram.Data
      * @type {Object}
-     * @param {float} lat - latitude for the graph point
-     * @param {float} lng - longitude for the graph point
+     * @param {float} lat - latitude for the diagram point
+     * @param {float} lng - longitude for the diagram point
      * @param {string} landmark - landmark that the point indicates
      */
 
@@ -13,27 +13,27 @@ niclabs.insight.map.graph.DelaunayGraph = (function($) {
      * Draw a delaunay triangulation over the map
      *
      * In a delaunay triangulation, each data point is a location where the delaunay triangulation
-     * is based on. A delaunay graph is drawn with the provided configuration.
+     * is based on. A delaunay diagram is drawn with the provided configuration.
      *
-     * @class niclabs.insight.map.graph.DelaunayGraph
-     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this graph belongs to
-     * @param {Object} options - configuration options for the graph
-     * @param {niclabs.insight.map.graph.DelaunayGraph.Data[]} options.data - array of points to draw the graph
-     * @param {string} [options.strokeColor='#ff0000'] - Color for the graph edges
-     * @param {float} [options.strokeWeight=2] - Width for the graph edges
-     * @param {float} [options.strokeOpacity=1] - Opacity for the graph edges.
+     * @class niclabs.insight.map.diagram.DelaunayDiagram
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this diagram belongs to
+     * @param {Object} options - configuration options for the diagram
+     * @param {niclabs.insight.map.diagram.DelaunayDiagram.Data[]} options.data - array of points to draw the graph
+     * @param {string} [options.strokeColor='#ff0000'] - Color for the diagram edges
+     * @param {float} [options.strokeWeight=2] - Width for the diagram edges
+     * @param {float} [options.strokeOpacity=1] - Opacity for the diagram edges.
      */
-    var DelaunayGraph = function(dashboard, options) {
+    var DelaunayDiagram = function(dashboard, options) {
         if (!('data' in options)) {
-            throw Error('No data provided for the graph');
+            throw Error('No data provided for the diagram');
         }
 
-        var self = niclabs.insight.map.graph.Graph(dashboard, options);
+        var self = niclabs.insight.map.diagram.Diagram(dashboard, options);
 
         /**
-         * Create a google map delaunay graph
+         * Create a google map delaunay diagram
          */
-        function googleMapsDelaunayGraph(data) {
+        function googleMapsDelaunayDiagram(data) {
 
             var MapTriLines = [];
 
@@ -45,7 +45,7 @@ niclabs.insight.map.graph.DelaunayGraph = (function($) {
                 latlngArray[i] = new google.maps.LatLng( data[i].lat,data[i].lng );
             }
 
-            var MapPositions = niclabs.insight.map.graph.transformMapPositions(data);
+            var MapPositions = niclabs.insight.map.diagram.transformMapPositions(data);
 
             var DT = FindDelaunayTriangulation(MapPositions);
 
@@ -53,7 +53,7 @@ niclabs.insight.map.graph.DelaunayGraph = (function($) {
             for (i=0; i<DT.edges.length; i++) {
                 var edge = DT.edges[i];
 
-                MapTriLines = niclabs.insight.map.graph.createLines(DT.positions,edge.verts);
+                MapTriLines = niclabs.insight.map.diagram.createLines(DT.positions,edge.verts);
 
                 var GLLs = [];
                 for (var j = 0; j < MapTriLines.length; j++) {
@@ -86,18 +86,18 @@ niclabs.insight.map.graph.DelaunayGraph = (function($) {
             return {'Polylines': Polylines, 'Markers': markers };
         }
 
-        // Create the graph
-        var graph = googleMapsDelaunayGraph(options.data);
+        // Create the diagram
+        var diagram = googleMapsDelaunayDiagram(options.data);
 
         // Set the options. Done in creation for better performance
         // Pseudocode below...
 
-        /*graph.set('strokeColor', options.color || '#578b8b');
-        graph.set('strokeWeight', options.thickness || 2);
-        graph.set('strokeOpacity', options.opacity || 2);*/
+        /*diagram.set('strokeColor', options.color || '#578b8b');
+        diagram.set('strokeWeight', options.thickness || 2);
+        diagram.set('strokeOpacity', options.opacity || 2);*/
 
-        // Set the graph
-        self.setMap(graph, self.map.googlemap());
+        // Set the diagram
+        self.setMap(diagram, self.map.googlemap());
 
         // Store the parent
         var clear = self.clear;
@@ -105,7 +105,7 @@ niclabs.insight.map.graph.DelaunayGraph = (function($) {
         /**
          * Clear the map
          *
-         * @memberof niclabs.insight.map.graph.DelaunayGraph
+         * @memberof niclabs.insight.map.diagram.DelaunayDiagram
          * @overrides
          */
         self.clear = function() {
@@ -113,14 +113,14 @@ niclabs.insight.map.graph.DelaunayGraph = (function($) {
             clear();
 
             // Remove the map
-            self.setMap(graph, null);
+            self.setMap(diagram, null);
         };
 
         return self;
     };
 
     // Register the handler
-    niclabs.insight.handler('delaunay-graph', 'graph', DelaunayGraph);
+    niclabs.insight.handler('delaunay-diagram', 'diagram', DelaunayDiagram);
 
-    return DelaunayGraph;
+    return DelaunayDiagram;
 })(jQuery);

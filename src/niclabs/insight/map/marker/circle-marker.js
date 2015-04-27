@@ -9,14 +9,14 @@ niclabs.insight.map.marker.CircleMarker = (function($) {
      * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
      * @param {Object} options - configuration options for the layer
      * @param {string} options.layer - identifier for the layer that this marker belongs to
-     * @params {float} options.lat - latitude for the marker
-     * @params {float} options.lng - longitude for the marker
-     * @params {string} options.landmark - landmark that the marker indicates
-     * @params {number} [options.radius=400] - radius for the circle
-     * @params {string} [options.strokeColor='#ff0000'] - color for the circle perimenter line
-     * @params {float} [options.strokeOpacity=0.8] - opacity for the circle perimeter line
-     * @params {string} [options.fillColor='#ff0000'] - color for the circle filling
-     * @params {float} [options.fillOpacity=0.35] - opacity for the circle filling
+     * @param {float} options.lat - latitude for the marker
+     * @param {float} options.lng - longitude for the marker
+     * @param {string} options.landmark - landmark that the marker indicates
+     * @param {number} [options.radius=400] - radius for the circle
+     * @param {string} [options.strokeColor='#ff0000'] - color for the circle perimenter line
+     * @param {float} [options.strokeOpacity=0.8] - opacity for the circle perimeter line
+     * @param {string} [options.fillColor='#ff0000'] - color for the circle filling
+     * @param {float} [options.fillOpacity=0.35] - opacity for the circle filling
      */
     var CircleMarker = function(dashboard, options) {
         var self = niclabs.insight.map.marker.Marker(dashboard, options);

@@ -1,11 +1,11 @@
-niclabs.insight.map.graph.VoronoiGraph = (function($) {
+niclabs.insight.map.diagram.VoronoiDiagram = (function($) {
     /**
-     * Data point for VoronoiGraph
+     * Data point for VoronoiDiagram
      *
-     * @typedef niclabs.insight.map.graph.VoronoiGraph.Data
+     * @typedef niclabs.insight.map.diagram.VoronoiDiagram.Data
      * @type {Object}
-     * @param {float} lat - latitude for the graph point
-     * @param {float} lng - longitude for the graph point
+     * @param {float} lat - latitude for the diagram point
+     * @param {float} lng - longitude for the diagram point
      * @param {string} landmark - landmark that the point indicates
      */
 
@@ -13,27 +13,27 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
      * Draw a voronoi diagram over the map
      *
      * In a voronoi diagram, each data point is a location where the voronoi diagram
-     * is based on. A voronoi graph is drawn with the provided configuration.
+     * is based on. A voronoi diagram is drawn with the provided configuration.
      *
-     * @class niclabs.insight.map.graph.VoronoiGraph
-     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this graph belongs to
-     * @param {Object} options - configuration options for the graph
-     * @param {niclabs.insight.map.graph.VoronoiGraph.Data[]} options.data - array of points to draw the graph
-     * @param {string} [options.strokeColor='#ff0000'] - Color for the graph edges
-     * @param {float} [options.strokeWeight=2] - Width for the graph edges
-     * @param {float} [options.strokeOpacity=1] - Opacity for the graph edges.
+     * @class niclabs.insight.map.diagram.VoronoiDiagram
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this diagram belongs to
+     * @param {Object} options - configuration options for the diagram
+     * @param {niclabs.insight.map.diagram.VoronoiDiagram.Data[]} options.data - array of points to draw the graph
+     * @param {string} [options.strokeColor='#ff0000'] - Color for the diagram edges
+     * @param {float} [options.strokeWeight=2] - Width for the diagram edges
+     * @param {float} [options.strokeOpacity=1] - Opacity for the diagram edges.
      */
-    var VoronoiGraph = function(dashboard, options) {
+    var VoronoiDiagram = function(dashboard, options) {
         if (!('data' in options)) {
-            throw Error('No data provided for the graph');
+            throw Error('No data provided for the diagram');
         }
 
-        var self = niclabs.insight.map.graph.Graph(dashboard, options);
+        var self = niclabs.insight.map.diagram.Diagram(dashboard, options);
 
         /**
-         * Create a google map voronoi graph
+         * Create a google map voronoi diagram
          */
-        function googleMapsVoronoiGraph(data) {
+        function googleMapsVoronoiDiagram(data) {
 
             var MapNgbrLines = [];
 
@@ -46,7 +46,7 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
             }
 
             // Pre-process data input
-            var MapPositions = niclabs.insight.map.graph.transformMapPositions(data);
+            var MapPositions = niclabs.insight.map.diagram.transformMapPositions(data);
 
             // Delaunay triangulation
             var DT = FindDelaunayTriangulation(MapPositions);
@@ -58,7 +58,7 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
                 if (edge[0] < 0) continue;
                 if (edge[1] < 0) continue;
 
-                MapNgbrLines = niclabs.insight.map.graph.createLines(DT.vor_positions,edge);
+                MapNgbrLines = niclabs.insight.map.diagram.createLines(DT.vor_positions,edge);
 
                 var GLLs = [];
                 for (var j = 0; j < MapNgbrLines.length; j++) {
@@ -91,18 +91,18 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
             return {'Polylines': Polylines, 'Markers': markers };
         }
 
-        // Create the graph
-        var graph = googleMapsVoronoiGraph(options.data);
+        // Create the diagram
+        var diagram = googleMapsVoronoiDiagram(options.data);
 
         // Set the options. Done in creation for better performance
         // Pseudocode below...
 
-        /*graph.set('strokeColor', options.color || '#578b8b');
-        graph.set('strokeWeight', options.thickness || 2);
-        graph.set('strokeOpacity', options.opacity || 2);*/
+        /*diagram.set('strokeColor', options.color || '#578b8b');
+        diagram.set('strokeWeight', options.thickness || 2);
+        diagram.set('strokeOpacity', options.opacity || 2);*/
 
-        // Set the graph
-        self.setMap(graph, self.map.googlemap());
+        // Set the diagram
+        self.setMap(diagram, self.map.googlemap());
 
         // Store the parent
         var clear = self.clear;
@@ -110,7 +110,7 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
         /**
          * Clear the map
          *
-         * @memberof niclabs.insight.map.graph.VoronoiGraph
+         * @memberof niclabs.insight.map.diagram.VoronoiDiagram
          * @overrides
          */
         self.clear = function() {
@@ -118,14 +118,14 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
             clear();
 
             // Remove the map
-            self.setMap(graph, null);
+            self.setMap(diagram, null);
         };
 
         return self;
     };
 
     // Register the handler
-    niclabs.insight.handler('voronoi-graph', 'graph', VoronoiGraph);
+    niclabs.insight.handler('voronoi-diagram', 'diagram', VoronoiDiagram);
 
-    return VoronoiGraph;
+    return VoronoiDiagram;
 })(jQuery);
