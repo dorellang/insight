@@ -1,11 +1,11 @@
 /**
- * Tools for drawing graphs on the map. To calculate the spherical voronoi/delaunay
+ * Tools for drawing diagrams on the map. To calculate the spherical voronoi/delaunay
  * uses the ThirdParty libray delaunayTriangles.js
  *
  *
  * @namespace
  */
-niclabs.insight.map.graph = (function($) {
+niclabs.insight.map.diagram = (function($) {
 
     return {
 

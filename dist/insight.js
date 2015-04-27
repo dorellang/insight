@@ -2468,43 +2468,48 @@ niclabs.insight.layer = (function () {
     return layer;
 })();
 
-niclabs.insight.layer.GraphLayer = (function($) {
+niclabs.insight.layer.DiagramLayer = (function($) {
     /**
-     * Construct a new graph layer
+     * Construct a new diagram layer
      *
+     * @class niclabs.insight.layer.DiagramLayer
+     * @extends niclabs.insight.layer.Layer
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this layer belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.id - identifier for the layer
+     * @param {string|Object[]} options.data - uri or data array for the layer
+     * @param {Object=} options.diagram - options for the diagram
      */
-    var GraphLayer = function(dashboard, options) {
+    var DiagramLayer = function(dashboard, options) {
         var layer = niclabs.insight.layer.Layer(dashboard, options);
 
-        var graphOptions = options.graph || {
-            'type': 'voronoi-graph'
+        var diagramOptions = options.diagram || {
+            'type': 'voronoi-diagram'
         };
 
-        function createGraph(data, obj) {
-            var graph;
+        function createDiagram(data, obj) {
+            var diagram;
             if ('type' in obj) {
                 var attr = {'layer': layer.id, 'data': data};
 
                 // Extend the attributes with the data and the options for the marker
                 $.extend(attr, obj);
 
-                graph = niclabs.insight.handler(obj.type)(dashboard, attr);
+                diagram = niclabs.insight.handler(obj.type)(dashboard, attr);
             }
             else {
-              graph = obj;
-
-                // Should we add a way to pass data to the heatmap?
+              diagram = obj;
             }
 
-            return graph;
+            return diagram;
         }
 
-        var graph;
+        var diagram;
 
         /**
-         * Draw the heatmap according to the internal data on the map
+         * Draw the diagram according to the internal data on the map
          *
-         * @memberof niclabs.insight.layer.GraphLayer
+         * @memberof niclabs.insight.layer.DiagramLayer
          * @override
          * @param {Object[]} data - data to draw
          * @param {float} data[].lat - latitude for the marker
@@ -2512,23 +2517,23 @@ niclabs.insight.layer.GraphLayer = (function($) {
          * @param {string=} data[].description - description for the marker
          */
         layer.draw = function(data) {
-            graph = createGraph(data, graphOptions);
+          diagram = createDiagram(data, diagramOptions);
         };
 
         /**
-         * Clear the graph from the map
+         * Clear the diagram from the map
          *
-         * @memberof niclabs.insight.layer.GraphLayer
+         * @memberof niclabs.insight.layer.DiagramLayer
          * @override
          */
         layer.clear = function() {
-            if (graph) graph.clear();
+            if (diagram) diagram.clear();
         };
 
         /**
          * Filter the layer according to the provided function.
          *
-         * @memberof niclabs.insight.layer.GraphLayer
+         * @memberof niclabs.insight.layer.DiagramLayer
          * @override
          * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
          */
@@ -2540,9 +2545,9 @@ niclabs.insight.layer.GraphLayer = (function($) {
     };
 
     // Register the handler
-    niclabs.insight.handler('graph-layer', 'layer', GraphLayer);
+    niclabs.insight.handler('diagram-layer', 'layer', DiagramLayer);
 
-    return GraphLayer;
+    return DiagramLayer;
 })(jQuery);
 
 niclabs.insight.layer.GridLayer = (function() {
@@ -2555,7 +2560,7 @@ niclabs.insight.layer.GridLayer = (function() {
      * @param {Object} options - configuration options for the layer
      * @param {string} options.id - identifier for the layer
      * @param {string|Object[]} options.data - uri or data array for the layer
-     * @param {Object=} options.grid - options for the heatmap
+     * @param {Object=} options.grid - options for the grid
      */
     var GridLayer = function(dashboard, options) {
         var layer = niclabs.insight.layer.Layer(dashboard, options);
@@ -3490,13 +3495,13 @@ niclabs.insight.quadtree.PointQuadTree = (function () {
 })();
 
 /**
- * Tools for drawing graphs on the map. To calculate the spherical voronoi/delaunay
+ * Tools for drawing diagrams on the map. To calculate the spherical voronoi/delaunay
  * uses the ThirdParty libray delaunayTriangles.js
  *
  *
  * @namespace
  */
-niclabs.insight.map.graph = (function($) {
+niclabs.insight.map.diagram = (function($) {
 
     return {
 
@@ -3601,14 +3606,14 @@ niclabs.insight.map.graph = (function($) {
       };
 })(jQuery);
 
-niclabs.insight.map.graph.DelaunayGraph = (function($) {
+niclabs.insight.map.diagram.DelaunayDiagram = (function($) {
     /**
-     * Data point for DelaunayGraph
+     * Data point for DelaunayDiagram
      *
-     * @typedef niclabs.insight.map.graph.DelaunayGraph.Data
+     * @typedef niclabs.insight.map.diagram.DelaunayDiagram.Data
      * @type {Object}
-     * @param {float} lat - latitude for the graph point
-     * @param {float} lng - longitude for the graph point
+     * @param {float} lat - latitude for the diagram point
+     * @param {float} lng - longitude for the diagram point
      * @param {string} landmark - landmark that the point indicates
      */
 
@@ -3616,27 +3621,27 @@ niclabs.insight.map.graph.DelaunayGraph = (function($) {
      * Draw a delaunay triangulation over the map
      *
      * In a delaunay triangulation, each data point is a location where the delaunay triangulation
-     * is based on. A delaunay graph is drawn with the provided configuration.
+     * is based on. A delaunay diagram is drawn with the provided configuration.
      *
-     * @class niclabs.insight.map.graph.DelaunayGraph
-     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this graph belongs to
-     * @param {Object} options - configuration options for the graph
-     * @param {niclabs.insight.map.graph.DelaunayGraph.Data[]} options.data - array of points to draw the graph
-     * @param {string} [options.strokeColor='#ff0000'] - Color for the graph edges
-     * @param {float} [options.strokeWeight=2] - Width for the graph edges
-     * @param {float} [options.strokeOpacity=1] - Opacity for the graph edges.
+     * @class niclabs.insight.map.diagram.DelaunayDiagram
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this diagram belongs to
+     * @param {Object} options - configuration options for the diagram
+     * @param {niclabs.insight.map.diagram.DelaunayDiagram.Data[]} options.data - array of points to draw the graph
+     * @param {string} [options.strokeColor='#ff0000'] - Color for the diagram edges
+     * @param {float} [options.strokeWeight=2] - Width for the diagram edges
+     * @param {float} [options.strokeOpacity=1] - Opacity for the diagram edges.
      */
-    var DelaunayGraph = function(dashboard, options) {
+    var DelaunayDiagram = function(dashboard, options) {
         if (!('data' in options)) {
-            throw Error('No data provided for the graph');
+            throw Error('No data provided for the diagram');
         }
 
-        var self = niclabs.insight.map.graph.Graph(dashboard, options);
+        var self = niclabs.insight.map.diagram.Diagram(dashboard, options);
 
         /**
-         * Create a google map delaunay graph
+         * Create a google map delaunay diagram
          */
-        function googleMapsDelaunayGraph(data) {
+        function googleMapsDelaunayDiagram(data) {
 
             var MapTriLines = [];
 
@@ -3648,7 +3653,7 @@ niclabs.insight.map.graph.DelaunayGraph = (function($) {
                 latlngArray[i] = new google.maps.LatLng( data[i].lat,data[i].lng );
             }
 
-            var MapPositions = niclabs.insight.map.graph.transformMapPositions(data);
+            var MapPositions = niclabs.insight.map.diagram.transformMapPositions(data);
 
             var DT = FindDelaunayTriangulation(MapPositions);
 
@@ -3656,7 +3661,7 @@ niclabs.insight.map.graph.DelaunayGraph = (function($) {
             for (i=0; i<DT.edges.length; i++) {
                 var edge = DT.edges[i];
 
-                MapTriLines = niclabs.insight.map.graph.createLines(DT.positions,edge.verts);
+                MapTriLines = niclabs.insight.map.diagram.createLines(DT.positions,edge.verts);
 
                 var GLLs = [];
                 for (var j = 0; j < MapTriLines.length; j++) {
@@ -3689,18 +3694,18 @@ niclabs.insight.map.graph.DelaunayGraph = (function($) {
             return {'Polylines': Polylines, 'Markers': markers };
         }
 
-        // Create the graph
-        var graph = googleMapsDelaunayGraph(options.data);
+        // Create the diagram
+        var diagram = googleMapsDelaunayDiagram(options.data);
 
         // Set the options. Done in creation for better performance
         // Pseudocode below...
 
-        /*graph.set('strokeColor', options.color || '#578b8b');
-        graph.set('strokeWeight', options.thickness || 2);
-        graph.set('strokeOpacity', options.opacity || 2);*/
+        /*diagram.set('strokeColor', options.color || '#578b8b');
+        diagram.set('strokeWeight', options.thickness || 2);
+        diagram.set('strokeOpacity', options.opacity || 2);*/
 
-        // Set the graph
-        self.setMap(graph, self.map.googlemap());
+        // Set the diagram
+        self.setMap(diagram, self.map.googlemap());
 
         // Store the parent
         var clear = self.clear;
@@ -3708,7 +3713,7 @@ niclabs.insight.map.graph.DelaunayGraph = (function($) {
         /**
          * Clear the map
          *
-         * @memberof niclabs.insight.map.graph.DelaunayGraph
+         * @memberof niclabs.insight.map.diagram.DelaunayDiagram
          * @overrides
          */
         self.clear = function() {
@@ -3716,29 +3721,29 @@ niclabs.insight.map.graph.DelaunayGraph = (function($) {
             clear();
 
             // Remove the map
-            self.setMap(graph, null);
+            self.setMap(diagram, null);
         };
 
         return self;
     };
 
     // Register the handler
-    niclabs.insight.handler('delaunay-graph', 'graph', DelaunayGraph);
+    niclabs.insight.handler('delaunay-diagram', 'diagram', DelaunayDiagram);
 
-    return DelaunayGraph;
+    return DelaunayDiagram;
 })(jQuery);
 
-niclabs.insight.map.graph.Graph = (function($) {
+niclabs.insight.map.diagram.Diagram = (function($) {
     /**
-     * Construct a Graph over the map
+     * Construct a Diagram over the map
      *
-     * @class niclabs.insight.map.graph.Graph
-     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this graph belongs to
-     * @param {Object} options - configuration options for the graph
+     * @class niclabs.insight.map.diagram.Diagram
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this diagram belongs to
+     * @param {Object} options - configuration options for the diagram
      */
-    var Graph = function(dashboard, options) {
+    var Diagram = function(dashboard, options) {
         if (!('layer' in options))
-            throw new Error('The Graph must be associated to a layer');
+            throw new Error('The Diagram must be associated to a layer');
 
         var layer;
         if (!(layer = dashboard.layer(options.layer)))
@@ -3749,12 +3754,12 @@ niclabs.insight.map.graph.Graph = (function($) {
             throw new Error('No map has been initialized for the dashboard yet');
 
         if (!('googlemap' in map))
-            throw new Error("Graphs are only supported for Google Maps at the moment");
+            throw new Error("Diagrams are only supported for Google Maps at the moment");
 
         var self = {
             /**
-             * Map view where the graph belongs to
-             * @memberof niclabs.insight.map.graph.Graph
+             * Map view where the diagram belongs to
+             * @memberof niclabs.insight.map.diagram.Diagram
              * @member {niclabs.insight.MapView}
              */
             get map () {
@@ -3762,9 +3767,9 @@ niclabs.insight.map.graph.Graph = (function($) {
             },
 
             /**
-             * Layer to which the graph belongs to
+             * Layer to which the diagram belongs to
              *
-             * @memberof niclabs.insight.map.graph.Graph
+             * @memberof niclabs.insight.map.diagram.Diagram
              * @member {niclabs.insight.layer.Layer}
              */
             get layer () {
@@ -3772,26 +3777,26 @@ niclabs.insight.map.graph.Graph = (function($) {
             },
 
             /**
-             * Clear the graph from the map
+             * Clear the diagram from the map
              *
-             * @memberof niclabs.insight.map.graph.Graph
+             * @memberof niclabs.insight.map.diagram.Diagram
              */
             clear: function() {
             },
 
             /**
-             * Set the map of the graph.
+             * Set the map of the diagram.
              * TODO: can be done better?
              *
-             * @memberof niclabs.insight.map.graph.Graph
+             * @memberof niclabs.insight.map.diagram.Diagram
              */
-            setMap: function(aGraph, map) {
-                for (var polylineKey in aGraph.Polylines) {
-                    aGraph.Polylines[polylineKey].setMap(map);
+            setMap: function(aDiagram, map) {
+                for (var polylineKey in aDiagram.Polylines) {
+                    aDiagram.Polylines[polylineKey].setMap(map);
                 }
 
-                for (var markerKey in aGraph.Markers) {
-                    aGraph.Markers[markerKey].setMap(map);
+                for (var markerKey in aDiagram.Markers) {
+                    aDiagram.Markers[markerKey].setMap(map);
                 }
             }
 
@@ -3800,17 +3805,17 @@ niclabs.insight.map.graph.Graph = (function($) {
         return self;
     };
 
-    return Graph;
+    return Diagram;
 })(jQuery);
 
-niclabs.insight.map.graph.VoronoiGraph = (function($) {
+niclabs.insight.map.diagram.VoronoiDiagram = (function($) {
     /**
-     * Data point for VoronoiGraph
+     * Data point for VoronoiDiagram
      *
-     * @typedef niclabs.insight.map.graph.VoronoiGraph.Data
+     * @typedef niclabs.insight.map.diagram.VoronoiDiagram.Data
      * @type {Object}
-     * @param {float} lat - latitude for the graph point
-     * @param {float} lng - longitude for the graph point
+     * @param {float} lat - latitude for the diagram point
+     * @param {float} lng - longitude for the diagram point
      * @param {string} landmark - landmark that the point indicates
      */
 
@@ -3818,27 +3823,27 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
      * Draw a voronoi diagram over the map
      *
      * In a voronoi diagram, each data point is a location where the voronoi diagram
-     * is based on. A voronoi graph is drawn with the provided configuration.
+     * is based on. A voronoi diagram is drawn with the provided configuration.
      *
-     * @class niclabs.insight.map.graph.VoronoiGraph
-     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this graph belongs to
-     * @param {Object} options - configuration options for the graph
-     * @param {niclabs.insight.map.graph.VoronoiGraph.Data[]} options.data - array of points to draw the graph
-     * @param {string} [options.strokeColor='#ff0000'] - Color for the graph edges
-     * @param {float} [options.strokeWeight=2] - Width for the graph edges
-     * @param {float} [options.strokeOpacity=1] - Opacity for the graph edges.
+     * @class niclabs.insight.map.diagram.VoronoiDiagram
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this diagram belongs to
+     * @param {Object} options - configuration options for the diagram
+     * @param {niclabs.insight.map.diagram.VoronoiDiagram.Data[]} options.data - array of points to draw the graph
+     * @param {string} [options.strokeColor='#ff0000'] - Color for the diagram edges
+     * @param {float} [options.strokeWeight=2] - Width for the diagram edges
+     * @param {float} [options.strokeOpacity=1] - Opacity for the diagram edges.
      */
-    var VoronoiGraph = function(dashboard, options) {
+    var VoronoiDiagram = function(dashboard, options) {
         if (!('data' in options)) {
-            throw Error('No data provided for the graph');
+            throw Error('No data provided for the diagram');
         }
 
-        var self = niclabs.insight.map.graph.Graph(dashboard, options);
+        var self = niclabs.insight.map.diagram.Diagram(dashboard, options);
 
         /**
-         * Create a google map voronoi graph
+         * Create a google map voronoi diagram
          */
-        function googleMapsVoronoiGraph(data) {
+        function googleMapsVoronoiDiagram(data) {
 
             var MapNgbrLines = [];
 
@@ -3851,7 +3856,7 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
             }
 
             // Pre-process data input
-            var MapPositions = niclabs.insight.map.graph.transformMapPositions(data);
+            var MapPositions = niclabs.insight.map.diagram.transformMapPositions(data);
 
             // Delaunay triangulation
             var DT = FindDelaunayTriangulation(MapPositions);
@@ -3863,7 +3868,7 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
                 if (edge[0] < 0) continue;
                 if (edge[1] < 0) continue;
 
-                MapNgbrLines = niclabs.insight.map.graph.createLines(DT.vor_positions,edge);
+                MapNgbrLines = niclabs.insight.map.diagram.createLines(DT.vor_positions,edge);
 
                 var GLLs = [];
                 for (var j = 0; j < MapNgbrLines.length; j++) {
@@ -3896,18 +3901,18 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
             return {'Polylines': Polylines, 'Markers': markers };
         }
 
-        // Create the graph
-        var graph = googleMapsVoronoiGraph(options.data);
+        // Create the diagram
+        var diagram = googleMapsVoronoiDiagram(options.data);
 
         // Set the options. Done in creation for better performance
         // Pseudocode below...
 
-        /*graph.set('strokeColor', options.color || '#578b8b');
-        graph.set('strokeWeight', options.thickness || 2);
-        graph.set('strokeOpacity', options.opacity || 2);*/
+        /*diagram.set('strokeColor', options.color || '#578b8b');
+        diagram.set('strokeWeight', options.thickness || 2);
+        diagram.set('strokeOpacity', options.opacity || 2);*/
 
-        // Set the graph
-        self.setMap(graph, self.map.googlemap());
+        // Set the diagram
+        self.setMap(diagram, self.map.googlemap());
 
         // Store the parent
         var clear = self.clear;
@@ -3915,7 +3920,7 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
         /**
          * Clear the map
          *
-         * @memberof niclabs.insight.map.graph.VoronoiGraph
+         * @memberof niclabs.insight.map.diagram.VoronoiDiagram
          * @overrides
          */
         self.clear = function() {
@@ -3923,16 +3928,16 @@ niclabs.insight.map.graph.VoronoiGraph = (function($) {
             clear();
 
             // Remove the map
-            self.setMap(graph, null);
+            self.setMap(diagram, null);
         };
 
         return self;
     };
 
     // Register the handler
-    niclabs.insight.handler('voronoi-graph', 'graph', VoronoiGraph);
+    niclabs.insight.handler('voronoi-diagram', 'diagram', VoronoiDiagram);
 
-    return VoronoiGraph;
+    return VoronoiDiagram;
 })(jQuery);
 
 /**
@@ -5001,14 +5006,14 @@ niclabs.insight.map.marker.CircleMarker = (function($) {
      * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
      * @param {Object} options - configuration options for the layer
      * @param {string} options.layer - identifier for the layer that this marker belongs to
-     * @params {float} options.lat - latitude for the marker
-     * @params {float} options.lng - longitude for the marker
-     * @params {string} options.landmark - landmark that the marker indicates
-     * @params {number} [options.radius=400] - radius for the circle
-     * @params {string} [options.strokeColor='#ff0000'] - color for the circle perimenter line
-     * @params {float} [options.strokeOpacity=0.8] - opacity for the circle perimeter line
-     * @params {string} [options.fillColor='#ff0000'] - color for the circle filling
-     * @params {float} [options.fillOpacity=0.35] - opacity for the circle filling
+     * @param {float} options.lat - latitude for the marker
+     * @param {float} options.lng - longitude for the marker
+     * @param {string} options.landmark - landmark that the marker indicates
+     * @param {number} [options.radius=400] - radius for the circle
+     * @param {string} [options.strokeColor='#ff0000'] - color for the circle perimenter line
+     * @param {float} [options.strokeOpacity=0.8] - opacity for the circle perimeter line
+     * @param {string} [options.fillColor='#ff0000'] - color for the circle filling
+     * @param {float} [options.fillOpacity=0.35] - opacity for the circle filling
      */
     var CircleMarker = function(dashboard, options) {
         var self = niclabs.insight.map.marker.Marker(dashboard, options);
@@ -5052,10 +5057,10 @@ niclabs.insight.map.marker.ImageMarker = (function($) {
      * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
      * @param {Object} options - configuration options for the layer
      * @param {string} options.layer - identifier for the layer that this marker belongs to
-     * @params {float} options.lat - latitude for the marker
-     * @params {float} options.lng - longitude for the marker
-     * @params {string} options.landmark - landmark that the marker indicates
-     * @params {string} options.src - image source
+     * @param {float} options.lat - latitude for the marker
+     * @param {float} options.lng - longitude for the marker
+     * @param {string} options.landmark - landmark that the marker indicates
+     * @param {string} options.src - image source
      */
     var ImageMarker = function(dashboard, options) {
         var self = niclabs.insight.map.marker.Marker(dashboard, options);
@@ -5099,9 +5104,9 @@ niclabs.insight.map.marker.Marker = (function($) {
      * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
      * @param {Object} options - configuration options for the layer
      * @param {string} options.layer - identifier for the layer that this marker belongs to
-     * @params {float} options.lat - latitude for the marker
-     * @params {float} options.lng - longitude for the marker
-     * @params {string} options.landmark - landmark that the marker indicates
+     * @param {float} options.lat - latitude for the marker
+     * @param {float} options.lng - longitude for the marker
+     * @param {string} options.landmark - landmark that the marker indicates
      */
     var Marker = function(dashboard, options) {
         if (!('layer' in options))
@@ -5227,9 +5232,9 @@ niclabs.insight.map.marker.SimpleMarker = (function($) {
      * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
      * @param {Object} options - configuration options for the layer
      * @param {string} options.layer - identifier for the layer that this marker belongs to
-     * @params {float} options.lat - latitude for the marker
-     * @params {float} options.lng - longitude for the marker
-     * @params {string} options.landmark - landmark that the marker indicates
+     * @param {float} options.lat - latitude for the marker
+     * @param {float} options.lng - longitude for the marker
+     * @param {string} options.landmark - landmark that the marker indicates
      */
     var SimpleMarker = function(dashboard, options) {
         var self = niclabs.insight.map.marker.Marker(dashboard, options);

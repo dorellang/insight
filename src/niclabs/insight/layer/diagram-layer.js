@@ -1,47 +1,45 @@
-niclabs.insight.layer.GridLayer = (function() {
+niclabs.insight.layer.DiagramLayer = (function($) {
     /**
-     * Construct a new grid Layer
+     * Construct a new diagram layer
      *
-     * @class niclabs.insight.layer.GridLayer
+     * @class niclabs.insight.layer.DiagramLayer
      * @extends niclabs.insight.layer.Layer
      * @param {niclabs.insight.Dashboard} dashboard - dashboard that this layer belongs to
      * @param {Object} options - configuration options for the layer
      * @param {string} options.id - identifier for the layer
      * @param {string|Object[]} options.data - uri or data array for the layer
-     * @param {Object=} options.grid - options for the grid
+     * @param {Object=} options.diagram - options for the diagram
      */
-    var GridLayer = function(dashboard, options) {
+    var DiagramLayer = function(dashboard, options) {
         var layer = niclabs.insight.layer.Layer(dashboard, options);
 
-        var gridOptions = options.grid || {
-            'type': 'hexagon'
+        var diagramOptions = options.diagram || {
+            'type': 'voronoi-diagram'
         };
 
-        function createGrid(data, obj) {
-            var grid;
+        function createDiagram(data, obj) {
+            var diagram;
             if ('type' in obj) {
                 var attr = {'layer': layer.id, 'data': data};
 
                 // Extend the attributes with the data and the options for the marker
                 $.extend(attr, obj);
 
-                grid = niclabs.insight.handler(obj.type)(dashboard, attr);
+                diagram = niclabs.insight.handler(obj.type)(dashboard, attr);
             }
             else {
-                grid = obj;
-
-                // Should we add a way to pass data to the grid?
+              diagram = obj;
             }
 
-            return grid;
+            return diagram;
         }
 
-        var grid;
+        var diagram;
 
         /**
-         * Draw the grid according to the internal data on the map
+         * Draw the diagram according to the internal data on the map
          *
-         * @memberof niclabs.insight.layer.GridLayer
+         * @memberof niclabs.insight.layer.DiagramLayer
          * @override
          * @param {Object[]} data - data to draw
          * @param {float} data[].lat - latitude for the marker
@@ -49,23 +47,23 @@ niclabs.insight.layer.GridLayer = (function() {
          * @param {string=} data[].description - description for the marker
          */
         layer.draw = function(data) {
-            grid = createGrid(data, gridOptions);
+          diagram = createDiagram(data, diagramOptions);
         };
 
         /**
-         * Clear the grid from the map
+         * Clear the diagram from the map
          *
-         * @memberof niclabs.insight.layer.GridLayer
+         * @memberof niclabs.insight.layer.DiagramLayer
          * @override
          */
         layer.clear = function() {
-            if (grid) grid.clear();
+            if (diagram) diagram.clear();
         };
 
         /**
          * Filter the layer according to the provided function.
          *
-         * @memberof niclabs.insight.layer.GridLayer
+         * @memberof niclabs.insight.layer.DiagramLayer
          * @override
          * @param {niclabs.insight.layer.Layer~Filter} fn - filtering function
          */
@@ -77,7 +75,7 @@ niclabs.insight.layer.GridLayer = (function() {
     };
 
     // Register the handler
-    niclabs.insight.handler('grid-layer', 'layer', GridLayer);
+    niclabs.insight.handler('diagram-layer', 'layer', DiagramLayer);
 
-    return GridLayer;
-})();
+    return DiagramLayer;
+})(jQuery);

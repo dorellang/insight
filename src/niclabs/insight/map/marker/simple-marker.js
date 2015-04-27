@@ -9,9 +9,9 @@ niclabs.insight.map.marker.SimpleMarker = (function($) {
      * @param {niclabs.insight.Dashboard} dashboard - dashboard that this marker belongs to
      * @param {Object} options - configuration options for the layer
      * @param {string} options.layer - identifier for the layer that this marker belongs to
-     * @params {float} options.lat - latitude for the marker
-     * @params {float} options.lng - longitude for the marker
-     * @params {string} options.landmark - landmark that the marker indicates
+     * @param {float} options.lat - latitude for the marker
+     * @param {float} options.lng - longitude for the marker
+     * @param {string} options.landmark - landmark that the marker indicates
      */
     var SimpleMarker = function(dashboard, options) {
         var self = niclabs.insight.map.marker.Marker(dashboard, options);
