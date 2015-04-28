@@ -43,14 +43,28 @@
     /// Binding the map and the information window.
     var dashboard = niclabs.insight.dashboard({
         'anchor': '#dashboard',
-        'layout': 'none'
+        'layout': 'left'
+    });
+
+    niclabs.insight.info({
+        handler: 'basic-info-view',
+        blocks: [{
+            'handler': 'summary-block',
+            'id': '#summary',
+            'title': 'My Marker Summary',
+            'closable': false,
+            //'template': '#template',
+            'defaults': {
+                'description': 'This block will show the details of the selected markers'
+            }
+        }]
     });
 
     var map = niclabs.insight.map({
         'handler': 'google-map',
-        'lat': 48.8583,
-        'lng': 2.2944,
-        'zoom': 15
+        'lat': 48.859961,
+        'lng': 2.326561,
+        'zoom': 14
     });
 
     niclabs.insight.layer({
@@ -58,23 +72,19 @@
         data: [{
             'lat': 48.860611,
             'lng': 2.337644,
-            'landmark': 'L’Arc de Triomphe',
-            'weight': 0.5
+            'landmark': 'Musée du Louvre',
         }, {
             'lat': 48.859961,
             'lng': 2.326561,
             'landmark': 'Musée D’Orsay',
-            'weight': 0.8
         }, {
             'lat': 48.873792,
             'lng': 2.295028,
             'landmark': 'L’Arc de Triomphe',
-            'weight': 0.4,
         }, {
             'lat': 48.852968,
             'lng': 2.349902,
             'landmark': 'Cathédrale Notre-Dame',
-            'weight': 0.95
         }, {
             'lat': 48.85837,
             'lng': 2.294481,
@@ -83,6 +93,12 @@
         }],
         graph: {
             'type': 'simple-graph',
+            //for now will be like this
+            'adj': [[0, 1, 1, 0, 0],
+                    [1, 0, 1, 1, 1],
+                    [1, 1, 0, 0, 0],
+                    [0, 1, 0, 0, 0],
+                    [0, 1, 0, 0, 0]]
         }
     });
 
