@@ -2552,6 +2552,68 @@ niclabs.insight.layer.DiagramLayer = (function($) {
     return DiagramLayer;
 })(jQuery);
 
+niclabs.insight.layer.GraphLayer = (function($) {
+    /**
+     * TODO: Missing documentation
+     */
+    var GraphLayer = function(dashboard, options) {
+        var layer = niclabs.insight.layer.Layer(dashboard, options);
+
+        var graphOptions = options.graph || {
+            'type': 'simple-graph'
+        };
+
+        function createGraph(data, obj) {
+            var graph;
+            if ('type' in obj) {
+                var attr = {'layer': layer.id, 'data': data};
+
+                // Extend the attributes with the data and the options for the graph
+                $.extend(attr, obj);
+
+                graph = niclabs.insight.handler(obj.type)(dashboard, attr);
+            }
+            else {
+                graph = obj;
+
+                // Should we add a way to pass data to the graph?
+            }
+
+            return graph;
+        }
+
+        var graph;
+
+        /**
+         * TODO: Missing documentation
+         */
+        layer.draw = function(data) {
+          graph = createGraph(data, graphOptions);
+        };
+
+        /**
+         * TODO: Missing documentation
+         */
+        layer.clear = function() {
+            if (graph) graph.clear();
+        };
+
+        /**
+         * TODO: Missing documentation
+         */
+        layer.filter = function(fn) {
+            // TODO. not sure if possible
+        };
+
+        return layer;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('graph-layer', 'layer', GraphLayer);
+
+    return GraphLayer;
+})(jQuery);
+
 niclabs.insight.layer.GridLayer = (function() {
     /**
      * Construct a new grid Layer
@@ -3946,6 +4008,157 @@ niclabs.insight.map.diagram.VoronoiDiagram = (function($) {
     niclabs.insight.handler('voronoi-diagram', 'diagram', VoronoiDiagram);
 
     return VoronoiDiagram;
+})(jQuery);
+
+/**
+ * Contains all graph definitions for the dashboard
+ *
+ * @namespace
+ */
+niclabs.insight.map.graph = {};
+
+niclabs.insight.map.graph.Graph = (function($) {
+    /**
+     * TODO: Missing documentatino
+     */
+    var Graph = function(dashboard, options) {
+        if (!('layer' in options))
+            throw new Error('The graph must be associated to a layer');
+
+        var layer;
+        if (!(layer = dashboard.layer(options.layer)))
+            throw new Error('The layer '+layer+' does not exist in the dashboard');
+
+        var map;
+        if (!(map = dashboard.map()))
+            throw new Error('No map has been initialized for the dashboard yet');
+
+        if (!('googlemap' in map))
+            throw new Error("Graphs are only supported for Google Maps at the moment");
+
+        var self = {
+            /**
+             * TODO: Missing documentation
+             */
+            get map () {
+                return map;
+            },
+
+            /**
+             * TODO: Missing documentation
+             */
+            get layer () {
+                return layer;
+            },
+
+            /**
+             * TODO: Missing documentation
+             */
+            clear: function() {
+            },
+        };
+
+        return self;
+    };
+
+    return Graph;
+})(jQuery);
+
+niclabs.insight.map.graph.SimpleGraph = (function($) {
+  /**
+   * TODO: Missing documentation
+   */
+  var SimpleGraph = function(dashboard, options) {
+    if (!('data' in options)) {
+      throw Error('No data provided for the graph');
+    }
+
+    var self = niclabs.insight.map.graph.Graph(dashboard, options);
+
+    /**
+     * TODO: Missing documentation
+     */
+    function googleMapsGraph(data) {
+      var graphNodes = [];
+      for (var i = 0; i < data.length; i++) {
+        var latLng = new google.maps.LatLng(data[i].lat, data[i].lng);
+        var marker = new google.maps.Marker({
+          position: latLng,
+          map: self.map.googlemap(),
+          title: data[i].landmark || ''
+        });
+        graphNodes.push(marker);
+      }
+      var vertex = [];
+
+      /*
+      changeColor = function() {
+          // TODO: make configurable?
+          polyline.setOptions({strokeColor: '#FF0000'});
+
+          // Set timeout to stop the animation
+          setTimeout(function() {
+              polyline.setOptions({strokeColor: '#000000'});
+          }, 3000);
+       };
+       */
+
+      // Note: non directed graph
+      for (i = 0; i < options.adj.length; i++) {
+        for (var j = 0; j < i; j++) {
+          if (options.adj[i][j] == 1) {
+            var myLatlngArray = [];
+            myLatlngArray[0] = new google.maps.LatLng(data[i].lat, data[i].lng);
+            myLatlngArray[1] = new google.maps.LatLng(data[j].lat, data[j].lng);
+
+            var polyline = new google.maps.Polyline({
+              path: myLatlngArray,
+              strokeColor: '#000000',
+              strokeOpacity: 1.0,
+              strokeWeight: 10
+            });
+
+            polyline.setMap(self.map.googlemap());
+            vertex.push(polyline);
+          }
+        }
+      }
+
+      return {
+        nodes: graphNodes,
+        vertex: vertex
+      };
+    }
+
+    // Create the graph
+    var graph = googleMapsGraph(options.data);
+
+    // Set the options
+
+    // Set the graph
+    //graph.setMap(self.map.googlemap());
+
+    // Store the parent
+    var clear = self.clear;
+
+    /**
+     * TODO: Missing documentation
+     */
+    self.clear = function() {
+      // Call the parent
+      clear();
+
+      // Remove the map
+      graph.setMap(null);
+    };
+
+    return self;
+  };
+
+  // Register the handler
+  niclabs.insight.handler('simple-graph', 'graph', SimpleGraph);
+
+  return SimpleGraph;
 })(jQuery);
 
 /**
