@@ -12,7 +12,7 @@ var jsdoc   = require("gulp-jsdoc-to-markdown");
 var notify  = require('gulp-notify');
 var connect = require('gulp-connect');
 
-var sources = ['src/niclabs/**/*.js','src/thirdParty/*.js'];
+var sources = ['src/niclabs/**/*.js','src/third-party/*.js'];
 
 var mimetype = {
     '.css':    'text/css',
