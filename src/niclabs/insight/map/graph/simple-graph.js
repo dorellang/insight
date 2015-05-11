@@ -25,18 +25,6 @@ niclabs.insight.map.graph.SimpleGraph = (function($) {
       }
       var vertex = [];
 
-      /*
-      changeColor = function() {
-          // TODO: make configurable?
-          polyline.setOptions({strokeColor: '#FF0000'});
-
-          // Set timeout to stop the animation
-          setTimeout(function() {
-              polyline.setOptions({strokeColor: '#000000'});
-          }, 3000);
-       };
-       */
-
       // Note: non directed graph
       for (i = 0; i < options.adj.length; i++) {
         for (var j = 0; j < i; j++) {
@@ -53,6 +41,7 @@ niclabs.insight.map.graph.SimpleGraph = (function($) {
             });
 
             polyline.setMap(self.map.googlemap());
+            //google.maps.event.addListener(polyline, 'click', changeColor);
             vertex.push(polyline);
           }
         }
@@ -60,7 +49,15 @@ niclabs.insight.map.graph.SimpleGraph = (function($) {
 
       return {
         nodes: graphNodes,
-        vertex: vertex
+        edges: vertex,
+        setMap: function(map) {
+          for(var node in this.nodes) {
+            this.nodes[node].setMap(map);
+          }
+          for(var edge in this.edges) {
+            this.edges[edge].setMap(map);
+          }
+        }
       };
     }
 
@@ -84,6 +81,18 @@ niclabs.insight.map.graph.SimpleGraph = (function($) {
 
       // Remove the map
       graph.setMap(null);
+    };
+
+    self.graph = function() {
+      return graph;
+    };
+
+    self.nodes = function() {
+      return graph.nodes;
+    };
+
+    self.edges = function() {
+      return graph.edges;
     };
 
     return self;

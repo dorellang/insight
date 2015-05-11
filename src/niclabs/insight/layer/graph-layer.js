@@ -9,13 +9,16 @@ niclabs.insight.layer.GraphLayer = (function($) {
             'type': 'simple-graph'
         };
 
+        var nodes = [];
+        var edges = [];
+
         function createGraph(data, obj) {
             var graph;
             if ('type' in obj) {
                 var attr = {'layer': layer.id, 'data': data};
 
                 // Extend the attributes with the data and the options for the graph
-                $.extend(attr, obj);
+                $.extend(attr, obj, data);
 
                 graph = niclabs.insight.handler(obj.type)(dashboard, attr);
             }
@@ -25,7 +28,54 @@ niclabs.insight.layer.GraphLayer = (function($) {
                 // Should we add a way to pass data to the graph?
             }
 
+            graph.clickable(true);
+            /*
+            for (var edge in edges){
+                console.log(edge);
+                edges[edge].clickable(true);
+            }*/
+
             return graph;
+        }
+
+        function newNode(data, index, obj) {
+            var node;
+            if ('type' in obj) {
+                var attr = {'layer': layer.id};
+
+                // Extend the attributes with the data and the options for the marker
+                $.extend(attr, obj, data[index]);
+
+                node = niclabs.insight.handler('simple-marker')(dashboard, attr);
+            }
+            else {
+                node = obj;
+            }
+
+            // Make the marker clickable
+            node.clickable(true);
+
+            return node;
+        }
+
+        function newEdge(data, index, obj) {
+            var node;
+            if ('type' in obj) {
+                var attr = {'layer': layer.id};
+
+                // Extend the attributes with the data and the options for the marker
+                $.extend(attr, obj, data[index]);
+
+                node = niclabs.insight.handler('edge')(dashboard, attr);
+            }
+            else {
+                node = obj;
+            }
+
+            // Make the marker clickable
+            node.clickable(true);
+
+            return node;
         }
 
         var graph;
@@ -34,7 +84,7 @@ niclabs.insight.layer.GraphLayer = (function($) {
          * TODO: Missing documentation
          */
         layer.draw = function(data) {
-          graph = createGraph(data, graphOptions);
+            graph = createGraph(data, graphOptions);
         };
 
         /**

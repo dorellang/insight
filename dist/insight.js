@@ -2563,13 +2563,16 @@ niclabs.insight.layer.GraphLayer = (function($) {
             'type': 'simple-graph'
         };
 
+        var nodes = [];
+        var edges = [];
+
         function createGraph(data, obj) {
             var graph;
             if ('type' in obj) {
                 var attr = {'layer': layer.id, 'data': data};
 
                 // Extend the attributes with the data and the options for the graph
-                $.extend(attr, obj);
+                $.extend(attr, obj, data);
 
                 graph = niclabs.insight.handler(obj.type)(dashboard, attr);
             }
@@ -2579,7 +2582,54 @@ niclabs.insight.layer.GraphLayer = (function($) {
                 // Should we add a way to pass data to the graph?
             }
 
+            graph.clickable(true);
+            /*
+            for (var edge in edges){
+                console.log(edge);
+                edges[edge].clickable(true);
+            }*/
+
             return graph;
+        }
+
+        function newNode(data, index, obj) {
+            var node;
+            if ('type' in obj) {
+                var attr = {'layer': layer.id};
+
+                // Extend the attributes with the data and the options for the marker
+                $.extend(attr, obj, data[index]);
+
+                node = niclabs.insight.handler('simple-marker')(dashboard, attr);
+            }
+            else {
+                node = obj;
+            }
+
+            // Make the marker clickable
+            node.clickable(true);
+
+            return node;
+        }
+
+        function newEdge(data, index, obj) {
+            var node;
+            if ('type' in obj) {
+                var attr = {'layer': layer.id};
+
+                // Extend the attributes with the data and the options for the marker
+                $.extend(attr, obj, data[index]);
+
+                node = niclabs.insight.handler('edge')(dashboard, attr);
+            }
+            else {
+                node = obj;
+            }
+
+            // Make the marker clickable
+            node.clickable(true);
+
+            return node;
         }
 
         var graph;
@@ -2588,7 +2638,7 @@ niclabs.insight.layer.GraphLayer = (function($) {
          * TODO: Missing documentation
          */
         layer.draw = function(data) {
-          graph = createGraph(data, graphOptions);
+            graph = createGraph(data, graphOptions);
         };
 
         /**
@@ -4056,6 +4106,87 @@ niclabs.insight.map.graph.Graph = (function($) {
              */
             clear: function() {
             },
+
+            /**
+             * TODO: Missing documentation
+             */
+            graph: function() {
+                return undefined;
+            },
+
+            /**
+             * TODO: Missing documentation
+             */
+            nodes: function() {
+                return undefined;
+            },
+
+            /**
+             * TODO: Missing documentation
+             */
+            edges: function() {
+                return undefined;
+            },
+
+            /**
+             * TODO: Missing documentation
+             */
+            clickable : function(activate) {
+                var listener;
+                if (activate) {
+                    listener = {};
+                    var edges = self.edges();
+                    for (var edge in edges) {
+                        listener.edges = self.edgeClickable(edges[edge]);
+                    }
+                    var nodes = self.nodes();
+                    for (var node in nodes) {
+                        listener.nodes = self.nodeClickable(nodes[node]);
+                    }
+                }
+                else if (typeof listener !== 'undefined') {
+                    google.maps.event.removeListener(listener);
+                    listener = undefined;
+                }
+                return (listener !== undefined);
+            },
+
+            /**
+             * TODO: Missing documentation
+             */
+            edgeClickable : function(edge) {
+                listener = google.maps.event.addListener(edge, 'click', function() {
+                  niclabs.insight.event.trigger('map_element_selected', options);
+                  //edge = this;
+                  edge.setOptions({strokeColor: '#FF0000'});
+                  // Set timeout to stop the animation
+                  setTimeout(function() {
+                      edge.setOptions({strokeColor: '#000000'});
+                  }, 1000);
+
+                });
+                return listener;
+            },
+
+            /**
+             * TODO: Missing documentation
+             */
+            nodeClickable : function(node) {
+                listener = google.maps.event.addListener(node, 'click', function() {
+                    niclabs.insight.event.trigger('map_element_selected', options);
+
+                    // TODO: make configurable?
+                    if ('setAnimation' in node) {
+                        node.setAnimation(google.maps.Animation.BOUNCE);
+                    }
+
+                    // Set timeout to stop the animation
+                    setTimeout(function() {
+                        node.setAnimation(null);
+                    }, 1000);
+                });
+                return listener;
+            }
         };
 
         return self;
@@ -4091,18 +4222,6 @@ niclabs.insight.map.graph.SimpleGraph = (function($) {
       }
       var vertex = [];
 
-      /*
-      changeColor = function() {
-          // TODO: make configurable?
-          polyline.setOptions({strokeColor: '#FF0000'});
-
-          // Set timeout to stop the animation
-          setTimeout(function() {
-              polyline.setOptions({strokeColor: '#000000'});
-          }, 3000);
-       };
-       */
-
       // Note: non directed graph
       for (i = 0; i < options.adj.length; i++) {
         for (var j = 0; j < i; j++) {
@@ -4119,6 +4238,7 @@ niclabs.insight.map.graph.SimpleGraph = (function($) {
             });
 
             polyline.setMap(self.map.googlemap());
+            //google.maps.event.addListener(polyline, 'click', changeColor);
             vertex.push(polyline);
           }
         }
@@ -4126,7 +4246,15 @@ niclabs.insight.map.graph.SimpleGraph = (function($) {
 
       return {
         nodes: graphNodes,
-        vertex: vertex
+        edges: vertex,
+        setMap: function(map) {
+          for(var node in this.nodes) {
+            this.nodes[node].setMap(map);
+          }
+          for(var edge in this.edges) {
+            this.edges[edge].setMap(map);
+          }
+        }
       };
     }
 
@@ -4150,6 +4278,18 @@ niclabs.insight.map.graph.SimpleGraph = (function($) {
 
       // Remove the map
       graph.setMap(null);
+    };
+
+    self.graph = function() {
+      return graph;
+    };
+
+    self.nodes = function() {
+      return graph.nodes;
+    };
+
+    self.edges = function() {
+      return graph.edges;
     };
 
     return self;
