@@ -1,7 +1,7 @@
-city-dashboard
-==============
+Urban Insight
+=============
 
-City Dashboard is a Generic Web Dashboard for Urban Based Visualization Projects.
+Insight is a generic web dashboard for smart city projects.
 
 This javascipt library lets you easily create a dashboard with several highly customizable visualizations.
 
