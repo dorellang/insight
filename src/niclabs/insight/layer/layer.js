@@ -79,14 +79,14 @@
                 if (typeof obj === 'string') {
                     dataSource = obj;
 
-                    // If the layer has already been loaded, reload the data
-                    if (loaded) self.load();
-
                     return dataSource;
                 }
                 else {
                     data = obj.length ? obj: [obj];
                 }
+
+                // If the layer has already been loaded, reload the data
+                if (loaded) self.load();
 
                 return data;
             },
@@ -142,6 +142,9 @@
 
                     // Re-draw with new data loaded
                     self.draw(data);
+
+                    // Set the layer as loaded
+                    loaded = true;
                 }
 
                 if (dataSource) {
