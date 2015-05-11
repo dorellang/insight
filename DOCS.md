@@ -22,6 +22,19 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
       * [event.off(event, listener)](#niclabs.insight.event.off)
       * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
       * [callback: event~listener](#niclabs.insight.event..listener)
+    * [insight.filter](#niclabs.insight.filter)
+      * [class: filter.Filter](#niclabs.insight.filter.Filter)
+        * [new filter.Filter(dashboard, options)](#new_niclabs.insight.filter.Filter)
+        * [Filter.view.apply(element)](#niclabs.insight.filter.Filter.view.apply)
+      * [class: filter.GoogleGeocodingFilter](#niclabs.insight.filter.GoogleGeocodingFilter)
+        * [new filter.GoogleGeocodingFilter(dashboard, options)](#new_niclabs.insight.filter.GoogleGeocodingFilter)
+      * [class: filter.LayerSelector](#niclabs.insight.filter.LayerSelector)
+        * [new filter.LayerSelector(dashboard, options)](#new_niclabs.insight.filter.LayerSelector)
+        * [LayerSelector.view.add(id, name)](#niclabs.insight.filter.LayerSelector.view.add)
+      * [class: filter.SelectionFilter](#niclabs.insight.filter.SelectionFilter)
+        * [new filter.SelectionFilter(dashboard, options)](#new_niclabs.insight.filter.SelectionFilter)
+        * [SelectionFilter.view.apply(element)](#niclabs.insight.filter.SelectionFilter.view.apply)
+        * [type: SelectionFilter.Option](#niclabs.insight.filter.SelectionFilter.Option)
     * [insight.info](#niclabs.insight.info)
       * [class: info.Block](#niclabs.insight.info.Block)
         * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
@@ -180,19 +193,6 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
         * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
         * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
         * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
-    * [insight.filter](#niclabs.insight.filter)
-      * [class: filter.Filter](#niclabs.insight.filter.Filter)
-        * [new filter.Filter(dashboard, options)](#new_niclabs.insight.filter.Filter)
-        * [Filter.view.apply(element)](#niclabs.insight.filter.Filter.view.apply)
-      * [class: filter.GoogleGeocodingFilter](#niclabs.insight.filter.GoogleGeocodingFilter)
-        * [new filter.GoogleGeocodingFilter(dashboard, options)](#new_niclabs.insight.filter.GoogleGeocodingFilter)
-      * [class: filter.LayerSelector](#niclabs.insight.filter.LayerSelector)
-        * [new filter.LayerSelector(dashboard, options)](#new_niclabs.insight.filter.LayerSelector)
-        * [LayerSelector.view.add(id, name)](#niclabs.insight.filter.LayerSelector.view.add)
-      * [class: filter.SelectionFilter](#niclabs.insight.filter.SelectionFilter)
-        * [new filter.SelectionFilter(dashboard, options)](#new_niclabs.insight.filter.SelectionFilter)
-        * [SelectionFilter.view.apply(element)](#niclabs.insight.filter.SelectionFilter.view.apply)
-        * [type: SelectionFilter.Option](#niclabs.insight.filter.SelectionFilter.Option)
     * [callback: insight~handler](#niclabs.insight..handler)
     * [class: insight.Dashboard](#niclabs.insight.Dashboard)
       * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
@@ -271,6 +271,19 @@ understand what is going on in the city
     * [event.off(event, listener)](#niclabs.insight.event.off)
     * [event.trigger(event, [data])](#niclabs.insight.event.trigger)
     * [callback: event~listener](#niclabs.insight.event..listener)
+  * [insight.filter](#niclabs.insight.filter)
+    * [class: filter.Filter](#niclabs.insight.filter.Filter)
+      * [new filter.Filter(dashboard, options)](#new_niclabs.insight.filter.Filter)
+      * [Filter.view.apply(element)](#niclabs.insight.filter.Filter.view.apply)
+    * [class: filter.GoogleGeocodingFilter](#niclabs.insight.filter.GoogleGeocodingFilter)
+      * [new filter.GoogleGeocodingFilter(dashboard, options)](#new_niclabs.insight.filter.GoogleGeocodingFilter)
+    * [class: filter.LayerSelector](#niclabs.insight.filter.LayerSelector)
+      * [new filter.LayerSelector(dashboard, options)](#new_niclabs.insight.filter.LayerSelector)
+      * [LayerSelector.view.add(id, name)](#niclabs.insight.filter.LayerSelector.view.add)
+    * [class: filter.SelectionFilter](#niclabs.insight.filter.SelectionFilter)
+      * [new filter.SelectionFilter(dashboard, options)](#new_niclabs.insight.filter.SelectionFilter)
+      * [SelectionFilter.view.apply(element)](#niclabs.insight.filter.SelectionFilter.view.apply)
+      * [type: SelectionFilter.Option](#niclabs.insight.filter.SelectionFilter.Option)
   * [insight.info](#niclabs.insight.info)
     * [class: info.Block](#niclabs.insight.info.Block)
       * [new info.Block(dashboard, options)](#new_niclabs.insight.info.Block)
@@ -429,19 +442,6 @@ understand what is going on in the city
       * [PointQuadTree.bounds](#niclabs.insight.quadtree.PointQuadTree.bounds)
       * [PointQuadTree.insert(point)](#niclabs.insight.quadtree.PointQuadTree.insert)
       * [PointQuadTree.query(range)](#niclabs.insight.quadtree.PointQuadTree.query)
-  * [insight.filter](#niclabs.insight.filter)
-    * [class: filter.Filter](#niclabs.insight.filter.Filter)
-      * [new filter.Filter(dashboard, options)](#new_niclabs.insight.filter.Filter)
-      * [Filter.view.apply(element)](#niclabs.insight.filter.Filter.view.apply)
-    * [class: filter.GoogleGeocodingFilter](#niclabs.insight.filter.GoogleGeocodingFilter)
-      * [new filter.GoogleGeocodingFilter(dashboard, options)](#new_niclabs.insight.filter.GoogleGeocodingFilter)
-    * [class: filter.LayerSelector](#niclabs.insight.filter.LayerSelector)
-      * [new filter.LayerSelector(dashboard, options)](#new_niclabs.insight.filter.LayerSelector)
-      * [LayerSelector.view.add(id, name)](#niclabs.insight.filter.LayerSelector.view.add)
-    * [class: filter.SelectionFilter](#niclabs.insight.filter.SelectionFilter)
-      * [new filter.SelectionFilter(dashboard, options)](#new_niclabs.insight.filter.SelectionFilter)
-      * [SelectionFilter.view.apply(element)](#niclabs.insight.filter.SelectionFilter.view.apply)
-      * [type: SelectionFilter.Option](#niclabs.insight.filter.SelectionFilter.Option)
   * [callback: insight~handler](#niclabs.insight..handler)
   * [class: insight.Dashboard](#niclabs.insight.Dashboard)
     * [new insight.Dashboard(options)](#new_niclabs.insight.Dashboard)
@@ -689,6 +689,158 @@ Insight event listener
 
 **Scope**: inner typedef of [event](#niclabs.insight.event)  
 **Type**: `function`  
+<a name="niclabs.insight.filter"></a>
+###insight.filter
+Define all possible filters for the dashboard
+
+**Members**
+
+* [insight.filter](#niclabs.insight.filter)
+  * [class: filter.Filter](#niclabs.insight.filter.Filter)
+    * [new filter.Filter(dashboard, options)](#new_niclabs.insight.filter.Filter)
+    * [Filter.view.apply(element)](#niclabs.insight.filter.Filter.view.apply)
+  * [class: filter.GoogleGeocodingFilter](#niclabs.insight.filter.GoogleGeocodingFilter)
+    * [new filter.GoogleGeocodingFilter(dashboard, options)](#new_niclabs.insight.filter.GoogleGeocodingFilter)
+  * [class: filter.LayerSelector](#niclabs.insight.filter.LayerSelector)
+    * [new filter.LayerSelector(dashboard, options)](#new_niclabs.insight.filter.LayerSelector)
+    * [LayerSelector.view.add(id, name)](#niclabs.insight.filter.LayerSelector.view.add)
+  * [class: filter.SelectionFilter](#niclabs.insight.filter.SelectionFilter)
+    * [new filter.SelectionFilter(dashboard, options)](#new_niclabs.insight.filter.SelectionFilter)
+    * [SelectionFilter.view.apply(element)](#niclabs.insight.filter.SelectionFilter.view.apply)
+    * [type: SelectionFilter.Option](#niclabs.insight.filter.SelectionFilter.Option)
+
+<a name="niclabs.insight.filter.Filter"></a>
+####class: filter.Filter
+**Extends**: `niclabs.insight.View`  
+**Members**
+
+* [class: filter.Filter](#niclabs.insight.filter.Filter)
+  * [new filter.Filter(dashboard, options)](#new_niclabs.insight.filter.Filter)
+  * [Filter.view.apply(element)](#niclabs.insight.filter.Filter.view.apply)
+
+<a name="new_niclabs.insight.filter.Filter"></a>
+#####new filter.Filter(dashboard, options)
+Defines a filter for the dashboard
+
+A filter provides both a visual filtering representation
+and an apply() function to be used on a data element for
+filtering
+
+For instance, a select filter will be visualized as a `<select>`
+HTML element, and calls to apply will pass the call to the appropriate
+filtering function according to the selected element
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this filter belongs to  
+- options `Object` - configuration options for the filter  
+
+**Extends**: `niclabs.insight.View`  
+<a name="niclabs.insight.filter.Filter.view.apply"></a>
+#####Filter.view.apply(element)
+Apply the filter to a data element
+
+**Params**
+
+- element `Object` - data element to evaluate  
+
+**Returns**: `boolean` - - true if the data element passes the filter  
+<a name="niclabs.insight.filter.GoogleGeocodingFilter"></a>
+####class: filter.GoogleGeocodingFilter
+**Extends**: `niclabs.insight.filter.Filter`  
+**Members**
+
+* [class: filter.GoogleGeocodingFilter](#niclabs.insight.filter.GoogleGeocodingFilter)
+  * [new filter.GoogleGeocodingFilter(dashboard, options)](#new_niclabs.insight.filter.GoogleGeocodingFilter)
+
+<a name="new_niclabs.insight.filter.GoogleGeocodingFilter"></a>
+#####new filter.GoogleGeocodingFilter(dashboard, options)
+Constructs a Google Geocoding filter for the dashboard
+
+Application of the filter always returns true, but allows to
+update the map according to a search location
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this filter belongs to  
+- options `Object` - configuration options for the filter  
+
+**Extends**: `niclabs.insight.filter.Filter`  
+<a name="niclabs.insight.filter.LayerSelector"></a>
+####class: filter.LayerSelector
+**Extends**: `niclabs.insight.filter.Filter`  
+**Members**
+
+* [class: filter.LayerSelector](#niclabs.insight.filter.LayerSelector)
+  * [new filter.LayerSelector(dashboard, options)](#new_niclabs.insight.filter.LayerSelector)
+  * [LayerSelector.view.add(id, name)](#niclabs.insight.filter.LayerSelector.view.add)
+
+<a name="new_niclabs.insight.filter.LayerSelector"></a>
+#####new filter.LayerSelector(dashboard, options)
+Construct a layer for the dashboard
+
+The layer selector provides an option to switch between layers of the dashboard
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this filter belongs to  
+- options `Object` - configuration options for the filter  
+
+**Extends**: `niclabs.insight.filter.Filter`  
+<a name="niclabs.insight.filter.LayerSelector.view.add"></a>
+#####LayerSelector.view.add(id, name)
+Add a layer to the selector
+
+**Params**
+
+- id `string` - id for the layer  
+- name `name` - name of the layer  
+
+<a name="niclabs.insight.filter.SelectionFilter"></a>
+####class: filter.SelectionFilter
+**Extends**: `niclabs.insight.filter.Filter`  
+**Members**
+
+* [class: filter.SelectionFilter](#niclabs.insight.filter.SelectionFilter)
+  * [new filter.SelectionFilter(dashboard, options)](#new_niclabs.insight.filter.SelectionFilter)
+  * [SelectionFilter.view.apply(element)](#niclabs.insight.filter.SelectionFilter.view.apply)
+  * [type: SelectionFilter.Option](#niclabs.insight.filter.SelectionFilter.Option)
+
+<a name="new_niclabs.insight.filter.SelectionFilter"></a>
+#####new filter.SelectionFilter(dashboard, options)
+Construct a selection filter for the dashboard
+
+A selection filter will be visualized as a `<select>`
+HTML element, and calls to apply will pass the call to the appropriate
+filtering function according to the selected option
+
+**Params**
+
+- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this filter belongs to  
+- options `Object` - configuration options for the filter  
+  - description `string` - description for this filter to use as default option of the select  
+  - options <code>[Array.&lt;Option&gt;](#niclabs.insight.filter.SelectionFilter.Option)</code> - list of options for the filter  
+
+**Extends**: `niclabs.insight.filter.Filter`  
+<a name="niclabs.insight.filter.SelectionFilter.view.apply"></a>
+#####SelectionFilter.view.apply(element)
+Apply the filter to a data element
+
+**Params**
+
+- element `Object` - data element to evaluate  
+
+**Returns**: `boolean` - - true if the data element passes the filter  
+<a name="niclabs.insight.filter.SelectionFilter.Option"></a>
+#####type: SelectionFilter.Option
+Selection filter option
+
+**Params**
+
+- name `string` - name for the option of the filter  
+- filter <code>[filter](#niclabs.insight.Filters..filter)</code> - callback to filter the data  
+
+**Type**: `Object`  
 <a name="niclabs.insight.info"></a>
 ###insight.info
 Contains the definitions for the information blocks supported by insight
@@ -2488,158 +2640,6 @@ Return all the points in the specified bounding box
 - range <code>[Bounds](#niclabs.insight.quadtree.Bounds)</code> - spatial range to search  
 
 **Returns**: [Array.&lt;Point&gt;](#niclabs.insight.quadtree.Point) - list of points in the given range  
-<a name="niclabs.insight.filter"></a>
-###insight.filter
-Define all possible filters for the dashboard
-
-**Members**
-
-* [insight.filter](#niclabs.insight.filter)
-  * [class: filter.Filter](#niclabs.insight.filter.Filter)
-    * [new filter.Filter(dashboard, options)](#new_niclabs.insight.filter.Filter)
-    * [Filter.view.apply(element)](#niclabs.insight.filter.Filter.view.apply)
-  * [class: filter.GoogleGeocodingFilter](#niclabs.insight.filter.GoogleGeocodingFilter)
-    * [new filter.GoogleGeocodingFilter(dashboard, options)](#new_niclabs.insight.filter.GoogleGeocodingFilter)
-  * [class: filter.LayerSelector](#niclabs.insight.filter.LayerSelector)
-    * [new filter.LayerSelector(dashboard, options)](#new_niclabs.insight.filter.LayerSelector)
-    * [LayerSelector.view.add(id, name)](#niclabs.insight.filter.LayerSelector.view.add)
-  * [class: filter.SelectionFilter](#niclabs.insight.filter.SelectionFilter)
-    * [new filter.SelectionFilter(dashboard, options)](#new_niclabs.insight.filter.SelectionFilter)
-    * [SelectionFilter.view.apply(element)](#niclabs.insight.filter.SelectionFilter.view.apply)
-    * [type: SelectionFilter.Option](#niclabs.insight.filter.SelectionFilter.Option)
-
-<a name="niclabs.insight.filter.Filter"></a>
-####class: filter.Filter
-**Extends**: `niclabs.insight.View`  
-**Members**
-
-* [class: filter.Filter](#niclabs.insight.filter.Filter)
-  * [new filter.Filter(dashboard, options)](#new_niclabs.insight.filter.Filter)
-  * [Filter.view.apply(element)](#niclabs.insight.filter.Filter.view.apply)
-
-<a name="new_niclabs.insight.filter.Filter"></a>
-#####new filter.Filter(dashboard, options)
-Defines a filter for the dashboard
-
-A filter provides both a visual filtering representation
-and an apply() function to be used on a data element for
-filtering
-
-For instance, a select filter will be visualized as a `<select>`
-HTML element, and calls to apply will pass the call to the appropriate
-filtering function according to the selected element
-
-**Params**
-
-- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this filter belongs to  
-- options `Object` - configuration options for the filter  
-
-**Extends**: `niclabs.insight.View`  
-<a name="niclabs.insight.filter.Filter.view.apply"></a>
-#####Filter.view.apply(element)
-Apply the filter to a data element
-
-**Params**
-
-- element `Object` - data element to evaluate  
-
-**Returns**: `boolean` - - true if the data element passes the filter  
-<a name="niclabs.insight.filter.GoogleGeocodingFilter"></a>
-####class: filter.GoogleGeocodingFilter
-**Extends**: `niclabs.insight.filter.Filter`  
-**Members**
-
-* [class: filter.GoogleGeocodingFilter](#niclabs.insight.filter.GoogleGeocodingFilter)
-  * [new filter.GoogleGeocodingFilter(dashboard, options)](#new_niclabs.insight.filter.GoogleGeocodingFilter)
-
-<a name="new_niclabs.insight.filter.GoogleGeocodingFilter"></a>
-#####new filter.GoogleGeocodingFilter(dashboard, options)
-Constructs a Google Geocoding filter for the dashboard
-
-Application of the filter always returns true, but allows to
-update the map according to a search location
-
-**Params**
-
-- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this filter belongs to  
-- options `Object` - configuration options for the filter  
-
-**Extends**: `niclabs.insight.filter.Filter`  
-<a name="niclabs.insight.filter.LayerSelector"></a>
-####class: filter.LayerSelector
-**Extends**: `niclabs.insight.filter.Filter`  
-**Members**
-
-* [class: filter.LayerSelector](#niclabs.insight.filter.LayerSelector)
-  * [new filter.LayerSelector(dashboard, options)](#new_niclabs.insight.filter.LayerSelector)
-  * [LayerSelector.view.add(id, name)](#niclabs.insight.filter.LayerSelector.view.add)
-
-<a name="new_niclabs.insight.filter.LayerSelector"></a>
-#####new filter.LayerSelector(dashboard, options)
-Construct a layer for the dashboard
-
-The layer selector provides an option to switch between layers of the dashboard
-
-**Params**
-
-- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this filter belongs to  
-- options `Object` - configuration options for the filter  
-
-**Extends**: `niclabs.insight.filter.Filter`  
-<a name="niclabs.insight.filter.LayerSelector.view.add"></a>
-#####LayerSelector.view.add(id, name)
-Add a layer to the selector
-
-**Params**
-
-- id `string` - id for the layer  
-- name `name` - name of the layer  
-
-<a name="niclabs.insight.filter.SelectionFilter"></a>
-####class: filter.SelectionFilter
-**Extends**: `niclabs.insight.filter.Filter`  
-**Members**
-
-* [class: filter.SelectionFilter](#niclabs.insight.filter.SelectionFilter)
-  * [new filter.SelectionFilter(dashboard, options)](#new_niclabs.insight.filter.SelectionFilter)
-  * [SelectionFilter.view.apply(element)](#niclabs.insight.filter.SelectionFilter.view.apply)
-  * [type: SelectionFilter.Option](#niclabs.insight.filter.SelectionFilter.Option)
-
-<a name="new_niclabs.insight.filter.SelectionFilter"></a>
-#####new filter.SelectionFilter(dashboard, options)
-Construct a selection filter for the dashboard
-
-A selection filter will be visualized as a `<select>`
-HTML element, and calls to apply will pass the call to the appropriate
-filtering function according to the selected option
-
-**Params**
-
-- dashboard <code>[Dashboard](#niclabs.insight.Dashboard)</code> - dashboard that this filter belongs to  
-- options `Object` - configuration options for the filter  
-  - description `string` - description for this filter to use as default option of the select  
-  - options <code>[Array.&lt;Option&gt;](#niclabs.insight.filter.SelectionFilter.Option)</code> - list of options for the filter  
-
-**Extends**: `niclabs.insight.filter.Filter`  
-<a name="niclabs.insight.filter.SelectionFilter.view.apply"></a>
-#####SelectionFilter.view.apply(element)
-Apply the filter to a data element
-
-**Params**
-
-- element `Object` - data element to evaluate  
-
-**Returns**: `boolean` - - true if the data element passes the filter  
-<a name="niclabs.insight.filter.SelectionFilter.Option"></a>
-#####type: SelectionFilter.Option
-Selection filter option
-
-**Params**
-
-- name `string` - name for the option of the filter  
-- filter <code>[filter](#niclabs.insight.Filters..filter)</code> - callback to filter the data  
-
-**Type**: `Object`  
 <a name="niclabs.insight..handler"></a>
 ###callback: insight~handler
 Constructs an insight element (visualization, layer, etc.)
