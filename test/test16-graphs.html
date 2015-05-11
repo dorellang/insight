@@ -72,24 +72,23 @@
         data: [{
             'lat': 48.860611,
             'lng': 2.337644,
-            'landmark': 'Musée du Louvre',
+            'landmark': 'Musée du Louvre'
         }, {
             'lat': 48.859961,
             'lng': 2.326561,
-            'landmark': 'Musée D’Orsay',
+            'landmark': 'Musée d\'Orsay'
         }, {
             'lat': 48.873792,
             'lng': 2.295028,
-            'landmark': 'L’Arc de Triomphe',
+            'landmark': 'L’Arc de Triomphe'
         }, {
             'lat': 48.852968,
             'lng': 2.349902,
-            'landmark': 'Cathédrale Notre-Dame',
+            'landmark': 'Cathédrale Notre-Dame'
         }, {
             'lat': 48.85837,
             'lng': 2.294481,
-            'landmark': 'Tour Eiffel',
-
+            'landmark': 'Tour Eiffel'
         }],
         graph: {
             'type': 'simple-graph',
@@ -99,6 +98,16 @@
                     [1, 1, 0, 0, 0],
                     [0, 1, 0, 0, 0],
                     [0, 1, 0, 0, 0]]
+        },
+        summary: function(data) {
+            var totals = {
+                description: 'Weeky visitors for '+data.length+' museums in Paris',
+                value: [
+                    [0,0,0,0,0,0,0],
+                ]
+            };
+
+            return totals;
         }
     });
 
