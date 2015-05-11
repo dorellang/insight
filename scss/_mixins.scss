@@ -1,0 +1,80 @@
+@mixin clearfix {
+    &:after {
+        content: " ";
+        display:  block;
+        clear: both;
+    }
+}
+
+@mixin container ($width: settings(width), $height: settings(height)) {
+    @if $height {height: $height;}
+    max-width: $width;
+    margin-left: auto;
+    margin-right: auto;
+    @include clearfix;
+}
+
+@mixin border-box-sizing {
+    /* Makes border-box properties */
+    *,
+    *:before,
+    *:after {
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+}
+
+
+@mixin span($n, $cols: settings(columns)) {
+    width: span($n);
+}
+
+//
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+          border-radius: $radius;
+}
+
+// Print @media block
+@mixin respond-to($media) {
+    @if $media == desktop {
+        @media (min-width: settings(min-width)) {
+            @content;
+        }
+    }
+}
+
+/// Mixin printing a linear-gradient
+/// as well as a plain color fallback
+/// and the `-webkit-` prefixed declaration
+/// Source: http://sassmeister.com/gist/b58f6e2cc3160007c880
+/// @access public
+/// @param {String | List | Angle} $direction - Linear gradient direction
+/// @param {Arglist} $color-stops - List of color-stops composing the gradient
+@mixin linear-gradient($direction, $color-stops...) {
+    @if is-direction($direction) == false {
+        $color-stops: ($direction, $color-stops);
+        $direction: 180deg;
+    }
+
+    background: nth(nth($color-stops, 1), 1);
+    background: -webkit-linear-gradient(legacy-direction($direction), $color-stops);
+    background: linear-gradient($direction, $color-stops);
+}
+
+@mixin font-size($size) {
+  font-size: $size;
+  font-size: rem($size);
+}
+
+@mixin no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

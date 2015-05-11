@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <!--
     THIS IS A TEST.
 
@@ -26,62 +26,62 @@
       }
     </style>
 
-    <link rel="stylesheet" type="text/css" href="css/CityDashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/insight.css">
     <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
 
     <script src="js/chartist.min.js"></script>
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization"></script>
-    <script src="js/delaunayTraingles.js"></script>
 
-    <script src="js/CityDashboard.min.js"></script>
+    <script src="js/insight.js"></script>
 
   </head>
 
   <body><div id="dashboard"></div></body>
 
   <script>
-    // Binding the map and the information window.
-    var myDashboard = new CityDashboard.Dashboard({
-      'anchor': '#dashboard',
-      'layout': 'left'
+    /// Binding the map and the information window.
+    var dashboard = niclabs.insight.dashboard({
+        'anchor': '#dashboard',
+        'layout': 'none'
     });
 
-    // Setting up our map.
-    var map = new CityDashboard.GoogleMap({
-      'lat': -33.442909,
-      'lng': -70.65387,
-      'zoom': 12
+    var map = niclabs.insight.map({
+        'handler': 'google-map',
+        'lat': 48.8583,
+        'lng': 2.2944,
+        'zoom': 13
     });
 
-    // Setting up our information window.
-    var infoWindow = new CityDashboard.InfoWindow({});
-
-    var lats = [];
-    var lngs = [];
-
-    var maxlat = -33.34;
-    var minlat = -33.54;
-
-    var maxlng = -70.55;
-    var minlng = -70.75;
-
-    points = [];
-
-    for(var i = 0; i < 30; i++) {
-      points[i] = {lat: Math.random() * (maxlat - minlat) + minlat,
-                   lng: Math.random() * (maxlng - minlng) + minlng};
-    }
-
-    myDashboard
-    .addLayer({
-      'id': '#delaunay',
-      'layer': 'delaunay-layer',
-      'data-source': '#delaunay',
-      'data': [{'points': points
+    niclabs.insight.layer({
+        handler: 'diagram-layer',
+        data: [{
+            'lat': 48.860611,
+            'lng': 2.337644,
+            'landmark': 'Musée du Louvre'
+        }, {
+            'lat': 48.859961,
+            'lng': 2.326561,
+            'landmark': 'Musée D’Orsay'
+        }, {
+            'lat': 48.873792,
+            'lng': 2.295028,
+            'landmark': 'L’Arc de Triomphe'
+        }, {
+            'lat': 48.852968,
+            'lng': 2.349902,
+            'landmark': 'Cathédrale Notre-Dame'
+        }, {
+            'lat': 48.85837,
+            'lng': 2.294481,
+            'landmark': 'Tour Eiffel'
         }],
-      'layer_attr': {
-        'type': 'delaunay'}
+        diagram: {
+            'type': 'delaunay-diagram',
+            'strokeColor': '#000000',
+            'strokeWeight': 3,
+            'strokeColor': 0.5
+        }
     });
 
   </script>

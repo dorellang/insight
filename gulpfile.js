@@ -2,98 +2,123 @@
 var gulp = require('gulp');
 
 // Include Our Plugins
-var jshint = require('gulp-jshint');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var cssmin = require('gulp-cssmin');
-var sass   = require('gulp-sass');
-var jsdoc  = require("gulp-jsdoc-to-markdown");
+var jshint  = require('gulp-jshint');
+var concat  = require('gulp-concat');
+var uglify  = require('gulp-uglify');
+var rename  = require('gulp-rename');
+var cssmin  = require('gulp-cssmin');
+var sass    = require('gulp-sass');
+var jsdoc   = require("gulp-jsdoc-to-markdown");
+var notify  = require('gulp-notify');
+var connect = require('gulp-connect');
 
-// Source list
-var sources = ['src/Utils.js',
-    'src/CityDashboard.js',
-    'src/Maps/Map.js',
-    'src/Maps/GoogleMap.js',
-    'src/Layers/Markers/Marker.js',
-    'src/Layers/Markers/CircleMarker.js',
-    'src/Layers/Markers/ImageMarker.js',
-    'src/Layers/Markers/SimpleMarker.js',
-    'src/Layers/Markers/PolylineMarker.js',
-    'src/Layers/Markers/MarkerSelector.js',
-    'src/Layers/Grids/Grid.js',
-    'src/Layers/Grids/HexagonalGrid.js',
-    'src/Layers/Grids/SquareGrid.js',
-    'src/Layers/Grids/GridSelector.js',
-    'src/Layers/Heatmaps/Heatmap.js',
-    'src/Layers/Heatmaps/PointHeatmap.js',
-    'src/Layers/Heatmaps/SegmentHeatmap.js',
-    'src/Layers/Heatmaps/HeatmapSelector.js',
-    'src/Layers/DTesselation/DTesselation.js',
-    'src/Layers/DTesselation/Voronoi.js',
-    'src/Layers/DTesselation/Delaunay.js',
-    'src/Layers/DTesselation/DTesselationSelector.js',
-    'src/Layers/Layer.js',
-    'src/Layers/MarkerLayer.js',
-    'src/Layers/GridLayer.js',
-    'src/Layers/HeatmapLayer.js',
-    'src/Layers/DelaunayLayer.js',
-    'src/Layers/LayerSelector.js',
-    'src/Visualizations/Visualization.js',
-    'src/Visualizations/SummaryVisualization.js',
-    'src/Visualizations/GeneralVisualization.js',
-    'src/Visualizations/ChartistVisualization.js',
-    'src/Visualizations/D3Visualization.js',
-    'src/FilterBar.js',
-    'src/InfoWindow.js',
-    'src/Dashboard.js'
-];
+var sources = ['src/niclabs/**/*.js','src/third-party/*.js'];
+
+var mimetype = {
+    '.css':    'text/css',
+    '.js':     'text/javascript',
+    '.txt':    'text/plain',
+    '.html':   'text/html'
+};
+
+// Web server
+gulp.task('serve', function () {
+    var fs = require('fs');
+    var path = require('path');
+
+    connect.server({
+        port: 8000,
+        livereload: true,
+        middleware: function(app, opt) {
+            return [function(request, response, next) {
+                var basename = path.basename(request.url);
+                var ext  = path.extname(basename);
+
+                // Check if /dist/basename exists otherwise return the file
+                fs.readFile(path.join('dist', basename), function(err, data) {
+                    if (err) {
+                        return next();
+                    }
+
+                    if (ext in mimetype) {
+                        response.setHeader('Content-Type', mimetype[ext]);
+                    }
+
+                    response.end(data);
+                });
+            }];
+        }
+    });
+});
 
 // Lint Task
-gulp.task('lint', function() {
-    return gulp.src('src/**/*.js')
+gulp.task('lint', function () {
+    return gulp.src(sources)
         .pipe(jshint())
-        .pipe(jshint.reporter('default'));
+        // Use gulp-notify as jshint reporter
+        .pipe(notify(function (file) {
+            if (file.jshint.success) {
+                // Don't show something if success
+                return false;
+            }
+
+            var errors = file.jshint.results.map(function (data) {
+                if (data.error) {
+                    return "(" + data.error.line + ':' + data.error.character + ') ' + data.error.reason;
+                }
+            }).join("\n");
+            return file.relative + " (" + file.jshint.results.length + " errors)\n" + errors;
+        }));
 });
 
 
-gulp.task('sass', function() {
-    gulp.src('scss/**/*.scss')
+gulp.task('sass', function () {
+    gulp.src('scss/style.scss')
         .pipe(sass())
-        .pipe(gulp.dest('tmp'))
-        .pipe(concat('CityDashboard.css'))
-        .pipe(gulp.dest('css'));
-});
+        .on("error", notify.onError(function (error) {
+            return error.message;
 
-gulp.task('css', ['sass'], function() {
-    gulp.src('css/**/*.css')
-        .pipe(cssmin())
-        .pipe(rename('CityDashboard.min.css'))
+        }))
+        .pipe(gulp.dest('tmp'))
+        .pipe(concat('insight.css'))
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task("docs", function() {
+gulp.task('css', ['sass'], function () {
+    gulp.src('dist/insight.css')
+        .pipe(cssmin())
+        .pipe(rename('insight.min.css'))
+        .pipe(gulp.dest('dist'))
+        .pipe(connect.reload());
+});
+
+gulp.task("docs", function () {
     return gulp.src(sources)
         .pipe(concat("DOCS.md"))
         .pipe(jsdoc())
+        .on("error", notify.onError(function (error) {
+            return error.message;
+
+        }))
         .pipe(gulp.dest('.'));
 });
 
 // Concatenate & Minify JS
-gulp.task('scripts', ['lint'], function() {
+gulp.task('scripts', ['lint'], function () {
     return gulp.src(sources)
-        .pipe(concat('CityDashboard.js'))
-        .pipe(gulp.dest('tmp'))
-        .pipe(rename('CityDashboard.min.js'))
+        .pipe(concat('insight.js'))
+        .pipe(gulp.dest('dist'))
+        .pipe(rename('insight.min.js'))
         .pipe(uglify())
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('dist'))
+        .pipe(connect.reload());
 });
 
 // Watch Files For Changes
-gulp.task('watch', function() {
-    gulp.watch('src/**/*.js', ['scripts', 'docs']);
+gulp.task('watch', function () {
+    gulp.watch(sources, ['scripts', 'docs']);
     gulp.watch('scss/**/*.scss', ['css']);
 });
 
 // Default Task
-gulp.task('default', ['css', 'scripts', 'docs', 'watch']);
+gulp.task('default', ['css', 'scripts', 'docs', 'serve', 'watch']);
