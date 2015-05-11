@@ -4808,8 +4808,6 @@ niclabs.insight.map.heatmap.PointHeatmap = (function($) {
             throw Error('No data provided for the heatmap');
         }
 
-        console.log(options);
-
         var self = niclabs.insight.map.heatmap.Heatmap(dashboard, options);
 
         /**
