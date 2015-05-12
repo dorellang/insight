@@ -71,6 +71,9 @@ niclabs.insight.layer.MarkerLayer = (function($) {
             for (var i = 0; i < markers.length; i++) {
                 markers[i].clear();
             }
+
+            // Clean the array
+            markers = [];
         };
 
         /**
