@@ -75,9 +75,7 @@ niclabs.insight.Dashboard = (function($) {
 
         // Create an event to be notified of a filter change
         niclabs.insight.event.on('filter_changed', function(f) {
-            $.each(layers, function(name, layer) {
-                layer.filter(f);
-            });
+            activeLayer.filter(f);
         });
 
         var self = {
