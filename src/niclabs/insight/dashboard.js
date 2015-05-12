@@ -73,9 +73,13 @@ niclabs.insight.Dashboard = (function($) {
         // Append the default filter bar
         container.append(filters.element);
 
+
+        var currentFilter = function() {return true;};
+
         // Create an event to be notified of a filter change
         niclabs.insight.event.on('filter_changed', function(f) {
-            activeLayer.filter(f);
+            currentFilter = f;
+            activeLayer.filter(currentFilter);
         });
 
         var self = {
@@ -244,6 +248,9 @@ niclabs.insight.Dashboard = (function($) {
 
                 // Load the new active layer
                 activeLayer.load();
+
+                // Apply the filter
+                activeLayer.filter(currentFilter);
 
                 return activeLayer;
             },
