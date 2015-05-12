@@ -116,7 +116,7 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
           * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
           * [Grid.map](#niclabs.insight.map.grid.Grid.map)
           * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
-          * [Grid.refresh()](#niclabs.insight.map.grid.Grid.refresh)
+          * [Grid.refresh](#niclabs.insight.map.grid.Grid.refresh)
           * [Grid.tile()](#niclabs.insight.map.grid.Grid.tile)
           * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
           * [type: Grid.Data](#niclabs.insight.map.grid.Grid.Data)
@@ -365,7 +365,7 @@ understand what is going on in the city
         * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
         * [Grid.map](#niclabs.insight.map.grid.Grid.map)
         * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
-        * [Grid.refresh()](#niclabs.insight.map.grid.Grid.refresh)
+        * [Grid.refresh](#niclabs.insight.map.grid.Grid.refresh)
         * [Grid.tile()](#niclabs.insight.map.grid.Grid.tile)
         * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
         * [type: Grid.Data](#niclabs.insight.map.grid.Grid.Data)
@@ -1518,7 +1518,7 @@ Map compatibility for the insight dashboard
       * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
       * [Grid.map](#niclabs.insight.map.grid.Grid.map)
       * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
-      * [Grid.refresh()](#niclabs.insight.map.grid.Grid.refresh)
+      * [Grid.refresh](#niclabs.insight.map.grid.Grid.refresh)
       * [Grid.tile()](#niclabs.insight.map.grid.Grid.tile)
       * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
       * [type: Grid.Data](#niclabs.insight.map.grid.Grid.Data)
@@ -1764,7 +1764,7 @@ Contains all grids definitions for the dashboard
     * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
     * [Grid.map](#niclabs.insight.map.grid.Grid.map)
     * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
-    * [Grid.refresh()](#niclabs.insight.map.grid.Grid.refresh)
+    * [Grid.refresh](#niclabs.insight.map.grid.Grid.refresh)
     * [Grid.tile()](#niclabs.insight.map.grid.Grid.tile)
     * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
     * [type: Grid.Data](#niclabs.insight.map.grid.Grid.Data)
@@ -1798,7 +1798,7 @@ Contains all grids definitions for the dashboard
   * [new grid.Grid(dashboard, options)](#new_niclabs.insight.map.grid.Grid)
   * [Grid.map](#niclabs.insight.map.grid.Grid.map)
   * [Grid.layer](#niclabs.insight.map.grid.Grid.layer)
-  * [Grid.refresh()](#niclabs.insight.map.grid.Grid.refresh)
+  * [Grid.refresh](#niclabs.insight.map.grid.Grid.refresh)
   * [Grid.tile()](#niclabs.insight.map.grid.Grid.tile)
   * [Grid.clear()](#niclabs.insight.map.grid.Grid.clear)
   * [type: Grid.Data](#niclabs.insight.map.grid.Grid.Data)
@@ -1842,7 +1842,7 @@ Layer to which the grid belongs to
 
 **Type**: [Layer](#niclabs.insight.layer.Layer)  
 <a name="niclabs.insight.map.grid.Grid.refresh"></a>
-######Grid.refresh()
+######Grid.refresh
 Refresh the grid with the current map bounds
 
 <a name="niclabs.insight.map.grid.Grid.tile"></a>
@@ -1852,7 +1852,7 @@ Construct a tile from the options of the grid
 **Returns**: [Tile](#niclabs.insight.map.grid.Tile)  
 <a name="niclabs.insight.map.grid.Grid.clear"></a>
 ######Grid.clear()
-Clear the grid from the map
+Remove the grid from the map
 
 <a name="niclabs.insight.map.grid.Grid.Data"></a>
 ######type: Grid.Data

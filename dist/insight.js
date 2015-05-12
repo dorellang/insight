@@ -675,11 +675,13 @@ niclabs.insight.Dashboard = (function($) {
         // Append the default filter bar
         container.append(filters.element);
 
+
+        var currentFilter = function() {return true;};
+
         // Create an event to be notified of a filter change
         niclabs.insight.event.on('filter_changed', function(f) {
-            $.each(layers, function(name, layer) {
-                layer.filter(f);
-            });
+            currentFilter = f;
+            activeLayer.filter(currentFilter);
         });
 
         var self = {
@@ -848,6 +850,9 @@ niclabs.insight.Dashboard = (function($) {
 
                 // Load the new active layer
                 activeLayer.load();
+
+                // Apply the filter
+                activeLayer.filter(currentFilter);
 
                 return activeLayer;
             },
@@ -2989,6 +2994,9 @@ niclabs.insight.layer.MarkerLayer = (function($) {
             for (var i = 0; i < markers.length; i++) {
                 markers[i].clear();
             }
+
+            // Clean the array
+            markers = [];
         };
 
         /**
@@ -4138,12 +4146,62 @@ niclabs.insight.map.grid.Grid = (function() {
 			quadtree.insert(options.data[i]);
 		}
 
+		/**
+		 * Notify clicks
+		 */
 		function notifyTileClick(points) {
 			return function() {
 				niclabs.insight.event.trigger('map_element_selected', points);
 			};
 		}
 
+		/**
+		 * Remove tiles from the map
+		 */
+		function cleanMap() {
+			for (var i = 0; i < tiles.length; i++) {
+				tiles[i].setMap(null);
+			}
+		}
+
+		/**
+		 * Refresh the map
+		 */
+		function refreshMap(bounds) {
+			bounds = typeof bounds !== 'undefined' ? bounds : map.googlemap().getBounds();
+
+			// Clean the map
+			cleanMap();
+
+			// Build the initial grid
+			rebuild(bounds);
+
+			// Listen for changes
+			listener.toggle(true);
+		}
+
+		var listener = (function () {
+			var handler;
+
+			return {
+				toggle: function(listen) {
+					if (listen && typeof handler === 'undefined') {
+						// Listen to boundary changes
+				        handler = google.maps.event.addListener(self.map.googlemap(), 'bounds_changed', function() {
+				            var bounds = this.getBounds();
+				            window.setTimeout(function() {
+				                refreshMap(bounds);
+				            }, 50);
+				        });
+					}
+					else if (!listen && typeof handler !== 'undefined') {
+						google.maps.event.removeListener(handler);
+
+						handler = undefined;
+					}
+				}
+			};
+		})();
 
         var self = {
             /**
@@ -4170,10 +4228,7 @@ niclabs.insight.map.grid.Grid = (function() {
 			 *
 			 * @memberof niclabs.insight.map.grid.Grid
 			 */
-			refresh: function() {
-				// Build the initial grid
-				build(self.map.googlemap().getBounds());
-			},
+			refresh: refreshMap,
 
 			/**
 			 * Construct a tile from the options of the grid
@@ -4187,20 +4242,22 @@ niclabs.insight.map.grid.Grid = (function() {
 			},
 
             /**
-             * Clear the grid from the map
+             * Remove the grid from the map
              *
              * @memberof niclabs.insight.map.grid.Grid
              */
             clear: function() {
-				for (var i = 0; i < tiles.length; i++) {
-					tiles[i].setMap(null);
-				}
+				// Clean the map
+				cleanMap();
+
+				// Disable the listener
+				listener.toggle(false);
             },
         };
 
 
 		// Build the grid
-        function build(mapBounds) {
+        function rebuild(mapBounds) {
 			if (!mapBounds) return;
 
 			var tile = self.tile();
@@ -4243,15 +4300,6 @@ niclabs.insight.map.grid.Grid = (function() {
 				}
 			}
         }
-
-		// Listen to boundary changes
-        google.maps.event.addListener(self.map.googlemap(), 'bounds_changed', function() {
-            var bounds = this.getBounds();
-            window.setTimeout(function() {
-				self.clear();
-                build(bounds);
-            }, 50);
-        });
 
         return self;
 	};
@@ -5181,12 +5229,12 @@ niclabs.insight.map.marker.Marker = (function($) {
                         // TODO: make configurable?
                         if ('setAnimation' in marker) {
                             marker.setAnimation(google.maps.Animation.BOUNCE);
-                        }
 
-                        // Set timeout to stop the animation
-                        setTimeout(function() {
-                            marker.setAnimation(null);
-                        }, 3000);
+                            // Set timeout to stop the animation
+                            setTimeout(function() {
+                                marker.setAnimation(null);
+                            }, 3000);
+                        }
                     });
                 }
                 else if (typeof listener !== 'undefined') {
