@@ -18,7 +18,8 @@ niclabs.insight.layer.GraphLayer = (function($) {
                 var attr = {'layer': layer.id, 'data': data};
 
                 // Extend the attributes with the data and the options for the graph
-                $.extend(attr, obj, data);
+                $.extend(attr, obj);
+                console.log(attr);
 
                 graph = niclabs.insight.handler(obj.type)(dashboard, attr);
             }
@@ -46,11 +47,13 @@ niclabs.insight.layer.GraphLayer = (function($) {
                 // Extend the attributes with the data and the options for the marker
                 $.extend(attr, obj, data[index]);
 
-                node = niclabs.insight.handler('simple-marker')(dashboard, attr);
+                node = niclabs.insight.handler('node')(dashboard, attr);
             }
             else {
                 node = obj;
             }
+
+            console.log(node);
 
             // Make the marker clickable
             node.clickable(true);
@@ -58,24 +61,24 @@ niclabs.insight.layer.GraphLayer = (function($) {
             return node;
         }
 
-        function newEdge(data, index, obj) {
-            var node;
+        function newEdge(data, index, j, obj) {
+            var edge;
             if ('type' in obj) {
                 var attr = {'layer': layer.id};
 
                 // Extend the attributes with the data and the options for the marker
-                $.extend(attr, obj, data[index]);
+                $.extend(attr, obj, [ data[index] , data[j] ]);
 
-                node = niclabs.insight.handler('edge')(dashboard, attr);
+                edge = niclabs.insight.handler('edge')(dashboard, attr);
             }
             else {
-                node = obj;
+                edge = obj;
             }
 
             // Make the marker clickable
-            node.clickable(true);
+            edge.clickable(true);
 
-            return node;
+            return edge;
         }
 
         var graph;
@@ -84,14 +87,23 @@ niclabs.insight.layer.GraphLayer = (function($) {
          * TODO: Missing documentation
          */
         layer.draw = function(data) {
-            graph = createGraph(data, graphOptions);
+            for (var i = 0; i < data.length; i++) {
+                nodes.push(newNode(data, i, graphOptions));
+            }
+            for (i = 0; i < graphOptions.adj.length; i++) {
+              for (var j = 0; j < i; j++) {
+                if (graphOptions.adj[i][j] == 1) {
+                  edges.push(newEdge(data, i, j, graphOptions));
+                }
+              }
+            }
         };
 
         /**
          * TODO: Missing documentation
          */
         layer.clear = function() {
-            if (graph) graph.clear();
+
         };
 
         /**
