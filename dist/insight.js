@@ -730,7 +730,9 @@ niclabs.insight.Dashboard = (function($) {
                     else {
                         infoView = obj;
                     }
-                    $(dashboardId).append(infoView.element);
+                    // The info element must be the first of the element to avoid
+                    // clashes with google maps (TODO: this is probably a CSS bug)
+                    $(dashboardId).prepend(infoView.element);
                 }
                 return infoView;
             },
@@ -2799,14 +2801,14 @@ niclabs.insight.layer.HeatmapLayer = (function($) {
                 if (typeof obj === 'string') {
                     dataSource = obj;
 
-                    // If the layer has already been loaded, reload the data
-                    if (loaded) self.load();
-
                     return dataSource;
                 }
                 else {
                     data = obj.length ? obj: [obj];
                 }
+
+                // If the layer has already been loaded, reload the data
+                if (loaded) self.load();
 
                 return data;
             },
@@ -2862,6 +2864,9 @@ niclabs.insight.layer.HeatmapLayer = (function($) {
 
                     // Re-draw with new data loaded
                     self.draw(data);
+
+                    // Set the layer as loaded
+                    loaded = true;
                 }
 
                 if (dataSource) {
@@ -2946,7 +2951,7 @@ niclabs.insight.layer.MarkerLayer = (function($) {
                 // Extend the attributes with the data and the options for the marker
                 $.extend(attr, obj, data[index]);
 
-                marker = niclabs.insight.handler(obj.type)(dashboard, attr);
+                marker = niclabs.insight.handler(attr.type)(dashboard, attr);
             }
             else {
                 marker = obj;

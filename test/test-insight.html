@@ -59,7 +59,7 @@
     <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
 
     <script type="text/javascript" src="js/chartist.min.js"></script>
-    <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?v="></script>
     <script type="text/javascript" src="js/chartist.min.js"></script>
 
@@ -104,7 +104,14 @@
             }, ]
         });
 
-        niclabs.insight.info({
+        var map = niclabs.insight.map({
+            'handler': 'google-map',
+            'lat': 48.8583,
+            'lng': 2.2944,
+            'zoom': 15
+        });
+
+        var infoview = niclabs.insight.info({
             handler: 'basic-info-view',
             blocks: [{
                 'handler': 'summary-block',
@@ -169,12 +176,6 @@
             }]
         });
 
-        var map = niclabs.insight.map({
-            'handler': 'google-map',
-            'lat': 48.8583,
-            'lng': 2.2944,
-            'zoom': 15
-        });
 
         niclabs.insight.layer({
             handler: 'marker-layer',
