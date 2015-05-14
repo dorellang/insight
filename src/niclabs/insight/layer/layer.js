@@ -78,25 +78,15 @@
 
                 if (typeof obj === 'string') {
                     dataSource = obj;
-
-<<<<<<< HEAD
-                    // If the layer has already been loaded, reload the data
-                    if (loaded) self.load();
-
-=======
->>>>>>> 527cf5b85597ec478e8e249721acc24140feccbe
                     return dataSource;
                 }
                 else {
                     data = obj.length ? obj: [obj];
                 }
 
-<<<<<<< HEAD
-=======
                 // If the layer has already been loaded, reload the data
                 if (loaded) self.load();
 
->>>>>>> 527cf5b85597ec478e8e249721acc24140feccbe
                 return data;
             },
 
@@ -151,12 +141,10 @@
 
                     // Re-draw with new data loaded
                     self.draw(data);
-<<<<<<< HEAD
-=======
 
                     // Set the layer as loaded
                     loaded = true;
->>>>>>> 527cf5b85597ec478e8e249721acc24140feccbe
+
                 }
 
                 if (dataSource) {
