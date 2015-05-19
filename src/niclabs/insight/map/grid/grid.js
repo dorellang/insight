@@ -223,10 +223,7 @@ niclabs.insight.map.grid.Grid = (function() {
 					if (listen && typeof handler === 'undefined') {
 						// Listen to boundary changes
 				        handler = google.maps.event.addListener(self.map.googlemap(), 'bounds_changed', function() {
-				            var bounds = this.getBounds();
-				            window.setTimeout(function() {
-				                refreshMap(bounds);
-				            }, 50);
+							refreshMap(this.getBounds());
 				        });
 					}
 					else if (!listen && typeof handler !== 'undefined') {
