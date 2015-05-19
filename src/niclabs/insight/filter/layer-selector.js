@@ -19,6 +19,9 @@ niclabs.insight.filter.LayerSelector = (function($) {
         // Configure the view
         var select = $('<select>');
 
+        // Hide the selector if there are no elements
+        select.hide();
+
         select.on('change', function() {
             dashboard.active($(this).val());
         });
@@ -36,6 +39,10 @@ niclabs.insight.filter.LayerSelector = (function($) {
         view.add = function(id, name) {
             layers[id] = name;
             select.append($('<option>').attr('value', id).text(name));
+
+            // Show the selector if there is more than one layer
+            if (layers.length > 1)
+                select.show();
         };
 
         return view;
