@@ -4,7 +4,7 @@ niclabs.insight.map.grid.Grid = (function() {
 	 *
 	 * @param {string} start_rgb - starting color for the interpolation
 	 * @param {string} end_rgb - ending color for the interpolation
-	 * @return {niclabs.insight.map.grid.HexagonalGrid~fill} average function
+	 * @return {niclabs.insight.map.grid.Grid~fill} average function
 	 */
 	function averageFill(start_rgb, end_rgb) {
 		start_rgb = niclabs.insight.Color.hexToRgb(start_rgb);
@@ -36,7 +36,7 @@ niclabs.insight.map.grid.Grid = (function() {
 	 *
 	 * @param {string} start_rgb - starting color for the interpolation
 	 * @param {string} end_rgb - ending color for the interpolation
-	 * @return {niclabs.insight.map.grid.HexagonalGrid~fill} median function
+	 * @return {niclabs.insight.map.grid.Grid~fill} median function
 	 */
 	function medianFill(start_rgb, end_rgb) {
 		function partition(data, i, j) {
