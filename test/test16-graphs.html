@@ -53,7 +53,20 @@
             'id': '#summary',
             'title': 'My Marker Summary',
             'closable': false,
-            //'template': '#template',
+            'template': '\
+            <dl class="deflist">\
+                <dt class="deflist-key" data-if="description">description</dt> \
+                <dd class="deflist-value" data-bind="description">none</dd> \
+                <dt class="deflist-key" data-if="landmark">landmark</dt> \
+                <dd class="deflist-value" data-bind="landmark">none</dd> \
+                <dt class="deflist-key" data-if="fun-fact">fun-fact</dt> \
+                <dd class="deflist-value" data-bind="fun-fact">none</dd> \
+                <dt class="deflist-key" data-if="startNode">startNode</dt> \
+                <dd class="deflist-value" data-bind="startNode">none</dd> \
+                <dt class="deflist-key" data-if="endNode">endNode</dt> \
+                <dd class="deflist-value" data-bind="endNode">none</dd> \
+            </dl>\
+            ',
             'defaults': {
                 'description': 'This block will show the details of the selected markers'
             }
@@ -98,16 +111,6 @@
                     [1, 1, 0, 0, 0],
                     [0, 1, 0, 0, 0],
                     [0, 1, 0, 0, 0]]
-        },
-        summary: function(data) {
-            var totals = {
-                description: 'Weeky visitors for '+data.length+' museums in Paris',
-                value: [
-                    [0,0,0,0,0,0,0],
-                ]
-            };
-
-            return totals;
         }
     });
 

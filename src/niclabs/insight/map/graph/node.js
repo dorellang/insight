@@ -1,6 +1,18 @@
 niclabs.insight.map.graph.Node = (function($) {
     /**
-     * TODO: Missing documentation
+     * Constructor for graph nodes
+     *
+     * Graph nodes are shown in the map as basic waypoints, with no style options
+     *
+     * @class niclabs.insight.map.graph.Node
+     * @extends niclabs.insight.map.graph.GraphElement
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this node belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.adj - adjacency matrix of the graph
+     * @param {string} options.layer - identifier for the layer that this node belongs to
+     * @param {float} options.lat - latitude for the graph node
+     * @param {float} options.lng - longitude for the graph node
+     * @param {string} options.landmark - landmark that the node indicates
      */
     var Node = function(dashboard, options) {
         var self = niclabs.insight.map.graph.GraphElement(dashboard, options);
@@ -13,27 +25,25 @@ niclabs.insight.map.graph.Node = (function($) {
             title: options.landmark || ''
         });
 
-        // Re-write the marker function
-        self.marker = function() {
+        // Re-write the graphElement function
+        self.graphElement = function() {
             return marker;
         };
 
         self.clickable = function() {
-            var marker = self.marker();
+            var marker = self.graphElement();
 
             listener = google.maps.event.addListener(marker, 'click', function() {
                 niclabs.insight.event.trigger('map_element_selected', options);
-
-                myself = this;
 
                 // TODO: make configurable?
                 if ('setAnimation' in marker) {
                   marker.setAnimation(google.maps.Animation.BOUNCE);
 
-                    // Set timeout to stop the animation
-                    setTimeout(function() {
-                      marker.setAnimation(null);
-                    }, 1000);
+                  // Set timeout to stop the animation
+                  setTimeout(function() {
+                    marker.setAnimation(null);
+                  }, 1000);
                 }
             });
             return listener;

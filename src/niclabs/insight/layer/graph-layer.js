@@ -53,9 +53,7 @@ niclabs.insight.layer.GraphLayer = (function($) {
                 node = obj;
             }
 
-            console.log(node);
-
-            // Make the marker clickable
+            // Make the node clickable
             node.clickable(true);
 
             return node;
@@ -67,7 +65,7 @@ niclabs.insight.layer.GraphLayer = (function($) {
                 var attr = {'layer': layer.id};
 
                 // Extend the attributes with the data and the options for the marker
-                $.extend(attr, obj, [ data[index] , data[j] ]);
+                $.extend(attr, obj, {'startNode': data[index] , 'endNode': data[j]});
 
                 edge = niclabs.insight.handler('edge')(dashboard, attr);
             }
@@ -75,7 +73,7 @@ niclabs.insight.layer.GraphLayer = (function($) {
                 edge = obj;
             }
 
-            // Make the marker clickable
+            // Make the edge clickable
             edge.clickable(true);
 
             return edge;

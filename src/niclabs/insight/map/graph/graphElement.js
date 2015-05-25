@@ -1,6 +1,15 @@
 niclabs.insight.map.graph.GraphElement = (function($) {
     /**
-     * TODO: Missing documentation
+     * Construct a new GraphElement
+     *
+     * @class niclabs.insight.map.graph.GraphElement
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this graph element belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.adj - adjacency matrix of the graph
+     * @param {string} options.layer - identifier for the layer that this graph element belongs to
+     * @param {float} options.lat - latitude for the graph graph element
+     * @param {float} options.lng - longitude for the graph graph element
+     * @param {string} options.landmark - landmark that the graph element indicates
      */
     var GraphElement = function(dashboard, options) {
         if (!('layer' in options))
