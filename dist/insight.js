@@ -732,9 +732,11 @@ niclabs.insight.Dashboard = (function($) {
                     else {
                         infoView = obj;
                     }
+
                     // The info element must be the first of the element to avoid
                     // clashes with google maps (TODO: this is probably a CSS bug)
                     $(dashboardId).prepend(infoView.element);
+
                 }
                 return infoView;
             },
@@ -2584,7 +2586,8 @@ niclabs.insight.layer.GraphLayer = (function($) {
                 var attr = {'layer': layer.id, 'data': data};
 
                 // Extend the attributes with the data and the options for the graph
-                $.extend(attr, obj, data);
+                $.extend(attr, obj);
+                console.log(attr);
 
                 graph = niclabs.insight.handler(obj.type)(dashboard, attr);
             }
@@ -2612,36 +2615,36 @@ niclabs.insight.layer.GraphLayer = (function($) {
                 // Extend the attributes with the data and the options for the marker
                 $.extend(attr, obj, data[index]);
 
-                node = niclabs.insight.handler('simple-marker')(dashboard, attr);
+                node = niclabs.insight.handler('node')(dashboard, attr);
             }
             else {
                 node = obj;
             }
 
-            // Make the marker clickable
+            // Make the node clickable
             node.clickable(true);
 
             return node;
         }
 
-        function newEdge(data, index, obj) {
-            var node;
+        function newEdge(data, index, j, obj) {
+            var edge;
             if ('type' in obj) {
                 var attr = {'layer': layer.id};
 
                 // Extend the attributes with the data and the options for the marker
-                $.extend(attr, obj, data[index]);
+                $.extend(attr, obj, {'startNode': data[index] , 'endNode': data[j]});
 
-                node = niclabs.insight.handler('edge')(dashboard, attr);
+                edge = niclabs.insight.handler('edge')(dashboard, attr);
             }
             else {
-                node = obj;
+                edge = obj;
             }
 
-            // Make the marker clickable
-            node.clickable(true);
+            // Make the edge clickable
+            edge.clickable(true);
 
-            return node;
+            return edge;
         }
 
         var graph;
@@ -2650,14 +2653,23 @@ niclabs.insight.layer.GraphLayer = (function($) {
          * TODO: Missing documentation
          */
         layer.draw = function(data) {
-            graph = createGraph(data, graphOptions);
+            for (var i = 0; i < data.length; i++) {
+                nodes.push(newNode(data, i, graphOptions));
+            }
+            for (i = 0; i < graphOptions.adj.length; i++) {
+              for (var j = 0; j < i; j++) {
+                if (graphOptions.adj[i][j] == 1) {
+                  edges.push(newEdge(data, i, j, graphOptions));
+                }
+              }
+            }
         };
 
         /**
          * TODO: Missing documentation
          */
         layer.clear = function() {
-            if (graph) graph.clear();
+
         };
 
         /**
@@ -2924,7 +2936,6 @@ niclabs.insight.layer.HeatmapLayer = (function($) {
 
                 if (typeof obj === 'string') {
                     dataSource = obj;
-
                     return dataSource;
                 }
                 else {
@@ -2991,6 +3002,7 @@ niclabs.insight.layer.HeatmapLayer = (function($) {
 
                     // Set the layer as loaded
                     loaded = true;
+
                 }
 
                 if (dataSource) {
@@ -3140,237 +3152,6 @@ niclabs.insight.layer.MarkerLayer = (function($) {
 
     return MarkerLayer;
 })(jQuery);
-
-/**
- * Quadtree implementation
- *
- * @namespace
- */
-niclabs.insight.quadtree = {};
-
-/**
- * A cartesian point
- *
- * @typedef niclabs.insight.quadtree.Point
- * @type {Object}
- * @param {float} x - horizontal coordinates
- * @param {float} y - vertical coordinates
- */
-
-niclabs.insight.quadtree.Bounds = (function() {
-    /**
-     * Construct an axis aligned bounding box with the corners
-     * at the provided coordinates
-     *
-     * @class niclabs.insight.quadtree.Bounds
-     * @param {niclabs.insight.quadtree.Point} min - minimal coordinates of the bounding box (e.g. lower left corner if zero is at the lower left corner of the canvas)
-     * @param {niclabs.insight.quadtree.Point} max - maximal coordinates of the bounding box (e.g. upper right corner if zero is at the lower left corner of the canvas)
-     */
-    var Bounds = function(min, max) {
-        var center = {x: (min.x + max.x) / 2.0,
-            y: (min.y + max.y) / 2.0};
-
-
-        return {
-            /**
-             * Center of the bounding box
-             *
-             * @memberof niclabs.insight.quadtree.Bounds
-             * @member {niclabs.insight.quadtree.Point}
-             */
-            get center () {
-                return center;
-            },
-
-            /**
-             * Minimal coordinates of the bounding box
-             * (e.g. lower left corner if zero is at the lowest leftmost corner of the canvas)
-             *
-             * @memberof niclabs.insight.quadtree.Bounds
-             * @member {niclabs.insight.quadtree.Point}
-             */
-            get min () {
-                return min;
-            },
-
-            /**
-             * Maximal coordinates of the bounding box
-             * (e.g. upper right corner if zero is at the lowest leftmost corner of the canvas)
-             *
-             * @memberof niclabs.insight.quadtree.Bounds
-             * @member {niclabs.insight.quadtree.Point}
-             */
-            get max () {
-                return max;
-            },
-
-            /**
-             * Check if this bounding box contains the given point.
-             *
-             * As a convention, a bounding box contains all points inside its borders
-             * as well as all the points in the east and south borders.
-             *
-             * @memberof niclabs.insight.quadtree.Bounds
-             * @param {niclabs.insight.quadtree.Point} point - point to lookup
-             * @returns {boolean} true if the box contains the point
-             */
-            contains: function(point) {
-                return min.x <= point.x && point.x < max.x && min.y <= point.y && point.y < max.y;
-            },
-
-            /**
-             * Check if this bounding box intersects the given bounding box
-             *
-             * @memberof niclabs.insight.quadtree.Bounds
-             * @param {niclabs.insight.quadtree.Bounds} box - bounding box to check intersection with
-             * @returns {boolean} true if the boxes intersect in at least one point
-             */
-            intersects: function(box) {
-                // The explanation: http://gamemath.com/2011/09/detecting-whether-two-boxes-overlap/
-                if (max.x < box.min.x) return false; // self is left of box
-                if (min.x > box.max.x) return false; // self is right of box
-                if (max.y < box.min.y) return false; // self is above of box
-                if (min.y > box.max.y) return false; // self is below of box
-                return true; // boxes overlap
-            }
-        };
-    };
-
-    return Bounds;
-})();
-
-niclabs.insight.quadtree.PointQuadTree = (function () {
-    /**
-     * Construct a Point Quadtree
-     *
-     * See {@link http://en.wikipedia.org/wiki/Quadtree}
-     *
-     * @class niclabs.insight.quadtree.PointQuadTree
-     * @param {niclabs.insight.quadtree.Bounds} bounds - bounding box for the quadtree
-     * @param {integer} [capacity=50] - number of points that each node in the quadtree accepts before dividing
-     * @param {integer} [depth=40] - max depth of the quadtree
-     */
-    var PointQuadTree = function (bounds, capacity, depth) {
-        capacity = capacity || 50;
-        depth = depth || 40;
-
-        var points = [];
-
-        // Children (also quadtrees)
-        var northWest, northEast, southWest, southEast;
-
-        /**
-         * Subdivide the tree
-         *
-         * @memberof niclabs.insight.quadtree.PointQuadTree
-         * @access private
-         */
-        function subdivide() {
-            northWest = PointQuadTree(niclabs.insight.quadtree.Bounds(bounds.min, bounds.center), capacity, depth - 1);
-            northEast = PointQuadTree(niclabs.insight.quadtree.Bounds(
-                {x: bounds.center.x, y: bounds.min.y},
-                {x: bounds.max.x, y: bounds.center.y}),
-                capacity, depth - 1);
-            southWest = PointQuadTree(niclabs.insight.quadtree.Bounds(
-                {x: bounds.min.x, y: bounds.center.y},
-                {x: bounds.center.x, y: bounds.max.y}),
-                capacity, depth - 1);
-            southEast = PointQuadTree(niclabs.insight.quadtree.Bounds(bounds.center, bounds.max, capacity, depth - 1));
-        }
-
-        var self = {
-            /**
-             * Capacity for the quadtree
-             *
-             * @memberof niclabs.insight.quadtree.PointQuadTree
-             * @member {integer}
-             */
-            get capacity() {
-                return capacity;
-            },
-
-            /**
-             * Boundary of the quadtree
-             * @memberof niclabs.insight.quadtree.PointQuadTree
-             * @member {niclabs.insight.quadtree.Bounds}
-             */
-            get bounds() {
-                return bounds;
-            },
-
-            /**
-             * Insert a new point in the quadtree
-             *
-             * @memberof niclabs.insight.quadtree.PointQuadTree
-             * @param {niclabs.insight.quadtree.Point} point - new point to insert
-             * @returns {boolean} true if the point could be inserted (point belongs in the bounds of the quadtree)
-             */
-            insert: function (point) {
-                // Ignore objects that do not belong in this quad tree
-                if (!bounds.contains(point)) {
-                    return false; // object cannot be added
-                }
-
-                // If there is space in this quad tree, add the object here
-                if (points.length < capacity || depth <= 0) {
-                    points.push(point);
-                    return true;
-                }
-
-                // Otherwise, subdivide and then add the point to whichever node will accept it
-                if (northWest === undefined)
-                    subdivide();
-
-                if (northWest.insert(point)) return true;
-                if (northEast.insert(point)) return true;
-                if (southWest.insert(point)) return true;
-                if (southEast.insert(point)) return true;
-
-                // Otherwise, the point cannot be inserted for some unknown reason (this should never happen)
-                return false;
-            },
-
-            /**
-             * Return all the points in the specified bounding box
-             *
-             * @memberof niclabs.insight.quadtree.PointQuadTree
-             * @param {niclabs.insight.quadtree.Bounds} range - spatial range to search
-             * @returns {niclabs.insight.quadtree.Point[]} list of points in the given range
-             */
-            query: function(range, pointsInRange) {
-                pointsInRange = typeof pointsInRange === 'undefined' ? [] : pointsInRange;
-
-                if (!bounds.intersects(range)) {
-                    return pointsInRange; // Empty list
-                }
-
-                // Check points at this level
-                for (var i = 0; i < points.length; i++) {
-                    if (range.contains(points[i])) {
-                        pointsInRange.push(points[i]);
-                    }
-                }
-
-                // Terminate here if there are no children
-                if (northWest === undefined)
-                    return pointsInRange;
-
-                // Otherwise add the points from the children
-                northWest.query(range, pointsInRange);
-                northEast.query(range, pointsInRange);
-                southWest.query(range, pointsInRange);
-                southEast.query(range, pointsInRange);
-
-                // Otherwise add the points from the children
-                return pointsInRange;
-            }
-        };
-
-        return self;
-    };
-
-    return PointQuadTree;
-})();
 
 /**
  * Map compatibility for the insight dashboard
@@ -3625,6 +3406,237 @@ niclabs.insight.map.GoogleMap = (function($) {
 
     return GoogleMap;
 })(jQuery);
+
+/**
+ * Quadtree implementation
+ *
+ * @namespace
+ */
+niclabs.insight.quadtree = {};
+
+/**
+ * A cartesian point
+ *
+ * @typedef niclabs.insight.quadtree.Point
+ * @type {Object}
+ * @param {float} x - horizontal coordinates
+ * @param {float} y - vertical coordinates
+ */
+
+niclabs.insight.quadtree.Bounds = (function() {
+    /**
+     * Construct an axis aligned bounding box with the corners
+     * at the provided coordinates
+     *
+     * @class niclabs.insight.quadtree.Bounds
+     * @param {niclabs.insight.quadtree.Point} min - minimal coordinates of the bounding box (e.g. lower left corner if zero is at the lower left corner of the canvas)
+     * @param {niclabs.insight.quadtree.Point} max - maximal coordinates of the bounding box (e.g. upper right corner if zero is at the lower left corner of the canvas)
+     */
+    var Bounds = function(min, max) {
+        var center = {x: (min.x + max.x) / 2.0,
+            y: (min.y + max.y) / 2.0};
+
+
+        return {
+            /**
+             * Center of the bounding box
+             *
+             * @memberof niclabs.insight.quadtree.Bounds
+             * @member {niclabs.insight.quadtree.Point}
+             */
+            get center () {
+                return center;
+            },
+
+            /**
+             * Minimal coordinates of the bounding box
+             * (e.g. lower left corner if zero is at the lowest leftmost corner of the canvas)
+             *
+             * @memberof niclabs.insight.quadtree.Bounds
+             * @member {niclabs.insight.quadtree.Point}
+             */
+            get min () {
+                return min;
+            },
+
+            /**
+             * Maximal coordinates of the bounding box
+             * (e.g. upper right corner if zero is at the lowest leftmost corner of the canvas)
+             *
+             * @memberof niclabs.insight.quadtree.Bounds
+             * @member {niclabs.insight.quadtree.Point}
+             */
+            get max () {
+                return max;
+            },
+
+            /**
+             * Check if this bounding box contains the given point.
+             *
+             * As a convention, a bounding box contains all points inside its borders
+             * as well as all the points in the east and south borders.
+             *
+             * @memberof niclabs.insight.quadtree.Bounds
+             * @param {niclabs.insight.quadtree.Point} point - point to lookup
+             * @returns {boolean} true if the box contains the point
+             */
+            contains: function(point) {
+                return min.x <= point.x && point.x < max.x && min.y <= point.y && point.y < max.y;
+            },
+
+            /**
+             * Check if this bounding box intersects the given bounding box
+             *
+             * @memberof niclabs.insight.quadtree.Bounds
+             * @param {niclabs.insight.quadtree.Bounds} box - bounding box to check intersection with
+             * @returns {boolean} true if the boxes intersect in at least one point
+             */
+            intersects: function(box) {
+                // The explanation: http://gamemath.com/2011/09/detecting-whether-two-boxes-overlap/
+                if (max.x < box.min.x) return false; // self is left of box
+                if (min.x > box.max.x) return false; // self is right of box
+                if (max.y < box.min.y) return false; // self is above of box
+                if (min.y > box.max.y) return false; // self is below of box
+                return true; // boxes overlap
+            }
+        };
+    };
+
+    return Bounds;
+})();
+
+niclabs.insight.quadtree.PointQuadTree = (function () {
+    /**
+     * Construct a Point Quadtree
+     *
+     * See {@link http://en.wikipedia.org/wiki/Quadtree}
+     *
+     * @class niclabs.insight.quadtree.PointQuadTree
+     * @param {niclabs.insight.quadtree.Bounds} bounds - bounding box for the quadtree
+     * @param {integer} [capacity=50] - number of points that each node in the quadtree accepts before dividing
+     * @param {integer} [depth=40] - max depth of the quadtree
+     */
+    var PointQuadTree = function (bounds, capacity, depth) {
+        capacity = capacity || 50;
+        depth = depth || 40;
+
+        var points = [];
+
+        // Children (also quadtrees)
+        var northWest, northEast, southWest, southEast;
+
+        /**
+         * Subdivide the tree
+         *
+         * @memberof niclabs.insight.quadtree.PointQuadTree
+         * @access private
+         */
+        function subdivide() {
+            northWest = PointQuadTree(niclabs.insight.quadtree.Bounds(bounds.min, bounds.center), capacity, depth - 1);
+            northEast = PointQuadTree(niclabs.insight.quadtree.Bounds(
+                {x: bounds.center.x, y: bounds.min.y},
+                {x: bounds.max.x, y: bounds.center.y}),
+                capacity, depth - 1);
+            southWest = PointQuadTree(niclabs.insight.quadtree.Bounds(
+                {x: bounds.min.x, y: bounds.center.y},
+                {x: bounds.center.x, y: bounds.max.y}),
+                capacity, depth - 1);
+            southEast = PointQuadTree(niclabs.insight.quadtree.Bounds(bounds.center, bounds.max, capacity, depth - 1));
+        }
+
+        var self = {
+            /**
+             * Capacity for the quadtree
+             *
+             * @memberof niclabs.insight.quadtree.PointQuadTree
+             * @member {integer}
+             */
+            get capacity() {
+                return capacity;
+            },
+
+            /**
+             * Boundary of the quadtree
+             * @memberof niclabs.insight.quadtree.PointQuadTree
+             * @member {niclabs.insight.quadtree.Bounds}
+             */
+            get bounds() {
+                return bounds;
+            },
+
+            /**
+             * Insert a new point in the quadtree
+             *
+             * @memberof niclabs.insight.quadtree.PointQuadTree
+             * @param {niclabs.insight.quadtree.Point} point - new point to insert
+             * @returns {boolean} true if the point could be inserted (point belongs in the bounds of the quadtree)
+             */
+            insert: function (point) {
+                // Ignore objects that do not belong in this quad tree
+                if (!bounds.contains(point)) {
+                    return false; // object cannot be added
+                }
+
+                // If there is space in this quad tree, add the object here
+                if (points.length < capacity || depth <= 0) {
+                    points.push(point);
+                    return true;
+                }
+
+                // Otherwise, subdivide and then add the point to whichever node will accept it
+                if (northWest === undefined)
+                    subdivide();
+
+                if (northWest.insert(point)) return true;
+                if (northEast.insert(point)) return true;
+                if (southWest.insert(point)) return true;
+                if (southEast.insert(point)) return true;
+
+                // Otherwise, the point cannot be inserted for some unknown reason (this should never happen)
+                return false;
+            },
+
+            /**
+             * Return all the points in the specified bounding box
+             *
+             * @memberof niclabs.insight.quadtree.PointQuadTree
+             * @param {niclabs.insight.quadtree.Bounds} range - spatial range to search
+             * @returns {niclabs.insight.quadtree.Point[]} list of points in the given range
+             */
+            query: function(range, pointsInRange) {
+                pointsInRange = typeof pointsInRange === 'undefined' ? [] : pointsInRange;
+
+                if (!bounds.intersects(range)) {
+                    return pointsInRange; // Empty list
+                }
+
+                // Check points at this level
+                for (var i = 0; i < points.length; i++) {
+                    if (range.contains(points[i])) {
+                        pointsInRange.push(points[i]);
+                    }
+                }
+
+                // Terminate here if there are no children
+                if (northWest === undefined)
+                    return pointsInRange;
+
+                // Otherwise add the points from the children
+                northWest.query(range, pointsInRange);
+                northEast.query(range, pointsInRange);
+                southWest.query(range, pointsInRange);
+                southEast.query(range, pointsInRange);
+
+                // Otherwise add the points from the children
+                return pointsInRange;
+            }
+        };
+
+        return self;
+    };
+
+    return PointQuadTree;
+})();
 
 /**
  * Tools for drawing diagrams on the map. To calculate the spherical voronoi/delaunay
@@ -4082,13 +4094,93 @@ niclabs.insight.map.diagram.VoronoiDiagram = (function($) {
  */
 niclabs.insight.map.graph = {};
 
-niclabs.insight.map.graph.Graph = (function($) {
+niclabs.insight.map.graph.Edge = (function($) {
     /**
-     * TODO: Missing documentatino
+     * Constructor for graph edges
+     *
+     * Graph edge are shown in the map as basic segments, with no style options
+     * TODO: make segment customizable
+     *
+     * @class niclabs.insight.map.graph.Edge
+     * @extends niclabs.insight.map.graph.GraphElement
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this edge belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.adj - adjacency matrix of the graph
+     * @param {string} options.layer - identifier for the layer that this edge belongs to
+     * @param {Object} options.startNode - data for the first node that this edge connects to
+     * @param {Object} options.endNode - data for the second node that this edge connects to
+     * @param {float} options.startNode.lat - latitude for the first graph node
+     * @param {float} options.startNode.lng - longitude for the first graph node
+     * @param {string} options.startNode.landmark - landmark that the first node indicates
+     * @param {float} options.endNode.lat - latitude for the second graph node
+     * @param {float} options.endNode.lng - longitude for the second graph node
+     * @param {string} options.endNode.landmark - landmark that the second node indicates
      */
-    var Graph = function(dashboard, options) {
+    var Edge = function(dashboard, options) {
+        var self = niclabs.insight.map.graph.GraphElement(dashboard, options);
+
+        var myLatlngArray = [];
+
+        myLatlngArray[0] = new google.maps.LatLng(options.startNode.lat, options.startNode.lng);
+        myLatlngArray[1] = new google.maps.LatLng(options.endNode.lat, options.endNode.lng);
+
+        var polyline = new google.maps.Polyline({
+          path: myLatlngArray,
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 10
+        });
+
+        polyline.setMap(self.map.googlemap());
+
+        // Re-write the graphElement function
+        self.graphElement = function() {
+            return polyline;
+        };
+
+        self.clickable = function() {
+            var edge = self.graphElement();
+
+            listener = google.maps.event.addListener(edge, 'click', function() {
+              niclabs.insight.event.trigger('map_element_selected', options);
+
+              if ('setOptions' in edge) {
+                edge.setOptions({strokeColor: '#FF0000'});
+                // Set timeout to stop the animation
+                setTimeout(function() {
+                    edge.setOptions({strokeColor: '#000000'});
+                }, 1000);
+              }
+
+            });
+            return listener;
+        };
+
+        return self;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('edge', 'graph', Edge);
+
+    return Edge;
+})(jQuery);
+
+niclabs.insight.map.graph.GraphElement = (function($) {
+    /**
+     * Construct a new GraphElement
+     *
+     * @class niclabs.insight.map.graph.GraphElement
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this graph element belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.adj - adjacency matrix of the graph
+     * @param {string} options.layer - identifier for the layer that this graph element belongs to
+     * @param {float} options.lat - latitude for the graph graph element
+     * @param {float} options.lng - longitude for the graph graph element
+     * @param {string} options.landmark - landmark that the graph element indicates
+     */
+    var GraphElement = function(dashboard, options) {
         if (!('layer' in options))
-            throw new Error('The graph must be associated to a layer');
+            throw new Error('The marker must be associated to a layer');
 
         var layer;
         if (!(layer = dashboard.layer(options.layer)))
@@ -4099,221 +4191,146 @@ niclabs.insight.map.graph.Graph = (function($) {
             throw new Error('No map has been initialized for the dashboard yet');
 
         if (!('googlemap' in map))
-            throw new Error("Graphs are only supported for Google Maps at the moment");
+            throw new Error("Markers are only supported for Google Maps at the moment");
+
+        var listener;
 
         var self = {
             /**
-             * TODO: Missing documentation
+             * Map view where the map belongs to
+             * @memberof niclabs.insight.map.marker.Marker
+             * @member {niclabs.insight.MapView}
              */
             get map () {
                 return map;
             },
 
             /**
-             * TODO: Missing documentation
+             * Layer to which the marker belongs to
+             *
+             * @memberof niclabs.insight.map.marker.Marker
+             * @member {niclabs.insight.layer.Layer}
              */
             get layer () {
                 return layer;
             },
 
             /**
-             * TODO: Missing documentation
+             * Return the internal marker object associated with this Marker
+             *
+             * @memberof niclabs.insight.map.marker.Marker
+             * @abstract
+             * @returns {google.maps.Marker} internal marker
              */
-            clear: function() {
-            },
-
-            /**
-             * TODO: Missing documentation
-             */
-            graph: function() {
+            graphElement: function() {
                 return undefined;
             },
 
             /**
-             * TODO: Missing documentation
-             */
-            nodes: function() {
-                return undefined;
-            },
-
-            /**
-             * TODO: Missing documentation
-             */
-            edges: function() {
-                return undefined;
-            },
-
-            /**
-             * TODO: Missing documentation
+             * Get/activate clickable status for the marker
+             *
+             * When clicked the marker will trigger a {@link niclabs.insight.MapView#map_element_selected} event
+             * with the particular data for the marker
+             *
+             * @memberof niclabs.insight.map.marker.Marker
+             * @param {boolean} [activate=true] - true to make clickable
              */
             clickable : function(activate) {
-                var listener;
-                if (activate) {
-                    listener = {};
-                    var edges = self.edges();
-                    for (var edge in edges) {
-                        listener.edges = self.edgeClickable(edges[edge]);
-                    }
-                    var nodes = self.nodes();
-                    for (var node in nodes) {
-                        listener.nodes = self.nodeClickable(nodes[node]);
-                    }
-                }
-                else if (typeof listener !== 'undefined') {
-                    google.maps.event.removeListener(listener);
-                    listener = undefined;
-                }
-                return (listener !== undefined);
+
             },
 
             /**
-             * TODO: Missing documentation
+             * Clear the marker from the map
+             *
+             * @memberof niclabs.insight.map.marker.Marker
              */
-            edgeClickable : function(edge) {
-                listener = google.maps.event.addListener(edge, 'click', function() {
-                  niclabs.insight.event.trigger('map_element_selected', options);
-                  //edge = this;
-                  edge.setOptions({strokeColor: '#FF0000'});
-                  // Set timeout to stop the animation
-                  setTimeout(function() {
-                      edge.setOptions({strokeColor: '#000000'});
-                  }, 1000);
-
-                });
-                return listener;
+            clear: function() {
+                var marker = self.graphElement();
+                graphElement.setMap(null);
             },
 
             /**
-             * TODO: Missing documentation
+             * Set/get the visibility for the marker
+             *
+             * @memberof niclabs.insight.map.marker.Marker
+             * @param {boolean=} visible - new value for the visibility of the marker
+             * @returns {boolean} true if the marker is visible
              */
-            nodeClickable : function(node) {
-                listener = google.maps.event.addListener(node, 'click', function() {
-                    niclabs.insight.event.trigger('map_element_selected', options);
+            visible: function(visible) {
+                if (typeof visible === 'undefined') return self.graphElement().getVisible();
+                else self.graphElement().setVisible(visible);
 
-                    // TODO: make configurable?
-                    if ('setAnimation' in node) {
-                        node.setAnimation(google.maps.Animation.BOUNCE);
-                    }
-
-                    // Set timeout to stop the animation
-                    setTimeout(function() {
-                        node.setAnimation(null);
-                    }, 1000);
-                });
-                return listener;
+                return visible;
             }
         };
 
         return self;
     };
 
-    return Graph;
+    return GraphElement;
 })(jQuery);
 
-niclabs.insight.map.graph.SimpleGraph = (function($) {
-  /**
-   * TODO: Missing documentation
-   */
-  var SimpleGraph = function(dashboard, options) {
-    if (!('data' in options)) {
-      throw Error('No data provided for the graph');
-    }
-
-    var self = niclabs.insight.map.graph.Graph(dashboard, options);
-
+niclabs.insight.map.graph.Node = (function($) {
     /**
-     * TODO: Missing documentation
+     * Constructor for graph nodes
+     *
+     * Graph nodes are shown in the map as basic waypoints, with no style options
+     *
+     * @class niclabs.insight.map.graph.Node
+     * @extends niclabs.insight.map.graph.GraphElement
+     * @param {niclabs.insight.Dashboard} dashboard - dashboard that this node belongs to
+     * @param {Object} options - configuration options for the layer
+     * @param {string} options.adj - adjacency matrix of the graph
+     * @param {string} options.layer - identifier for the layer that this node belongs to
+     * @param {float} options.lat - latitude for the graph node
+     * @param {float} options.lng - longitude for the graph node
+     * @param {string} options.landmark - landmark that the node indicates
      */
-    function googleMapsGraph(data) {
-      var graphNodes = [];
-      for (var i = 0; i < data.length; i++) {
-        var latLng = new google.maps.LatLng(data[i].lat, data[i].lng);
+    var Node = function(dashboard, options) {
+        var self = niclabs.insight.map.graph.GraphElement(dashboard, options);
+
+        var latLng = new google.maps.LatLng(parseFloat(options.lat), parseFloat(options.lng));
+
         var marker = new google.maps.Marker({
-          position: latLng,
-          map: self.map.googlemap(),
-          title: data[i].landmark || ''
+            position: latLng,
+            map: self.map.googlemap(),
+            title: options.landmark || ''
         });
-        graphNodes.push(marker);
-      }
-      var vertex = [];
 
-      // Note: non directed graph
-      for (i = 0; i < options.adj.length; i++) {
-        for (var j = 0; j < i; j++) {
-          if (options.adj[i][j] == 1) {
-            var myLatlngArray = [];
-            myLatlngArray[0] = new google.maps.LatLng(data[i].lat, data[i].lng);
-            myLatlngArray[1] = new google.maps.LatLng(data[j].lat, data[j].lng);
+        // Re-write the graphElement function
+        self.graphElement = function() {
+            return marker;
+        };
 
-            var polyline = new google.maps.Polyline({
-              path: myLatlngArray,
-              strokeColor: '#000000',
-              strokeOpacity: 1.0,
-              strokeWeight: 10
+        self.clickable = function() {
+            var marker = self.graphElement();
+
+            listener = google.maps.event.addListener(marker, 'click', function() {
+                niclabs.insight.event.trigger('map_element_selected', options);
+
+                // TODO: make configurable?
+                if ('setAnimation' in marker) {
+                  marker.setAnimation(google.maps.Animation.BOUNCE);
+
+                  // Set timeout to stop the animation
+                  setTimeout(function() {
+                    marker.setAnimation(null);
+                  }, 1000);
+                }
             });
+            return listener;
+        };
 
-            polyline.setMap(self.map.googlemap());
-            //google.maps.event.addListener(polyline, 'click', changeColor);
-            vertex.push(polyline);
-          }
-        }
-      }
+        //console.log(self.clickable);
 
-      return {
-        nodes: graphNodes,
-        edges: vertex,
-        setMap: function(map) {
-          for(var node in this.nodes) {
-            this.nodes[node].setMap(map);
-          }
-          for(var edge in this.edges) {
-            this.edges[edge].setMap(map);
-          }
-        }
-      };
-    }
+        return self;
 
-    // Create the graph
-    var graph = googleMapsGraph(options.data);
-
-    // Set the options
-
-    // Set the graph
-    //graph.setMap(self.map.googlemap());
-
-    // Store the parent
-    var clear = self.clear;
-
-    /**
-     * TODO: Missing documentation
-     */
-    self.clear = function() {
-      // Call the parent
-      clear();
-
-      // Remove the map
-      graph.setMap(null);
     };
 
-    self.graph = function() {
-      return graph;
-    };
+    // Register the handler
+    niclabs.insight.handler('node', 'graph', Node);
 
-    self.nodes = function() {
-      return graph.nodes;
-    };
-
-    self.edges = function() {
-      return graph.edges;
-    };
-
-    return self;
-  };
-
-  // Register the handler
-  niclabs.insight.handler('simple-graph', 'graph', SimpleGraph);
-
-  return SimpleGraph;
+    return Node;
 })(jQuery);
 
 /**
