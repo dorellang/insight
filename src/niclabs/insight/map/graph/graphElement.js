@@ -78,7 +78,7 @@ niclabs.insight.map.graph.GraphElement = (function($) {
              * @memberof niclabs.insight.map.marker.Marker
              */
             clear: function() {
-                var marker = self.graphElement();
+                var graphElement = self.graphElement();
                 graphElement.setMap(null);
             },
 

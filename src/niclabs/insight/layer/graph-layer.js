@@ -101,6 +101,19 @@ niclabs.insight.layer.GraphLayer = (function($) {
          * TODO: Missing documentation
          */
         layer.clear = function() {
+          for (var i = 0; i < nodes.length; i++) {
+            nodes[i].clear();
+          }
+
+          // Clean the array
+          nodes = [];
+
+          for (i = 0; i < edges.length; i++) {
+            edges[i].clear();
+          }
+
+          // Clean the array
+          edges = [];
 
         };
 
