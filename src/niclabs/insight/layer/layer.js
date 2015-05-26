@@ -78,7 +78,6 @@
 
                 if (typeof obj === 'string') {
                     dataSource = obj;
-
                     return dataSource;
                 }
                 else {
@@ -145,6 +144,7 @@
 
                     // Set the layer as loaded
                     loaded = true;
+
                 }
 
                 if (dataSource) {

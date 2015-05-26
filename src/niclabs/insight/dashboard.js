@@ -130,9 +130,11 @@ niclabs.insight.Dashboard = (function($) {
                     else {
                         infoView = obj;
                     }
+
                     // The info element must be the first of the element to avoid
                     // clashes with google maps (TODO: this is probably a CSS bug)
                     $(dashboardId).prepend(infoView.element);
+
                 }
                 return infoView;
             },

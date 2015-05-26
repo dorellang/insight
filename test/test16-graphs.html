@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <!--
+    THIS IS A TEST.
+
+    IT SHOULD SHOW A GOOGLE MAPS AND AN EMPTY INFOWINDOW
+
+    GRAPH
+
+    -->
+
+    <title>Test 16 - Graphs</title>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+      #dashboard {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="css/insight.css">
+    <link rel="stylesheet" type="text/css" href="css/chartist.min.css">
+
+    <script src="js/chartist.min.js"></script>
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization"></script>
+
+    <script src="js/insight.js"></script>
+
+  </head>
+
+  <body><div id="dashboard"></div></body>
+
+  <script>
+    /// Binding the map and the information window.
+    var dashboard = niclabs.insight.dashboard({
+        'anchor': '#dashboard',
+        'layout': 'left'
+    });
+
+    niclabs.insight.info({
+        handler: 'basic-info-view',
+        blocks: [{
+            'handler': 'summary-block',
+            'id': '#summary',
+            'title': 'My Marker Summary',
+            'closable': false,
+            'template': '\
+            <dl class="deflist">\
+                <dt class="deflist-key" data-if="description">description</dt> \
+                <dd class="deflist-value" data-bind="description">none</dd> \
+                <dt class="deflist-key" data-if="landmark">landmark</dt> \
+                <dd class="deflist-value" data-bind="landmark">none</dd> \
+                <dt class="deflist-key" data-if="fun-fact">fun-fact</dt> \
+                <dd class="deflist-value" data-bind="fun-fact">none</dd> \
+                <dt class="deflist-key" data-if="startNode">startNode</dt> \
+                <dd class="deflist-value" data-bind="startNode">none</dd> \
+                <dt class="deflist-key" data-if="endNode">endNode</dt> \
+                <dd class="deflist-value" data-bind="endNode">none</dd> \
+            </dl>\
+            ',
+            'defaults': {
+                'description': 'This block will show the details of the selected markers'
+            }
+        }]
+    });
+
+    var map = niclabs.insight.map({
+        'handler': 'google-map',
+        'lat': 48.859961,
+        'lng': 2.326561,
+        'zoom': 14
+    });
+
+    niclabs.insight.layer({
+        handler: 'graph-layer',
+        data: [{
+            'lat': 48.860611,
+            'lng': 2.337644,
+            'landmark': 'Musée du Louvre'
+        }, {
+            'lat': 48.859961,
+            'lng': 2.326561,
+            'landmark': 'Musée d\'Orsay'
+        }, {
+            'lat': 48.873792,
+            'lng': 2.295028,
+            'landmark': 'L’Arc de Triomphe'
+        }, {
+            'lat': 48.852968,
+            'lng': 2.349902,
+            'landmark': 'Cathédrale Notre-Dame'
+        }, {
+            'lat': 48.85837,
+            'lng': 2.294481,
+            'landmark': 'Tour Eiffel'
+        }],
+        graph: {
+            'type': 'simple-graph',
+            //for now will be like this
+            'adj': [[0, 1, 1, 0, 0],
+                    [1, 0, 1, 1, 1],
+                    [1, 1, 0, 0, 0],
+                    [0, 1, 0, 0, 0],
+                    [0, 1, 0, 0, 0]]
+        }
+    });
+
+  </script>
+</html>

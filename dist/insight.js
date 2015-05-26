@@ -2564,6 +2564,118 @@ niclabs.insight.layer.DiagramLayer = (function($) {
     return DiagramLayer;
 })(jQuery);
 
+niclabs.insight.layer.GraphLayer = (function($) {
+    /**
+     * TODO: Missing documentation
+     */
+    var GraphLayer = function(dashboard, options) {
+        var layer = niclabs.insight.layer.Layer(dashboard, options);
+
+        var graphOptions = options.graph || {
+            'type': 'simple-graph'
+        };
+
+        var nodes = [];
+        var edges = [];
+
+        function createGraph(data, obj) {
+            var graph;
+            if ('type' in obj) {
+                var attr = {'layer': layer.id, 'data': data};
+
+                // Extend the attributes with the data and the options for the graph
+                $.extend(attr, obj, data);
+
+                graph = niclabs.insight.handler(obj.type)(dashboard, attr);
+            }
+            else {
+                graph = obj;
+
+                // Should we add a way to pass data to the graph?
+            }
+
+            graph.clickable(true);
+            /*
+            for (var edge in edges){
+                console.log(edge);
+                edges[edge].clickable(true);
+            }*/
+
+            return graph;
+        }
+
+        function newNode(data, index, obj) {
+            var node;
+            if ('type' in obj) {
+                var attr = {'layer': layer.id};
+
+                // Extend the attributes with the data and the options for the marker
+                $.extend(attr, obj, data[index]);
+
+                node = niclabs.insight.handler('simple-marker')(dashboard, attr);
+            }
+            else {
+                node = obj;
+            }
+
+            // Make the marker clickable
+            node.clickable(true);
+
+            return node;
+        }
+
+        function newEdge(data, index, obj) {
+            var node;
+            if ('type' in obj) {
+                var attr = {'layer': layer.id};
+
+                // Extend the attributes with the data and the options for the marker
+                $.extend(attr, obj, data[index]);
+
+                node = niclabs.insight.handler('edge')(dashboard, attr);
+            }
+            else {
+                node = obj;
+            }
+
+            // Make the marker clickable
+            node.clickable(true);
+
+            return node;
+        }
+
+        var graph;
+
+        /**
+         * TODO: Missing documentation
+         */
+        layer.draw = function(data) {
+            graph = createGraph(data, graphOptions);
+        };
+
+        /**
+         * TODO: Missing documentation
+         */
+        layer.clear = function() {
+            if (graph) graph.clear();
+        };
+
+        /**
+         * TODO: Missing documentation
+         */
+        layer.filter = function(fn) {
+            // TODO. not sure if possible
+        };
+
+        return layer;
+    };
+
+    // Register the handler
+    niclabs.insight.handler('graph-layer', 'layer', GraphLayer);
+
+    return GraphLayer;
+})(jQuery);
+
 niclabs.insight.layer.GridLayer = (function() {
     /**
      * Construct a new grid Layer
@@ -3961,6 +4073,247 @@ niclabs.insight.map.diagram.VoronoiDiagram = (function($) {
     niclabs.insight.handler('voronoi-diagram', 'diagram', VoronoiDiagram);
 
     return VoronoiDiagram;
+})(jQuery);
+
+/**
+ * Contains all graph definitions for the dashboard
+ *
+ * @namespace
+ */
+niclabs.insight.map.graph = {};
+
+niclabs.insight.map.graph.Graph = (function($) {
+    /**
+     * TODO: Missing documentatino
+     */
+    var Graph = function(dashboard, options) {
+        if (!('layer' in options))
+            throw new Error('The graph must be associated to a layer');
+
+        var layer;
+        if (!(layer = dashboard.layer(options.layer)))
+            throw new Error('The layer '+layer+' does not exist in the dashboard');
+
+        var map;
+        if (!(map = dashboard.map()))
+            throw new Error('No map has been initialized for the dashboard yet');
+
+        if (!('googlemap' in map))
+            throw new Error("Graphs are only supported for Google Maps at the moment");
+
+        var self = {
+            /**
+             * TODO: Missing documentation
+             */
+            get map () {
+                return map;
+            },
+
+            /**
+             * TODO: Missing documentation
+             */
+            get layer () {
+                return layer;
+            },
+
+            /**
+             * TODO: Missing documentation
+             */
+            clear: function() {
+            },
+
+            /**
+             * TODO: Missing documentation
+             */
+            graph: function() {
+                return undefined;
+            },
+
+            /**
+             * TODO: Missing documentation
+             */
+            nodes: function() {
+                return undefined;
+            },
+
+            /**
+             * TODO: Missing documentation
+             */
+            edges: function() {
+                return undefined;
+            },
+
+            /**
+             * TODO: Missing documentation
+             */
+            clickable : function(activate) {
+                var listener;
+                if (activate) {
+                    listener = {};
+                    var edges = self.edges();
+                    for (var edge in edges) {
+                        listener.edges = self.edgeClickable(edges[edge]);
+                    }
+                    var nodes = self.nodes();
+                    for (var node in nodes) {
+                        listener.nodes = self.nodeClickable(nodes[node]);
+                    }
+                }
+                else if (typeof listener !== 'undefined') {
+                    google.maps.event.removeListener(listener);
+                    listener = undefined;
+                }
+                return (listener !== undefined);
+            },
+
+            /**
+             * TODO: Missing documentation
+             */
+            edgeClickable : function(edge) {
+                listener = google.maps.event.addListener(edge, 'click', function() {
+                  niclabs.insight.event.trigger('map_element_selected', options);
+                  //edge = this;
+                  edge.setOptions({strokeColor: '#FF0000'});
+                  // Set timeout to stop the animation
+                  setTimeout(function() {
+                      edge.setOptions({strokeColor: '#000000'});
+                  }, 1000);
+
+                });
+                return listener;
+            },
+
+            /**
+             * TODO: Missing documentation
+             */
+            nodeClickable : function(node) {
+                listener = google.maps.event.addListener(node, 'click', function() {
+                    niclabs.insight.event.trigger('map_element_selected', options);
+
+                    // TODO: make configurable?
+                    if ('setAnimation' in node) {
+                        node.setAnimation(google.maps.Animation.BOUNCE);
+                    }
+
+                    // Set timeout to stop the animation
+                    setTimeout(function() {
+                        node.setAnimation(null);
+                    }, 1000);
+                });
+                return listener;
+            }
+        };
+
+        return self;
+    };
+
+    return Graph;
+})(jQuery);
+
+niclabs.insight.map.graph.SimpleGraph = (function($) {
+  /**
+   * TODO: Missing documentation
+   */
+  var SimpleGraph = function(dashboard, options) {
+    if (!('data' in options)) {
+      throw Error('No data provided for the graph');
+    }
+
+    var self = niclabs.insight.map.graph.Graph(dashboard, options);
+
+    /**
+     * TODO: Missing documentation
+     */
+    function googleMapsGraph(data) {
+      var graphNodes = [];
+      for (var i = 0; i < data.length; i++) {
+        var latLng = new google.maps.LatLng(data[i].lat, data[i].lng);
+        var marker = new google.maps.Marker({
+          position: latLng,
+          map: self.map.googlemap(),
+          title: data[i].landmark || ''
+        });
+        graphNodes.push(marker);
+      }
+      var vertex = [];
+
+      // Note: non directed graph
+      for (i = 0; i < options.adj.length; i++) {
+        for (var j = 0; j < i; j++) {
+          if (options.adj[i][j] == 1) {
+            var myLatlngArray = [];
+            myLatlngArray[0] = new google.maps.LatLng(data[i].lat, data[i].lng);
+            myLatlngArray[1] = new google.maps.LatLng(data[j].lat, data[j].lng);
+
+            var polyline = new google.maps.Polyline({
+              path: myLatlngArray,
+              strokeColor: '#000000',
+              strokeOpacity: 1.0,
+              strokeWeight: 10
+            });
+
+            polyline.setMap(self.map.googlemap());
+            //google.maps.event.addListener(polyline, 'click', changeColor);
+            vertex.push(polyline);
+          }
+        }
+      }
+
+      return {
+        nodes: graphNodes,
+        edges: vertex,
+        setMap: function(map) {
+          for(var node in this.nodes) {
+            this.nodes[node].setMap(map);
+          }
+          for(var edge in this.edges) {
+            this.edges[edge].setMap(map);
+          }
+        }
+      };
+    }
+
+    // Create the graph
+    var graph = googleMapsGraph(options.data);
+
+    // Set the options
+
+    // Set the graph
+    //graph.setMap(self.map.googlemap());
+
+    // Store the parent
+    var clear = self.clear;
+
+    /**
+     * TODO: Missing documentation
+     */
+    self.clear = function() {
+      // Call the parent
+      clear();
+
+      // Remove the map
+      graph.setMap(null);
+    };
+
+    self.graph = function() {
+      return graph;
+    };
+
+    self.nodes = function() {
+      return graph.nodes;
+    };
+
+    self.edges = function() {
+      return graph.edges;
+    };
+
+    return self;
+  };
+
+  // Register the handler
+  niclabs.insight.handler('simple-graph', 'graph', SimpleGraph);
+
+  return SimpleGraph;
 })(jQuery);
 
 /**
