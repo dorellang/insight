@@ -197,6 +197,12 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
             * [new Edge(dashboard, options)](#new_niclabs.insight.map.graph.Edge_new)
           * [.GraphElement](#niclabs.insight.map.graph.GraphElement)
             * [new GraphElement(dashboard, options)](#new_niclabs.insight.map.graph.GraphElement_new)
+            * [.map](#niclabs.insight.map.graph.GraphElement.map) : <code>[MapView](#niclabs.insight.MapView)</code>
+            * [.layer](#niclabs.insight.map.graph.GraphElement.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
+            * *[.graphElement()](#niclabs.insight.map.graph.GraphElement.graphElement) ⇒*
+            * [.clickable([activate])](#niclabs.insight.map.graph.GraphElement.clickable)
+            * [.clear()](#niclabs.insight.map.graph.GraphElement.clear)
+            * [.visible([visible])](#niclabs.insight.map.graph.GraphElement.visible) ⇒ <code>boolean</code>
           * [.Node](#niclabs.insight.map.graph.Node) ⇐ <code>[GraphElement](#niclabs.insight.map.graph.GraphElement)</code>
             * [new Node(dashboard, options)](#new_niclabs.insight.map.graph.Node_new)
         * [.grid](#niclabs.insight.map.grid) : <code>object</code>
@@ -254,12 +260,6 @@ We are based in Santiago, Chile, in front of the FCFM, Universidad de Chile.
             * [new Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker_new)
             * [.map](#niclabs.insight.map.marker.Marker.map) : <code>[MapView](#niclabs.insight.MapView)</code>
             * [.layer](#niclabs.insight.map.marker.Marker.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-            * [.map](#niclabs.insight.map.marker.Marker.map) : <code>[MapView](#niclabs.insight.MapView)</code>
-            * [.layer](#niclabs.insight.map.marker.Marker.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-            * *[.graphElement()](#niclabs.insight.map.marker.Marker.graphElement) ⇒ <code>google.maps.Marker</code>*
-            * [.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
-            * [.clear()](#niclabs.insight.map.marker.Marker.clear)
-            * [.visible([visible])](#niclabs.insight.map.marker.Marker.visible) ⇒ <code>boolean</code>
             * *[.marker()](#niclabs.insight.map.marker.Marker.marker) ⇒ <code>google.maps.Marker</code>*
             * [.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
             * [.clear()](#niclabs.insight.map.marker.Marker.clear)
@@ -486,6 +486,12 @@ understand what is going on in the city
           * [new Edge(dashboard, options)](#new_niclabs.insight.map.graph.Edge_new)
         * [.GraphElement](#niclabs.insight.map.graph.GraphElement)
           * [new GraphElement(dashboard, options)](#new_niclabs.insight.map.graph.GraphElement_new)
+          * [.map](#niclabs.insight.map.graph.GraphElement.map) : <code>[MapView](#niclabs.insight.MapView)</code>
+          * [.layer](#niclabs.insight.map.graph.GraphElement.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
+          * *[.graphElement()](#niclabs.insight.map.graph.GraphElement.graphElement) ⇒*
+          * [.clickable([activate])](#niclabs.insight.map.graph.GraphElement.clickable)
+          * [.clear()](#niclabs.insight.map.graph.GraphElement.clear)
+          * [.visible([visible])](#niclabs.insight.map.graph.GraphElement.visible) ⇒ <code>boolean</code>
         * [.Node](#niclabs.insight.map.graph.Node) ⇐ <code>[GraphElement](#niclabs.insight.map.graph.GraphElement)</code>
           * [new Node(dashboard, options)](#new_niclabs.insight.map.graph.Node_new)
       * [.grid](#niclabs.insight.map.grid) : <code>object</code>
@@ -543,12 +549,6 @@ understand what is going on in the city
           * [new Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker_new)
           * [.map](#niclabs.insight.map.marker.Marker.map) : <code>[MapView](#niclabs.insight.MapView)</code>
           * [.layer](#niclabs.insight.map.marker.Marker.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-          * [.map](#niclabs.insight.map.marker.Marker.map) : <code>[MapView](#niclabs.insight.MapView)</code>
-          * [.layer](#niclabs.insight.map.marker.Marker.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-          * *[.graphElement()](#niclabs.insight.map.marker.Marker.graphElement) ⇒ <code>google.maps.Marker</code>*
-          * [.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
-          * [.clear()](#niclabs.insight.map.marker.Marker.clear)
-          * [.visible([visible])](#niclabs.insight.map.marker.Marker.visible) ⇒ <code>boolean</code>
           * *[.marker()](#niclabs.insight.map.marker.Marker.marker) ⇒ <code>google.maps.Marker</code>*
           * [.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
           * [.clear()](#niclabs.insight.map.marker.Marker.clear)
@@ -2201,6 +2201,12 @@ Map compatibility for the insight dashboard
         * [new Edge(dashboard, options)](#new_niclabs.insight.map.graph.Edge_new)
       * [.GraphElement](#niclabs.insight.map.graph.GraphElement)
         * [new GraphElement(dashboard, options)](#new_niclabs.insight.map.graph.GraphElement_new)
+        * [.map](#niclabs.insight.map.graph.GraphElement.map) : <code>[MapView](#niclabs.insight.MapView)</code>
+        * [.layer](#niclabs.insight.map.graph.GraphElement.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
+        * *[.graphElement()](#niclabs.insight.map.graph.GraphElement.graphElement) ⇒*
+        * [.clickable([activate])](#niclabs.insight.map.graph.GraphElement.clickable)
+        * [.clear()](#niclabs.insight.map.graph.GraphElement.clear)
+        * [.visible([visible])](#niclabs.insight.map.graph.GraphElement.visible) ⇒ <code>boolean</code>
       * [.Node](#niclabs.insight.map.graph.Node) ⇐ <code>[GraphElement](#niclabs.insight.map.graph.GraphElement)</code>
         * [new Node(dashboard, options)](#new_niclabs.insight.map.graph.Node_new)
     * [.grid](#niclabs.insight.map.grid) : <code>object</code>
@@ -2258,12 +2264,6 @@ Map compatibility for the insight dashboard
         * [new Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker_new)
         * [.map](#niclabs.insight.map.marker.Marker.map) : <code>[MapView](#niclabs.insight.MapView)</code>
         * [.layer](#niclabs.insight.map.marker.Marker.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-        * [.map](#niclabs.insight.map.marker.Marker.map) : <code>[MapView](#niclabs.insight.MapView)</code>
-        * [.layer](#niclabs.insight.map.marker.Marker.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-        * *[.graphElement()](#niclabs.insight.map.marker.Marker.graphElement) ⇒ <code>google.maps.Marker</code>*
-        * [.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
-        * [.clear()](#niclabs.insight.map.marker.Marker.clear)
-        * [.visible([visible])](#niclabs.insight.map.marker.Marker.visible) ⇒ <code>boolean</code>
         * *[.marker()](#niclabs.insight.map.marker.Marker.marker) ⇒ <code>google.maps.Marker</code>*
         * [.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
         * [.clear()](#niclabs.insight.map.marker.Marker.clear)
@@ -2547,6 +2547,12 @@ Contains all graph definitions for the dashboard
     * [new Edge(dashboard, options)](#new_niclabs.insight.map.graph.Edge_new)
   * [.GraphElement](#niclabs.insight.map.graph.GraphElement)
     * [new GraphElement(dashboard, options)](#new_niclabs.insight.map.graph.GraphElement_new)
+    * [.map](#niclabs.insight.map.graph.GraphElement.map) : <code>[MapView](#niclabs.insight.MapView)</code>
+    * [.layer](#niclabs.insight.map.graph.GraphElement.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
+    * *[.graphElement()](#niclabs.insight.map.graph.GraphElement.graphElement) ⇒*
+    * [.clickable([activate])](#niclabs.insight.map.graph.GraphElement.clickable)
+    * [.clear()](#niclabs.insight.map.graph.GraphElement.clear)
+    * [.visible([visible])](#niclabs.insight.map.graph.GraphElement.visible) ⇒ <code>boolean</code>
   * [.Node](#niclabs.insight.map.graph.Node) ⇐ <code>[GraphElement](#niclabs.insight.map.graph.GraphElement)</code>
     * [new Node(dashboard, options)](#new_niclabs.insight.map.graph.Node_new)
 
@@ -2580,6 +2586,16 @@ TODO: make segment customizable
 <a name="niclabs.insight.map.graph.GraphElement"></a>
 ###### graph.GraphElement
 **Kind**: static class of <code>[graph](#niclabs.insight.map.graph)</code>  
+
+* [.GraphElement](#niclabs.insight.map.graph.GraphElement)
+  * [new GraphElement(dashboard, options)](#new_niclabs.insight.map.graph.GraphElement_new)
+  * [.map](#niclabs.insight.map.graph.GraphElement.map) : <code>[MapView](#niclabs.insight.MapView)</code>
+  * [.layer](#niclabs.insight.map.graph.GraphElement.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
+  * *[.graphElement()](#niclabs.insight.map.graph.GraphElement.graphElement) ⇒*
+  * [.clickable([activate])](#niclabs.insight.map.graph.GraphElement.clickable)
+  * [.clear()](#niclabs.insight.map.graph.GraphElement.clear)
+  * [.visible([visible])](#niclabs.insight.map.graph.GraphElement.visible) ⇒ <code>boolean</code>
+
 <a name="new_niclabs.insight.map.graph.GraphElement_new"></a>
 ####### new GraphElement(dashboard, options)
 Construct a new GraphElement
@@ -2594,6 +2610,51 @@ Construct a new GraphElement
 | options.lat | <code>float</code> | latitude for the graph graph element |
 | options.lng | <code>float</code> | longitude for the graph graph element |
 | options.landmark | <code>string</code> | landmark that the graph element indicates |
+
+<a name="niclabs.insight.map.graph.GraphElement.map"></a>
+####### GraphElement.map : <code>[MapView](#niclabs.insight.MapView)</code>
+Map view where the map belongs to
+
+**Kind**: static property of <code>[GraphElement](#niclabs.insight.map.graph.GraphElement)</code>  
+<a name="niclabs.insight.map.graph.GraphElement.layer"></a>
+####### GraphElement.layer : <code>[Layer](#niclabs.insight.layer.Layer)</code>
+Layer to which the graphElement belongs to
+
+**Kind**: static property of <code>[GraphElement](#niclabs.insight.map.graph.GraphElement)</code>  
+<a name="niclabs.insight.map.graph.GraphElement.graphElement"></a>
+####### *GraphElement.graphElement() ⇒*
+Return the internal marker object associated with this graphElement
+
+**Kind**: static abstract method of <code>[GraphElement](#niclabs.insight.map.graph.GraphElement)</code>  
+**Returns**: internal graphElement  
+<a name="niclabs.insight.map.graph.GraphElement.clickable"></a>
+####### GraphElement.clickable([activate])
+Get/activate clickable status for the graphElement
+
+When clicked the graphElement will trigger a [niclabs.insight.MapView#map_element_selected](niclabs.insight.MapView#map_element_selected) event
+with the particular data for the graphElement
+
+**Kind**: static method of <code>[GraphElement](#niclabs.insight.map.graph.GraphElement)</code>  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [activate] | <code>boolean</code> | <code>true</code> | true to make clickable |
+
+<a name="niclabs.insight.map.graph.GraphElement.clear"></a>
+####### GraphElement.clear()
+Clear the graphElement from the map
+
+**Kind**: static method of <code>[GraphElement](#niclabs.insight.map.graph.GraphElement)</code>  
+<a name="niclabs.insight.map.graph.GraphElement.visible"></a>
+####### GraphElement.visible([visible]) ⇒ <code>boolean</code>
+Set/get the visibility for the graphElement
+
+**Kind**: static method of <code>[GraphElement](#niclabs.insight.map.graph.GraphElement)</code>  
+**Returns**: <code>boolean</code> - true if the graphElement is visible  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [visible] | <code>boolean</code> | new value for the visibility of the graphElement |
 
 <a name="niclabs.insight.map.graph.Node"></a>
 ###### graph.Node ⇐ <code>[GraphElement](#niclabs.insight.map.graph.GraphElement)</code>
@@ -3152,12 +3213,6 @@ Collection of markers available for drawing on the map
     * [new Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker_new)
     * [.map](#niclabs.insight.map.marker.Marker.map) : <code>[MapView](#niclabs.insight.MapView)</code>
     * [.layer](#niclabs.insight.map.marker.Marker.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-    * [.map](#niclabs.insight.map.marker.Marker.map) : <code>[MapView](#niclabs.insight.MapView)</code>
-    * [.layer](#niclabs.insight.map.marker.Marker.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-    * *[.graphElement()](#niclabs.insight.map.marker.Marker.graphElement) ⇒ <code>google.maps.Marker</code>*
-    * [.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
-    * [.clear()](#niclabs.insight.map.marker.Marker.clear)
-    * [.visible([visible])](#niclabs.insight.map.marker.Marker.visible) ⇒ <code>boolean</code>
     * *[.marker()](#niclabs.insight.map.marker.Marker.marker) ⇒ <code>google.maps.Marker</code>*
     * [.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
     * [.clear()](#niclabs.insight.map.marker.Marker.clear)
@@ -3219,12 +3274,6 @@ An image marker includes an image for each waypoint
   * [new Marker(dashboard, options)](#new_niclabs.insight.map.marker.Marker_new)
   * [.map](#niclabs.insight.map.marker.Marker.map) : <code>[MapView](#niclabs.insight.MapView)</code>
   * [.layer](#niclabs.insight.map.marker.Marker.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-  * [.map](#niclabs.insight.map.marker.Marker.map) : <code>[MapView](#niclabs.insight.MapView)</code>
-  * [.layer](#niclabs.insight.map.marker.Marker.layer) : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-  * *[.graphElement()](#niclabs.insight.map.marker.Marker.graphElement) ⇒ <code>google.maps.Marker</code>*
-  * [.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
-  * [.clear()](#niclabs.insight.map.marker.Marker.clear)
-  * [.visible([visible])](#niclabs.insight.map.marker.Marker.visible) ⇒ <code>boolean</code>
   * *[.marker()](#niclabs.insight.map.marker.Marker.marker) ⇒ <code>google.maps.Marker</code>*
   * [.clickable([activate])](#niclabs.insight.map.marker.Marker.clickable)
   * [.clear()](#niclabs.insight.map.marker.Marker.clear)
@@ -3254,51 +3303,6 @@ Map view where the map belongs to
 Layer to which the marker belongs to
 
 **Kind**: static property of <code>[Marker](#niclabs.insight.map.marker.Marker)</code>  
-<a name="niclabs.insight.map.marker.Marker.map"></a>
-####### Marker.map : <code>[MapView](#niclabs.insight.MapView)</code>
-Map view where the map belongs to
-
-**Kind**: static property of <code>[Marker](#niclabs.insight.map.marker.Marker)</code>  
-<a name="niclabs.insight.map.marker.Marker.layer"></a>
-####### Marker.layer : <code>[Layer](#niclabs.insight.layer.Layer)</code>
-Layer to which the marker belongs to
-
-**Kind**: static property of <code>[Marker](#niclabs.insight.map.marker.Marker)</code>  
-<a name="niclabs.insight.map.marker.Marker.graphElement"></a>
-####### *Marker.graphElement() ⇒ <code>google.maps.Marker</code>*
-Return the internal marker object associated with this Marker
-
-**Kind**: static abstract method of <code>[Marker](#niclabs.insight.map.marker.Marker)</code>  
-**Returns**: <code>google.maps.Marker</code> - internal marker  
-<a name="niclabs.insight.map.marker.Marker.clickable"></a>
-####### Marker.clickable([activate])
-Get/activate clickable status for the marker
-
-When clicked the marker will trigger a [niclabs.insight.MapView#map_element_selected](niclabs.insight.MapView#map_element_selected) event
-with the particular data for the marker
-
-**Kind**: static method of <code>[Marker](#niclabs.insight.map.marker.Marker)</code>  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [activate] | <code>boolean</code> | <code>true</code> | true to make clickable |
-
-<a name="niclabs.insight.map.marker.Marker.clear"></a>
-####### Marker.clear()
-Clear the marker from the map
-
-**Kind**: static method of <code>[Marker](#niclabs.insight.map.marker.Marker)</code>  
-<a name="niclabs.insight.map.marker.Marker.visible"></a>
-####### Marker.visible([visible]) ⇒ <code>boolean</code>
-Set/get the visibility for the marker
-
-**Kind**: static method of <code>[Marker](#niclabs.insight.map.marker.Marker)</code>  
-**Returns**: <code>boolean</code> - true if the marker is visible  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [visible] | <code>boolean</code> | new value for the visibility of the marker |
-
 <a name="niclabs.insight.map.marker.Marker.marker"></a>
 ####### *Marker.marker() ⇒ <code>google.maps.Marker</code>*
 Return the internal marker object associated with this Marker

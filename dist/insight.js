@@ -1513,112 +1513,6 @@ niclabs.insight.View = (function($) {
 })(jQuery);
 
 /**
- * Very basic event manager for the dashboard
- *
- * @example
- * ```javascript
- * // Subscribe to the event
- * var eventId = niclabs.insight.event.on('hello', function(who) {
- *      alert("HELLO "+who+"!!!");
- * });
- *
- * // Trigger the event
- * niclabs.insight.event.trigger('hello', "John"); // Shows alert 'HELLO John!!!'
- *
- * // Unsubscribe
- * niclabs.insight.event.off('hello', eventId);
- * ```
- *
- * @namespace
- */
-niclabs.insight.event = (function() {
-    "use strict";
-
-    var events = {};
-
-    /**
-     * Find the event in the event list, return -1 if not found
-     */
-    function indexOf(event, listener) {
-        if (event in events) {
-            for (var i = 0; i < events[event].length; i++) {
-                if (events[event][i] === listener) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * Insight event listener
-     *
-     * @callback niclabs.insight.event~listener
-     * @param {Object} data - data for the callback function, dependant on the event
-     */
-
-    return {
-        /**
-         * Listen for an event. A listener callback can only be assigned once for an event
-         *
-         * @memberof niclabs.insight.event
-         * @param {string} event - event type
-         * @param {niclabs.insight.event~listener} listener - callback to process the event
-         * @returns {number} id of the listener
-         */
-        on: function(event, listener) {
-            var index = indexOf(event, listener);
-
-            if (index < 0) {
-                if (!(event in events)) {
-                    events[event] = [];
-                }
-
-                // Add the new listener
-                return events[event].push(listener) - 1;
-            }
-            return index;
-        },
-
-        /**
-         * Stop listening for an event.
-         *
-         * @memberof niclabs.insight.event
-         * @param {string} event - event type
-         * @param {niclabs.insight.event~listener|number} listener - callback to remove or id of the listener provided by {@link niclabs.insight.event.on()}
-         * @returns {boolean} true if the listener was found and was succesfully removed
-         */
-        off: function(event, listener) {
-            var index = typeof listener === 'number' ? listener : indexOf(event, listener);
-
-            if (index >= 0) {
-                // Remove the event
-                events[event].splice(index, 1);
-
-                return true;
-            }
-            return false;
-        },
-
-        /**
-         * Trigger an event
-         *
-         * @memberof niclabs.insight.event
-         * @param {string} event - event type
-         * @param {Object=} data - data to pass to the callback
-         */
-        trigger: function(event, data) {
-            if (event in events) {
-                for (var i = 0; i < events[event].length; i++) {
-                    // Notify the listeners
-                    events[event][i](data);
-                }
-            }
-        }
-    };
-})();
-
-/**
  * Define all possible filters for the dashboard
  *
  * @namespace
@@ -2587,7 +2481,6 @@ niclabs.insight.layer.GraphLayer = (function($) {
 
                 // Extend the attributes with the data and the options for the graph
                 $.extend(attr, obj);
-                console.log(attr);
 
                 graph = niclabs.insight.handler(obj.type)(dashboard, attr);
             }
@@ -2598,15 +2491,17 @@ niclabs.insight.layer.GraphLayer = (function($) {
             }
 
             graph.clickable(true);
-            /*
-            for (var edge in edges){
-                console.log(edge);
-                edges[edge].clickable(true);
-            }*/
 
             return graph;
         }
 
+        /**
+         * Create node from the type attribute
+         *
+         * @param {Object[]} data - layer data
+         * @param {number} index - index of the node in the data array
+         * @param {Object} obj - configuration for the new node
+          */
         function newNode(data, index, obj) {
             var node;
             if ('type' in obj) {
@@ -2627,6 +2522,14 @@ niclabs.insight.layer.GraphLayer = (function($) {
             return node;
         }
 
+        /**
+         * Create edge from the type attribute
+         *
+         * @param {Object[]} data - layer data
+         * @param {number} index - index of the first node in the data array
+         * @param {number} j - index of the second node in the data array
+         * @param {Object} obj - configuration for the new edge
+          */
         function newEdge(data, index, j, obj) {
             var edge;
             if ('type' in obj) {
@@ -2650,7 +2553,14 @@ niclabs.insight.layer.GraphLayer = (function($) {
         var graph;
 
         /**
-         * TODO: Missing documentation
+         * Draw the graphElements according to the internal data on the map
+         *
+         * @memberof niclabs.insight.layer.GraphLayer
+         * @override
+         * @param {Object[]} data - data to draw
+         * @param {float} data[].lat - latitude for the graphElement
+         * @param {float} data[].lng - longitude for the graphElement
+         * @param {string=} data[].description - description for the graphElement
          */
         layer.draw = function(data) {
             for (var i = 0; i < data.length; i++) {
@@ -2666,9 +2576,25 @@ niclabs.insight.layer.GraphLayer = (function($) {
         };
 
         /**
-         * TODO: Missing documentation
+         * Clear the graph from the map
+         *
+         * @memberof niclabs.insight.layer.GraphLayer
+         * @override
          */
         layer.clear = function() {
+          for (var i = 0; i < nodes.length; i++) {
+            nodes[i].clear();
+          }
+
+          // Clean the array
+          nodes = [];
+
+          for (i = 0; i < edges.length; i++) {
+            edges[i].clear();
+          }
+
+          // Clean the array
+          edges = [];
 
         };
 
@@ -3639,6 +3565,112 @@ niclabs.insight.quadtree.PointQuadTree = (function () {
 })();
 
 /**
+ * Very basic event manager for the dashboard
+ *
+ * @example
+ * ```javascript
+ * // Subscribe to the event
+ * var eventId = niclabs.insight.event.on('hello', function(who) {
+ *      alert("HELLO "+who+"!!!");
+ * });
+ *
+ * // Trigger the event
+ * niclabs.insight.event.trigger('hello', "John"); // Shows alert 'HELLO John!!!'
+ *
+ * // Unsubscribe
+ * niclabs.insight.event.off('hello', eventId);
+ * ```
+ *
+ * @namespace
+ */
+niclabs.insight.event = (function() {
+    "use strict";
+
+    var events = {};
+
+    /**
+     * Find the event in the event list, return -1 if not found
+     */
+    function indexOf(event, listener) {
+        if (event in events) {
+            for (var i = 0; i < events[event].length; i++) {
+                if (events[event][i] === listener) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Insight event listener
+     *
+     * @callback niclabs.insight.event~listener
+     * @param {Object} data - data for the callback function, dependant on the event
+     */
+
+    return {
+        /**
+         * Listen for an event. A listener callback can only be assigned once for an event
+         *
+         * @memberof niclabs.insight.event
+         * @param {string} event - event type
+         * @param {niclabs.insight.event~listener} listener - callback to process the event
+         * @returns {number} id of the listener
+         */
+        on: function(event, listener) {
+            var index = indexOf(event, listener);
+
+            if (index < 0) {
+                if (!(event in events)) {
+                    events[event] = [];
+                }
+
+                // Add the new listener
+                return events[event].push(listener) - 1;
+            }
+            return index;
+        },
+
+        /**
+         * Stop listening for an event.
+         *
+         * @memberof niclabs.insight.event
+         * @param {string} event - event type
+         * @param {niclabs.insight.event~listener|number} listener - callback to remove or id of the listener provided by {@link niclabs.insight.event.on()}
+         * @returns {boolean} true if the listener was found and was succesfully removed
+         */
+        off: function(event, listener) {
+            var index = typeof listener === 'number' ? listener : indexOf(event, listener);
+
+            if (index >= 0) {
+                // Remove the event
+                events[event].splice(index, 1);
+
+                return true;
+            }
+            return false;
+        },
+
+        /**
+         * Trigger an event
+         *
+         * @memberof niclabs.insight.event
+         * @param {string} event - event type
+         * @param {Object=} data - data to pass to the callback
+         */
+        trigger: function(event, data) {
+            if (event in events) {
+                for (var i = 0; i < events[event].length; i++) {
+                    // Notify the listeners
+                    events[event][i](data);
+                }
+            }
+        }
+    };
+})();
+
+/**
  * Tools for drawing diagrams on the map. To calculate the spherical voronoi/delaunay
  * uses the ThirdParty libray delaunayTriangles.js
  *
@@ -4198,7 +4230,7 @@ niclabs.insight.map.graph.GraphElement = (function($) {
         var self = {
             /**
              * Map view where the map belongs to
-             * @memberof niclabs.insight.map.marker.Marker
+             * @memberof niclabs.insight.map.graph.GraphElement
              * @member {niclabs.insight.MapView}
              */
             get map () {
@@ -4206,9 +4238,9 @@ niclabs.insight.map.graph.GraphElement = (function($) {
             },
 
             /**
-             * Layer to which the marker belongs to
+             * Layer to which the graphElement belongs to
              *
-             * @memberof niclabs.insight.map.marker.Marker
+             * @memberof niclabs.insight.map.graph.GraphElement
              * @member {niclabs.insight.layer.Layer}
              */
             get layer () {
@@ -4216,23 +4248,23 @@ niclabs.insight.map.graph.GraphElement = (function($) {
             },
 
             /**
-             * Return the internal marker object associated with this Marker
+             * Return the internal marker object associated with this graphElement
              *
-             * @memberof niclabs.insight.map.marker.Marker
+             * @memberof niclabs.insight.map.graph.GraphElement
              * @abstract
-             * @returns {google.maps.Marker} internal marker
+             * @returns internal graphElement
              */
             graphElement: function() {
                 return undefined;
             },
 
             /**
-             * Get/activate clickable status for the marker
+             * Get/activate clickable status for the graphElement
              *
-             * When clicked the marker will trigger a {@link niclabs.insight.MapView#map_element_selected} event
-             * with the particular data for the marker
+             * When clicked the graphElement will trigger a {@link niclabs.insight.MapView#map_element_selected} event
+             * with the particular data for the graphElement
              *
-             * @memberof niclabs.insight.map.marker.Marker
+             * @memberof niclabs.insight.map.graph.GraphElement
              * @param {boolean} [activate=true] - true to make clickable
              */
             clickable : function(activate) {
@@ -4240,21 +4272,21 @@ niclabs.insight.map.graph.GraphElement = (function($) {
             },
 
             /**
-             * Clear the marker from the map
+             * Clear the graphElement from the map
              *
-             * @memberof niclabs.insight.map.marker.Marker
+             * @memberof niclabs.insight.map.graph.GraphElement
              */
             clear: function() {
-                var marker = self.graphElement();
+                var graphElement = self.graphElement();
                 graphElement.setMap(null);
             },
 
             /**
-             * Set/get the visibility for the marker
+             * Set/get the visibility for the graphElement
              *
-             * @memberof niclabs.insight.map.marker.Marker
-             * @param {boolean=} visible - new value for the visibility of the marker
-             * @returns {boolean} true if the marker is visible
+             * @memberof niclabs.insight.map.graph.GraphElement
+             * @param {boolean=} visible - new value for the visibility of the graphElement
+             * @returns {boolean} true if the graphElement is visible
              */
             visible: function(visible) {
                 if (typeof visible === 'undefined') return self.graphElement().getVisible();
@@ -4320,8 +4352,6 @@ niclabs.insight.map.graph.Node = (function($) {
             });
             return listener;
         };
-
-        //console.log(self.clickable);
 
         return self;
 

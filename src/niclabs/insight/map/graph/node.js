@@ -49,8 +49,6 @@ niclabs.insight.map.graph.Node = (function($) {
             return listener;
         };
 
-        //console.log(self.clickable);
-
         return self;
 
     };

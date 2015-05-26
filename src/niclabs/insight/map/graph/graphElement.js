@@ -31,7 +31,7 @@ niclabs.insight.map.graph.GraphElement = (function($) {
         var self = {
             /**
              * Map view where the map belongs to
-             * @memberof niclabs.insight.map.marker.Marker
+             * @memberof niclabs.insight.map.graph.GraphElement
              * @member {niclabs.insight.MapView}
              */
             get map () {
@@ -39,9 +39,9 @@ niclabs.insight.map.graph.GraphElement = (function($) {
             },
 
             /**
-             * Layer to which the marker belongs to
+             * Layer to which the graphElement belongs to
              *
-             * @memberof niclabs.insight.map.marker.Marker
+             * @memberof niclabs.insight.map.graph.GraphElement
              * @member {niclabs.insight.layer.Layer}
              */
             get layer () {
@@ -49,23 +49,23 @@ niclabs.insight.map.graph.GraphElement = (function($) {
             },
 
             /**
-             * Return the internal marker object associated with this Marker
+             * Return the internal marker object associated with this graphElement
              *
-             * @memberof niclabs.insight.map.marker.Marker
+             * @memberof niclabs.insight.map.graph.GraphElement
              * @abstract
-             * @returns {google.maps.Marker} internal marker
+             * @returns internal graphElement
              */
             graphElement: function() {
                 return undefined;
             },
 
             /**
-             * Get/activate clickable status for the marker
+             * Get/activate clickable status for the graphElement
              *
-             * When clicked the marker will trigger a {@link niclabs.insight.MapView#map_element_selected} event
-             * with the particular data for the marker
+             * When clicked the graphElement will trigger a {@link niclabs.insight.MapView#map_element_selected} event
+             * with the particular data for the graphElement
              *
-             * @memberof niclabs.insight.map.marker.Marker
+             * @memberof niclabs.insight.map.graph.GraphElement
              * @param {boolean} [activate=true] - true to make clickable
              */
             clickable : function(activate) {
@@ -73,9 +73,9 @@ niclabs.insight.map.graph.GraphElement = (function($) {
             },
 
             /**
-             * Clear the marker from the map
+             * Clear the graphElement from the map
              *
-             * @memberof niclabs.insight.map.marker.Marker
+             * @memberof niclabs.insight.map.graph.GraphElement
              */
             clear: function() {
                 var graphElement = self.graphElement();
@@ -83,11 +83,11 @@ niclabs.insight.map.graph.GraphElement = (function($) {
             },
 
             /**
-             * Set/get the visibility for the marker
+             * Set/get the visibility for the graphElement
              *
-             * @memberof niclabs.insight.map.marker.Marker
-             * @param {boolean=} visible - new value for the visibility of the marker
-             * @returns {boolean} true if the marker is visible
+             * @memberof niclabs.insight.map.graph.GraphElement
+             * @param {boolean=} visible - new value for the visibility of the graphElement
+             * @returns {boolean} true if the graphElement is visible
              */
             visible: function(visible) {
                 if (typeof visible === 'undefined') return self.graphElement().getVisible();
