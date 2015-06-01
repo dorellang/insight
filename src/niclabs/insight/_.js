@@ -260,6 +260,37 @@ niclabs.insight = (function ($) {
     };
 
     /**
+     * JQuery plugin to make an element closeable
+     * TODO: Missing documentation
+     */
+    $.fn.hidable = function (handler) {
+        if (!handler) {
+            handler = function () {
+                return;
+            };
+        }
+
+        var panel = this.children('.header').css('height','25px');
+        if (!panel.length) {
+            panel = $('<div>').css('height','25px');
+            this.prepend(panel);
+        }
+
+        var close = $('<div>').addClass('button').attr('data-icon', 'hide');
+
+        panel.prepend(close);
+
+        var _this = this;
+
+        close.on('click', function () {
+            _this.remove();
+            handler();
+        });
+
+        return this;
+    };
+
+    /**
      * Check if indexOf exists in Array.prototype or use jQuery.inArray();
      */
     Array.prototype.indexOf = 'indexOf' in Array.prototype ? Array.prototype.indexOf : function (item, start) {
