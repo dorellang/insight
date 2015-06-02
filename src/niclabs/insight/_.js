@@ -307,6 +307,7 @@ niclabs.insight = (function ($) {
             handler();
             //This is needed
             close.on('click', closer);
+            width = undefined;
 
         };
 
@@ -315,7 +316,9 @@ niclabs.insight = (function ($) {
                 blocks = _this.find('.block');
             }
 
-            width = $('#insight-info-view').css('width');
+            if(!width) {
+                width = $('#insight-info-view').css('width');
+            }
 
             for (var i = 0; i<blocks.length; i++) {
                 blocks[i].remove();
