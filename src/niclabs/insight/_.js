@@ -262,7 +262,7 @@ niclabs.insight = (function ($) {
      * JQuery plugin to make an element hide-able
      * TODO: Missing documentation
      */
-    $.fn.hidable = function (orientation) {
+    $.fn.hidable = function () {
         var handler = false;
         if (!handler) {
             handler = function () {
