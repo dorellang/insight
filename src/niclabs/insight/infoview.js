@@ -37,9 +37,9 @@ niclabs.insight.InfoView = (function($) {
             element.$.resizable(resizeOrientation);
         }
 
-        element.$.hidable();
-
         var blocks = niclabs.insight.ElementList(dashboard);
+
+        element.$.hidable();
 
         /**
          * Add/get a block from the info view

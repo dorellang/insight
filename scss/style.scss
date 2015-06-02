@@ -18,6 +18,22 @@
         border-right: $border-style;
         display: block;
         float: left;
+
+    }
+
+    .hidden {
+        height: 100%;
+        padding: $sidebar-padding;
+        background: #fff;
+
+        /* Draw the border to the right */
+        border-right: $border-style;
+        display: block;
+        float: left;
+
+        min-width: 0px;
+        overflow-y: auto;
+        width: 27px;
     }
 
     .map {

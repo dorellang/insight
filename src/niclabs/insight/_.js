@@ -260,12 +260,15 @@ niclabs.insight = (function ($) {
     };
 
     /**
-     * JQuery plugin to make an element closeable
+     * JQuery plugin to make an element hide-able
      * TODO: Missing documentation
      */
-    $.fn.hidable = function (handler) {
+    $.fn.hidable = function () {
+        var handler = false;
         if (!handler) {
             handler = function () {
+                map = dashboard.map().googlemap();
+                google.maps.event.trigger(map, 'resize');
                 return;
             };
         }
@@ -277,15 +280,60 @@ niclabs.insight = (function ($) {
         }
 
         var close = $('<div>').addClass('button').attr('data-icon', 'hide');
+        var open = $('<div>').addClass('button').attr('data-icon', 'show');
+        var resizer = $('.resizer');
 
         panel.prepend(close);
 
         var _this = this;
 
-        close.on('click', function () {
-            _this.remove();
+        var blocks;
+
+        var width;
+
+        var opener = function () {
+
+            for (var i = 0; i<blocks.length; i++) {
+              $('#insight-info-view').append(blocks[i]);
+            }
+
+            $('#insight-info-view').removeClass('hidden').addClass('info resizable');
+            $('#insight-info-view').append(resizer);
+            $('#insight-info-view').css('width',width);
+
+            panel.prepend(close);
+            open.remove();
+
             handler();
-        });
+            //This is needed
+            close.on('click', closer);
+
+        };
+
+        var closer = function () {
+            if(!blocks) {
+                blocks = _this.find('.block');
+            }
+
+            width = $('#insight-info-view').css('width');
+
+            for (var i = 0; i<blocks.length; i++) {
+                blocks[i].remove();
+            }
+
+            $('#insight-info-view').removeClass('info resizable').removeAttr('style').addClass('hidden');
+
+            panel.prepend(open);
+            close.remove();
+
+            handler();
+            //This is needed
+            open.on('click', opener);
+
+        };
+
+        open.on('click', opener);
+        close.on('click', closer);
 
         return this;
     };
