@@ -171,8 +171,7 @@ niclabs.insight = (function ($) {
                 resizable.css('top', (e.clientY) + 'px')
                 .css('height', (startHeight + startY - e.clientY) + 'px');
             if (west)
-                resizable.css('left', (e.clientX) + 'px')
-                .css('width', (startWidth - e.clientX) + 'px');
+                resizable.css('width', (startWidth  - e.clientX + startX) + 'px');
         }
 
         function stopDrag(e) {
@@ -263,7 +262,7 @@ niclabs.insight = (function ($) {
      * JQuery plugin to make an element hide-able
      * TODO: Missing documentation
      */
-    $.fn.hidable = function () {
+    $.fn.hidable = function (orientation) {
         var handler = false;
         if (!handler) {
             handler = function () {

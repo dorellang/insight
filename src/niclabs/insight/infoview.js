@@ -25,8 +25,9 @@ niclabs.insight.InfoView = (function($) {
         // Create the info view
         element.$.addClass('info');
 
+        var resizeOrientation;
+
         if (dashboard.config('layout') !== 'none') {
-            var resizeOrientation;
             if (dashboard.config('layout') === 'left') {
                 // TODO: move filter bar
                 resizeOrientation = 'e';
@@ -39,7 +40,7 @@ niclabs.insight.InfoView = (function($) {
 
         var blocks = niclabs.insight.ElementList(dashboard);
 
-        element.$.hidable();
+        element.$.hidable(resizeOrientation);
 
         /**
          * Add/get a block from the info view
