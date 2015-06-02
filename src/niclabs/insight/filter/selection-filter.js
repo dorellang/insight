@@ -49,6 +49,22 @@ niclabs.insight.filter.SelectionFilter = (function($) {
                 // Use the selected filter
                 filter = selectOptions[index - 1].filter;
             }
+            //TODO: Improve this, store an object represented by the URL
+            path = filter.toString();
+            path = path.slice(path.indexOf('return ')+7, path.indexOf(';'));
+            path = path.replace(/ /g, '');
+            if (window.location.hash.includes('#selector')) {
+                if (window.location.hash.includes('&filter')) {
+                    window.location.hash = window.location.hash.slice(0,window.location.hash.indexOf('&filter')) +
+                    '&filter=' + path;
+                }
+                else {
+                    window.location.hash = window.location.hash + '&filter=' + path;
+                }
+            }
+            else {
+                window.location.hash = '#filter=' + path;
+            }
 
             niclabs.insight.event.trigger('filter_selected', view);
         });

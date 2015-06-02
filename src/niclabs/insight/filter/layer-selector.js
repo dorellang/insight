@@ -24,6 +24,17 @@ niclabs.insight.filter.LayerSelector = (function($) {
 
         select.on('change', function() {
             dashboard.active($(this).val());
+            if (window.location.hash.includes('&filter')) {
+                window.location.hash = '#selector=' + $(this).val() +
+                window.location.hash.slice(window.location.hash.indexOf('&filter'),window.location.hash.length);
+            }
+            else if (window.location.hash.includes('#filter')){
+                window.location.hash = '#selector=' + $(this).val() + '&' +
+                window.location.hash.slice(window.location.hash.indexOf('#filter')+1,window.location.hash.length);
+            }
+            else {
+                window.location.hash = '#selector=' + $(this).val();
+            }
         });
 
         // Add the selector to the view
