@@ -73,13 +73,31 @@ niclabs.insight.Dashboard = (function($) {
         // Append the default filter bar
         container.append(filters.element);
 
-
         var currentFilter = function() {return true;};
 
         // Create an event to be notified of a filter change
         niclabs.insight.event.on('filter_changed', function(f) {
             currentFilter = f;
             activeLayer.filter(currentFilter);
+        });
+
+        // Listen to hash changes
+        niclabs.insight.event.on('hash', function() {
+            if (window.location.hash.includes('filter=')) {
+                var hashValue = window.location.hash;
+                var f = window.location.hash.slice(hashValue.indexOf('filter=')+7);
+                // Eval is evil
+                currentFilter = new Function('data','return ' + f);
+                activeLayer.filter(currentFilter);
+            }
+        });
+
+        $(window).on('hashchange', function() {
+            niclabs.insight.event.trigger('hash');
+        });
+
+        $(window).on('load', function() {
+            niclabs.insight.event.trigger('hash');
         });
 
         var self = {
