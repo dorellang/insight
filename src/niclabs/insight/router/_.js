@@ -1,0 +1,1 @@
+niclabs.insight.router = {};
